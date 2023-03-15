@@ -1,0 +1,3 @@
+[submodule "HiVolunteer-Back"]
+	path = HiVolunteer-Back
+	url = git@github.com:EIP-HiVolunteer/HiVolunteer-Back.git
