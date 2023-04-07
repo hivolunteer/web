@@ -21,26 +21,29 @@ function Login(props: any) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSelected, setSelected] = useState(false);
-  const [postUrl, setPostUrl] = useState('/signAssociation');
+  const [postUrl, setPostUrl] = useState('associations/create');
   const [typeUser, setTypeUser] = useState('association');
 
   const login = () => {
-    let url = 'http://localhost:8000' + postUrl;
+    let url = 'http://localhost:8000/volunteers/login'
     fetch(url, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         email: email,
-        password: password
+        password: password,
+        phone: ""
       })
     })
     .then((response) => {
       if (response.status === 200) {
-        response.json().then((data) => {
-          navigation('/', {state: {token: data.token, user: typeUser}})
-        })
+        console.log('success');
+        alert('success')
+        // response.json().then((data) => {
+        //   navigation('/', {state: {token: data.token, user: typeUser}})
+        // })
       } else {
         console.log('error');
       }})
@@ -67,10 +70,12 @@ function Login(props: any) {
               onChange={() => {
                 setSelected(!isSelected)
                 if (isSelected) {
-                  setPostUrl('/signUser')
+                  setPostUrl('/volunteers/create')
+                  console.log(postUrl)
                   setTypeUser('user')
                 } else {
-                  setPostUrl('/signAssociation')
+                  setPostUrl('/associations/create')
+                  console.log(postUrl)
                   setTypeUser('association')
                 }
               }}
