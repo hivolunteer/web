@@ -19,6 +19,7 @@
     background-color: $background;
     display: inline-block;
     height: auto;
+    border-radius: 20px;
 
     .title {
         font-family: 'Montserrat', sans-serif;
@@ -41,4 +42,33 @@
     &:active {
         background-color: darken($color-hivolunteer, 10%);
     }
+}
+
+.form-register {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+
+    input {
+        margin: 10px;
+        max-width: 100%;
+        width: 100%;
+    }
+}
+
+.input-register {
+    font-family: 'Monserrat', sans-serif;
+    //width: 100%;
+    height: 30px;
+    padding: 5px 5px;
+    border-radius: 10px;
+    border-color: transparent;
+    margin: 3px;
+}
+
+.input-register:focus {
+    outline: none;
+    border-color: $color-hivolunteer;
 }
