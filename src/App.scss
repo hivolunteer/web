@@ -1,38 +1,40 @@
-.App {
+.row {
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+
+.btn {
+  height: 5rem !important;
+  color: white !important;
+}
+
+.title {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.entreprise {
+  width: 50%;
+  margin-right: auto !important;
+  margin-left: 0 !important;
+  display:block !important;
+  background-color: #67a191 !important;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.association {
+  width: 100%;
+  margin-right: 0 !important;
+  margin-left:auto !important;
+  display:block !important;
+  margin-top: 0.4rem;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.benevole {
+  width: 50%;
+  margin-right: auto !important;
+  margin-left: 0 !important;
+  display:block !important;
 }
 
-.App-link {
-  color: #61dafb;
-}
+.titleLogo {
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
