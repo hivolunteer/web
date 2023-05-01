@@ -1,6 +1,7 @@
 import React from "react";
-import './App.scss';
+import './userTypeChoice.scss';
 import titleLogo from '../../images/titleLogo.png';
+import {Link} from "react-router-dom";
 
 const UserTypeChoice = () => {
 
@@ -13,26 +14,32 @@ const UserTypeChoice = () => {
             </div>
             <div className="row">
                 <div className="col-12">
-                    <button className="btn entreprise btn-lg">
-                        entreprise
-                    </button>
+                    <Link to="/register" style={{textDecoration: "none"}}>
+                        <button className="btn entreprise btn-lg">
+                            Entreprise
+                        </button>
+                    </Link>
                 </div>
             </div>
             <div className="row">
                 <div className="col-6">
-                    <img className="img-fluid titleLogo" src={titleLogo} alt=""/>
+                    <img className="titleLogo" src={titleLogo} alt=""/>
                 </div>
                 <div className="col-6">
-                    <button className="btn association btn-lg" style={{backgroundColor: "darkolivegreen"}}>
-                        association
-                    </button>
+                    <Link to="/register" style={{textDecoration: "none"}}>
+                        <button className="btn association btn-lg" >
+                            Association
+                        </button>
+                    </Link>
                 </div>
             </div>
             <div className="row">
                 <div className="col-12">
-                    <button className="btn benevole btn-lg" style={{backgroundColor: "yellowgreen"}}>
-                        bénévole
-                    </button>
+                    <Link to="/register" style={{textDecoration: "none"}}>
+                        <button className="btn benevole btn-lg">
+                            Bénévole
+                        </button>
+                    </Link>
                 </div>
             </div>
         </div>

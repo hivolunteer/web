@@ -8,7 +8,6 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<UserTypeChoice />} />
-        <Route path="/register" element={<UserTypeChoice />} />
       </Routes>
     </Router>
   );
