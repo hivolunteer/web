@@ -30,6 +30,7 @@ function Login(props: any) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': 'http://localhost:8000',
       },
       body: JSON.stringify({
         email: email,
@@ -39,15 +40,13 @@ function Login(props: any) {
     })
     .then((response) => {
       if (response.status === 200) {
-        console.log('success');
-        alert('success')
-        // response.json().then((data) => {
-        //   navigation('/', {state: {token: data.token, user: typeUser}})
-        // })
-      } else {
-        console.log('error');
-      }})
-    .catch((error) => {
+        response.json().then((data) => {
+          localStorage.setItem('token', data.token);
+          navigation('/profile');
+        })
+      } else
+        console.log('Error fetching profile');
+    }).catch((error) => {
       console.log(error);
     })
   }
