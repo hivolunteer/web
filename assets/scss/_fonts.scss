@@ -1,11 +1,10 @@
 // import Montserrat font
 // ----------------------
 //
-@import url('https://fonts.googleapis.com/css?family=Montserrat:400,700');
-//
-//body {
-//   font-family: 'Montserrat', sans-serif;
-//}
+@import '@fontsource/montserrat/300.css';
+@import '@fontsource/montserrat/400.css';
+@import '@fontsource/montserrat/500.css';
+@import '@fontsource/montserrat/700.css';
 //
 
 
@@ -14,33 +13,5 @@
 /////////////////////////////
 
 h1, h2, h3, h4, h5, h6 {
-   margin: 0 0 0.75em;
-   font-family: 'Montserrat', sans-serif;
-   font-weight: 300;
-   line-height: 1.2;
-}
-
-h1 {
-   font-size: 2em;
-   margin: 0.67em 0;
-}
-
-h1 {
-   display: block;
-   font-size: 2em;
-   margin-block-start: 0.67em;
-   margin-block-end: 0.67em;
-   margin-inline-start: 0px;
-   margin-inline-end: 0px;
-   font-weight: bold;
-}
-
-h2 {
-   display: block;
-   font-size: 1.5em;
-   margin-block-start: 0.83em;
-   margin-block-end: 0.83em;
-   margin-inline-start: 0px;
-   margin-inline-end: 0px;
-   font-weight: bold;
+    font-family: 'Montserrat', sans-serif;
 }
