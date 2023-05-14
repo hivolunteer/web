@@ -6,36 +6,154 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 const theme = createTheme();
 
 function Register() {
-
+    /***
+     * Define all states
+    ***/
+    /* State for password visibility */
     const [showPassword, setShowPassword] = React.useState(false);
-    const [completed, setCompleted] = React.useState(true);
-
-    {/* State complete for all inputs*/}
-    const [complete, setComplete] = useState({
+    /* State complete for all inputs*/
+    const [firstName, setFirstName] = useState(true);
+    const [lastName, setLastName] = useState(true);
+    const [birthdate, setBirthdate] = useState(true);
+    const [phone, setPhone] = useState(true);
+    const [email, setEmail] = useState(true);
+    const [password, setPassword] = useState(true);
+    /* Check specific parameters */
+        /* State for age major */
+        const [major, setMajor] = useState(true);
+        /* State strength password */
+        const [strength, setStrength] = useState(true);
+        /* State for email format */
+        const [emailFormat, setEmailFormat] = useState(true);
+        /* State for phone format */
+        const [phoneFormat, setPhoneFormat] = useState(true);
+    /*const [complete, setComplete] = useState({
         firstName: true,
         lastName: true,
         birthdate: true,
         phone: true,
         email: true,
         password: true,
-    });
+    });*/
 
-    {/* Handle change for all inputs */ }
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = event.target;
-        setComplete({ ...complete, [name]: value });
+
+    /***
+     * Define all functions
+    ***/
+    /* Function to check if user is major */
+    const checkMajor = (birthdate: Date) => {
+       // const birthdate = new Date(data.get('birthdate') as string);
+        const today = new Date();
+        let age = today.getFullYear() - birthdate.getFullYear();
+        const m = today.getMonth() - birthdate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthdate.getDate())) {
+            age--;
+        }
+        if (age < 18) {
+            setMajor(false);
+        } else {
+            setMajor(true);
+        }
     };
 
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        {/* Check if all fields are completed */}
-        const form = event.currentTarget;
-        if (form.checkValidity() === false) {
-            setCompleted(false);
+    /* Function to check if all inputs are complete */
+    const checkComplete = (data: FormData) => {
+        /*data.forEach((value, key) => {
+            if (value === '') {
+                setComplete({...complete, [key]: false});
+            } else {
+                setComplete({...complete, [key]: true});
+            }
+        });*/
+        if (data.get('firstName') === '') {
+            setFirstName(false);
+        } else {
+            setFirstName(true);
         }
-        
+        if (data.get('lastName') === '') {
+            setLastName(false);
+        } else {
+            setLastName(true);
+        }
+        if (data.get('birthdate') === '') {
+            setBirthdate(false);
+        } else {
+            setBirthdate(true);
+        }
+        if (data.get('phone') === '') {
+            setPhone(false);
+        } else {
+            setPhone(true);
+        }
+        if (data.get('email') === '') {
+            setEmail(false);
+        } else {
+            setEmail(true);
+        }
+        if (data.get('password') === '') {
+            setPassword(false);
+        } else {
+            setPassword(true);
+        }
+    };
+
+    /* Function to check strength password */
+    const checkStrength = (password: string) => {
+        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%.^&*])(?=.{8,})/;
+        // regex : 1 uppercase, 1 lowercase, 1 number, 1 special character (!@#$%.^&*), 8 characters minimum
+        if (regex.test(password)) {
+            setStrength(true);
+        } else {
+            setStrength(false);
+        }
+    };
+
+    /* Function to check email format */
+    const checkEmailFormat = (email: string) => {
+        const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        // regex :  1 @, 1 point, 2 to 4 characters
+        if (regex.test(email)) {
+            setEmailFormat(true);
+        } else {
+            setEmailFormat(false);
+        }
+    };
+
+    /* Function to check phone format */
+    const checkPhoneFormat = (phone: string) => {
+        const regex = /^(\+33|0|0033)[1-9][0-9]{8}$/;
+        // regex : format +33612345678 or +32612345678 or +41612345678
+        if (regex.test(phone)) {
+            setPhoneFormat(true);
+        } else {
+            setPhoneFormat(false);
+        }
+    };
+
+    /* Function to check Inputs */
+    const checkInput = (data: FormData) => {
+        /* Check if all inputs are complete */
+        checkComplete(data);
+        /* Check if user is major */
+        checkMajor(new Date(data.get('birthdate') as string));
+        /* Check strength password */
+        checkStrength(data.get('password') as string);
+        /* Check email format */
+        checkEmailFormat(data.get('email') as string);
+        /* Check phone format */
+        checkPhoneFormat(data.get('phone') as string);
+    };
+
+    /* Function to submit form */
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        /* Prevent default behavior of form */
+        const form = event.currentTarget;
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
+        const data = new FormData(form);
+        /* Check all inputs */
+        checkInput(data);
+        /* Print all data in console if all states are true */
         console.log({
             firstName: data.get('firstName'),
             lastName: data.get('lastName'),
@@ -77,7 +195,8 @@ function Register() {
                                     label="Prénom"
                                     autoFocus
                                 />
-                                {!completed && (
+                                {/* If firstName is empty, display an error message */}
+                                {!firstName && (
                                     <Alert severity="error">
                                         Le prénom est requis
                                     </Alert>
@@ -92,7 +211,8 @@ function Register() {
                                     id='lastName'
                                     label='Nom'
                                 />
-                                {!completed && (
+                                {/* If lastName is empty, display an error message */}
+                                {!lastName && (
                                     <Alert severity="error">
                                         Le nom de famille est requis
                                     </Alert>
@@ -111,9 +231,16 @@ function Register() {
                                         shrink: true,
                                     }}
                                 />
-                                {!completed && (
+                                {/* If birthdate is empty, display an error message */}
+                                {!birthdate && (
                                     <Alert severity="error">
                                         Une date de naissance est requise pour vérifier votre majorité
+                                    </Alert>
+                                )}
+                                {/* If birthdate is not empty but user is not major, display an info message */}
+                                {(birthdate && !major) && (
+                                    <Alert severity="info">
+                                        Vous devez être majeur pour vous inscrire
                                     </Alert>
                                 )}
                             </Grid>
@@ -127,10 +254,18 @@ function Register() {
                                     id='phone'
                                     label='Numéro de téléphone'
                                     type='tel'
+                                    placeholder='+336XXXXXXXXX'
                                 />
-                                {!completed && (
+                                {/* If phone is empty, display an error message */}
+                                {!phone && (
                                     <Alert severity="error">
                                         Un numéro de téléphone est requis
+                                    </Alert>
+                                )}
+                                {/* If phone is not empty but format is not correct, display a warning message */}
+                                {(phone && !phoneFormat) && (
+                                    <Alert severity="warning">
+                                        Le format du numéro de téléphone doit être 06XXXXXXXX ou +336XXXXXXXX
                                     </Alert>
                                 )}
                             </Grid>
@@ -143,9 +278,16 @@ function Register() {
                                     id='email'
                                     label='Adresse email'
                                 />
-                                {!completed && (
+                                {/* If email is empty, display an error message */}
+                                {!email && (
                                     <Alert severity="error">
                                         L'adresse email est requise
+                                    </Alert>
+                                )}
+                                {/* If email is not empty but format is not correct, display a warning message */}
+                                {(email && !emailFormat) && (
+                                    <Alert severity="warning">
+                                        Le format de l'adresse email doit être de type xxxxxx.xxxx@xxx.com
                                     </Alert>
                                 )}
                             </Grid>
@@ -171,9 +313,16 @@ function Register() {
                                         )
                                     }}
                                 />
-                                {!completed && (
+                                {/* If password is empty, display an error message */}
+                                {!password && (
                                     <Alert severity="error">
                                         Un mot de passe est requis
+                                    </Alert>
+                                )}
+                                {/* If password is not empty but not strong enough, display a warning message */}
+                                {(password && !strength) && (
+                                    <Alert severity="warning">
+                                        Le mot de passe doit contenir au moins 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial parmi : !@#$%^.&*
                                     </Alert>
                                 )}
                             </Grid>
@@ -184,7 +333,7 @@ function Register() {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Sign Up
+                            Inscription
                         </Button>
                         <Grid container justifyContent='flex-end'>
                             <Grid item>
