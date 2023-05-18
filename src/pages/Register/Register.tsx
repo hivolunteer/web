@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Alert, Box, Button, Container, CssBaseline, Grid, IconButton, InputAdornment, Link, TextField, ThemeProvider, Typography, createTheme } from '@mui/material';
 import './Register.scss';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { MuiTelInput } from 'mui-tel-input';
 
 const theme = createTheme();
 
@@ -27,6 +28,7 @@ function Register() {
         const [emailFormat, setEmailFormat] = useState(true);
         /* State for phone format */
         const [phoneFormat, setPhoneFormat] = useState(true);
+        const [phoneInput, setPhoneInput] = useState('' as string);
     /*const [complete, setComplete] = useState({
         firstName: true,
         lastName: true,
@@ -142,7 +144,7 @@ function Register() {
         /* Check email format */
         checkEmailFormat(data.get('email') as string);
         /* Check phone format */
-        checkPhoneFormat(data.get('phone') as string);
+        //checkPhoneFormat(data.get('phone') as string);
     };
 
     /* Function to submit form */
@@ -159,6 +161,7 @@ function Register() {
             lastName: data.get('lastName'),
             birthdate: data.get('birthdate'),
             email: data.get('email'),
+            phone: phoneInput,
             password: data.get('password'),
         });
     };
@@ -246,15 +249,17 @@ function Register() {
                             </Grid>
                             {/* Input phone number */}
                             <Grid item xs={12}>
-                                <TextField
-                                    autoComplete='tel'
+                                <MuiTelInput
                                     name='phone'
+                                    label='Numéro de téléphone'
                                     required
                                     fullWidth
                                     id='phone'
-                                    label='Numéro de téléphone'
-                                    type='tel'
-                                    placeholder='+336XXXXXXXXX'
+                                    autoComplete='tel'
+                                    continents={['EU']}
+                                    defaultCountry='FR'
+                                    value={phoneInput}
+                                    onChange={setPhoneInput}
                                 />
                                 {/* If phone is empty, display an error message */}
                                 {!phone && (
@@ -263,11 +268,11 @@ function Register() {
                                     </Alert>
                                 )}
                                 {/* If phone is not empty but format is not correct, display a warning message */}
-                                {(phone && !phoneFormat) && (
+                                {/*(phone && !phoneFormat) && (
                                     <Alert severity="warning">
                                         Le format du numéro de téléphone doit être 06XXXXXXXX ou +336XXXXXXXX
                                     </Alert>
-                                )}
+                                )*/}
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
@@ -287,7 +292,7 @@ function Register() {
                                 {/* If email is not empty but format is not correct, display a warning message */}
                                 {(email && !emailFormat) && (
                                     <Alert severity="warning">
-                                        Le format de l'adresse email doit être de type xxxxxx.xxxx@xxx.com
+                                        Le format de l'adresse email doit être au format xxxxxx.xxxx@xxx.com
                                     </Alert>
                                 )}
                             </Grid>
