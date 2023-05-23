@@ -4,14 +4,17 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // import Pages
 import Home from './pages/Home/Home';
-import Register from './pages/Register/Register';
+import RegisterVolunteer from './pages/Authentication/RegisterVolunteer/Register';
+import RegisterAssociation from './pages/Authentication/RegisterAssociation/Register';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/register" element={<RegisterVolunteer />} />
+        <Route path="/register/volunteer" element={<RegisterVolunteer />} />
+        <Route path="/register/association" element={<RegisterAssociation />} />
       </Routes>
     </Router>
   );

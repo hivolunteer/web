@@ -3,26 +3,23 @@ import { Alert, Box, Button, Container, CssBaseline, Grid, IconButton, InputAdor
 import './Register.scss';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { MuiTelInput } from 'mui-tel-input';
-import { AuthenticationService } from '../../services/authentication.service';
+import { AuthenticationService } from '../../../services/authentication.service';
 
 const theme = createTheme();
 
-function Register() {
+function RegisterAssociation() {
     /***
      * Define all states
     ***/
     /* State for password visibility */
     const [showPassword, setShowPassword] = React.useState(false);
     /* State complete for all inputs*/
-    const [firstName, setFirstName] = useState(true);
-    const [lastName, setLastName] = useState(true);
-    const [birthdate, setBirthdate] = useState(true);
+    const [name, setName] = useState(true);
+    const [rna, setRna] = useState(true);
     const [phone, setPhone] = useState(true);
     const [email, setEmail] = useState(true);
     const [password, setPassword] = useState(true);
     /* Check specific parameters */
-        /* State for age major */
-        const [major, setMajor] = useState(true);
         /* State strength password */
         const [strength, setStrength] = useState(true);
         /* State for email format */
@@ -35,24 +32,6 @@ function Register() {
     /***
      * Define all functions
     ***/
-    /* Function to check if user is major */
-    const checkMajor = (birthdate: Date) => {
-       // const birthdate = new Date(data.get('birthdate') as string);
-        const today = new Date();
-        let age = today.getFullYear() - birthdate.getFullYear();
-        const m = today.getMonth() - birthdate.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < birthdate.getDate())) {
-            age--;
-        }
-        if (age < 18) {
-            setMajor(false);
-            return false;
-        } else {
-            setMajor(true);
-            return true;
-        }
-    };
-
 
     /* Function to check if all inputs are complete */
     const checkComplete = (data: FormData) => {
@@ -63,20 +42,15 @@ function Register() {
                 setComplete({...complete, [key]: true});
             }
         });*/
-        if (data.get('firstName') === '') {
-            setFirstName(false);
+        if (data.get('name') === '') {
+            setName(false);
         } else {
-            setFirstName(true);
+            setName(true);
         }
-        if (data.get('lastName') === '') {
-            setLastName(false);
+        if (data.get('rna') === '') {
+            setRna(false);
         } else {
-            setLastName(true);
-        }
-        if (data.get('birthdate') === '') {
-            setBirthdate(false);
-        } else {
-            setBirthdate(true);
+            setRna(true);
         }
         if (data.get('phone') === '') {
             setPhone(false);
@@ -138,8 +112,6 @@ function Register() {
     const checkInput = (data: FormData) => {
         /* Check if all inputs are complete */
         checkComplete(data);
-        /* Check if user is major */
-        checkMajor(new Date(data.get('birthdate') as string));
         /* Check strength password */
         checkStrength(data.get('password') as string);
         /* Check email format */
@@ -154,15 +126,12 @@ function Register() {
         const user = Object.fromEntries(data.entries());
 
         /* If all inputs are complete, send data */
-        if (user['firstName'] && user['lastName'] && user['birthdate'] && user['phone'] && user['email'] && user['password']) {
+        if (user['name'] && user['rna'] && user['phone'] && user['email'] && user['password']) {
             /* If user is major, password is strong enough, email format is correct and phone format is correct, send data */
             if (checkStrength(user['password'] as string) && checkEmailFormat(user['email'] as string) && checkPhoneFormat(user['phone'] as string)) {
-                /* If user is major, send data */
-                if (checkMajor(new Date(user['birthdate'] as string))) {
-                    // call registerVolunteer service
-                    const response = AuthenticationService.registerVolunteers(user);
-                    console.log(response);
-                }
+                // call RegisterAssociation service
+                const response = AuthenticationService.registerAssociations(user);
+                console.log(response);
             }
         }
     };
@@ -178,7 +147,7 @@ function Register() {
             checkInput(data);
         }
         /* If all states are true, send data */
-        console.log(firstName, lastName, birthdate, phone, email, password, major, strength, emailFormat, phoneFormat);
+        console.log(name, rna, phone, email, password, strength, emailFormat, phoneFormat);
         sendData(data);
     };
 
@@ -189,7 +158,25 @@ function Register() {
 
     return (
         <ThemeProvider theme={theme}>
-            <Container component="main" maxWidth="xs">
+            <Container
+                component="main"
+                maxWidth="xs"
+                sx={{
+                    backgroundColor: (theme) =>
+                        theme.palette.mode === 'light'
+                            ? theme.palette.grey[50]
+                            : theme.palette.grey[900],
+                    borderRadius: 8,
+                    borderColor: (theme) =>
+                        theme.palette.mode === 'light'
+                            ? theme.palette.grey[100]
+                            : theme.palette.grey[800],
+                    boxShadow: (theme) =>
+                        theme.palette.mode === 'light'
+                            ? theme.shadows[1]
+                            : 'none',
+                }}
+                >
                 <CssBaseline />
                 <Box
                     sx={{
@@ -200,66 +187,41 @@ function Register() {
                     }}
                 >
                     <Typography component="h1" variant="h5">
-                        Inscription
+                        Inscription Association
                     </Typography>
                     <Box component="form" noValidate onSubmit={handleSubmit} sx={{mt: 3}}>
                         <Grid container spacing={2}>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12}>
                                 <TextField
                                     autoComplete="given-name"
-                                    name="firstName"
+                                    name="name"
                                     required
                                     fullWidth
-                                    id="firstName"
-                                    label="Prénom"
+                                    id="name"
+                                    label="Nom de l'association"
                                     autoFocus
                                 />
                                 {/* If firstName is empty, display an error message */}
-                                {!firstName && (
+                                {!name && (
                                     <Alert severity="error">
-                                        Le prénom est requis
+                                        Le nom de l'association est requis
                                     </Alert>
                                 )}
                             </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    autoComplete='family-name'
-                                    name='lastName'
-                                    required
-                                    fullWidth
-                                    id='lastName'
-                                    label='Nom'
-                                />
-                                {/* If lastName is empty, display an error message */}
-                                {!lastName && (
-                                    <Alert severity="error">
-                                        Le nom de famille est requis
-                                    </Alert>
-                                )}
-                            </Grid>
+                            {/* Input RNA */}
                             <Grid item xs={12}>
                                 <TextField
-                                    autoComplete='bday'
-                                    name='birthdate'
+                                    autoComplete='rna'
+                                    name='rna'
                                     required
                                     fullWidth
-                                    id='birthdate'
-                                    label='Date de naissance'
-                                    type='date'
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
+                                    id='rna'
+                                    label='Numéro RNA'
                                 />
-                                {/* If birthdate is empty, display an error message */}
-                                {!birthdate && (
+                                {/* If rna is empty, display an error message */}
+                                {!rna && (
                                     <Alert severity="error">
-                                        Une date de naissance est requise pour vérifier votre majorité
-                                    </Alert>
-                                )}
-                                {/* If birthdate is not empty but user is not major, display an info message */}
-                                {(birthdate && !major) && (
-                                    <Alert severity="info">
-                                        Vous devez être majeur pour vous inscrire
+                                        Le numéro RNA est requis
                                     </Alert>
                                 )}
                             </Grid>
@@ -386,4 +348,4 @@ function Register() {
     );
 }
 
-export default Register;
+export default RegisterAssociation;
