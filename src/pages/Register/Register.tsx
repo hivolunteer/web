@@ -3,6 +3,7 @@ import { Alert, Box, Button, Container, CssBaseline, Grid, IconButton, InputAdor
 import './Register.scss';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { MuiTelInput } from 'mui-tel-input';
+import { AuthenticationService } from '../../services/authentication.service';
 
 const theme = createTheme();
 
@@ -29,14 +30,6 @@ function Register() {
         /* State for phone format */
         const [phoneFormat, setPhoneFormat] = useState(true);
         const [phoneInput, setPhoneInput] = useState('' as string);
-    /*const [complete, setComplete] = useState({
-        firstName: true,
-        lastName: true,
-        birthdate: true,
-        phone: true,
-        email: true,
-        password: true,
-    });*/
 
 
     /***
@@ -53,8 +46,10 @@ function Register() {
         }
         if (age < 18) {
             setMajor(false);
+            return false;
         } else {
             setMajor(true);
+            return true;
         }
     };
 
@@ -102,12 +97,14 @@ function Register() {
 
     /* Function to check strength password */
     const checkStrength = (password: string) => {
-        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%.^&*])(?=.{8,})/;
-        // regex : 1 uppercase, 1 lowercase, 1 number, 1 special character (!@#$%.^&*), 8 characters minimum
+        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@:_#$%.^&*])(?=.{8,})/;
+        // regex : 1 uppercase, 1 lowercase, 1 number, 1 special character (!@:_#$%.^&*), 8 characters minimum
         if (regex.test(password)) {
             setStrength(true);
+            return true;
         } else {
             setStrength(false);
+            return false;
         }
     };
 
@@ -117,19 +114,23 @@ function Register() {
         // regex :  1 @, 1 point, 2 to 4 characters
         if (regex.test(email)) {
             setEmailFormat(true);
+            return true;
         } else {
             setEmailFormat(false);
+            return false;
         }
     };
 
     /* Function to check phone format */
     const checkPhoneFormat = (phone: string) => {
-        const regex = /^(\+33|0|0033)[1-9][0-9]{8}$/;
-        // regex : format +33612345678 or +32612345678 or +41612345678
+        const regex = /^\+(?:[0-9] ?){6,14}[0-9]$/;
+        // regex : "+" or "00", 1 to 3 numbers country code, 1 to 12 numbers
         if (regex.test(phone)) {
             setPhoneFormat(true);
+            return true;
         } else {
             setPhoneFormat(false);
+            return false;
         }
     };
 
@@ -144,7 +145,26 @@ function Register() {
         /* Check email format */
         checkEmailFormat(data.get('email') as string);
         /* Check phone format */
-        //checkPhoneFormat(data.get('phone') as string);
+        checkPhoneFormat(data.get('phone') as string);        
+    };
+
+    /* Function to send data and print user token receive */
+    const sendData = async (data: FormData) => {
+        // convert FormData to table
+        const user = Object.fromEntries(data.entries());
+
+        /* If all inputs are complete, send data */
+        if (user['firstName'] && user['lastName'] && user['birthdate'] && user['phone'] && user['email'] && user['password']) {
+            /* If user is major, password is strong enough, email format is correct and phone format is correct, send data */
+            if (checkStrength(user['password'] as string) && checkEmailFormat(user['email'] as string) && checkPhoneFormat(user['phone'] as string)) {
+                /* If user is major, send data */
+                if (checkMajor(new Date(user['birthdate'] as string))) {
+                    // call registerVolunteer service
+                    const response = AuthenticationService.registerVolunteers(user);
+                    console.log(response);
+                }
+            }
+        }
     };
 
     /* Function to submit form */
@@ -153,17 +173,13 @@ function Register() {
         const form = event.currentTarget;
         event.preventDefault();
         const data = new FormData(form);
-        /* Check all inputs */
-        checkInput(data);
-        /* Print all data in console if all states are true */
-        console.log({
-            firstName: data.get('firstName'),
-            lastName: data.get('lastName'),
-            birthdate: data.get('birthdate'),
-            email: data.get('email'),
-            phone: phoneInput,
-            password: data.get('password'),
-        });
+        /* Check all inputs x2 */
+        for (let i = 0; i < 2; i++) {
+            checkInput(data);
+        }
+        /* If all states are true, send data */
+        console.log(firstName, lastName, birthdate, phone, email, password, major, strength, emailFormat, phoneFormat);
+        sendData(data);
     };
 
 
@@ -249,7 +265,7 @@ function Register() {
                             </Grid>
                             {/* Input phone number */}
                             <Grid item xs={12}>
-                                <MuiTelInput
+                                {/*<MuiTelInput
                                     name='phone'
                                     label='Numéro de téléphone'
                                     required
@@ -258,9 +274,25 @@ function Register() {
                                     autoComplete='tel'
                                     continents={['EU']}
                                     defaultCountry='FR'
-                                    value={phoneInput}
-                                    onChange={setPhoneInput}
+                                    value='phone'
+                                    //value={phoneInput}
+                                    //onChange={setPhoneInput}
+                                />*/}
+                                <TextField
+                                    autoComplete='tel'
+                                    name='phone'
+                                    required
+                                    fullWidth
+                                    id='phone'
+                                    label='Numéro de téléphone'
+                                    type='tel'
+                                    /* accept only numbers and symbols + */
+                                    inputProps={{pattern: '[0-9+]*'}}
+                                    helperText='Format : +336XXXXXXXX'
+                                    error={!phone || !phoneFormat}
                                 />
+
+
                                 {/* If phone is empty, display an error message */}
                                 {!phone && (
                                     <Alert severity="error">
@@ -268,11 +300,11 @@ function Register() {
                                     </Alert>
                                 )}
                                 {/* If phone is not empty but format is not correct, display a warning message */}
-                                {/*(phone && !phoneFormat) && (
+                                {(phone && !phoneFormat) && (
                                     <Alert severity="warning">
-                                        Le format du numéro de téléphone doit être 06XXXXXXXX ou +336XXXXXXXX
+                                        Le format du numéro de téléphone doit être +336XXXXXXXX
                                     </Alert>
-                                )*/}
+                                )}
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
@@ -327,7 +359,7 @@ function Register() {
                                 {/* If password is not empty but not strong enough, display a warning message */}
                                 {(password && !strength) && (
                                     <Alert severity="warning">
-                                        Le mot de passe doit contenir au moins 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial parmi : !@#$%^.&*
+                                        Le mot de passe doit contenir au moins 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial parmi : !@:_#$%.^&*
                                     </Alert>
                                 )}
                             </Grid>
