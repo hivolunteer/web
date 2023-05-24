@@ -3,16 +3,18 @@ import './App.scss';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // import Pages
-import Login from './Login/Login';
-import Register from './Register/Register';
+import Home from './pages/Home/Home';
+import RegisterVolunteer from './pages/Authentication/RegisterVolunteer/Register';
+import RegisterAssociation from './pages/Authentication/RegisterAssociation/Register';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/register" element={<RegisterVolunteer />} />
+        <Route path="/register/volunteer" element={<RegisterVolunteer />} />
+        <Route path="/register/association" element={<RegisterAssociation />} />
       </Routes>
     </Router>
   );
