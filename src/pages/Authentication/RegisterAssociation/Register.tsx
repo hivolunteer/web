@@ -201,7 +201,7 @@ function RegisterAssociation() {
                                     label="Nom de l'association"
                                     autoFocus
                                 />
-                                {/* If firstName is empty, display an error message */}
+                                {/* If first_name is empty, display an error message */}
                                 {!name && (
                                     <Alert severity="error">
                                         Le nom de l'association est requis

@@ -14,8 +14,8 @@ function RegisterVolunteer() {
     /* State for password visibility */
     const [showPassword, setShowPassword] = React.useState(false);
     /* State complete for all inputs*/
-    const [firstName, setFirstName] = useState(true);
-    const [lastName, setLastName] = useState(true);
+    const [first_name, setfirst_name] = useState(true);
+    const [last_name, setlast_name] = useState(true);
     const [birthdate, setBirthdate] = useState(true);
     const [phone, setPhone] = useState(true);
     const [email, setEmail] = useState(true);
@@ -63,15 +63,15 @@ function RegisterVolunteer() {
                 setComplete({...complete, [key]: true});
             }
         });*/
-        if (data.get('firstName') === '') {
-            setFirstName(false);
+        if (data.get('first_name') === '') {
+            setfirst_name(false);
         } else {
-            setFirstName(true);
+            setfirst_name(true);
         }
-        if (data.get('lastName') === '') {
-            setLastName(false);
+        if (data.get('last_name') === '') {
+            setlast_name(false);
         } else {
-            setLastName(true);
+            setlast_name(true);
         }
         if (data.get('birthdate') === '') {
             setBirthdate(false);
@@ -154,7 +154,7 @@ function RegisterVolunteer() {
         const user = Object.fromEntries(data.entries());
 
         /* If all inputs are complete, send data */
-        if (user['firstName'] && user['lastName'] && user['birthdate'] && user['phone'] && user['email'] && user['password']) {
+        if (user['first_name'] && user['last_name'] && user['birthdate'] && user['phone'] && user['email'] && user['password']) {
             /* If user is major, password is strong enough, email format is correct and phone format is correct, send data */
             if (checkStrength(user['password'] as string) && checkEmailFormat(user['email'] as string) && checkPhoneFormat(user['phone'] as string)) {
                 /* If user is major, send data */
@@ -178,7 +178,7 @@ function RegisterVolunteer() {
             checkInput(data);
         }
         /* If all states are true, send data */
-        console.log(firstName, lastName, birthdate, phone, email, password, major, strength, emailFormat, phoneFormat);
+        console.log(first_name, last_name, birthdate, phone, email, password, major, strength, emailFormat, phoneFormat);
         sendData(data);
     };
 
@@ -225,15 +225,15 @@ function RegisterVolunteer() {
                             <Grid item xs={12} sm={6}>
                                 <TextField
                                     autoComplete="given-name"
-                                    name="firstName"
+                                    name="first_name"
                                     required
                                     fullWidth
-                                    id="firstName"
+                                    id="first_name"
                                     label="Prénom"
                                     autoFocus
                                 />
-                                {/* If firstName is empty, display an error message */}
-                                {!firstName && (
+                                {/* If first_name is empty, display an error message */}
+                                {!first_name && (
                                     <Alert severity="error">
                                         Le prénom est requis
                                     </Alert>
@@ -242,14 +242,14 @@ function RegisterVolunteer() {
                             <Grid item xs={12} sm={6}>
                                 <TextField
                                     autoComplete='family-name'
-                                    name='lastName'
+                                    name='last_name'
                                     required
                                     fullWidth
-                                    id='lastName'
+                                    id='last_name'
                                     label='Nom'
                                 />
-                                {/* If lastName is empty, display an error message */}
-                                {!lastName && (
+                                {/* If last_name is empty, display an error message */}
+                                {!last_name && (
                                     <Alert severity="error">
                                         Le nom de famille est requis
                                     </Alert>
