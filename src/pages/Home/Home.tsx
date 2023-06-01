@@ -11,8 +11,11 @@ function Home() {
     function handleClickRegisterAssociation() {
         navigate('/register/association');
     }
-    function handleClickLogin() {
-        navigate('/login');
+    function handleClickLoginVolunteer() {
+        navigate('/login/volunteer');
+    }
+    function handleClickLoginAssociation() {
+        navigate('/login/association');
     }
 
     return (
@@ -22,7 +25,9 @@ function Home() {
             <div className='btn-container'>
                 <button className='btn-basic' onClick={handleClickRegisterVolunteer}>Inscription Volontaire</button>
                 <button className='btn-basic' onClick={handleClickRegisterAssociation}>Inscription Association</button>
-                <button className='btn-basic' onClick={handleClickLogin}>Connexion</button>
+                <button className='btn-basic' onClick={handleClickLoginVolunteer}>Connexion Volontaire</button>
+                <button className='btn-basic' onClick={handleClickLoginAssociation}>Connexion Association</button>
+
             </div>
         </div>
     );
