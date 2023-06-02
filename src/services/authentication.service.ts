@@ -6,9 +6,10 @@ export class AuthenticationService {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(user)
         });
-        const data = response.json();
-        localStorage.setItem("auth", await data);
-        console.log("token: " + localStorage.getItem("auth"));
+        const data : any = response.json();
+        //get token from data to locql storage
+        console.log(data);
+        localStorage.setItem("token", await data.token);
         return response.status;
     }
 
@@ -31,9 +32,8 @@ export class AuthenticationService {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(user)
         });
-        const data = response.json();
-        localStorage.setItem("auth", await data);
-        console.log("token: " + localStorage.getItem("auth"));
+        const data : any = response.json();
+        localStorage.setItem("token", await data.token);
         return data;
     }
 
