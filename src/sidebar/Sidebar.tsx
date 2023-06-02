@@ -12,6 +12,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import { ReactComponent as Logo } from "../logo/bee_white.svg";
 
 const pages = ['Accueil', 'Calendrier', 'Profile'];
 const settings = ['Profile', 'Logout'];
@@ -94,7 +95,7 @@ function ResponsiveAppBar() {
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <Logo />
           <Typography
             variant="h5"
             noWrap
