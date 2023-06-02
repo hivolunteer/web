@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.scss';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Sidebar from './sidebar/Sidebar';
 
 // import Pages
 import Profile from './Profile/Profile';
@@ -13,6 +14,7 @@ import LoginAssociation from './pages/Authentication/LoginAssociation/Login';
 function App() {
   return (
     <Router>
+      <Sidebar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/volunteers/profile" element={<Profile />} />
