@@ -95,7 +95,7 @@ function ResponsiveAppBar() {
               ))}
             </Menu>
           </Box>
-          <Logo />
+          {/* <Logo /> */}
           <Typography
             variant="h5"
             noWrap

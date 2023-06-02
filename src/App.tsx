@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Sidebar from './sidebar/Sidebar';
 
 // import Pages
-import Profile from './Profile/Profile';
+import Profile from './pages/Profile/Profile';
 import Home from './pages/Home/Home';
 import RegisterVolunteer from './pages/Authentication/RegisterVolunteer/Register';
 import RegisterAssociation from './pages/Authentication/RegisterAssociation/Register';
