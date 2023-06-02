@@ -88,7 +88,7 @@ function LoginVolunteer() {
         switch (response_status) {
             case 200:
                 alert('Connexion réussie');
-                navigate('/');
+                /*navigate('/volunteers/profile');*/
                 break;
             case 401:
                 alert('Connexion échouée');
@@ -109,9 +109,15 @@ function LoginVolunteer() {
             /* If user is major, password is strong enough, email format is correct and phone format is correct, send data */
             if (checkEmailFormat(user['email'] as string)) {
                 // call LoginVolunteer service
-                const response_status = AuthenticationService.loginVolunteers(user);
-                console.log(response_status);
-                responseExecute(await response_status);
+                const response = fetch('/volunteers/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(user)
+                }).then((res) => {
+                    (res.status === 200) ? res.json().then(data => {
+                        localStorage.setItem('token', data.token)
+                    }) : console.log(res)
+                })
             }
         }
     };

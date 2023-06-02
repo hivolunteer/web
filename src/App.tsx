@@ -14,8 +14,8 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/profile" element={<Profile />} />
         <Route path="/" element={<Home />} />
+        <Route path="/volunteers/profile" element={<Profile />} />
         <Route path="/register" element={<RegisterVolunteer />} />
         <Route path="/register/volunteer" element={<RegisterVolunteer />} />
         <Route path="/register/association" element={<RegisterAssociation />} />

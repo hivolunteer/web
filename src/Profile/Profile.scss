@@ -1,7 +1,9 @@
 @import '../../assets/scss/_colors';
 @import '../../assets/scss/_fonts';
 
-@import 'material-symbols';
+.input {
+  display: none;
+}
 
 .profile-container {
   padding: 2rem;

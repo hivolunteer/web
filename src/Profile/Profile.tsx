@@ -1,10 +1,8 @@
-import 'material-symbols';
 import "./Profile.scss";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import { AsyncLocalStorage } from 'async_hooks';
-import { Sidebar } from '../Sidebar/Sidebar';
 
 const src_img = require('../Images/logo192.png');
 
@@ -33,6 +31,7 @@ function ProfilePage(props: any) {
   const [profile_picture, setProfilePicture] = useState<string>(src_img);
 
   useEffect(() => {
+    console.log(localStorage)
     const getProfile = () => {
       let url = 'http://localhost:8000/volunteers/profile';
       fetch(url, {
@@ -53,6 +52,7 @@ function ProfilePage(props: any) {
           });
         } else {
           console.log('Error fetching profile');
+          console.log(response)
         }
       })
       .catch((error) => {
@@ -106,15 +106,15 @@ function ProfilePage(props: any) {
   //   }
   };
   
-  const updateProfile = () => {
-    if (!validateEmail(email)) {
-      console.error('Invalid email');
-      return;
+    const updateProfile = () => {
+      if (!validateEmail(email)) {
+        console.error('Invalid email');
+        return;
     }
-    if (!validatePhone(phone)) {
-      console.error('Invalid phone number');
-      return;
-    }
+    // if (!validatePhone(phone)) {
+    //   console.error('Invalid phone number');
+    //   return;
+    // }
     console.log(first_name, last_name, email, phone, profile_picture);
     let profile: newProfile = {
       first_name: first_name,
@@ -172,7 +172,7 @@ function ProfilePage(props: any) {
                     <label htmlFor="profile-pic-upload" className="profile-pic-btn">
                         Changer la Photo
                     </label>
-                    <input id="profile-pic-upload" type="file" onChange={handleFileChange} accept="image/*" style={{ display: 'none' }} />
+                    <input className='input' id="profile-pic-upload" type="file" onChange={handleFileChange} accept="image/*"/> 
                 </div>
             </Col>
             <Col sm={12} md={8} lg={9}>
