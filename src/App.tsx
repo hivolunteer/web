@@ -7,6 +7,7 @@ import Sidebar from "./sidebar/Sidebar";
 // import Pages
 import Profile from "./pages/Profile/Profile";
 import Home from "./pages/Home/Home";
+import UserTypeChoice from "./pages/userTypeChoice/userTypeChoice";
 import RegisterVolunteer from "./pages/Authentication/RegisterVolunteer/Register";
 import RegisterAssociation from "./pages/Authentication/RegisterAssociation/Register";
 import LoginVolunteer from "./pages/Authentication/LoginVolunteer/Login";
