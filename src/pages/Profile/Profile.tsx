@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import { AsyncLocalStorage } from 'async_hooks';
 
-const src_img = require('../Images/logo192.png');
+const src_img = require('../../images/titleLogo.png');
 
 type newProfile = {
   first_name: string,

@@ -13,28 +13,33 @@
 }
 
 .entreprise {
-  width: 50%;
+  width: 40%;
   margin-right: auto !important;
   margin-left: 0 !important;
   display:block !important;
-  background-color: #67a191 !important;
+  background-color: rgba(162, 197, 106, 0.86) !important;
 }
 
 .association {
-  width: 100%;
+  width: 80%;
   margin-right: 0 !important;
   margin-left:auto !important;
   display:block !important;
   margin-top: 0.4rem;
+  background-color: rgba(106, 153, 197, 0.86) !important;
 }
 
 .benevole {
-  width: 50%;
+  width: 40%;
   margin-right: auto !important;
   margin-left: 0 !important;
   display:block !important;
+  background-color: rgba(168, 138, 199, 0.86) !important;
 }
 
 .titleLogo {
-
+  width: 100% !important;
+  height: 100% !important;
+  display: inline-block;
+  vertical-align: middle;
 }

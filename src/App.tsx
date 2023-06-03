@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.scss';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import UserTypeChoice from "./pages/userTypeChoice/userTypeChoice";
 import Sidebar from './sidebar/Sidebar';
 
 // import Pages
@@ -16,7 +17,8 @@ function App() {
     <Router>
       <Sidebar />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<UserTypeChoice />} />
+        {/* <Route path="/" element={<Home />} /> */}
         <Route path="/volunteers/profile" element={<Profile />} />
         <Route path="/register" element={<RegisterVolunteer />} />
         <Route path="/register/volunteer" element={<RegisterVolunteer />} />
