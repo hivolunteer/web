@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Alert, Box, Button, Container, CssBaseline, Grid, IconButton, InputAdornment, Link, TextField, ThemeProvider, Typography, createTheme } from '@mui/material';
 import './Login.scss';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { MuiTelInput } from 'mui-tel-input';
 import { AuthenticationService } from '../../../services/authentication.service';
 import { useNavigate } from 'react-router-dom';
 
@@ -88,7 +87,7 @@ function LoginVolunteer() {
         switch (response_status) {
             case 200:
                 alert('Connexion réussie');
-                /*navigate('/volunteers/profile');*/
+                navigate('/volunteers/profile');
                 break;
             case 401:
                 alert('Connexion échouée');
@@ -109,15 +108,8 @@ function LoginVolunteer() {
             /* If user is major, password is strong enough, email format is correct and phone format is correct, send data */
             if (checkEmailFormat(user['email'] as string)) {
                 // call LoginVolunteer service
-                const response = fetch('/volunteers/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(user)
-                }).then((res) => {
-                    (res.status === 200) ? res.json().then(data => {
-                        localStorage.setItem('token', data.token)
-                    }) : console.log(res)
-                })
+                const response_status = AuthenticationService.loginVolunteers(user);
+                responseExecute(await response_status);
             }
         }
     };

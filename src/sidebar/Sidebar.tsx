@@ -11,7 +11,9 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import { Link, useNavigate } from 'react-router-dom';
 import { ReactComponent as Logo } from "../logo/bee_white.svg";
+import logoImage from '../logo/bee_yb.png';
 
 const pages = ['Accueil', 'Calendrier', 'Profile'];
 const settings = ['Profile', 'Logout'];
@@ -19,6 +21,7 @@ const settings = ['Profile', 'Logout'];
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const navigate = useNavigate();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -116,6 +119,8 @@ function ResponsiveAppBar() {
             {pages.map((page) => (
               <Button
                 key={page}
+                component={Link}
+                to={`volunteers/${page.toLowerCase()}`}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
@@ -127,7 +132,7 @@ function ResponsiveAppBar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="User" src="../logo.svg" />
+                <Avatar alt="User" src={ logoImage } />
               </IconButton>
             </Tooltip>
             <Menu
@@ -148,7 +153,18 @@ function ResponsiveAppBar() {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                  <Typography
+                    textAlign="center"
+                    component={Link}
+                    to={setting === 'Profile' ? '/volunteers/profile' : '/'}
+                    onClick={() => {
+                      handleCloseUserMenu();
+                      navigate(setting === 'Profile' ? '/volunteers/profile' : '/');
+                    }}
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                    >
+                      {setting}
+                    </Typography>
                 </MenuItem>
               ))}
             </Menu>

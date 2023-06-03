@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Alert, Box, Button, Container, CssBaseline, Grid, IconButton, InputAdornment, Link, TextField, ThemeProvider, Typography, createTheme } from '@mui/material';
 import './Login.scss';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { MuiTelInput } from 'mui-tel-input';
 import { AuthenticationService } from '../../../services/authentication.service';
 import { useNavigate } from 'react-router-dom';
 
@@ -97,7 +96,6 @@ function LoginAssociation() {
             if (checkEmailFormat(user['email'] as string)) {
                 // call LoginAssociation service
                 const response_status = AuthenticationService.loginAssociations(user);
-                console.log(response_status);
                 responseExecute(await response_status);
             }
         }
