@@ -11,7 +11,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
 import { ReactComponent as Logo } from "../logo/bee_white.svg";
 
 const pages = ['Accueil', 'Calendrier', 'Profile'];
@@ -37,10 +36,10 @@ function ResponsiveAppBar() {
   };
 
   return (
-    <AppBar position="static" background-color="#F5F5F5">
+    <AppBar position="static" background-color="#F5F5F5" style={{ background: '#598b7d' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <Logo style={{ width: '50px', height: '50px' }} />
           <Typography
             variant="h6"
             noWrap
@@ -89,13 +88,12 @@ function ResponsiveAppBar() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                <MenuItem key={page} onClick={() => {console.log('hd')}}>
+                  {page}
                 </MenuItem>
               ))}
             </Menu>
           </Box>
-          {/* <Logo /> */}
           <Typography
             variant="h5"
             noWrap
