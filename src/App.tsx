@@ -3,6 +3,7 @@ import './App.scss';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import UserTypeChoice from "./pages/userTypeChoice/userTypeChoice";
 import Sidebar from './sidebar/Sidebar';
+import 'moment/locale/fr';
 
 // import Pages
 import Profile from './pages/Profile/Profile';
