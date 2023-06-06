@@ -55,7 +55,7 @@ export default function MissionCreation() {
                             label="Date de début"
                             format="DD/MM/YYYY HH:mm"
                             value={moment.utc().local()}
-                            onChange={(date) => {
+                            onChange={(date: any) => {
                                 console.log(date);
                             }}
                         />
