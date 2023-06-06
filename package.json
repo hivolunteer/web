@@ -15,6 +15,9 @@
     "@types/node": "^16.18.23",
     "@types/react": "^18.0.37",
     "@types/react-dom": "^18.0.11",
+    "binary-extensions": "^2.2.0",
+    "moment": "^2.29.4",
+    "mui-tel-input": "^3.1.3",
     "bootstrap": "^5.2.3",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.4",
@@ -24,7 +27,9 @@
     "react-scripts": "5.0.1",
     "sass": "^1.62.0",
     "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "@react-buddy/ide-toolbox": "^2.3.1",
+    "@react-buddy/palette-mui": "^5.0.1"
   },
   "proxy": "http://localhost:8000",
   "scripts": {
