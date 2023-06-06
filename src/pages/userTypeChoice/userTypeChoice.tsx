@@ -1,27 +1,24 @@
 import React from "react";
+import Button from '@mui/material/Button';
 import "./userTypeChoice.scss";
 import {Link} from "react-router-dom";
 import Switch from "@mui/material/Switch";
 import {Grid} from "@mui/material";
 import titleLogo from "../../images/titleLogo.png";
+import { useNavigate } from "react-router-dom";
+
 const UserTypeChoice = () => {
-    const [associationRegisterStatus, setAssociationRegisterStatus] = React.useState("/register/association");
-    const [volunteerRegisterStatus, setVolunteerRegisterStatus] = React.useState("/register/volunteer");
-    const [companyRegisterStatus, setCompanyRegisterStatus] = React.useState("/register");
+    const navigation = useNavigate();
 
     const [checked, setChecked] = React.useState(true);
+    let isVolunteer: boolean = false;
 
-    React.useEffect(() => {
-        if (checked) {
-            setAssociationRegisterStatus("/login/association");
-            setVolunteerRegisterStatus("/login/volunteer");
-            setCompanyRegisterStatus("/login");
-        } else {
-            setAssociationRegisterStatus("/register/association");
-            setVolunteerRegisterStatus("/register/volunteer");
-            setCompanyRegisterStatus("/register");
-        }
-    });
+    const goToPage = () => {
+        let to_go: string = (checked) ? "/login" : "/register";
+        to_go += (isVolunteer) ? "/volunteer" : "/association";
+        navigation(to_go);
+    } 
+
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setChecked(event.target.checked);
     };
@@ -47,9 +44,16 @@ const UserTypeChoice = () => {
             </div>
             <div className="row">
                 <div className="col-12">
-                    <Link to={companyRegisterStatus} style={{textDecoration: "none"}}>
-                        <button className="btn entreprise btn-lg">Entreprise</button>
-                    </Link>
+                    <Button 
+                        variant="contained" 
+                        className="btn btn-lg entreprise" 
+                        onClick={() => {
+                            isVolunteer = true;
+                            goToPage()
+                        }}
+                    >
+                        Entreprise
+                    </Button>
                 </div>
             </div>
             <div className="row">
@@ -57,19 +61,30 @@ const UserTypeChoice = () => {
                     <img className="titleLogo" src={titleLogo} alt=""/>
                 </div>
                 <div className="col-6">
-                    <Link
-                        to={associationRegisterStatus}
-                        style={{textDecoration: "none"}}
+                    <Button 
+                        variant="contained" 
+                        className="btn association btn-lg" 
+                        onClick={() => {
+                            isVolunteer = false;
+                            goToPage()
+                        }}
                     >
-                        <button className="btn association btn-lg">Association</button>
-                    </Link>
+                        Association
+                    </Button>
                 </div>
             </div>
             <div className="row">
                 <div className="col-12">
-                    <Link to={volunteerRegisterStatus} style={{textDecoration: "none"}}>
-                        <button className="btn benevole btn-lg">Bénévole</button>
-                    </Link>
+                    <Button 
+                        variant="contained" 
+                        className="btn benevole btn-lg" 
+                        onClick={() => {
+                            isVolunteer = true;
+                            goToPage()
+                        }}
+                    >
+                        Bénévole
+                    </Button>
                 </div>
             </div>
         </div>
