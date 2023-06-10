@@ -109,3 +109,8 @@ package-lock.json
 # Temporary file
 *.tmp
 tmp/
+
+# WebStorm files
+
+.idea
+*.DS_Store

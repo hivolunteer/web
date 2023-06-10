@@ -17,12 +17,14 @@
     "@types/react": "^18.0.37",
     "@types/react-dom": "^18.0.11",
     "binary-extensions": "^2.2.0",
+    "lottie-react": "^2.4.0",
     "moment": "^2.29.4",
+    "mui-address-autocomplete": "^3.0.4",
+    "mui-image": "^1.0.7",
     "mui-tel-input": "^3.1.3",
-    "bootstrap": "^5.2.3",
-    "react": "^18.2.0",
+    "react": "^17.0.0 || ^18.0.0",
     "react-bootstrap": "^2.7.4",
-    "react-dom": "^18.2.0",
+    "react-dom": "^17.0.0 || ^18.0.0",
     "react-hook-form": "^7.43.9",
     "react-phone-input-material-ui": "^2.18.1",
     "react-scripts": "5.0.1",
@@ -36,7 +38,6 @@
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0"
   },
-
   "proxy": "http://localhost:8000",
   "scripts": {
     "start": "react-scripts start",
@@ -63,6 +64,7 @@
     ]
   },
   "devDependencies": {
-    "react-router-dom": "^6.11.2"
+    "react-router-dom": "^6.11.2",
+    "@types/mui-image": "^1.0.1"
   }
 }
