@@ -5,7 +5,7 @@ import 'moment/locale/de';
 import {DateTimePicker, TimePicker} from "@mui/x-date-pickers";
 import moment from "moment";
 import Lottie from "lottie-react";
-import noImage from "../../Images/lottie/noImage.json";
+import noImage from "../../images/lottie/noImage.json";
 import AddressAutocomplete, {AddressAutocompleteValue} from 'mui-address-autocomplete';
 import {AuthenticationService} from "../../services/authentication.service";
 
