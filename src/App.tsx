@@ -31,7 +31,7 @@ function Routing() {
   const shouldRenderAppBar = !location.pathname.includes('login') && !location.pathname.includes('register') && location.pathname !== '/';
   return (
     <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="fr">
-      <>
+      {/* <ResponsiveAppBar /> */}
         {shouldRenderAppBar && <ResponsiveAppBar />}
         <Routes>
           <Route path="/" element={<UserTypeChoice />} />
@@ -46,7 +46,6 @@ function Routing() {
           <Route path="/association/missionCreation" element={<MissionCreation />} />
           <Route path="*" element={<h1> Error 404 </h1>} />
         </Routes>
-      </>
     </LocalizationProvider>
   );
 }

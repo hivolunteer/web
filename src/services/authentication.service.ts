@@ -6,10 +6,9 @@ export class AuthenticationService {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(user)
         });
-        const data : any = response.json();
-        //get token from data to local storage
-        console.log(data);
-        localStorage.setItem("token", await data.token);
+        response.json().then((data) => {
+            localStorage.setItem('token', data.token)
+        })
         return response.status;
     }
 

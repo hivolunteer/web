@@ -4,7 +4,7 @@ import "./userTypeChoice.scss";
 import {Link} from "react-router-dom";
 import Switch from "@mui/material/Switch";
 import {Grid} from "@mui/material";
-import titleLogo from "../../images/titleLogo.png";
+import titleLogo from "../../Images/titleLogo.png";
 import { useNavigate } from "react-router-dom";
 
 const UserTypeChoice = () => {

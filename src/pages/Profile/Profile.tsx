@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import { AsyncLocalStorage } from 'async_hooks';
 
-const src_img = require('../../images/titleLogo.png');
+const src_img = require('../../Images/titleLogo.png');
 
 type newProfile = {
   first_name: string,
@@ -39,11 +39,12 @@ function ProfilePage(props: any) {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+        },
       })
       .then((response) => {
         if (response.status === 200) {
           response.json().then((data) => {
+            console.log(data)
             setFirstName(data.volunteer.first_name);
             setLastName(data.volunteer.last_name);
             setEmail(data.volunteer.email);

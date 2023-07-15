@@ -5,7 +5,7 @@ import 'moment/locale/de';
 import {DateTimePicker, TimePicker} from "@mui/x-date-pickers";
 import moment from "moment";
 import Lottie from "lottie-react";
-import noImage from "../../images/lottie/noImage.json";
+// import noImage from "../../images/lottie/noImage.json";
 import AddressAutocomplete, {AddressAutocompleteValue} from 'mui-address-autocomplete';
 import {AuthenticationService} from "../../services/authentication.service";
 
@@ -21,9 +21,9 @@ interface MissionCreation {
     missionSkills: string;
 }
 
-const noImageComponent = () => {
-    return <><p>Vous n'avez pas encore choisi de photo</p><Lottie animationData={noImage}/></>;
-}
+// const noImageComponent = () => {
+//     return <><p>Vous n'avez pas encore choisi de photo</p><Lottie animationData={noImage}/></>;
+// }
 
 const isNumberKey = (evt: KeyboardEvent | any) => {
     const charCode = (evt.which) ? evt.which : evt.keyCode;
@@ -103,7 +103,7 @@ export default function MissionCreation() {
                 <p>Remplissez le formulaire ci-dessous pour créer une mission</p>
 
 
-                {!image ? noImageComponent() : <Image src={image} height="20%" width="20%" fit="contain" showLoading={true} shiftDuration={100} errorIcon={true} style={{marginBottom: '10%'}}/>}
+                {/* {!image ? noImageComponent() : <Image src={image} height="20%" width="20%" fit="contain" showLoading={true} shiftDuration={100} errorIcon={true} style={{marginBottom: '10%'}}/>} */}
                 <label htmlFor="upload-photo">
                     <input
                         style={{ display: 'none' }}
