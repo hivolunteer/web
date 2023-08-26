@@ -6,16 +6,16 @@ function Home() {
     const navigate = useNavigate();
 
     function handleClickRegisterVolunteer() {
-        navigate('/register/volunteer');
+        navigate('/register');
     }
     function handleClickRegisterAssociation() {
-        navigate('/register/association');
+        navigate('/register');
     }
     function handleClickLoginVolunteer() {
-        navigate('/login/volunteer');
+        navigate('/login');
     }
     function handleClickLoginAssociation() {
-        navigate('/login/association');
+        navigate('/login');
     }
 
     return (

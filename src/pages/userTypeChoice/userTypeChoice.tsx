@@ -14,8 +14,8 @@ const UserTypeChoice = () => {
     let isVolunteer: boolean = false;
 
     const goToPage = () => {
-        let to_go: string = (checked) ? "/login" : "/register";
-        to_go += (isVolunteer) ? "/volunteer" : "/association";
+        let to_go: string = (isVolunteer) ? "/volunteers" : "/associations"
+        to_go += (checked) ? "/login" : "/register";
         navigation(to_go);
     } 
 

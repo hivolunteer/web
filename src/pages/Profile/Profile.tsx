@@ -33,7 +33,7 @@ function ProfilePage(props: any) {
   useEffect(() => {
     console.log(localStorage)
     const getProfile = () => {
-      let url = 'http://localhost:8000/volunteers/profile';
+      let url = 'http://localhost:8000/profile';
       fetch(url, {
         method: 'GET',
         headers: {
@@ -125,7 +125,7 @@ function ProfilePage(props: any) {
       profile_picture: profile_picture,
     }
 
-    let url = 'http://localhost:8000/volunteers/update';
+    let url = 'http://localhost:8000/update';
     fetch(url, {
       method: 'POST',
       headers: {
@@ -158,7 +158,7 @@ function ProfilePage(props: any) {
             console.log('Error deleting account');
           }
         })
-        .catch((error) => {
+        .catch((error) => 
           console.log(error);
         });
     } */

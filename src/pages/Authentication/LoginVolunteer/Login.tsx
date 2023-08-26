@@ -87,7 +87,8 @@ function LoginVolunteer() {
         switch (response_status) {
             case 200:
                 alert('Connexion réussie');
-                navigate('/volunteers/profile');
+                navigate('/');
+                window.location.reload();
                 break;
             case 401:
                 alert('Connexion échouée');
@@ -260,7 +261,7 @@ function LoginVolunteer() {
                         </Button>
                         <Grid container justifyContent='flex-end'>
                             <Grid item>
-                                <Link href='/register/volunteer' variant='body2'>
+                                <Link href='/register' variant='body2'>
                                     Vous n'avez pas de compte ? Inscrivez-vous
                                 </Link>
                             </Grid>

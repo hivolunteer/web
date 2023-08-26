@@ -75,6 +75,7 @@ function LoginAssociation() {
             case 200:
                 alert('Connexion réussie');
                 navigate('/');
+                window.location.reload();
                 break;
             case 401:
                 alert('Connexion échouée');
@@ -113,7 +114,48 @@ function LoginAssociation() {
         }
         /* If all states are true, send data */
         console.log(email, password, emailFormat);
-        sendData(data);<Box component="form" noValidate onSubmit={handleSubmit} sx={{mt: 3}}>
+        sendData(data);
+    };
+
+
+    function handleClick(): void {
+        setShowPassword(!showPassword);
+    }
+
+    return (
+        <ThemeProvider theme={theme}>
+            <Container
+                component="main"
+                maxWidth="xs"
+                sx={{
+                    backgroundColor: (theme) =>
+                        theme.palette.mode === 'light'
+                            ? theme.palette.grey[50]
+                            : theme.palette.grey[900],
+                    borderRadius: 8,
+                    borderColor: (theme) =>
+                        theme.palette.mode === 'light'
+                            ? theme.palette.grey[100]
+                            : theme.palette.grey[800],
+                    boxShadow: (theme) =>
+                        theme.palette.mode === 'light'
+                            ? theme.shadows[1]
+                            : 'none',
+                }}
+                >
+                <CssBaseline />
+                <Box
+                    sx={{
+                      marginTop: 8,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                    }}
+                >
+                    <Typography component="h1" variant="h5">
+                        Connexion Association
+                    </Typography>
+                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{mt: 3}}>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <TextField
@@ -181,65 +223,24 @@ function LoginAssociation() {
                             Un mot de passe est requis
                         </Alert>
                     )}
-                </Grid>
-            </Grid>
-            <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-            >
-                Connexion
-            </Button>
-            <Grid container justifyContent='flex-end'>
-                <Grid item>
-                    <Link href='/login/association' variant='body2'>
-                        Vous n'avez pas de compte ? Inscrivez-vous
-                    </Link>
-                </Grid>
-            </Grid>
-        </Box>
-    };
-
-
-    function handleClick(): void {
-        setShowPassword(!showPassword);
-    }
-
-    return (
-        <ThemeProvider theme={theme}>
-            <Container
-                component="main"
-                maxWidth="xs"
-                sx={{
-                    backgroundColor: (theme) =>
-                        theme.palette.mode === 'light'
-                            ? theme.palette.grey[50]
-                            : theme.palette.grey[900],
-                    borderRadius: 8,
-                    borderColor: (theme) =>
-                        theme.palette.mode === 'light'
-                            ? theme.palette.grey[100]
-                            : theme.palette.grey[800],
-                    boxShadow: (theme) =>
-                        theme.palette.mode === 'light'
-                            ? theme.shadows[1]
-                            : 'none',
-                }}
-                >
-                <CssBaseline />
-                <Box
-                    sx={{
-                      marginTop: 8,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                    }}
-                >
-                    <Typography component="h1" variant="h5">
-                        Connexion Association
-                    </Typography>
-
+                    </Grid>
+                    </Grid>
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2 }}
+                    >
+                        Connexion
+                    </Button>
+                    <Grid container justifyContent='flex-end'>
+                        <Grid item>
+                            <Link href='/login' variant='body2'>
+                                Vous n'avez pas de compte ? Inscrivez-vous
+                            </Link>
+                        </Grid>
+                    </Grid>
+                </Box>
                 </Box>
             </Container>
         </ThemeProvider>

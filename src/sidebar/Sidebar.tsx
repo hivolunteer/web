@@ -120,7 +120,7 @@ function ResponsiveAppBar() {
               <Button
                 key={page}
                 component={Link}
-                to={`volunteers/${page.toLowerCase()}`}
+                to={`/${page.toLowerCase()}`}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
@@ -156,10 +156,21 @@ function ResponsiveAppBar() {
                   <Typography
                     textAlign="center"
                     component={Link}
-                    to={setting === 'Profile' ? '/volunteers/profile' : '/'}
+                    to={setting === 'Profile' ? '/profile' : '/'}
                     onClick={() => {
                       handleCloseUserMenu();
-                      navigate(setting === 'Profile' ? '/volunteers/profile' : '/');
+                      switch (setting) {
+                        case 'Profile':
+                          navigate('/profile');
+                          break;
+                        case 'Logout':
+                          console.log('logout'); 
+                          localStorage.removeItem('token');
+                          window.location.reload();
+                          break;
+                        default:
+                          break;
+                      }
                     }}
                     style={{ textDecoration: 'none', color: 'inherit' }}
                     >
