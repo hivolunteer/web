@@ -74,6 +74,7 @@ function LoginAssociation() {
         switch (response_status) {
             case 200:
                 alert('Connexion réussie');
+                localStorage.setItem('role', 'association')
                 navigate('/');
                 window.location.reload();
                 break;
@@ -97,6 +98,7 @@ function LoginAssociation() {
             if (checkEmailFormat(user['email'] as string)) {
                 // call LoginAssociation service
                 const response_status = AuthenticationService.loginAssociations(user);
+                console.log(response_status)
                 responseExecute(await response_status);
             }
         }

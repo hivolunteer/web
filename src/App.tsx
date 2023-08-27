@@ -27,35 +27,15 @@ function NoConnectRouter() {
 
 function ConnectRouter() {
 
-  function amIAssociation() : boolean {
-    fetch('http://localhost:8000/auth/', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + localStorage.getItem('token')
-      }
-    }).then(response => {
-      if (response.status === 200) {
-        response.json().then(data => {
-          console.log(data)
-          return data.answer
-      })} else {
-        return false
-      }
-    })
-    return false
-  }
-
   return(
     <Router>
       <ResponsiveAppBar />
       <Routes>
         {
-          amIAssociation() ? (
-              <Route path="/*" element={<VolunteerRouterConnected />} />
-          ) : (
-              <Route path="/*" element={<AssociationRouterConnected />} />
-          )
+          localStorage.getItem('role') === 'volunteer' ?
+            <Route path="/*" element={<VolunteerRouterConnected />} />
+            :
+            <Route path="/*" element={<AssociationRouterConnected />} />
         }
       </Routes>
     </Router>

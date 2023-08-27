@@ -165,7 +165,9 @@ function ResponsiveAppBar() {
                           break;
                         case 'Logout':
                           console.log('logout'); 
+                          window.location.href = '/';
                           localStorage.removeItem('token');
+                          localStorage.removeItem('role');
                           window.location.reload();
                           break;
                         default:

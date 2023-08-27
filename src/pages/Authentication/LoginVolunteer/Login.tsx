@@ -87,6 +87,7 @@ function LoginVolunteer() {
         switch (response_status) {
             case 200:
                 alert('Connexion réussie');
+                localStorage.setItem('role', 'volunteer')
                 navigate('/');
                 window.location.reload();
                 break;

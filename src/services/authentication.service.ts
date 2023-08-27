@@ -18,9 +18,10 @@ export class AuthenticationService {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(user)
         });
-        const data = response.json();
-        localStorage.setItem("auth", await data);
-        console.log("token: " + localStorage.getItem("auth"));
+        response.json().then((data) => {
+            localStorage.setItem('token', data.token)
+        })
+        console.log("token: " + localStorage.getItem("token"));
         return response.status;
     }
 
@@ -31,9 +32,10 @@ export class AuthenticationService {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(user)
         });
-        const data : any = response.json();
-        localStorage.setItem("token", await data.token);
-        return data;
+        response.json().then((data) => {
+            localStorage.setItem('token', data.token)
+        })
+        return response.status;
     }
 
     static async registerAssociations(user: { [k: string]: FormDataEntryValue; }) {
@@ -43,9 +45,9 @@ export class AuthenticationService {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(user)
         });
-        const data = response.json();
-        localStorage.setItem("auth", await data);
-        console.log("token: " + localStorage.getItem("auth"));
-        return data;
+        response.json().then((data) => {
+            localStorage.setItem('token', data.token)
+        })
+        return response.status;
     }
 }
