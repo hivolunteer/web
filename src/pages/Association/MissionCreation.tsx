@@ -1,11 +1,8 @@
 import {Box, Button, Grid, Link, TextField} from "@mui/material";
 import React from "react";
-import {Image} from 'mui-image'
 import 'moment/locale/de';
 import {DateTimePicker, TimePicker} from "@mui/x-date-pickers";
 import moment from "moment";
-import Lottie from "lottie-react";
-// import noImage from "../../images/lottie/noImage.json";
 import AddressAutocomplete, {AddressAutocompleteValue} from 'mui-address-autocomplete';
 import {AuthenticationService} from "../../services/authentication.service";
 
@@ -106,7 +103,7 @@ export default function MissionCreation() {
                 {/* {!image ? noImageComponent() : <Image src={image} height="20%" width="20%" fit="contain" showLoading={true} shiftDuration={100} errorIcon={true} style={{marginBottom: '10%'}}/>} */}
                 <label htmlFor="upload-photo">
                     <input
-                        style={{ display: 'none' }}
+                        className="upload"
                         id="upload-photo"
                         name="upload-photo"
                         type="file"

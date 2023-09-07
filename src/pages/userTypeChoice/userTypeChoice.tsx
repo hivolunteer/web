@@ -1,9 +1,7 @@
 import React from "react";
 import Button from '@mui/material/Button';
 import "./userTypeChoice.scss";
-import {Link} from "react-router-dom";
-import Switch from "@mui/material/Switch";
-import {Grid} from "@mui/material";
+import Box from "@mui/material/Box";
 import titleLogo from "../../Images/titleLogo.png";
 import { useNavigate } from "react-router-dom";
 
@@ -15,9 +13,11 @@ const UserTypeChoice = () => {
 
     const goToPage = () => {
         let to_go: string = (isVolunteer) ? "/volunteers" : "/associations"
-        to_go += (checked) ? "/login" : "/register";
+        to_go += (subType === "Inscription") ? "/login" : "/register";
         navigation(to_go);
-    } 
+    };
+
+    const [subType, setSubType] = React.useState("Inscription");
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setChecked(event.target.checked);
@@ -28,25 +28,40 @@ const UserTypeChoice = () => {
             <div className="row">
                 <h1 className="title">Qui êtes vous ?</h1>
             </div>
-
-            <div className="row">
-                <Grid component="label" container alignItems="center" spacing={1}>
-                    <Grid item>Inscription</Grid>
-                    <Grid item>
-                        <Switch
-                            checked={checked} // relevant state for your case
-                            onChange={handleChange} // relevant method to handle your change
-                            value="checked" // some value you need
-                        />
-                    </Grid>
-                    <Grid item>Connexion</Grid>
-                </Grid>
-            </div>
+            <Box sx={{ display: "flex" }}>
+                <Box className="mask-box">
+                    <Box
+                      className="mask"
+                      style={{
+                        transform: `translateX(${subType === "Inscription" ? 0 : "200px"})`
+                      }}
+                    />
+                    <Button
+                      disableRipple
+                      variant="text"
+                      sx={{ color: subType === "Inscription" ? "#ffffff" : "#5316AE" }}
+                      onClick={() => setSubType("Inscription")}
+                      onChange={() => handleChange}
+                    >
+                      Inscription
+                    </Button>
+                    <Button
+                      disableRipple
+                      variant="text"
+                      sx={{ color: subType === "Connexion" ? "#ffffff" : "#5316AE" }}
+                      onClick={() => setSubType("Connexion")}
+                      onChange={() => handleChange}
+                      value="checked"
+                    >
+                      Connexion
+                    </Button>
+                </Box>
+            </Box>
             <div className="row">
                 <div className="col-12">
                     <Button 
                         variant="contained" 
-                        className="btn btn-lg entreprise" 
+                        className="btn btn-lg enterprise" 
                         onClick={() => {
                             isVolunteer = true;
                             goToPage()
@@ -77,7 +92,7 @@ const UserTypeChoice = () => {
                 <div className="col-12">
                     <Button 
                         variant="contained" 
-                        className="btn benevole btn-lg" 
+                        className="btn volunteer btn-lg" 
                         onClick={() => {
                             isVolunteer = true;
                             goToPage()

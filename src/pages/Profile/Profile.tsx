@@ -2,7 +2,6 @@ import "./Profile.scss";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
-import { AsyncLocalStorage } from 'async_hooks';
 
 const src_img = require('../../Images/titleLogo.png');
 
@@ -15,15 +14,6 @@ type newProfile = {
 }
 
 function ProfilePage(props: any) {
-  let navigation = useNavigate();
-
-  useEffect(() => {
-    document.body.classList.add('auth');
-    return () => {
-      document.body.classList.remove('auth');
-    }
-  }, []);
-
   const [first_name, setFirstName] = useState<string>("");
   const [last_name, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -33,7 +23,7 @@ function ProfilePage(props: any) {
   useEffect(() => {
     console.log(localStorage)
     const getProfile = () => {
-      let url = 'http://localhost:8000/profile';
+      let url = 'http://localhost:8000/volunteers/profile';
       fetch(url, {
         method: 'GET',
         headers: {
@@ -44,7 +34,6 @@ function ProfilePage(props: any) {
       .then((response) => {
         if (response.status === 200) {
           response.json().then((data) => {
-            console.log(data)
             setFirstName(data.volunteer.first_name);
             setLastName(data.volunteer.last_name);
             setEmail(data.volunteer.email);
@@ -75,42 +64,42 @@ function ProfilePage(props: any) {
   }
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = event.target.files ? event.target.files[0] : null;
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.readAsDataURL(file);
-  //     reader.onloadend = () => {
-  //       const dataUrl = reader.result as string;
-  //       setProfilePicture(dataUrl);
-  //       const formData = new FormData();
-  //       formData.append('file', file);
-  //       const url = 'http://localhost:3000/volunteers/profile/';
-  //       fetch(url, {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //           'Authorization': `Bearer ${localStorage.getItem('token')}`
-  //         },
-  //         body: formData,
-  //       })
-  //         .then((response) => {
-  //           if (response.status === 200) {
-  //             alert('Profile picture updated successfully');
-  //           } else {
-  //             console.log('Error updating profile picture');
-  //           }
-  //         })
-  //         .catch((error) => {
-  //           console.log(error);
-  //         });
-  //     };
-  //   }
+     const file = event.target.files ? event.target.files[0] : null;
+     if (file) {
+       const reader = new FileReader();
+       reader.readAsDataURL(file);
+       reader.onloadend = () => {
+         const dataUrl = reader.result as string;
+         setProfilePicture(dataUrl);
+         const formData = new FormData();
+         formData.append('file', file);
+         const url = 'http://localhost:8000/volunteers/profile/';
+         fetch(url, {
+           method: 'POST',
+           headers: {
+             'Content-Type': 'application/json',
+             'Authorization': `Bearer ${localStorage.getItem('token')}`
+           },
+           body: formData,
+         })
+           .then((response) => {
+             if (response.status === 200) {
+               alert('Profile picture updated successfully');
+             } else {
+               console.log('Error updating profile picture');
+             }
+           })
+           .catch((error) => {
+             console.log(error);
+           });
+       };
+     }
   };
   
     const updateProfile = () => {
-      if (!validateEmail(email)) {
-        console.error('Invalid email');
-        return;
+    if (!validateEmail(email)) {
+      console.error('Invalid email');
+      return;
     }
     // if (!validatePhone(phone)) {
     //   console.error('Invalid phone number');
@@ -125,7 +114,7 @@ function ProfilePage(props: any) {
       profile_picture: profile_picture,
     }
 
-    let url = 'http://localhost:8000/update';
+    let url = 'http://localhost:8000/volunteers/update';
     fetch(url, {
       method: 'POST',
       headers: {
@@ -139,6 +128,8 @@ function ProfilePage(props: any) {
       console.log(error);
     })
   };
+
+  /* Function to add when back is gonna be done */
 
   const deleteAccount = () => {
     /* if (window.confirm('Are you sure you want to delete your account?')) {
@@ -166,14 +157,16 @@ function ProfilePage(props: any) {
 
   return (
     <Container className="profile-container">
-        <Row>
+        <Row className="profile-row">
             <Col sm={12} md={4} lg={3}>
                 <div className="profile-pic">
-                    <img src={profile_picture} alt="profile" className="profile-img"/>
-                    <label htmlFor="profile-pic-upload" className="profile-pic-btn">
-                        Changer la Photo
-                    </label>
-                    <input className='input' id="profile-pic-upload" type="file" onChange={handleFileChange} accept="image/*"/> 
+                    <img src={profile_picture} alt="" className="profile-img"/>
+                </div>
+                <div className="profile-btn-div">
+                  <label htmlFor="profile-pic-upload" className="profile-pic-btn">
+                    Changer la Photo
+                  </label>
+                  <input className='profile-input' id="profile-pic-upload" type="file" onChange={handleFileChange} accept="image/*"/> 
                 </div>
             </Col>
             <Col sm={12} md={8} lg={9}>
@@ -181,7 +174,9 @@ function ProfilePage(props: any) {
                     <div className="profile-row">
                         <label>Prénom:</label>
                         <input
+                            className="filled-text"
                             type="text"
+                            placeholder="Name"
                             value={first_name}
                             onChange={(event) => setFirstName(event.target.value)}
                         />
@@ -189,7 +184,9 @@ function ProfilePage(props: any) {
                     <div className="profile-row">
                         <label>Nom de famille:</label>
                         <input
+                            className="filled-text"
                             type="text"
+                            placeholder="Last Name"
                             value={last_name}
                             onChange={(event) => setLastName(event.target.value)}
                         />
@@ -197,7 +194,9 @@ function ProfilePage(props: any) {
                     <div className="profile-row">
                         <label>Email:</label>
                         <input
+                            className="filled-text"
                             type="text"
+                            placeholder="Email"
                             value={email}
                             onChange={(event) => setEmail(event.target.value)}
                         />
@@ -205,12 +204,14 @@ function ProfilePage(props: any) {
                     <div className="profile-row">
                         <label>Numéro de téléphone:</label>
                         <input
+                            className="filled-text"
                             type="text"
+                            placeholder="Phone number"
                             value={phone}
                             onChange={(event) => setPhone(event.target.value)}
                         />
                     </div>
-                    <div className="profile-btn">
+                    <div className="profile-btn-div">
                         <button className="profile-pic-btn" onClick={updateProfile}>
                             Mettre à jour le profile
                         </button>

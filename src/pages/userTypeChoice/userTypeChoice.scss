@@ -3,6 +3,34 @@
   padding-bottom: 2.5rem;
 }
 
+.mask-box {
+  margin: auto;
+  border-radius: 20px;
+  position: relative;
+  background: #9dbdb3;
+  box-shadow: 1px 1px 2px rgb(165, 165, 165) inset;
+}
+.mask-box .mask {
+  width: 200px;
+  height: 40px;
+  border-radius: 20px;
+  background: #5d9082;
+  position: absolute;
+  box-shadow: 1px 0 2px #5d9082;
+  transition: all 0.5s ease;
+}
+.mask-box .MuiButton-root {
+  border-radius: 20px;
+  width: 200px;
+  height: 40px;
+  font-weight: bold;
+  color: white;
+  transition: all 0.2s 0.1s ease;
+}
+.mask-box .MuiButton-root:hover {
+  opacity: 0.8;
+}
+
 .btn {
   height: 5rem !important;
   color: white !important;
@@ -10,9 +38,11 @@
 
 .title {
   text-align: center;
+  color: #1f0812;
+  font-weight: normal;
 }
 
-.entreprise {
+.enterprise {
   width: 40%;
   margin-right: auto !important;
   margin-left: 0 !important;
@@ -21,7 +51,7 @@
 }
 
 .association {
-  width: 80%;
+  width: 60%;
   margin-right: 0 !important;
   margin-left:auto !important;
   display:block !important;
@@ -29,7 +59,7 @@
   background-color: rgba(106, 153, 197, 0.86) !important;
 }
 
-.benevole {
+.volunteer {
   width: 40%;
   margin-right: auto !important;
   margin-left: 0 !important;
@@ -38,8 +68,9 @@
 }
 
 .titleLogo {
-  width: 100% !important;
-  height: 100% !important;
-  display: inline-block;
+  width: 40% !important;
+  height: 40% !important;
+  display: flex;
+  margin: auto;
   vertical-align: middle;
 }
