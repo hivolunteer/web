@@ -13,7 +13,7 @@ const UserTypeChoice = () => {
 
     const goToPage = () => {
         let to_go: string = (isVolunteer) ? "/volunteers" : "/associations"
-        to_go += (subType === "Inscription") ? "/login" : "/register";
+        to_go += (subType === "Inscription") ? "/register" : "/login";
         navigation(to_go);
     };
 
