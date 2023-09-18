@@ -33,11 +33,6 @@ const noImageComponent = () => {
   );
 };
 
-const isNumberKey = (evt: KeyboardEvent | any) => {
-  const charCode = evt.which ? evt.which : evt.keyCode;
-  return !(charCode > 31 && (charCode < 48 || charCode > 57));
-};
-
 export default function MissionCreation() {
   const [image, setImage] = React.useState<any>(null);
   const [address, setAddress] = React.useState<AddressAutocompleteValue | null>(
@@ -55,17 +50,6 @@ export default function MissionCreation() {
   const [form, setForm] = React.useState<MissionCreationData>();
   const [error, setError] = React.useState<boolean>(false);
 
-  /* checking volunteer number */
-  const checkVolunteerNb = (volunteerNb: string) => {
-    const regex = /^[0-9]+$/;
-    // check if volunteerNb is a number
-    if (regex.test(volunteerNb)) {
-      setError(true);
-    } else {
-      setError(false);
-    }
-  };
-
   const createNewMission = () => {
     const token = localStorage.getItem("token");
     const body = {
@@ -74,8 +58,8 @@ export default function MissionCreation() {
       description: form?.missionDescription,
       practical_information: form?.missionPracticalInformation,
       location: "Paris",
-      start_date: "2023-06-11 17:15:40.602 UTC",
-      end_date: "2023-06-11 17:15:40.602 UTC",
+      start_date: form?.missionDate,
+      end_date: form?.missionEndDate,
       title: form?.missionName,
     };
     console.log(body);
@@ -83,7 +67,7 @@ export default function MissionCreation() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token"),
+        Authorization: "Bearer " + token, // localStorage.getItem("token")
       },
       body: JSON.stringify(body),
     })
@@ -289,7 +273,17 @@ export default function MissionCreation() {
               />
             </Grid>
             <Grid item xs={12} lg={4}>
-              <TimePicker label="Fin de la mission" />
+              <TimePicker
+                label="Fin de la mission"
+                format="HH:mm"
+                defaultValue={moment.utc().local()}
+                onChange={(date) => {
+                  setForm({
+                    ...form,
+                    missionEndDate: moment(date).utc().local().toDate(),
+                  });
+                }}
+              />
             </Grid>
             <Grid item xs={12} lg={4}>
               <TextField
