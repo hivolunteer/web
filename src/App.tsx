@@ -1,20 +1,20 @@
-import './App.scss';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import "./App.scss";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import UserTypeChoice from "./pages/userTypeChoice/userTypeChoice";
-import 'moment/locale/fr';
+import "moment/locale/fr";
 
 // import Pages
 // import Home from './pages/Home/Home';
-import AssociationRouter from './routers/NoConnectAssociationRouter';
-import AssociationRouterConnected from './routers/ConnectAssociationRouter';
-import VolunteerRouter from './routers/NoConnectVolunteerRouter';
-import VolunteerRouterConnected from './routers/ConnectVolunteerRouter';
-import ResponsiveAppBar from './sidebar/Sidebar';
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import AssociationRouter from "./routers/NoConnectAssociationRouter";
+import AssociationRouterConnected from "./routers/ConnectAssociationRouter";
+import VolunteerRouter from "./routers/NoConnectVolunteerRouter";
+import VolunteerRouterConnected from "./routers/ConnectVolunteerRouter";
+import ResponsiveAppBar from "./sidebar/Sidebar";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 
 function NoConnectRouter() {
-  return(
+  return (
     <Router>
       <Routes>
         <Route path="/" element={<UserTypeChoice />} />
@@ -22,37 +22,33 @@ function NoConnectRouter() {
         <Route path="/associations/*" element={<AssociationRouter />} />
       </Routes>
     </Router>
-  )
+  );
 }
 
 function ConnectRouter() {
-
-  return(
+  return (
     <Router>
       <ResponsiveAppBar />
       <Routes>
-        {
-          localStorage.getItem('role') === 'volunteer' ?
-            <Route path="/*" element={<VolunteerRouterConnected />} />
-            :
-            <Route path="/*" element={<AssociationRouterConnected />} />
-        }
+        {localStorage.getItem("role") === "volunteer" ? (
+          <Route path="/*" element={<VolunteerRouterConnected />} />
+        ) : (
+          <Route path="/*" element={<AssociationRouterConnected />} />
+        )}
       </Routes>
     </Router>
-  )
+  );
 }
 
 function App() {
   return (
     <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="fr">
       <div>
-        {
-          localStorage.getItem('token') ? (
-            <ConnectRouter />
-          ) : (
-            <NoConnectRouter />
-          )
-        }
+        {localStorage.getItem("token") ? (
+          <ConnectRouter />
+        ) : (
+          <NoConnectRouter />
+        )}
       </div>
     </LocalizationProvider>
   );
