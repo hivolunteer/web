@@ -1,6 +1,6 @@
 import "./App.scss";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import UserTypeChoice from "./pages/userTypeChoice/userTypeChoice";
+import UserTypeChoice from "./pages/UserTypeChoice/UserTypeChoice";
 import "moment/locale/fr";
 
 // import Pages

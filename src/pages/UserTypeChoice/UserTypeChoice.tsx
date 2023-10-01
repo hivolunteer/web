@@ -1,8 +1,8 @@
 import React from "react";
 import Button from '@mui/material/Button';
-import "./userTypeChoice.scss";
+import "./UserTypeChoice.scss";
 import Box from "@mui/material/Box";
-import titleLogo from "../../Images/titleLogo.png";
+import titleLogo from "../../images/titleLogo.png";
 import { useNavigate } from "react-router-dom";
 
 const UserTypeChoice = () => {

@@ -3,6 +3,7 @@ import { Alert, Box, Button, Container, CssBaseline, Grid, IconButton, InputAdor
 import './Register.scss';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { AuthenticationService } from '../../../services/authentication.service';
+import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
 
@@ -19,6 +20,8 @@ function RegisterVolunteer() {
     const [phone, setPhone] = useState(true);
     const [email, setEmail] = useState(true);
     const [password, setPassword] = useState(true);
+
+    const navigate = useNavigate();
     /* Check specific parameters */
         /* State for age major */
         const [major, setMajor] = useState(true);
@@ -147,6 +150,24 @@ function RegisterVolunteer() {
         checkPhoneFormat(data.get('phone') as string);        
     };
 
+    /* Function to execute response */
+    const responseExecute = (response_status: number) => {
+      switch (response_status) {
+        case 201:
+          alert("Inscription réussie");
+          localStorage.setItem("role", "association");
+          navigate("/profile");
+          window.location.reload();
+          break;
+        case 401:
+          alert("Connexion échouée");
+          break;
+        default:
+          alert("Erreur inconnue");
+          break;
+      }
+    };
+
     /* Function to send data and print user token receive */
     const sendData = async (data: FormData) => {
         // convert FormData to table
@@ -159,8 +180,8 @@ function RegisterVolunteer() {
                 /* If user is major, send data */
                 if (checkMajor(new Date(user['birthdate'] as string))) {
                     // call registerVolunteer service
-                    const response = AuthenticationService.registerVolunteers(user);
-                    console.log(response);
+                    const response_status = AuthenticationService.registerVolunteers(user);
+                    responseExecute(await response_status)
                 }
             }
         }
@@ -391,7 +412,7 @@ function RegisterVolunteer() {
                         </Button>
                         <Grid container justifyContent='flex-end'>
                             <Grid item>
-                                <Link href='/login' variant='body2'>
+                                <Link href='/volunteers/login' variant='body2'>
                                     Vous avez déjà un compte ? Connectez-vous
                                 </Link>
                             </Grid>

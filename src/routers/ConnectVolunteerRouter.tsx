@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-import Profile from '../pages/Profile/Profile';
+import Profile from '../pages/Volunteer/Profile/Profile';
 
 function ConnectVolunteerRouter() {
     return(

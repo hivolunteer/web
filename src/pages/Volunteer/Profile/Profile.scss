@@ -1,0 +1,142 @@
+@import '../../../../assets/scss/_colors';
+@import '../../../../assets/scss/_fonts';
+
+.profile-input {
+  display: none;
+}
+
+.profile-container {
+  padding: 2rem;
+  background-color: #f5f5f5;
+  border-radius: 0.5rem;
+  display: block;
+}
+
+.card-component {
+  display: inline-flex;
+}
+
+.volunteer-card {
+  width: 6.25rem;
+  height: 6.25rem;
+  border-radius: 0.75rem;
+  border: 1px dashed #E8E7E7;
+  background: #FFF;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25); 
+}
+
+.profile-row {
+  text-align: center;
+}
+
+.profile-pic {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  margin: auto;
+}
+
+.profile-pic img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.profile-btn-div {
+  margin: 0 40%;
+}
+
+.filled-text {
+  color: #2d2a32;
+  font-size: small;
+  font-weight: lighter;
+}
+
+.title-text {
+  color: #2d2a32;
+  font-feature-settings: 'clig' off, 'liga' off;
+  font-family: Montserrat;
+  font-size: 2rem;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 1.3125rem;
+}
+
+.volunteers-title {
+  display: flex;
+  width: 22.0625rem;
+  height: 3.0625rem;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0; 
+}
+
+.profile-pic-btn {
+  padding: 0.5rem 1rem;
+  align-items: center;
+  margin: 0.5rem;
+  border: none;
+  border-radius: 20px;
+  background-color: #67a191;
+}
+
+.profile-pic-btn:hover {
+  background-color: #5b8971;
+}
+
+.profile-info {
+  margin-top: 2rem;
+}
+
+.profile-row {
+  margin-bottom: 1rem;
+}
+
+.profile-row label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.profile-row input {
+  width: 30%;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 20px;
+  background-color: #fff;
+  font-size: 1.1rem;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+}
+
+.profile-row button,
+.profile-pic-btn {
+  display: table-row;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 20px;
+  background-color: #67a191;
+  color: #fff;
+  cursor: pointer;
+}
+
+.profile-row button[type="submit"]:hover,
+.profile-pic-btn:hover {
+  background-color: #5b8971;
+}
+
+.delete-account-btn {
+  margin-top: 2rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  text-decoration: underline;
+  text-decoration-color: red;
+  color: red;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.delete-account-btn:hover {
+  background-color: rgb(224, 127, 127);
+}
