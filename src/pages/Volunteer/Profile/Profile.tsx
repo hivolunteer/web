@@ -220,7 +220,6 @@ function ProfilePage(props: any) {
                             className="filled-text"
                             type="text"
                             placeholder="Password"
-                            value={password}
                             onChange={(event) => setPassword(event.target.value)}
                         />
                     </div>

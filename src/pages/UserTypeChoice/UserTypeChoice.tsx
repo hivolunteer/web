@@ -13,11 +13,11 @@ const UserTypeChoice = () => {
 
     const goToPage = () => {
         let to_go: string = (isVolunteer) ? "/volunteers" : "/associations"
-        to_go += (subType === "Inscription") ? "/register" : "/login";
+        to_go += (subType === "Connexion") ? "/login" : "/register";
         navigation(to_go);
     };
 
-    const [subType, setSubType] = React.useState("Inscription");
+    const [subType, setSubType] = React.useState("Connexion");
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setChecked(event.target.checked);

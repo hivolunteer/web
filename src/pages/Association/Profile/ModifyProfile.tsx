@@ -221,7 +221,7 @@ function ModifyProfilePage(props: any) {
                             className="filled-text"
                             type="text"
                             placeholder="Phone number"
-                            value={phone}
+                            value={phone} /* Checker le telephone */
                             onChange={(event) => setPhone(event.target.value)}
                         />
                     </div>
@@ -230,8 +230,7 @@ function ModifyProfilePage(props: any) {
                         <input
                             className="filled-text"
                             type="text"
-                            placeholder="Password"
-                            value={password}
+                            placeholder="Password" /* Checker le password */
                             onChange={(event) => setPassword(event.target.value)}
                         />
                     </div>
