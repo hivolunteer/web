@@ -1,5 +1,5 @@
-import { Box, Button, Grid, TextField } from "@mui/material";
-import React from "react";
+import {Box, Button, Chip, Grid, Stack, TextField} from "@mui/material";
+import React, {useState} from "react";
 import { Image } from "mui-image";
 import "moment/locale/de";
 import { DateTimePicker, TimePicker } from "@mui/x-date-pickers";
@@ -12,6 +12,7 @@ import { AuthenticationService } from "../../services/authentication.service";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import moment from "moment";
+
 interface MissionCreationData {
   missionName?: string;
   missionDescription?: string;
@@ -49,6 +50,11 @@ export default function MissionCreation() {
   );
   const [form, setForm] = React.useState<MissionCreationData>();
   const [error, setError] = React.useState<boolean>(false);
+  const [newSkill, setNewSkill] = useState(["Ukrainien"]);
+
+  const handleDelete = (chipToDelete: string) => {
+    setNewSkill(chips => chips.filter((chip) => chip !== chipToDelete));
+  }
 
   const createNewMission = () => {
     const token = localStorage.getItem("token");
@@ -74,6 +80,8 @@ export default function MissionCreation() {
       .then((response) => {
         console.log(response);
         if (response.status === 201) {
+          alert("Mission créée");
+          window.location.href = "/";
           return response.body;
         }
       })
@@ -108,6 +116,25 @@ export default function MissionCreation() {
         break;
     }
   };
+
+  const addSkills = (event: any) => {
+    setForm({
+      ...form,
+      missionSkills: event.target.value,
+    });
+  }
+  const handleKeyPress = (e: any) => {
+
+    if (e.key === "Enter") {
+      setNewSkill((prev: any): any => {
+        return [...prev, form?.missionSkills]
+      });
+      setForm({
+        ...form,
+        missionSkills: "",
+      })
+    }
+  }
 
   // sending data to the back
   const sendData = async (data: FormData) => {
@@ -199,8 +226,8 @@ export default function MissionCreation() {
         </Box>
 
         <Box component="form">
-          <Grid container spacing={2} direction="column" alignContent="center">
-            <Grid item xs={12} lg={8}>
+          <Grid container spacing={3}  >
+            <Grid item xs={6} lg={6}>
               <TextField
                 name="missionName"
                 required
@@ -213,7 +240,7 @@ export default function MissionCreation() {
                 }}
               />
             </Grid>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={6} lg={6}>
               <TextField
                 name="missionDescription"
                 required
@@ -230,7 +257,7 @@ export default function MissionCreation() {
                 }}
               />
             </Grid>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={6} lg={6}>
               <TextField
                 name="missionPracticalInformation"
                 required
@@ -248,7 +275,7 @@ export default function MissionCreation() {
                 }}
               />
             </Grid>
-            <Grid item xs={12} lg={4}>
+            <Grid item xs={6} lg={6}>
               <AddressAutocomplete
                 apiKey="AIzaSyDq1CgJltdWn8rUq5KoWX5c-PXHeOMFDO0" // add 0
                 label="Adresse de la mission"
@@ -259,7 +286,7 @@ export default function MissionCreation() {
                 value={address}
               />
             </Grid>
-            <Grid item xs={12} lg={4}>
+            <Grid item xs={6} lg={3}>
               <DateTimePicker
                 label="Date de début"
                 format="DD/MM/YYYY HH:mm"
@@ -272,20 +299,20 @@ export default function MissionCreation() {
                 }}
               />
             </Grid>
-            <Grid item xs={12} lg={4}>
+            <Grid item xs={6} lg={3}>
               <TimePicker
-                label="Fin de la mission"
-                format="HH:mm"
-                defaultValue={moment.utc().local()}
-                onChange={(date) => {
-                  setForm({
-                    ...form,
-                    missionEndDate: moment(date).utc().local().toDate(),
-                  });
-                }}
-              />
+                  label="Fin de la mission"
+                  format="HH:mm"
+                  defaultValue={moment.utc().local()}
+                  onChange={(date) => {
+                    setForm({
+                      ...form,
+                      missionEndDate: moment(date).utc().local().toDate(),
+                    });
+                  }}
+                />
             </Grid>
-            <Grid item xs={12} lg={4}>
+            <Grid item xs={6} lg={6}>
               <TextField
                 autoComplete="name"
                 name="missionVolunteersNumber"
@@ -317,14 +344,30 @@ export default function MissionCreation() {
                 label="Coordonnées de referent de la mission"
               />
             </Grid>
+            <Grid item xs={12} lg={6} alignContent={"center"} justifyContent={"center"} alignItems={"center"}>
+              <Stack direction="row" spacing={2}>
+                {
+                  newSkill.map(chip => (
+                      <Chip key={chip}
+                            color='primary'
+                            style={{ backgroundColor: "green"}}
+                            label={chip}
+                            onDelete={() => handleDelete(chip)} />
+                  ))
+                }
+              </Stack>
+            </Grid>
+            <Grid item xs={12} lg={6} />
             <Grid item xs={12} lg={6}>
               <TextField
                 autoComplete="name"
                 name="name"
-                multiline={true}
                 fullWidth
+                value={form?.missionSkills}
                 id="name"
                 label="Compétences requises"
+                onKeyPress={handleKeyPress}
+                onChange={addSkills}
               />
             </Grid>
           </Grid>
