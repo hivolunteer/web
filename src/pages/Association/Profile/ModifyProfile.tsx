@@ -1,29 +1,33 @@
-import "./Profile.scss";
+import "./ModifyProfile.scss";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
+import { Password } from "@mui/icons-material";
 
-const src_img = require('../../Images/titleLogo.png');
+const src_img = require('../../../images/titleLogo.png');
 
 type newProfile = {
-  first_name: string,
-  last_name: string,
-  email: string,
-  phone: string,
-  profile_picture: string,
+    name: string,
+    rna: string,
+    email: string,
+    phone: string,
+    description: string,
+    profile_picture: string,
 }
 
-function ProfilePage(props: any) {
-  const [first_name, setFirstName] = useState<string>("");
-  const [last_name, setLastName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [phone, setPhone] = useState<string>("");
-  const [profile_picture, setProfilePicture] = useState<string>(src_img);
+function ModifyProfilePage(props: any) {
+    const [name, setName] = useState<string>("");
+    const [rna, setRna] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
+    const [phone, setPhone] = useState<string>("");
+    const [description, setDescription] = useState<string>("");
+    const [profile_picture, setProfilePicture] = useState<string>(src_img);
+    const navigate = useNavigate();
 
   useEffect(() => {
     console.log(localStorage)
     const getProfile = () => {
-      let url = 'http://localhost:8000/volunteers/profile';
+      let url = 'http://localhost:8000/associations/profile';
       fetch(url, {
         method: 'GET',
         headers: {
@@ -34,11 +38,12 @@ function ProfilePage(props: any) {
       .then((response) => {
         if (response.status === 200) {
           response.json().then((data) => {
-            setFirstName(data.volunteer.first_name);
-            setLastName(data.volunteer.last_name);
-            setEmail(data.volunteer.email);
-            setPhone(data.volunteer.phone);
-            setProfilePicture(data.volunteer.profile_picture);
+            setEmail(data.association.email);
+            setName(data.association.name);
+            setRna(data.association.rna);
+            setPhone(data.association.phone);
+            setDescription(data.association.desc);
+            setProfilePicture(data.association.profile_picture);
           });
         } else {
           console.log('Error fetching profile');
@@ -73,7 +78,7 @@ function ProfilePage(props: any) {
          setProfilePicture(dataUrl);
          const formData = new FormData();
          formData.append('file', file);
-         const url = 'http://localhost:8000/volunteers/profile/';
+         const url = 'http://localhost:8000/associations/profile/';
          fetch(url, {
            method: 'POST',
            headers: {
@@ -105,16 +110,16 @@ function ProfilePage(props: any) {
     //   console.error('Invalid phone number');
     //   return;
     // }
-    console.log(first_name, last_name, email, phone, profile_picture);
     let profile: newProfile = {
-      first_name: first_name,
-      last_name: last_name,
-      email: email,
-      phone: phone,
-      profile_picture: profile_picture,
+        name: name,
+        rna: rna,
+        email: email,
+        phone: phone,
+        description: description,
+        profile_picture: profile_picture,
     }
 
-    let url = 'http://localhost:8000/volunteers/update';
+    let url = 'http://localhost:8000/associations/update';
     fetch(url, {
       method: 'POST',
       headers: {
@@ -124,6 +129,7 @@ function ProfilePage(props: any) {
       body: JSON.stringify(profile),
     }).then((response) => {
       console.log(response);
+      navigate('/profile');
     }).catch((error) => {
       console.log(error);
     })
@@ -133,7 +139,7 @@ function ProfilePage(props: any) {
 
   const deleteAccount = () => {
     /* if (window.confirm('Are you sure you want to delete your account?')) {
-      let url = 'http://localhost:8000/volunteers/profile';
+      let url = 'http://localhost:8000/associations/profile';
       fetch(url, {
         method: 'DELETE',
         headers: {
@@ -172,23 +178,23 @@ function ProfilePage(props: any) {
             <Col sm={12} md={8} lg={9}>
                 <div className="profile-info">
                     <div className="profile-row">
-                        <label>Prénom:</label>
+                        <label>Titre:</label>
                         <input
                             className="filled-text"
                             type="text"
                             placeholder="Name"
-                            value={first_name}
-                            onChange={(event) => setFirstName(event.target.value)}
+                            value={name}
+                            onChange={(event) => setName(event.target.value)}
                         />
                     </div>
                     <div className="profile-row">
-                        <label>Nom de famille:</label>
+                        <label>RNA:</label>
                         <input
                             className="filled-text"
                             type="text"
-                            placeholder="Last Name"
-                            value={last_name}
-                            onChange={(event) => setLastName(event.target.value)}
+                            placeholder="RNA"
+                            value={rna}
+                            onChange={(event) => setRna(event.target.value)}
                         />
                     </div>
                     <div className="profile-row">
@@ -207,7 +213,7 @@ function ProfilePage(props: any) {
                             className="filled-text"
                             type="text"
                             placeholder="Phone number"
-                            value={phone}
+                            value={phone} /* Checker le telephone */
                             onChange={(event) => setPhone(event.target.value)}
                         />
                     </div>
@@ -226,4 +232,4 @@ function ProfilePage(props: any) {
   );
 };  
 
-export default ProfilePage;
+export default ModifyProfilePage;

@@ -12,8 +12,8 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { Link, useNavigate } from 'react-router-dom';
-import { ReactComponent as Logo } from "../logo/bee_white.svg";
-import logoImage from '../logo/bee_yb.png';
+import { ReactComponent as Logo } from "../images/logo/bee_white.svg";
+import logoImage from '../images/logo/bee_yb.png';
 
 const pages = ['Accueil', 'Calendrier', 'Profile'];
 const settings = ['Profile', 'Logout'];
@@ -165,10 +165,10 @@ function ResponsiveAppBar() {
                           break;
                         case 'Logout':
                           console.log('logout'); 
-                          window.location.href = '/';
                           localStorage.removeItem('token');
                           localStorage.removeItem('role');
                           window.location.reload();
+                          window.location.href = '/';
                           break;
                         default:
                           break;

@@ -1,8 +1,8 @@
 import React from "react";
 import Button from '@mui/material/Button';
-import "./userTypeChoice.scss";
+import "./UserTypeChoice.scss";
 import Box from "@mui/material/Box";
-import titleLogo from "../../Images/titleLogo.png";
+import titleLogo from "../../images/titleLogo.png";
 import { useNavigate } from "react-router-dom";
 
 const UserTypeChoice = () => {
@@ -13,11 +13,11 @@ const UserTypeChoice = () => {
 
     const goToPage = () => {
         let to_go: string = (isVolunteer) ? "/volunteers" : "/associations"
-        to_go += (subType === "Inscription") ? "/register" : "/login";
+        to_go += (subType === "Connexion") ? "/login" : "/register";
         navigation(to_go);
     };
 
-    const [subType, setSubType] = React.useState("Inscription");
+    const [subType, setSubType] = React.useState("Connexion");
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setChecked(event.target.checked);
