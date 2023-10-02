@@ -14,6 +14,7 @@ function ProfilePage(props: any) {
   const [phone, setPhone] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [profile_picture, setProfilePicture] = useState<string>(src_img);
+  const [rating, setRating] = useState<number>(0);
   const navigate = useNavigate();
 
   const [show, setShow] = useState(false);
@@ -37,6 +38,7 @@ function ProfilePage(props: any) {
             setPhone(data.association.phone);
             setDescription(data.association.desc);
             setProfilePicture(data.association.profile_picture);
+            setRating(data.association.rating);
           });
         } else {
           console.log('Error fetching profile');
@@ -82,7 +84,7 @@ function ProfilePage(props: any) {
         <Row className="profile-row">
             <Col sm={12} md={4} lg={3}>
               <div className="profile-pic">
-                  <Typography className="rating">0 / 5</Typography>
+                  <Typography className="rating">{rating} / 5</Typography>
                   <img src={profile_picture} alt="" className="profile-img"/>
               </div>
               <div className="profile-btn-div">

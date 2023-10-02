@@ -10,7 +10,6 @@ type newProfile = {
   email: string,
   phone: string,
   profile_picture: string,
-  password: string,
 }
 
 function ProfilePage(props: any) {
@@ -19,7 +18,6 @@ function ProfilePage(props: any) {
   const [email, setEmail] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [profile_picture, setProfilePicture] = useState<string>(src_img);
-  const [password, setPassword] = useState<string>("");
 
   useEffect(() => {
     console.log(localStorage)
@@ -40,7 +38,6 @@ function ProfilePage(props: any) {
             setEmail(data.volunteer.email);
             setPhone(data.volunteer.phone);
             setProfilePicture(data.volunteer.profile_picture);
-            setPassword(data.volunteer.password);
           });
         } else {
           console.log('Error fetching profile');
@@ -114,7 +111,6 @@ function ProfilePage(props: any) {
       email: email,
       phone: phone,
       profile_picture: profile_picture,
-      password: password,
     }
 
     let url = 'http://localhost:8000/volunteers/update';
@@ -212,15 +208,6 @@ function ProfilePage(props: any) {
                             placeholder="Phone number"
                             value={phone}
                             onChange={(event) => setPhone(event.target.value)}
-                        />
-                    </div>
-                    <div className="profile-row">
-                        <label>Mot de passe:</label>
-                        <input
-                            className="filled-text"
-                            type="text"
-                            placeholder="Password"
-                            onChange={(event) => setPassword(event.target.value)}
                         />
                     </div>
                     <div className="profile-btn-div">

@@ -12,9 +12,7 @@ type newProfile = {
     email: string,
     phone: string,
     description: string,
-    rating: number,
     profile_picture: string,
-    password: string,
 }
 
 function ModifyProfilePage(props: any) {
@@ -23,9 +21,7 @@ function ModifyProfilePage(props: any) {
     const [email, setEmail] = useState<string>("");
     const [phone, setPhone] = useState<string>("");
     const [description, setDescription] = useState<string>("");
-    const [rating, setRating] = useState<number>(0);
     const [profile_picture, setProfilePicture] = useState<string>(src_img);
-    const [password, setPassword] = useState<string>("");
     const navigate = useNavigate();
 
   useEffect(() => {
@@ -47,9 +43,7 @@ function ModifyProfilePage(props: any) {
             setRna(data.association.rna);
             setPhone(data.association.phone);
             setDescription(data.association.desc);
-            setRating(data.association.rating);
             setProfilePicture(data.association.profile_picture);
-            setPassword(data.association.password);
           });
         } else {
           console.log('Error fetching profile');
@@ -122,9 +116,7 @@ function ModifyProfilePage(props: any) {
         email: email,
         phone: phone,
         description: description,
-        rating: rating,
         profile_picture: profile_picture,
-        password: password,
     }
 
     let url = 'http://localhost:8000/associations/update';
@@ -223,15 +215,6 @@ function ModifyProfilePage(props: any) {
                             placeholder="Phone number"
                             value={phone} /* Checker le telephone */
                             onChange={(event) => setPhone(event.target.value)}
-                        />
-                    </div>
-                    <div className="profile-row">
-                        <label>Mot de passe</label>
-                        <input
-                            className="filled-text"
-                            type="text"
-                            placeholder="Password" /* Checker le password */
-                            onChange={(event) => setPassword(event.target.value)}
                         />
                     </div>
                     <div className="profile-btn-div">
