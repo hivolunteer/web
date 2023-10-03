@@ -44,3 +44,19 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+## Troubleshooting
+
+If you can't run the project with `npm start` and you get the following error:
+
+```
+
+Invalid options object. Dev Server has been initialized using an options object that does not match the API schema.
+ - options.allowedHosts[0] should be a non-empty string.
+```
+    
+    Then you need to add the following line to your `.env` file:
+
+```
+DANGEROUSLY_DISABLE_HOST_CHECK=true
+```
