@@ -237,7 +237,7 @@ function LoginAssociation() {
                     </Button>
                     <Grid container justifyContent='flex-end'>
                         <Grid item>
-                            <Link href='/login' variant='body2'>
+                            <Link href='/associations/register' variant='body2'>
                                 Vous n'avez pas de compte ? Inscrivez-vous
                             </Link>
                         </Grid>
