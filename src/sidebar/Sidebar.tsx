@@ -16,7 +16,7 @@ import { ReactComponent as Logo } from "../images/logo/bee_white.svg";
 import logoImage from '../images/logo/bee_yb.png';
 
 const pages = ['Accueil', 'Calendrier', 'Profile'];
-const settings = ['Profile', 'Logout'];
+const settings = ['Créer une mission', 'Profile', 'Logout'];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -160,9 +160,12 @@ function ResponsiveAppBar() {
                     onClick={() => {
                       handleCloseUserMenu();
                       switch (setting) {
-                        case 'Profile':
-                          navigate('/profile');
-                          break;
+                          case 'Créer une mission':
+                              window.location.href = '/missionCreation';
+                              break;
+                          case 'Profile':
+                              navigate('/profile');
+                              break;
                         case 'Logout':
                           console.log('logout'); 
                           localStorage.removeItem('token');
