@@ -2,6 +2,18 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## How to launch with Docker
+
+### To just run the server
+```
+docker compose up
+```
+
+### To run the server environment only
+```
+docker compose -f docker-compose.dev.yml
+```
+
 ## Available Scripts
 
 In the project directory, you can run:
