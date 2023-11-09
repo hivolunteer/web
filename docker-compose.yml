@@ -30,11 +30,11 @@ services:
   hive-frontend:
     build: .
     depends_on:
-      - backend
+      - hive-backend
     restart: "no"
     ports:
       - 3000:3000
 
 volumes:
   postgres:
-    name: nest-db ~/Repositories/hivolunteer/back 
+    name: nest-db
