@@ -3,34 +3,32 @@ name: Push to container registry if the tag ends in "-dev"
 on:
   push:
     tags:
-    - '*-dev' # Trigger this GitHub Action when a tag ending in "-dev" is pushed.
-    branches: # Trigger this Github Action when pushes are made to the dev or main branches
-      [main, dev]
+    - '*' # Trigger this GitHub Action when a tag is pushed.
+
+env:
+  GITHUB_NAME: ${{ github.ref_name }} # the branch/tag's name
+  GITHUB_TYPE: ${{ github.ref_type }} # set to "branch" or "tag" depending on the push
+
 jobs:
-  check-tag:
+  check-tag-and-branch:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.1.1
-
-      # Store the Git Tag in a local variable
-      - name: Retrieve Tag
-        run: echo "TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-
-        # Assert if the retrieved tag has the right format
-      - name: Check Tag Syntax
-        run: |
-          echo ${{ env.TAG }}
-          if [[ ${{ env.TAG }} =~ .*-dev$ ]]; then
-              echo "Tag is valid: ${{ env.TAG }}"
-            else
-              echo "Error: Invalid tag format. Tags must end with '-dev'."
-              exit 1
-          fi
+          
+    # Assert if the retrieved tag has the right format
+    - name: Check Tag Syntax
+      if: env.GITHUB_NAME != 'main'
+      run: |
+        if [[ ${{ env.GITHUB_NAME }} =~ .*-dev$ && ${{ env.GITHUB_TYPE }} == "tag" ]]; then
+            echo "Tag is valid: ${{ env.GITHUB_NAME }}"
+          else
+            echo "Error: Invalid tag format. Tags must end with '-dev'."
+            exit 1
+        fi
           
   # Push the source code to the container registry.
   push:
     runs-on: ubuntu-latest
-    needs: check-tag
+    needs: check-tag-and-branch
     steps:
       # Download repository content to run test on it.
       - 
