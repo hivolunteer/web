@@ -3,27 +3,12 @@ name: Push to repository build container image to registry if a tag is made from
 on:
   push:
     tags:
-    - '*' # Trigger this GitHub Action when a tag is pushed.
-    branches:
-      - dev
+    - '^\d+.\d+.\d+(-alpha|-beta|)-dev$' # Trigger this GitHub Action when a tag is pushed.
 
 jobs:
-  check-tag-syntax:
-    runs-on: ubuntu-latest
-    steps:
-          
-    # Assert if the retrieved tag has the right format
-    - name: Check Tag Syntax
-      run: |
-        if ! [[ ${{ github.ref_name }} =~ ^\d+.\d+.\d+(-alpha|-beta|)-dev$ ]]; then
-            echo "Error: Invalid tag format."
-            exit 1
-        fi
-
   # Push the source code to the container registry.
   push:
     runs-on: ubuntu-latest
-    needs: check-tag-syntax
     steps:
       # Download repository content to run test on it.
       - 
