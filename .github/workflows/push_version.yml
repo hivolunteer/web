@@ -5,10 +5,6 @@ on:
     tags:
       - '[0-9]+.[0-9]+.[0-9]+*'
 
-env:
-  DEV_VERSION: ${{ endsWith(github.ref_name, '-dev') }}
-  MAIN_VERSION: ${{ $DEV_VERSION == 'false' }}
-
 jobs:
   # Push the source code to the container registry.
   push:
@@ -38,7 +34,7 @@ jobs:
 
       # Build container image and then push it onto the container registry.
       - name: Build and push
-        if: ${{ $DEV_VERSION == 'true' }}
+        if: ${{ endsWith(github.ref_name, '-dev') }}
         uses: docker/build-push-action@v4
         with:
           push: true
@@ -48,7 +44,7 @@ jobs:
       # Build container image and then push it onto the container registry as
       # the latest version.
       - name: Build and push
-        if: ${{ $MAIN_VERSION == 'true' }}
+        if: ${{ ! endsWith(github.ref_name, '-dev') }}
         uses: docker/build-push-action@v4
         with:
           push: true
