@@ -3,8 +3,8 @@ name: Push to repository build container image to registry
 on:
   push:
     tags:
-    - '^\d+\.\d+\.\d+(-alpha|-beta|)$'
-    - '^\d+\.\d+\.\d+(-alpha|-beta|)-dev$'
+    - '^[0-9]+\.[0-9]+\.[0-9]+(-alpha|-beta|)$'
+    - '^[0-9]+\.[0-9]+\.[0-9]+(-alpha|-beta|)-dev$'
 
 env:
   DEV_VERSION: ${{ endsWith(github.ref_name, '-dev') }}
