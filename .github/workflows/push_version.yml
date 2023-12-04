@@ -24,7 +24,7 @@ jobs:
   # Push the source code to the container registry.
   push:
     runs-on: ubuntu-latest
-    needs: check-tag-and-branch
+    needs: check-tag-syntax
     steps:
       # Download repository content to run test on it.
       - 
