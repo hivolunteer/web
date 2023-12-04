@@ -1,30 +1,25 @@
-name: Push to container registry if the tag ends in "-dev"
+name: Push to repository build container image to registry if a tag is made from the dev branch and ends in "-dev"
 
 on:
   push:
     tags:
     - '*' # Trigger this GitHub Action when a tag is pushed.
-
-env:
-  GITHUB_NAME: ${{ github.ref_name }} # the branch/tag's name
-  GITHUB_TYPE: ${{ github.ref_type }} # set to "branch" or "tag" depending on the push
+    branches:
+      - dev
 
 jobs:
-  check-tag-and-branch:
+  check-tag-syntax:
     runs-on: ubuntu-latest
     steps:
           
     # Assert if the retrieved tag has the right format
     - name: Check Tag Syntax
-      if: env.GITHUB_NAME != 'main'
       run: |
-        if [[ ${{ env.GITHUB_NAME }} =~ .*-dev$ && ${{ env.GITHUB_TYPE }} == "tag" ]]; then
-            echo "Tag is valid: ${{ env.GITHUB_NAME }}"
-          else
-            echo "Error: Invalid tag format. Tags must end with '-dev'."
+        if ! [[ ${{ env.GITHUB_NAME }} =~ ^\d+.\d+.\d+(-alpha|-beta|)$ ]]; then
+            echo "Error: Invalid tag format."
             exit 1
         fi
-          
+
   # Push the source code to the container registry.
   push:
     runs-on: ubuntu-latest
@@ -59,5 +54,4 @@ jobs:
         with:
           push: true
           tags: |
-            "${{ vars.CONTAINER_REPOSITORY_ENDPOINT }}/web:latest"
-            "${{ vars.CONTAINER_REPOSITORY_ENDPOINT }}/web:${{ github.ref_name }}"
+            "${{ vars.CONTAINER_REPOSITORY_ENDPOINT }}/${{ github.repository }}:${{ github.ref_name }}"

@@ -1,0 +1,59 @@
+name: Push to repository build container image to registry if tag is made from the main branch
+
+on:
+  push:
+    tags:
+    - '*' # Trigger this GitHub Action when a tag is pushed.
+    branches:
+      - main
+
+
+jobs:
+  check-tag-syntax:
+    runs-on: ubuntu-latest
+    steps:
+
+    # Assert if the retrieved tag has the right format
+    - name: Check Tag Syntax
+      run: |
+        if ! [[ ${{ env.GITHUB_NAME }} =~ ^\d+.\d+.\d+(-alpha|-beta|)$ ]]; then
+            echo "Error: Invalid tag format."
+            exit 1
+        fi
+
+  # Push the source code to the container registry.
+  push:
+    runs-on: ubuntu-latest
+    needs: check-tag-and-branch
+    steps:
+      # Download repository content to run test on it.
+      - 
+        name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }} # Checkout the source code of the specific tag.
+      # Setup the docker emulator.
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      # Setup the docker builder.
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      # Login to the Container registry.
+      -
+        name: Login to container registry (Google Artifact Registry)
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ vars.CONTAINER_REPOSITORY_ENDPOINT }}
+          username: _json_key
+          password: ${{ secrets.CONTAINER_REPOSITORY_KEY }}
+      # Build container image and then push it onto the container registry.
+      -
+        name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: |
+            "${{ vars.CONTAINER_REPOSITORY_ENDPOINT }}/${{ github.repository }}:latest"
+            "${{ vars.CONTAINER_REPOSITORY_ENDPOINT }}/${{ github.repository }}:${{ github.ref_name }}"
