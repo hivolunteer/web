@@ -7,7 +7,7 @@ on:
 
 env:
   DEV_VERSION: ${{ endsWith(github.ref_name, '-dev') }}
-  MAIN_VERSION: ${{ ! DEV_VERSION }}
+  MAIN_VERSION: ${{ $DEV_VERSION == 'false' }}
 
 jobs:
   # Push the source code to the container registry.
@@ -38,7 +38,7 @@ jobs:
 
       # Build container image and then push it onto the container registry.
       - name: Build and push
-        if: ${{ DEV_VERSION }}
+        if: ${{ $DEV_VERSION == 'true' }}
         uses: docker/build-push-action@v4
         with:
           push: true
@@ -48,7 +48,7 @@ jobs:
       # Build container image and then push it onto the container registry as
       # the latest version.
       - name: Build and push
-        if: ${{ MAIN_VERSION }}
+        if: ${{ $MAIN_VERSION == 'true' }}
         uses: docker/build-push-action@v4
         with:
           push: true
