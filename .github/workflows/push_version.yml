@@ -39,7 +39,7 @@ jobs:
         with:
           push: true
           tags: |
-            "${{ vars.CONTAINER_REPOSITORY_ENDPOINT }}/$(echo $GITHUB_REF | awk -F / '{print $3}'):${{ github.ref_name }}"
+            "${{ vars.CONTAINER_REPOSITORY_ENDPOINT }}/${{ github.event.repository.name }}:${{ github.ref_name }}"
 
       # Build container image and then push it onto the container registry as
       # the latest version.
@@ -49,5 +49,5 @@ jobs:
         with:
           push: true
           tags: |
-            "${{ vars.CONTAINER_REPOSITORY_ENDPOINT }}/$(echo $GITHUB_REF | awk -F / '{print $3}'):latest"
-            "${{ vars.CONTAINER_REPOSITORY_ENDPOINT }}/$(echo $GITHUB_REF | awk -F / '{print $3}'):${{ github.ref_name }}"
+            "${{ vars.CONTAINER_REPOSITORY_ENDPOINT }}/${{ github.event.repository.name }}:latest"
+            "${{ vars.CONTAINER_REPOSITORY_ENDPOINT }}/${{ github.event.repository.name }}:${{ github.ref_name }}"
