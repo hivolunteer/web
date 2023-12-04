@@ -33,21 +33,21 @@ jobs:
           password: ${{ secrets.CONTAINER_REPOSITORY_KEY }}
 
       # Build container image and then push it onto the container registry.
-      - name: Build and push
+      - name: Build and push dev version
         if: ${{ endsWith(github.ref_name, '-dev') }}
         uses: docker/build-push-action@v4
         with:
           push: true
           tags: |
-            "${{ vars.CONTAINER_REPOSITORY_ENDPOINT }}/${{ github.repository }}:${{ github.ref_name }}"
+            "${{ vars.CONTAINER_REPOSITORY_ENDPOINT }}/$(echo $GITHUB_REF | awk -F / '{print $3}'):${{ github.ref_name }}"
 
       # Build container image and then push it onto the container registry as
       # the latest version.
-      - name: Build and push
+      - name: Build and push main version
         if: ${{ ! endsWith(github.ref_name, '-dev') }}
         uses: docker/build-push-action@v4
         with:
           push: true
           tags: |
-            "${{ vars.CONTAINER_REPOSITORY_ENDPOINT }}/${{ github.repository }}:latest"
-            "${{ vars.CONTAINER_REPOSITORY_ENDPOINT }}/${{ github.repository }}:${{ github.ref_name }}"
+            "${{ vars.CONTAINER_REPOSITORY_ENDPOINT }}/$(echo $GITHUB_REF | awk -F / '{print $3}'):latest"
+            "${{ vars.CONTAINER_REPOSITORY_ENDPOINT }}/$(echo $GITHUB_REF | awk -F / '{print $3}'):${{ github.ref_name }}"
