@@ -15,7 +15,7 @@ jobs:
     # Assert if the retrieved tag has the right format
     - name: Check Tag Syntax
       run: |
-        if ! [[ ${{ github.ref_name }} =~ ^\d+.\d+.\d+(-alpha|-beta|)$ ]]; then
+        if ! [[ ${{ github.ref_name }} =~ ^\d+.\d+.\d+(-alpha|-beta|)-dev$ ]]; then
             echo "Error: Invalid tag format."
             exit 1
         fi
