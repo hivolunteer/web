@@ -4,8 +4,6 @@ on:
   push:
     tags:
     - '^\d+.\d+.\d+(-alpha|-beta|)$' # Trigger this GitHub Action when a tag is pushed.
-    branches:
-      - main
 
 jobs:
   # Push the source code to the container registry.
