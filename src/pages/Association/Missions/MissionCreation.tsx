@@ -11,6 +11,7 @@ import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import moment from "moment";
 import LocationModal from "./Modal/LocationModal";
 import { cp } from "fs";
+import config from "../../../config";
 
 interface MissionCreationData {
   missionName?: string;
@@ -79,7 +80,7 @@ export default function MissionCreation() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    fetch("http://localhost:8000/skills", {
+    fetch(`${config.apiUrl}/skills`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -108,7 +109,7 @@ export default function MissionCreation() {
       title: form?.missionName,
       skills: newSkill,
     };
-    fetch("http://localhost:8000/missions/association/create", {
+    fetch(`${config.apiUrl}/missions/association/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
