@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogTitle, Grid, IconButton, TextField, Switch, Button, Box, Autocomplete } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
+import config from "../../../../config";
 
 interface Address {
     street_number: number | null;
@@ -45,7 +46,7 @@ const LocationModal = ({
     const sendData = () => {
         if (basicAddress.street_number && basicAddress.street_name && basicAddress.street_type && basicAddress.city && basicAddress.postal_code) {
             basicAddress.departement_id = Number(basicAddress.postal_code.toString().slice(0, 2));
-            fetch('http://localhost:8000/locations/create', {
+            fetch(`${config.apiUrl}/locations/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

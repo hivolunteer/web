@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Card from 'react-bootstrap/Card';
+import config from "../../../config";
 
 function MisssionCard(props: {mission: number}) {
 
@@ -23,7 +24,7 @@ function MisssionCard(props: {mission: number}) {
 
     useEffect(() => {
 
-        fetch(`http://localhost:8000/missions/association/${props.mission}`, {
+        fetch(`${config.apiUrl}/missions/association/${props.mission}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -33,7 +34,7 @@ function MisssionCard(props: {mission: number}) {
                 response.json().then((data) => {
                     setMission(data.association_mission)
                     console.log(data.association_mission)
-                    fetch('http://localhost:8000/associations/' + data.association_mission.owner_id, {
+                    fetch(`${config.apiUrl}/associations/` + data.association_mission.owner_id, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json'
