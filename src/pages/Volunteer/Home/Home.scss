@@ -1,0 +1,28 @@
+@import 'assets/scss/_colors.scss';
+@import 'assets/scss/_fonts.scss';
+
+.home-container {
+    width: 100%;
+    height: 100%;
+    background-color: $color-background;
+}
+
+.header-container {
+    display: flex;
+    margin: 0 2.5%
+}
+
+.header-left {
+    flex-direction: row;
+    display: flex;
+    flex: 2;
+}
+
+.mission-body-with-icon {
+    flex-direction: row;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    align-items: center;
+    margin: -10px 0;
+}
