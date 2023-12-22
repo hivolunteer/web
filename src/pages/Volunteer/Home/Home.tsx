@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import MissionCard from './MissionCard';
 import './Home.scss';
+import config from "../../../config";
 
 function Home(props: any) {
-
     interface Mission {
         association_mission: number
     }
@@ -13,7 +13,8 @@ function Home(props: any) {
     const [profile, setProfile] = useState<any>({})
 
     useEffect(() => {
-        fetch('http://localhost:8000/missions/volunteer/active', {
+        console.log(localStorage)
+        fetch(`${config.apiUrl}/missions/volunteer/active`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -28,7 +29,7 @@ function Home(props: any) {
             }
         })
 
-        fetch('http://localhost:8000/missions/volunteer/passed', {
+        fetch(`${config.apiUrl}/missions/volunteer/passed`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

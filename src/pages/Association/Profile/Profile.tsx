@@ -5,6 +5,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { useNavigate } from "react-router-dom";
+import config from "../../../config";
 
 const src_img = require('../../../images/titleLogo.png');
 
@@ -22,8 +23,7 @@ function ProfilePage(props: any) {
   useEffect(() => {
     console.log(localStorage)
     const getProfile = () => {
-      let url = 'http://localhost:8000/associations/profile';
-      fetch(url, {
+      fetch(`${config.apiUrl}/associations/profile`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ function ProfilePage(props: any) {
 
   const deleteAccount = () => {
     /* if (window.confirm('Are you sure you want to delete your account?')) {
-      let url = 'http://localhost:8000/associations/profile';
+      let url = `${config.apiUrl}/associations/profile`;
       fetch(url, {
         method: 'DELETE',
         headers: {

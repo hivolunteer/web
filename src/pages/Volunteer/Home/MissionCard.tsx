@@ -5,6 +5,7 @@ import './Home.scss';
 
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import NearMeOutlinedIcon from '@mui/icons-material/NearMeOutlined';
+import config from "../../../config";
 
 function MisssionCard(props: {mission: number}) {
 
@@ -30,7 +31,7 @@ function MisssionCard(props: {mission: number}) {
     useEffect(() => {
         console.log(props)
 
-        fetch(`http://localhost:8000/missions/association/${props.mission}`, {
+        fetch(`${config.apiUrl}/missions/association/${props.mission}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -40,7 +41,7 @@ function MisssionCard(props: {mission: number}) {
                 response.json().then((data) => {
                     setMission(data.association_mission)
                     console.log(data.association_mission)
-                    fetch('http://localhost:8000/associations/profile/' + data.association_mission.owner_id, {
+                    fetch(`${config.apiUrl}/associations/` + data.association_mission.owner_id, {
                         method: 'GET',
                         headers: {
                             'Authorization': `Bearer ${localStorage.getItem('token')}`,

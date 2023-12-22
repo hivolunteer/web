@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import { Password } from "@mui/icons-material";
+import config from '../../../config';
 
 const src_img = require('../../../images/titleLogo.png');
 
@@ -27,7 +28,7 @@ function ModifyProfilePage(props: any) {
   useEffect(() => {
     console.log(localStorage)
     const getProfile = () => {
-      let url = 'http://localhost:8000/associations/profile';
+      let url = `${config.apiUrl}/associations/profile`;
       fetch(url, {
         method: 'GET',
         headers: {
@@ -78,8 +79,7 @@ function ModifyProfilePage(props: any) {
          setProfilePicture(dataUrl);
          const formData = new FormData();
          formData.append('file', file);
-         const url = 'http://localhost:8000/associations/profile/';
-         fetch(url, {
+         fetch(`${config.apiUrl}/associations/profile/`, {
            method: 'POST',
            headers: {
              'Content-Type': 'application/json',
@@ -119,8 +119,7 @@ function ModifyProfilePage(props: any) {
         profile_picture: profile_picture,
     }
 
-    let url = 'http://localhost:8000/associations/update';
-    fetch(url, {
+    fetch(`${config.apiUrl}/associations/update`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -139,7 +138,7 @@ function ModifyProfilePage(props: any) {
 
   const deleteAccount = () => {
     /* if (window.confirm('Are you sure you want to delete your account?')) {
-      let url = 'http://localhost:8000/associations/profile';
+      let url = `${config.apiUrl}/associations/profile`;
       fetch(url, {
         method: 'DELETE',
         headers: {

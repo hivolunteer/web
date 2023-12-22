@@ -1,6 +1,7 @@
 import "./Profile.scss";
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
+import config from "../../../config";
 
 const src_img = require('../../../images/titleLogo.png');
 
@@ -22,8 +23,7 @@ function ProfilePage(props: any) {
   useEffect(() => {
     console.log(localStorage)
     const getProfile = () => {
-      let url = 'http://localhost:8000/volunteers/profile';
-      fetch(url, {
+      fetch(`${config.apiUrl}/volunteers/profile`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -72,8 +72,7 @@ function ProfilePage(props: any) {
          setProfilePicture(dataUrl);
          const formData = new FormData();
          formData.append('file', file);
-         const url = 'http://localhost:8000/volunteers/profile/';
-         fetch(url, {
+         fetch(`${config.apiUrl}volunteers/profile/`, {
            method: 'POST',
            headers: {
              'Content-Type': 'application/json',
@@ -113,8 +112,7 @@ function ProfilePage(props: any) {
       profile_picture: profile_picture,
     }
 
-    let url = 'http://localhost:8000/volunteers/update';
-    fetch(url, {
+    fetch(`${config.apiUrl}/volunteers/update`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -132,7 +130,7 @@ function ProfilePage(props: any) {
 
   const deleteAccount = () => {
     /* if (window.confirm('Are you sure you want to delete your account?')) {
-      let url = 'http://localhost:8000/volunteers/profile';
+      let url = `${config.apiUrl}/volunteers/profile`;
       fetch(url, {
         method: 'DELETE',
         headers: {
