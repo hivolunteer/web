@@ -38,6 +38,29 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
+  const handleMenuItemClick = (setting: string) => {
+    handleCloseUserMenu();
+  
+    switch (setting) {
+      case 'Créer une mission':
+        window.location.href = '/missionCreation';
+        break;
+      case 'Profile':
+        navigate('/profile');
+        break;
+      case 'Logout':
+        handleLogout();
+        break;
+      default:
+        break;
+    }
+  };
+  
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.href = '/';
+  };  
+
   return (
     <AppBar position="static" background-color="#F5F5F5" style={{ background: '#598b7d' }}>
       <Container maxWidth="xl">
@@ -152,35 +175,15 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting} onClick={() => handleMenuItemClick(setting)}>
                   <Typography
                     textAlign="center"
                     component={Link}
                     to={setting === 'Profile' ? '/profile' : '/'}
-                    onClick={() => {
-                      handleCloseUserMenu();
-                      switch (setting) {
-                          case 'Créer une mission':
-                              window.location.href = '/missionCreation';
-                              break;
-                          case 'Profile':
-                              navigate('/profile');
-                              break;
-                        case 'Logout':
-                          console.log('logout'); 
-                          localStorage.removeItem('token');
-                          localStorage.removeItem('role');
-                          window.location.reload();
-                          window.location.href = '/';
-                          break;
-                        default:
-                          break;
-                      }
-                    }}
                     style={{ textDecoration: 'none', color: 'inherit' }}
-                    >
-                      {setting}
-                    </Typography>
+                  >
+                    {setting}
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>

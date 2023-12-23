@@ -2,18 +2,14 @@ import React, { useState, useEffect } from 'react';
 import MissionCard from './MissionCard';
 import './Home.scss';
 import config from "../../../config";
+import WeekMissions from './WeekMissions';
 
 function Home(props: any) {
-    interface Mission {
-        association_mission: number
-    }
 
-    const [missionList, setMissionList] = useState<Mission[]>([]);
-    const [passedMissionList, setPassedMissionList] = useState<Mission[]>([]);
+    const [missionList, setMissionList] = useState<Number[]>([]);
     const [profile, setProfile] = useState<any>({})
 
     useEffect(() => {
-        console.log(localStorage)
         fetch(`${config.apiUrl}/missions/volunteer/active`, {
             method: 'GET',
             headers: {
@@ -23,26 +19,10 @@ function Home(props: any) {
         }).then((response) => {
             if (response.status === 200) {
                 response.json().then((data) => {
-                    console.log(data)
                     setMissionList(data.active_missions)
                 })
             }
         })
-
-        fetch(`${config.apiUrl}/missions/volunteer/passed`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-              }
-          }).then((response) => {
-              if (response.status === 200) {
-                  response.json().then((data) => {
-                    console.log(data)
-                    setPassedMissionList(data.passed_missions)
-                  })
-              }
-          })
 
           fetch('http://localhost:8000/volunteers/profile', {
             method: 'GET',
@@ -53,7 +33,6 @@ function Home(props: any) {
         }).then((response) => {
             if (response.status === 200) {
                 response.json().then((data) => {
-                    console.log(data)
                     setProfile(data.volunteer)
                 })
             }
@@ -71,15 +50,15 @@ function Home(props: any) {
                     <p> {profile.rating} </p>
                 </div>
             </div>
-            <div style={{width: '95%', margin: '0 2.5%'}}>
-                <div>
+            <div className="body-container">
+                <div className="mission-container">
                     <div>
-                        <h1> Vos missions : </h1>
-                        <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', margin: '0 15%'}}>
+                        <h2> Prochaines missions : </h2>
+                        <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
                             {
                                 missionList.map((mission: any) => {
                                     return(
-                                        <div style={{width: '50%'}}>
+                                        <div style={{width: '100%', margin: '10px'}}>
                                             <MissionCard mission={mission} />
                                         </div>
                                     )
@@ -89,18 +68,7 @@ function Home(props: any) {
                     </div>
                 </div>
                 <div>
-                    <h1> Missions de la semaine </h1>
-                    <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', margin: '0 15%'}}>
-                        {
-                            passedMissionList.map((mission: any) => {
-                                return(
-                                    <div style={{width: '50%', margin: '10px 0'}}>
-                                        <MissionCard mission={mission} />
-                                    </div>
-                                )
-                            })
-                        }
-                    </div>
+                    <WeekMissions missions={missionList} />
                 </div>
             </div>
         </div>
