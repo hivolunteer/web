@@ -1,5 +1,10 @@
+import { CardContent, CardMedia } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import Card from 'react-bootstrap/Card';
+import './Home.scss';
+
+import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
+import NearMeOutlinedIcon from '@mui/icons-material/NearMeOutlined';
 import config from "../../../config";
 
 function MisssionCard(props: {mission: number}) {
@@ -20,7 +25,8 @@ function MisssionCard(props: {mission: number}) {
         pratical_info: ''
     })
 
-    let [associationName, setAssociationName] = useState<string>('')
+    let [associationPicture, setAssociationPicture] = useState<string>('')
+
 
     useEffect(() => {
 
@@ -33,17 +39,16 @@ function MisssionCard(props: {mission: number}) {
             if (response.status === 200) {
                 response.json().then((data) => {
                     setMission(data.association_mission)
-                    console.log(data.association_mission)
-                    fetch(`${config.apiUrl}/associations/` + data.association_mission.owner_id, {
+                    fetch(`${config.apiUrl}/associations/profile/` + data.association_mission.owner_id, {
                         method: 'GET',
                         headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`,
                             'Content-Type': 'application/json'
                         }
                     }).then((response) => {
-                        console.log(response)
                         if (response.status === 200) {
                             response.json().then((data) => {
-                                setAssociationName(data.name)
+                                setAssociationPicture(data.association.profile_picture)
                             })
                         }
                     })
@@ -56,17 +61,20 @@ function MisssionCard(props: {mission: number}) {
     // misc functions
 
     function convertDay(date: string) {
-        let newDate = new Date(date)
-        // return just the day format DD/MM/YYYY
-        return `${newDate.getDate()}/${newDate.getMonth() + 1}/${newDate.getFullYear()}`
+        if (date === '')
+            return ''
+        let day = date.split('T')[0].split('-')[2]
+        let month = date.split('T')[0].split('-')[1]
+        let year = date.split('T')[0].split('-')[0]
+        return `${day}/${month}/${year}`
     }
 
-    function convertDate(date: string) {
-        let newDate = new Date(date)
-        // get only hours and minutes
-        let hours = newDate.getHours()
-        let minutes = newDate.getMinutes()
-        return `${hours}:${minutes}`
+    function convertHour(date: string) {
+        if (date === '')
+            return ''
+        let hour = date.split('T')[1].split(':')[0]
+        let minutes = date.split('T')[1].split(':')[1]
+        return `${hour}:${minutes}`
     }
         
 
@@ -74,45 +82,44 @@ function MisssionCard(props: {mission: number}) {
     return(
         <Card
             style={{
-                width: '18rem',
-                height: '15rem',
-                margin: '1rem',
-                border: '3px solid #5b8971',
+                width: '100%',
+                height: '100%',
+                border: 'none',
                 borderRadius: '10px',
+                boxShadow: '0px 5px 5px -5px #2d2a32',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
-                alignItems: 'center'
+                alignItems: 'center',
+                backgroundColor: '#FFFEFF'
             }}
         >
-            <Card.Body
-                style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    textAlign: 'center',
-                    margin: 'auto'
-                }}
-            >
-                <Card.Title
-                    style={{
-                        fontSize: '1.5rem',
-                        fontWeight: 'bold',
-                        width: '80%',
-                    }}
-                > {mission.title} </Card.Title>
-                <Card.Subtitle
-                    style={{
-                        fontSize: '1rem',
-                        fontWeight: 'italic'
-                    }}
-                > 
-                    {associationName} 
-                </Card.Subtitle>
-                <br />
-                <Card.Text> Date : {convertDay(mission.start_date)} </Card.Text>
-                <Card.Text> {convertDate(mission.start_date)} - {convertDate(mission.end_date)} </Card.Text>
+            <Card.Body style={{width: '100%'}}>
+                <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%'}}>
+                    <div style={{flex: 1, margin: '10px 20px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
+                        <CardMedia
+                            component="img"
+                            style={{borderRadius: '100%', objectFit: 'cover', height: '150px', width: '150px'}}
+                            image={(associationPicture === '') ? 'https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg' : associationPicture}
+                            alt="association picture"
+                        />
+                    </div>
+                    <div style={{flex: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start'}}>
+                        <div className='mission-header'>
+                            <p style={{fontWeight: 'bold'}}> {mission.title} </p>
+                        </div>
+                        <div className='mission-body'>
+                            <div className='mission-body-with-icon'>
+                                <CalendarMonthOutlinedIcon />
+                                <p style={{marginLeft: '10px'}}> {convertDay(mission.start_date)} {convertHour(mission.start_date)}h - {convertHour(mission.end_date)}h </p>
+                            </div>
+                            <div className='mission-body-with-icon' style={{marginBottom: '2px'}}>
+                                <NearMeOutlinedIcon />
+                                <p style={{marginLeft: '10px'}}> Lieu </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </Card.Body>
         </Card>
     )
