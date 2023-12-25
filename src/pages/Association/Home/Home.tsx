@@ -7,6 +7,7 @@
 import './Home.scss';
 import {useEffect, useState } from 'react'
 import config from "../../../config";
+import { Button } from '@mui/material';
 
 interface Association {
     id: number,
@@ -16,6 +17,7 @@ interface Association {
 }
 
 function Home () {
+
     const [Association, setAssociation] = useState<Association>({
         id: 0,
         name: "", 
@@ -51,6 +53,26 @@ function Home () {
                         <h2 className="asso-rating"> {Association.rating} / 5 </h2>
                     </div>
                     <h1> {Association.name} </h1>
+                </div>
+                <div className="header-right-association">
+                    <Button 
+                        variant="contained"
+                        className="new-mission"
+                        style={{
+                            backgroundColor: '#67A191',
+                            color: '#FFFEFF',
+                            textTransform: 'none',
+                            borderRadius: '10px',
+                            fontSize: '15px',
+                            padding: '15px',
+                            width: '100%',
+                            height: '100%',
+                            boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                        }}
+                        onClick={() => {window.location.href = 'missionCreation'}}
+                    > 
+                        Nouvelle Mission
+                    </Button>
                 </div>
             </div>
             <div className="body-container" style={{flex: 2}}>
