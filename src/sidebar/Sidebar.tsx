@@ -12,8 +12,8 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { Link, useNavigate } from 'react-router-dom';
-import { ReactComponent as Logo } from "../images/logo/bee_white.svg";
-import logoImage from '../images/logo/bee_yb.png';
+import logoWhite from "../images/logo/submark_white.png";
+import logoImage from '../images/logo/submark.png';
 
 const pages = ['Accueil', 'Calendrier', 'Profile'];
 const settings = ['Créer une mission', 'Profile', 'Logout'];
@@ -65,7 +65,7 @@ function ResponsiveAppBar() {
     <AppBar position="static" background-color="#F5F5F5" style={{ background: '#598b7d' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Logo style={{ width: '50px', height: '50px' }} />
+          <Avatar alt="User" src={ logoWhite } />
           <Typography
             variant="h6"
             noWrap
