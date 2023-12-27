@@ -1,3 +1,9 @@
+/**
+ * @module Profile.tsx
+ * @description Association Profile Page
+ * @utility This page is used to display the association's profile page
+*/
+
 import "./Profile.scss";
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";

@@ -4,6 +4,7 @@ import "./UserTypeChoice.scss";
 import Box from "@mui/material/Box";
 import titleLogo from "../../images/titleLogo.png";
 import { useNavigate } from "react-router-dom";
+import Switch from '../../components/Switch'
 
 const UserTypeChoice = () => {
     const navigation = useNavigate();
@@ -13,11 +14,11 @@ const UserTypeChoice = () => {
 
     const goToPage = () => {
         let to_go: string = (isVolunteer) ? "/volunteers" : "/associations"
-        to_go += (subType === "Connexion") ? "/login" : "/register";
+        to_go += (subType === "Connection") ? "/login" : "/register";
         navigation(to_go);
     };
 
-    const [subType, setSubType] = React.useState("Connexion");
+    const [subType, setSubType] = React.useState("Connection");
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setChecked(event.target.checked);
@@ -28,35 +29,16 @@ const UserTypeChoice = () => {
             <div className="row">
                 <h1 className="title">Qui êtes vous ?</h1>
             </div>
-            <Box sx={{ display: "flex" }}>
-                <Box className="mask-box">
-                    <Box
-                      className="mask"
-                      style={{
-                        transform: `translateX(${subType === "Inscription" ? 0 : "200px"})`
-                      }}
+            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                <div style={{width: '30%'}}>
+                    <Switch
+                        option1="Inscription"
+                        option2="Connection"
+                        subType={subType}
+                        setSubType={setSubType}
                     />
-                    <Button
-                      disableRipple
-                      variant="text"
-                      sx={{ color: subType === "Inscription" ? "#ffffff" : "#5316AE" }}
-                      onClick={() => setSubType("Inscription")}
-                      onChange={() => handleChange}
-                    >
-                      Inscription
-                    </Button>
-                    <Button
-                      disableRipple
-                      variant="text"
-                      sx={{ color: subType === "Connexion" ? "#ffffff" : "#5316AE" }}
-                      onClick={() => setSubType("Connexion")}
-                      onChange={() => handleChange}
-                      value="checked"
-                    >
-                      Connexion
-                    </Button>
-                </Box>
-            </Box>
+                </div>
+            </div>
             <div className="row">
                 <div className="col-12">
                     <Button 

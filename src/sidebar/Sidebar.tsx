@@ -16,7 +16,7 @@ import logoWhite from "../images/logo/submark_white.png";
 import logoImage from '../images/logo/submark.png';
 
 const pages = ['Accueil', 'Calendrier', 'Profile'];
-const settings = ['Créer une mission', 'Profile', 'Logout'];
+const settings = ['Profile', 'Logout'];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -42,9 +42,6 @@ function ResponsiveAppBar() {
     handleCloseUserMenu();
   
     switch (setting) {
-      case 'Créer une mission':
-        window.location.href = '/missionCreation';
-        break;
       case 'Profile':
         navigate('/profile');
         break;

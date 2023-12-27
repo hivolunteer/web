@@ -1,3 +1,9 @@
+/**
+ * @module MissionCreation.tsx
+ * @description Mission Creation Page
+ * @utility This page is used to create a mission
+*/
+
 import {Autocomplete, Box, Button, Chip, Dialog, DialogContent, DialogTitle, Grid, Stack, TextField} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import { Image } from "mui-image";
