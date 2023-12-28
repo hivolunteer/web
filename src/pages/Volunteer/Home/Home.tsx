@@ -24,7 +24,7 @@ function Home(props: any) {
             }
         })
 
-          fetch('http://localhost:8000/volunteers/profile', {
+          fetch(`${config.apiUrl}/volunteers/profile`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
