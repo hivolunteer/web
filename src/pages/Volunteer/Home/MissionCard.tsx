@@ -1,5 +1,5 @@
-import { CardContent, CardMedia } from '@mui/material';
-import React, { useState, useEffect } from 'react';
+import { CardMedia } from '@mui/material';
+import { useState, useEffect } from 'react';
 import Card from 'react-bootstrap/Card';
 import './Home.scss';
 

@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Alert, Box, Button, Container, CssBaseline, Grid, IconButton, InputAdornment, Link, TextField, ThemeProvider, Typography, createTheme } from '@mui/material';
-import './Register.scss';
+import { useNavigate } from 'react-router-dom';
+import { Alert, Box, Button, Grid, IconButton, InputAdornment, Link, TextField, Typography } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { AuthenticationService } from '../../../services/authentication.service';
-import { useNavigate } from 'react-router-dom';
-
-const theme = createTheme();
+import './Register.scss';
+import titleLogo from "../../../images/logo/primary_logo.png";
 
 function RegisterVolunteer() {
     /***
@@ -208,74 +207,78 @@ function RegisterVolunteer() {
     }
 
     return (
-        <ThemeProvider theme={theme}>
-            <Container
-                component="main"
-                maxWidth="xs"
-                sx={{
-                    backgroundColor: (theme) =>
-                        theme.palette.mode === 'light'
-                            ? theme.palette.grey[50]
-                            : theme.palette.grey[900],
-                    borderRadius: 8,
-                    borderColor: (theme) =>
-                        theme.palette.mode === 'light'
-                            ? theme.palette.grey[100]
-                            : theme.palette.grey[800],
-                    boxShadow: (theme) =>
-                        theme.palette.mode === 'light'
-                            ? theme.shadows[1]
-                            : 'none',
-                }}
-                >
-                <CssBaseline />
+        <div className="center-form">
+            <div className="choice-form">
+                <div className="row">
+                    <div className="col-12">
+                        <img className="titleLogo" src={titleLogo} alt=""/>
+                    </div>
+                </div>
                 <Box
                     sx={{
-                      marginTop: 8,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
+                        marginTop: "30px",
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
                     }}
                 >
-                    <Typography component="h1" variant="h5">
+                    <Typography component="h1" variant="h5" marginBottom="10px">
                         Inscription Bénévole
                     </Typography>
-                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{mt: 3}}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    autoComplete="given-name"
-                                    name="first_name"
-                                    required
-                                    fullWidth
-                                    id="first_name"
-                                    label="Prénom"
-                                    autoFocus
-                                />
-                                {/* If first_name is empty, display an error message */}
-                                {!first_name && (
-                                    <Alert severity="error">
-                                        Le prénom est requis
-                                    </Alert>
-                                )}
+                    <Box component="form"
+                         noValidate
+                         onSubmit={handleSubmit}
+                         sx={{ mt: 3 }}
+                         >
+                        <Grid container spacing={2} justifyContent="center" flexDirection="column">
+                            <Grid container spacing={2} justifyContent="center">
+                                <Grid item xs={12} sm={5}>
+                                    <TextField
+                                        autoComplete="given-name"
+                                        name="first_name"
+                                        required
+                                        fullWidth
+                                        id="first_name"
+                                        label="Prénom"
+                                        autoFocus
+                                        InputProps={{
+                                            style: { color: "#2D2A32",
+                                                     boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                                     borderRadius: "10px"
+                                                   }
+                                        }}
+                                    />
+                                    {/* If first_name is empty, display an error message */}
+                                    {!first_name && (
+                                        <Alert severity="error">
+                                            Le prénom est requis
+                                        </Alert>
+                                    )}
+                                </Grid>
+                                <Grid item xs={12} sm={5}>
+                                    <TextField
+                                        autoComplete='family-name'
+                                        name='last_name'
+                                        required
+                                        fullWidth
+                                        id='last_name'
+                                        label='Nom'
+                                        InputProps={{
+                                            style: { color: "#2D2A32",
+                                                     boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                                     borderRadius: "10px",
+                                                   }
+                                        }}
+                                    />
+                                    {/* If last_name is empty, display an error message */}
+                                    {!last_name && (
+                                        <Alert severity="error">
+                                            Le nom de famille est requis
+                                        </Alert>
+                                    )}
+                                </Grid>
                             </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    autoComplete='family-name'
-                                    name='last_name'
-                                    required
-                                    fullWidth
-                                    id='last_name'
-                                    label='Nom'
-                                />
-                                {/* If last_name is empty, display an error message */}
-                                {!last_name && (
-                                    <Alert severity="error">
-                                        Le nom de famille est requis
-                                    </Alert>
-                                )}
-                            </Grid>
-                            <Grid item xs={12}>
+                            <Grid item xs={10} marginLeft={4}>
                                 <TextField
                                     autoComplete='bday'
                                     name='birthdate'
@@ -286,6 +289,13 @@ function RegisterVolunteer() {
                                     type='date'
                                     InputLabelProps={{
                                         shrink: true,
+                                    }}
+                                    sx={{ alignItems: "center" }}
+                                    InputProps={{
+                                        style: { color: "#2D2A32",
+                                                 boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                                 borderRadius: "10px",
+                                               }
                                     }}
                                 />
                                 {/* If birthdate is empty, display an error message */}
@@ -302,20 +312,7 @@ function RegisterVolunteer() {
                                 )}
                             </Grid>
                             {/* Input phone number */}
-                            <Grid item xs={12}>
-                                {/*<MuiTelInput
-                                    name='phone'
-                                    label='Numéro de téléphone'
-                                    required
-                                    fullWidth
-                                    id='phone'
-                                    autoComplete='tel'
-                                    continents={['EU']}
-                                    defaultCountry='FR'
-                                    value='phone'
-                                    //value={phoneInput}
-                                    //onChange={setPhoneInput}
-                                />*/}
+                            <Grid item xs={10} marginLeft={4}>
                                 <TextField
                                     autoComplete='tel'
                                     name='phone'
@@ -324,13 +321,25 @@ function RegisterVolunteer() {
                                     id='phone'
                                     label='Numéro de téléphone'
                                     type='tel'
+                                    inputProps={{
+                                        pattern: "[0-9+]*",
+                                        style:
+                                        {
+                                            color: "#2D2A32",
+                                            boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                            borderRadius: "10px"
+                                        }
+                                    }}
                                     /* accept only numbers and symbols + */
-                                    inputProps={{pattern: '[0-9+]*'}}
                                     helperText='Format : +336XXXXXXXX'
+                                    FormHelperTextProps={{
+                                        sx: { marginRight: "auto" }
+                                    }}
                                     error={!phone || !phoneFormat}
+                                    sx={{ alignItems: "center" }}
                                 />
 
-
+                            
                                 {/* If phone is empty, display an error message */}
                                 {!phone && (
                                     <Alert severity="error">
@@ -344,7 +353,7 @@ function RegisterVolunteer() {
                                     </Alert>
                                 )}
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid item xs={10} marginLeft={4}>
                                 <TextField
                                     autoComplete='email'
                                     name='email'
@@ -352,6 +361,13 @@ function RegisterVolunteer() {
                                     fullWidth
                                     id='email'
                                     label='Adresse email'
+                                    sx={{ alignItems: "center" }}
+                                    InputProps={{
+                                        style: { color: "#2D2A32",
+                                                 boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                                 borderRadius: "10px",
+                                               }
+                                    }}
                                 />
                                 {/* If email is empty, display an error message */}
                                 {!email && (
@@ -366,7 +382,7 @@ function RegisterVolunteer() {
                                     </Alert>
                                 )}
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid item xs={10} marginLeft={4}>
                                 <TextField
                                     autoComplete='new-password'
                                     name='password'
@@ -375,7 +391,12 @@ function RegisterVolunteer() {
                                     id='password'
                                     label='Mot de passe'
                                     type={showPassword ? 'text' : 'password'}
+                                    sx={{ alignItems: "center" }}
                                     InputProps={{
+                                        style: { color: "#2D2A32",
+                                                 boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                                 borderRadius: "10px",
+                                               },
                                         endAdornment: (
                                           <InputAdornment position="end">
                                              <IconButton
@@ -406,11 +427,18 @@ function RegisterVolunteer() {
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
+                            sx={{ mt: 6,
+                                mb: 3,
+                                color: "#FFFEFF",
+                                backgroundColor: "#67A191",
+                                borderRadius: "10px",
+                                boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                width: "200px",
+                              }}
                         >
                             Inscription
                         </Button>
-                        <Grid container justifyContent='flex-end'>
+                        <Grid container justifyContent='flex-end' sx={{ mb: 4 }}>
                             <Grid item>
                                 <Link href='/volunteers/login' variant='body2'>
                                     Vous avez déjà un compte ? Connectez-vous
@@ -419,8 +447,8 @@ function RegisterVolunteer() {
                         </Grid>
                     </Box>
                 </Box>
-            </Container>
-        </ThemeProvider>
+            </div>
+        </div>
     );
 }
 

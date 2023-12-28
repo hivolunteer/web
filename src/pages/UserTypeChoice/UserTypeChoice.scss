@@ -1,76 +1,74 @@
 .row {
-  padding-top: 2.5rem;
-  padding-bottom: 2.5rem;
+  padding-bottom: 10px;
 }
 
-.mask-box {
-  margin: auto;
-  border-radius: 20px;
-  position: relative;
-  background: #9dbdb3;
-  box-shadow: 1px 1px 2px rgb(165, 165, 165) inset;
-}
-.mask-box .mask {
-  width: 200px;
-  height: 40px;
-  border-radius: 20px;
-  background: #5d9082;
-  position: absolute;
-  box-shadow: 1px 0 2px #5d9082;
-  transition: all 0.5s ease;
-}
-.mask-box .MuiButton-root {
-  border-radius: 20px;
-  width: 200px;
-  height: 40px;
-  font-weight: bold;
-  color: white;
-  transition: all 0.2s 0.1s ease;
-}
-.mask-box .MuiButton-root:hover {
-  opacity: 0.8;
+.center-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  height: 100vh;
+  background-color: #CDCDCD;
 }
 
-.btn {
-  height: 5rem !important;
-  color: white !important;
+.choice-form {
+  grid-column: 2;
+  grid-row: 2;
+  display: grid;
+  grid-gap: 10px;
+  margin: auto 0;
+  padding: 20px;
+  background-color: #F5F5F5;
+  border-radius: 10px;
+  box-shadow: 0 32px 64px rgba(0,0,0,0.2);
 }
 
 .title {
   text-align: center;
   color: #1f0812;
-  font-weight: normal;
-}
-
-.enterprise {
-  width: 40%;
-  margin-right: auto !important;
-  margin-left: 0 !important;
-  display:block !important;
-  background-color: rgba(162, 197, 106, 0.86) !important;
-}
-
-.association {
-  width: 60%;
-  margin-right: 0 !important;
-  margin-left:auto !important;
-  display:block !important;
-  margin-top: 0.4rem;
-  background-color: rgba(106, 153, 197, 0.86) !important;
-}
-
-.volunteer {
-  width: 40%;
-  margin-right: auto !important;
-  margin-left: 0 !important;
-  display:block !important;
-  background-color: rgba(168, 138, 199, 0.86) !important;
+  font-weight: 600;
+  font-size: 24px;
+  margin-bottom: 50px;
 }
 
 .titleLogo {
-  width: 40% !important;
-  height: 40% !important;
+  width: 40%;
   display: flex;
   margin: auto;
   vertical-align: middle;
+}
+
+.radio-button-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.radio-button {
+  width: 400px;
+  height: 50px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25); 
+  border: none;
+}
+
+.choice-btn {
+  width: 150px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25); 
+  border: none;
+}
+
+.radio-button.selected {
+  background-color: #FFCF56;
+}
+
+.buttons-box {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  gap: 300px;
+  margin-top: 50px;
+  margin-bottom: 50px;
 }
