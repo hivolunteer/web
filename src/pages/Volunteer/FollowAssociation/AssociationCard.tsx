@@ -19,8 +19,6 @@ function AssociationCard(props: {id: number}) {
         }).then((response: any) => {
             if (response.status === 200) {
                 response.json().then((data: any) => {
-                    console.log(data)
-                    console.log(data.association)
                     setAssociation(data.association)
                     setAssociationPicture(data.association.profile_picture)
                 })
