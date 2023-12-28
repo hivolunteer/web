@@ -1,0 +1,92 @@
+@import 'assets/scss/_colors.scss';
+
+body {
+    background-color: var(--bg, white);
+    color: var(--bg-text, black)
+}
+
+.body-home {
+    // make window responsive
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: center;
+    text-align: center;
+    background-color: var(--bg, white);
+    color: var(--bg-text, black);
+    font-size: 1.2rem;
+    font-weight: 300;
+    padding: 1rem;
+    overflow-y: scroll;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    -ms-touch-action: pan-x pan-y;
+    touch-action: pan-x pan-y;
+}
+
+.color-option {
+    // button props
+    border: 1px solid black;
+    width: 120px;
+    height: 100px;
+    margin: 15px;
+    cursor: pointer;
+}
+
+.color-options {
+    // center all buttons on the div one by one
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.body-home-color-blind {
+    // make window responsive
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: center;
+    text-align: center;
+    background-color: rgb(255, 255, 255);
+    color: black;
+    font-size: 1.2rem;
+    font-weight: 300;
+    padding: 1rem;
+    overflow-y: scroll;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    -ms-touch-action: pan-x pan-y;
+    touch-action: pan-x pan-y;
+}
+
+.btn-container {
+    // center all buttons on the div one by one
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-container button {
+    // center all buttons on the div one by one
+    margin: 3px;
+    min-width: 200px;
+}
+
+.btn-basic {
+    // rounded green button with white text in Monserrat font in it an green border
+    border-radius: 20px;
+    background-color: $color-hivolunteer;
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    font-size: 14px;
+    padding: 10px 20px;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: none;
+    cursor: pointer;
+    outline: none;
+}

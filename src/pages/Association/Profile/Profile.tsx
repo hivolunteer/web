@@ -84,64 +84,85 @@ function ProfilePage(props: any) {
         });
     } */
   };
+  const [color_blind, setColorBlind] = useState(
+    localStorage.getItem("color_blind") === "true"
+  );
+  const handleClickColorBlind = () => {
+    let className = "";
+    if (!color_blind) {
+      className = "profile-pic";
+      localStorage.setItem("color_blind", "false");
+    } else {
+      className = "profile-pic-btn-color-blind";
+      localStorage.setItem("color_blind", "true");
+    }
+    return className;
+  };
 
   return (
     <Container className="profile-container">
-        <Row className="profile-row">
-            <Col sm={12} md={4} lg={3}>
-              <div className="profile-pic">
-                  <Typography className="rating">{rating} / 5</Typography>
-                  <img src={profile_picture} alt="" className="profile-img"/>
-              </div>
-              <div className="profile-btn-div">
-                <h2>
-                  {name}
-                </h2>
-              </div>
-            </Col>
-            <Col sm={12} md={8} lg={9}>
-                <div className="profile-info">
-                  <label className="volunteers-title">Bénévoles: </label>
-                  <div className="card-component">
-                    <Card sx={{ width: 400 }} className="volunteer-card">
-                      <CardContent>
-                        <Typography>
-                          0 bénévoles
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                    <Card sx={{ width: 400 }} className="volunteer-card">
-                      <CardContent>
-                        <Typography>
-                          0 en attente
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                  </div>
-                  <div>
-                    <label className="volunteers-title">Description : </label>
-                    <Typography className="asso-desc"> {description || "Aucune description"} </Typography>
-                  </div>
-                  <div>
-                    <label className="volunteers-title">Contacts : </label>
-                    <button type="button" onClick={() => setShow(prev => !prev)}>Afficher</button>
-                    {show && 
-                    <Typography className="asso-desc"> Numéro de téléphone: {phone || "Pas de téléphone"} <br/> Email: {email || "Pas de email"} <br/> Site: { "Pas de site"} </Typography>
-                    }
-                  </div>
-                  <div className="profile-btn-div">
-                      <button type="button" className="profile-pic-btn" onClick={() => navigate("/modifyProfile")}>
-                          Modifier le profile
-                      </button>
-                      {/* <button className="delete-account-btn" onClick={deleteAccount}>
+      <Row className="profile-row">
+        <Col sm={12} md={4} lg={3}>
+          <div className={handleClickColorBlind()}>
+            <Typography className="rating">{rating} / 5</Typography>
+            <img src={profile_picture} alt="" className="profile-img" />
+          </div>
+          <div className="profile-btn-div">
+            <h2>{name}</h2>
+          </div>
+        </Col>
+        <Col sm={12} md={8} lg={9}>
+          <div className="profile-info">
+            <label className="volunteers-title">Bénévoles: </label>
+            <div className="card-component">
+              <Card sx={{ width: 400 }} className="volunteer-card">
+                <CardContent>
+                  <Typography>0 bénévoles</Typography>
+                </CardContent>
+              </Card>
+              <Card sx={{ width: 400 }} className="volunteer-card">
+                <CardContent>
+                  <Typography>0 en attente</Typography>
+                </CardContent>
+              </Card>
+            </div>
+            <div>
+              <label className="volunteers-title">Description : </label>
+              <Typography className="asso-desc">
+                {" "}
+                {description || "Aucune description"}{" "}
+              </Typography>
+            </div>
+            <div>
+              <label className="volunteers-title">Contacts : </label>
+              <button type="button" onClick={() => setShow((prev) => !prev)}>
+                Afficher
+              </button>
+              {show && (
+                <Typography className="asso-desc">
+                  {" "}
+                  Numéro de téléphone: {phone || "Pas de téléphone"} <br />{" "}
+                  Email: {email || "Pas de email"} <br /> Site: {"Pas de site"}{" "}
+                </Typography>
+              )}
+            </div>
+            <div className="profile-btn-div">
+              <button
+                type="button"
+                className="profile-pic-btn"
+                onClick={() => navigate("/modifyProfile")}
+              >
+                Modifier le profile
+              </button>
+              {/* <button className="delete-account-btn" onClick={deleteAccount}>
                           Supprimer le compte
                       </button> */}
-                  </div>
-                </div>
-            </Col>
-        </Row>
+            </div>
+          </div>
+        </Col>
+      </Row>
     </Container>
   );
-};  
+}
 
 export default ProfilePage;

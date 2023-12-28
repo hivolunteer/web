@@ -86,6 +86,20 @@
   background-color: #5b8971;
 }
 
+.profile-pic-btn-color-blind {
+  padding: 0.5rem 1rem;
+  align-items: center;
+  margin: 0.5rem;
+  border: none;
+  border-radius: 20px;
+  background-color: #3b3d3c
+  ;
+}
+
+.profile-pic-btn-color-blind:hover {
+  background-color: #3b3d3c;
+}
+
 .profile-info {
   margin-top: 2rem;
 }
@@ -139,4 +153,36 @@
 
 .delete-account-btn:hover {
   background-color: rgb(224, 127, 127);
+}
+
+.profile-row-color-blind button,
+.profile-pic-btn-color-blind {
+  display: table-row;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 20px;
+  background-color: #3b3d3c;
+  color: #fff;
+  cursor: pointer;
+}
+
+
+.profile-row-color-blind button[type="submit"]:hover,
+.profile-pic-btn-color-blind:hover {
+  background-color: #3b3d3c;
+}
+
+.delete-account-btn-color-blind {
+  margin-top: 2rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  text-decoration: underline;
+  text-decoration-color: #3b3d3c;
+  color: #3b3d3c;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.delete-account-btn-color-blind:hover {
+  background-color: #3b3d3c;
 }
