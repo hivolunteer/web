@@ -64,7 +64,6 @@ function Home () {
                             textTransform: 'none',
                             borderRadius: '10px',
                             fontSize: '15px',
-                            padding: '15px',
                             width: '100%',
                             height: '100%',
                             boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
