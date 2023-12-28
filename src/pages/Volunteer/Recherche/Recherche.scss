@@ -1,0 +1,40 @@
+@import 'assets/scss/_colors.scss';
+@import 'assets/scss/_fonts.scss';
+
+.search-bar-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 2% 5%;
+}
+
+.filter-container {
+    display: flex;
+    justify-content: flex-start;
+    margin: 0% 5%;
+}
+
+.search-bar {
+    flex: 4;
+}
+
+.search-country {
+    flex: 2;
+}
+
+.switch-container {
+    display: flex;
+    justify-content: center;
+    margin: 2% 5%;
+}
+
+.missions-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 5%;
+    flex-direction: row;
+}
+
+.mission-card {
+    margin: 1% 2.5%;
+    width: 20%;
+}
