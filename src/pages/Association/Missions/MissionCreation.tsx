@@ -1,3 +1,9 @@
+/**
+ * @module MissionCreation.tsx
+ * @description Mission Creation Page
+ * @utility This page is used to create a mission
+*/
+
 import {Autocomplete, Box, Button, Chip, Dialog, DialogContent, DialogTitle, Grid, Stack, TextField} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import { Image } from "mui-image";
@@ -11,6 +17,7 @@ import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import moment from "moment";
 import LocationModal from "./Modal/LocationModal";
 import { cp } from "fs";
+import config from "../../../config";
 
 interface MissionCreationData {
   missionName?: string;
@@ -79,7 +86,7 @@ export default function MissionCreation() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    fetch("http://localhost:8000/skills", {
+    fetch(`${config.apiUrl}/skills`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -108,7 +115,7 @@ export default function MissionCreation() {
       title: form?.missionName,
       skills: newSkill,
     };
-    fetch("http://localhost:8000/missions/association/create", {
+    fetch(`${config.apiUrl}/missions/association/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

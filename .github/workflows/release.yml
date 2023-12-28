@@ -1,0 +1,32 @@
+---
+name: Deploy from release
+
+on:
+  release:
+    types:
+      - published
+
+env:
+  repo: ${{ github.event.repository.name }}
+  owner: ${{ github.repository_owner }}
+  version: ${{ github.ref_name }}
+  deploy_repo: ${{ vars.DEPLOYING_REPOSITORY }}
+  deploy_workflow: ${{ vars.DEPLOYING_WORKFLOW }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Trigger Deployment in Repository ${{ env.owner }}/${{ env.deploy_repo }}"
+        uses: octokit/request-action@v2.x
+        with:
+          route: POST /repos/{owner}/{repo}/actions/workflows/{workflow}/dispatches
+          owner: ${{ env.owner }}
+          repo: ${{ env.deploy_repo }}
+          workflow: ${{ env.deploy_workflow }}
+          ref: main
+          inputs: |
+            repository: "${{ env.repo }}"
+            version: "${{ env.version }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.HIVE_GITHUB_PAT }}
