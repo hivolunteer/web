@@ -57,6 +57,13 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 
 To learn React, check out the [React documentation](https://reactjs.org/).
 
+## Configuration
+You'll find here all the environment you can setup to configure the react server:
+
+| Name | Default | Description |
+| :--: | :-----: | :---------- |
+| REACT_APP_API_URL | http://localhost:8000 | The url that will be used as a prefix to form the full request to the backend server |
+
 ## Troubleshooting
 
 If you can't run the project with `npm start` and you get the following error:

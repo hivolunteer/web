@@ -1,22 +1,14 @@
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import MenuIcon from '@mui/icons-material/Menu';
+import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Button, Tooltip } from '@mui/material'
 import { Link, useNavigate } from 'react-router-dom';
-import { ReactComponent as Logo } from "../images/logo/bee_white.svg";
-import logoImage from '../images/logo/bee_yb.png';
+import './Sidebar.scss';
+import logoWhite from "../images/logo/submark_white.png";
+import logoImage from '../images/logo/submark.png';
 
 const pages = ['Accueil', 'Calendrier', 'Profile'];
-const settings = ['Créer une mission', 'Profile', 'Logout'];
+const settings = ['Profile', 'Logout'];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -38,11 +30,31 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
+  const handleMenuItemClick = (setting: string) => {
+    handleCloseUserMenu();
+  
+    switch (setting) {
+      case 'Profile':
+        navigate('/profile');
+        break;
+      case 'Logout':
+        handleLogout();
+        break;
+      default:
+        break;
+    }
+  };
+  
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.href = '/';
+  };  
+
   return (
     <AppBar position="static" background-color="#F5F5F5" style={{ background: '#598b7d' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Logo style={{ width: '50px', height: '50px' }} />
+          <Avatar alt="User" src={ logoWhite } />
           <Typography
             variant="h6"
             noWrap
@@ -152,35 +164,15 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting} onClick={() => handleMenuItemClick(setting)}>
                   <Typography
                     textAlign="center"
                     component={Link}
                     to={setting === 'Profile' ? '/profile' : '/'}
-                    onClick={() => {
-                      handleCloseUserMenu();
-                      switch (setting) {
-                          case 'Créer une mission':
-                              window.location.href = '/missionCreation';
-                              break;
-                          case 'Profile':
-                              navigate('/profile');
-                              break;
-                        case 'Logout':
-                          console.log('logout'); 
-                          localStorage.removeItem('token');
-                          localStorage.removeItem('role');
-                          //window.location.reload();
-                          window.location.href = '/';
-                          break;
-                        default:
-                          break;
-                      }
-                    }}
                     style={{ textDecoration: 'none', color: 'inherit' }}
-                    >
-                      {setting}
-                    </Typography>
+                  >
+                    {setting}
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>

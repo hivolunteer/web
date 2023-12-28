@@ -1,19 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import './Home.scss';
+import config from "../../../config";
 import MissionCard from './MissionCard';
+import WeekMissions from './WeekMissions';
 
 function Home(props: any) {
 
-    interface Mission {
-        association_mission: number
-    }
-
-    const [missionList, setMissionList] = useState<Mission[]>([]);
-    const [passedMissionList, setPassedMissionList] = useState<Mission[]>([]);
-
+    const [missionList, setMissionList] = useState<Number[]>([]);
+    const [profile, setProfile] = useState<any>({})
 
     useEffect(() => {
-        console.log(localStorage)
-        fetch('http://localhost:8000/missions/volunteer/active', {
+        fetch(`${config.apiUrl}/missions/volunteer/active`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -27,54 +24,53 @@ function Home(props: any) {
             }
         })
 
-        fetch('http://localhost:8000/missions/volunteer/passed', {
+          fetch('http://localhost:8000/volunteers/profile', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
-              }
-          }).then((response) => {
-              if (response.status === 200) {
-                  response.json().then((data) => {
-                    setPassedMissionList(data.passed_missions)
-                  })
-              }
-          })
+            }
+        }).then((response) => {
+            if (response.status === 200) {
+                response.json().then((data) => {
+                    setProfile(data.volunteer)
+                })
+            }
+        })
     }, [])
     
     return(
-        <div>
-            <div>
-                <h1> Bienvenue sur l'application HiVolunteer ! </h1>
+        <div className="home-container">
+            <div className="header-container">
+                <div className="header-left">
+                    <br/>
+                    <h1> {profile.first_name} {profile.last_name} </h1>
+                </div>
+                <div className="header-right">
+                    <p> {profile.rating} </p>
+                </div>
             </div>
-            <div>
-                <div>
-                    <h1> Vos missions : </h1>
-                    <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
-                        {
-                            missionList.map((mission: any) => {
-                                return(
-                                    <MissionCard mission={mission.association_mission} />
-                                )
-                            })
-                        }
+            <div className="body-container">
+                <div className="mission-container">
+                    <div>
+                        <h2> Prochaines missions : </h2>
+                        <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
+                            {
+                                missionList.map((mission: any) => {
+                                    return(
+                                        <div style={{width: '100%', margin: '10px'}}>
+                                            <MissionCard mission={mission} />
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div>
-            <div>
-                <h1> Vos missions passées : </h1>
-                <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
-                    {
-                        passedMissionList.map((mission: any) => {
-                            return(
-                                <MissionCard mission={mission.association_mission} />
-                            )
-                        })
-                    }
+                <div>
+                    <WeekMissions missions={missionList} />
                 </div>
             </div>
-        </div>
         </div>
     )
 }

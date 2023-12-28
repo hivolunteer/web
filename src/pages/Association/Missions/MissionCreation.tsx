@@ -1,16 +1,21 @@
-import {Autocomplete, Box, Button, Chip, Dialog, DialogContent, DialogTitle, Grid, Stack, TextField} from "@mui/material";
+/**
+ * @module MissionCreation.tsx
+ * @description Mission Creation Page
+ * @utility This page is used to create a mission
+*/
+
+import {Autocomplete, Box, Button, Chip, Grid, TextField} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import { Image } from "mui-image";
-import "moment/locale/de";
-import { DateTimePicker, TimePicker } from "@mui/x-date-pickers";
-import Lottie from "lottie-react";
-import noImage from "../../../images/lottie/noImage.json";
-import { AuthenticationService } from "../../../services/authentication.service";
-import { LocalizationProvider } from "@mui/x-date-pickers";
+import { LocalizationProvider, DateTimePicker, TimePicker } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import Lottie from "lottie-react";
 import moment from "moment";
+import "moment/locale/de";
+import './MissionCreation.scss';
+import config from "../../../config";
 import LocationModal from "./Modal/LocationModal";
-import { cp } from "fs";
+import noImage from "../../../images/lottie/noImage.json";
 
 interface MissionCreationData {
   missionName?: string;
@@ -52,10 +57,8 @@ const noImageComponent = () => {
 export default function MissionCreation() {
   const [image, setImage] = React.useState<any>(null);
   const [form, setForm] = React.useState<MissionCreationData>();
-  const [error, setError] = React.useState<boolean>(false);
   const [newSkill, setNewSkill] = useState<Array<number>>([]);
   const [skillDb, setSkillDb] = useState<Array<SkillDatabase>>([]);
-  const [skillIds, setSkillIds] = useState<Array<number>>([]);
 
   // preparation for adress modal
   const [open, setOpen] = React.useState<boolean>(false);
@@ -79,7 +82,7 @@ export default function MissionCreation() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    fetch("http://localhost:8000/skills", {
+    fetch(`${config.apiUrl}/skills`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -108,7 +111,7 @@ export default function MissionCreation() {
       title: form?.missionName,
       skills: newSkill,
     };
-    fetch("http://localhost:8000/missions/association/create", {
+    fetch(`${config.apiUrl}/missions/association/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

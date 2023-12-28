@@ -1,5 +1,4 @@
-import { Stack, Chip, Avatar } from '@mui/material';
-import FaceIcon from '@mui/icons-material/Face';
+import { Stack, Chip } from '@mui/material';
 import { useState } from "react";
 
 export const MuiChip = (props: any) => {
