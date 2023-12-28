@@ -12,6 +12,8 @@ import VolunteerRouterConnected from "./routers/ConnectVolunteerRouter";
 import ResponsiveAppBar from "./sidebar/Sidebar";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { ThemeProvider, useTheme } from "@mui/material";
+import { myTheme } from "./theme/theme";
 
 function NoConnectRouter() {
   return (
@@ -41,16 +43,20 @@ function ConnectRouter() {
 }
 
 function App() {
+
+  const theme = useTheme();
   return (
-    <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="fr">
-      <div>
-        {localStorage.getItem("token") ? (
-          <ConnectRouter />
-        ) : (
-          <NoConnectRouter />
-        )}
-      </div>
-    </LocalizationProvider>
+    <ThemeProvider theme={myTheme}>
+      <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="fr">
+        <div>
+          {localStorage.getItem("token") ? (
+            <ConnectRouter />
+          ) : (
+            <NoConnectRouter />
+          )}
+        </div>
+      </LocalizationProvider>
+    </ThemeProvider>
   );
 }
 

@@ -1,5 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Autocomplete, Box, Button, Chip, Grid, TextField } from "@mui/material";
+/**
+ * @module MissionCreation.tsx
+ * @description Mission Creation Page
+ * @utility This page is used to create a mission
+*/
+
+import {Autocomplete, Box, Button, Chip, Grid, TextField} from "@mui/material";
+import React, {useEffect, useState} from "react";
 import { Image } from "mui-image";
 import { LocalizationProvider, DateTimePicker, TimePicker } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
