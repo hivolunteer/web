@@ -1,6 +1,6 @@
-import { Dialog, DialogContent, DialogTitle, Grid, IconButton, TextField, Switch, Button, Box, Autocomplete } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { Dialog, DialogContent, DialogTitle, Grid, IconButton, TextField, Button, Box, Autocomplete } from "@mui/material";
 import { useState } from "react";
+import CloseIcon from "@mui/icons-material/Close";
 import config from "../../../../config";
 
 interface Address {

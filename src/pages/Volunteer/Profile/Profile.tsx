@@ -1,9 +1,9 @@
-import "./Profile.scss";
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import config from "../../../config";
+import "./Profile.scss";
 
-const src_img = require('../../../images/titleLogo.png');
+import profileImage from "../../../images/logo/submark.png";
 
 type newProfile = {
   first_name: string,
@@ -18,7 +18,7 @@ function ProfilePage(props: any) {
   const [last_name, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
-  const [profile_picture, setProfilePicture] = useState<string>(src_img);
+  const [profile_picture, setProfilePicture] = useState<string>(profileImage);
 
   useEffect(() => {
     console.log(localStorage)
@@ -55,12 +55,12 @@ function ProfilePage(props: any) {
   function validateEmail(email: string): boolean {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
-}
+  }
 
-  function validatePhone(phone: string): boolean {
+  /* function validatePhone(phone: string): boolean {
     const re = /^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/;
     return re.test(phone);
-  }
+  } */
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
      const file = event.target.files ? event.target.files[0] : null;
@@ -128,8 +128,8 @@ function ProfilePage(props: any) {
 
   /* Function to add when back is gonna be done */
 
-  const deleteAccount = () => {
-    /* if (window.confirm('Are you sure you want to delete your account?')) {
+  /*const deleteAccount = () => {
+     if (window.confirm('Are you sure you want to delete your account?')) {
       let url = `${config.apiUrl}/volunteers/profile`;
       fetch(url, {
         method: 'DELETE',
@@ -149,11 +149,11 @@ function ProfilePage(props: any) {
         .catch((error) => 
           console.log(error);
         });
-    } */
-  };
+    }
+  };*/
 
   return (
-    <Container className="profile-container">
+    <Container>
         <Row className="profile-row">
             <Col sm={12} md={4} lg={3}>
                 <div className="profile-pic">
