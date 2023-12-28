@@ -226,12 +226,12 @@ function RegisterVolunteer() {
                         Inscription Bénévole
                     </Typography>
                     <Box component="form"
-                         noValidate
-                         onSubmit={handleSubmit}
-                         sx={{ mt: 3 }}
-                         >
+                        noValidate
+                        onSubmit={handleSubmit}
+                        sx={{ mt: 3 }}
+                        >
                         <Grid container spacing={2} justifyContent="center" flexDirection="column">
-                            <Grid container spacing={2} justifyContent="center">
+                            <Grid container spacing={1} justifyContent="center">
                                 <Grid item xs={12} sm={5}>
                                     <TextField
                                         autoComplete="given-name"
@@ -242,7 +242,8 @@ function RegisterVolunteer() {
                                         label="Prénom"
                                         autoFocus
                                         InputProps={{
-                                            style: { color: "#2D2A32",
+                                            style: {
+                                                     color: "#2D2A32",
                                                      boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
                                                      borderRadius: "10px"
                                                    }
@@ -439,7 +440,7 @@ function RegisterVolunteer() {
                             Inscription
                         </Button>
                         <Grid container justifyContent='flex-end' sx={{ mb: 4 }}>
-                            <Grid item>
+                            <Grid item sx={{ textAlign: 'center', width: '100%'}}>
                                 <Link href='/volunteers/login' variant='body2'>
                                     Vous avez déjà un compte ? Connectez-vous
                                 </Link>

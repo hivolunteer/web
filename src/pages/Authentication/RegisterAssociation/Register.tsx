@@ -334,6 +334,7 @@ function RegisterAssociation() {
                                         style: { color: "#2D2A32",
                                                  boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
                                                  borderRadius: "10px",
+                                                 marginRight: "10px"
                                                },
                                         endAdornment: (
                                           <InputAdornment position="end">
@@ -377,7 +378,7 @@ function RegisterAssociation() {
                             Inscription
                         </Button>
                         <Grid container justifyContent='flex-end' sx={{ mb: 4 }}>
-                            <Grid item>
+                            <Grid item sx={{ textAlign: 'center', width: '100%'}}>
                                 <Link href='/associations/login' variant='body2'>
                                     Vous avez déjà un compte ? Connectez-vous
                                 </Link>

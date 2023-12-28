@@ -260,7 +260,7 @@ function LoginVolunteer() {
             </Button>
             <Grid container justifyContent="flex-end" sx={{ mb: 4 }}>
               <Grid item>
-                <Link href="/associations/register" variant="body2">
+                <Link href="/volunteers/register" variant="body2">
                   Vous n'avez pas de compte ? Inscrivez-vous
                 </Link>
               </Grid>

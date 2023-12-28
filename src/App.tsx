@@ -61,11 +61,13 @@ function App() {
             </div>
           ) : (
             <div
-              style={{
+                style={{
                 display: 'flex',
                 justifyContent: 'center',
-                height: '100%',
-                backgroundColor: '#DFDFDF'
+                height: '90%',
+                backgroundColor: '#DFDFDF',
+                alignItems: 'center',
+                margin: '5%'
               }}
             >
               <NoConnectRouter />
