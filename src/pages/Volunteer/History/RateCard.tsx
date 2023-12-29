@@ -1,13 +1,26 @@
-import { Button, CardContent, CardMedia } from '@mui/material';
-import React, { useState, useEffect } from 'react';
+import {Button, CardMedia,} from '@mui/material';
+import React, {useEffect, useState} from 'react';
 import Card from 'react-bootstrap/Card';
 import '../Home/Home.scss';
 
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import NearMeOutlinedIcon from '@mui/icons-material/NearMeOutlined';
 import config from "../../../config";
+import SimpleDialog from "./dialog";
 
-function RateCard(props: {mission: number}) {
+function RateCard(props: { mission: number }) {
+
+    const [open, setOpen] = React.useState(false);
+    const [selectedValue, setSelectedValue] = React.useState("");
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = (value: string) => {
+        setOpen(false);
+        setSelectedValue(value);
+    };
 
     interface Mission {
         owner_id: number,
@@ -26,7 +39,6 @@ function RateCard(props: {mission: number}) {
     })
 
     let [associationPicture, setAssociationPicture] = useState<string>('')
-
 
     useEffect(() => {
 
@@ -55,8 +67,7 @@ function RateCard(props: {mission: number}) {
                 })
             }
         })
-    }, [])
-
+    }, [props.mission])
 
     // misc functions
 
@@ -76,12 +87,13 @@ function RateCard(props: {mission: number}) {
         let minutes = date.split('T')[1].split(':')[1]
         return `${hour}:${minutes}`
     }
-        
+
 
     // page rendering
-    return(
+    return (
         <Card
             style={{
+                marginBottom: '1%',
                 width: '100%',
                 height: '100%',
                 border: 'none',
@@ -95,8 +107,21 @@ function RateCard(props: {mission: number}) {
             }}
         >
             <Card.Body style={{width: '100%'}}>
-                <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%'}}>
-                    <div style={{flex: 1, margin: '10px 20px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    width: '100%'
+                }}>
+                    <div style={{
+                        flex: 1,
+                        margin: '10px 20px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        flexDirection: 'row'
+                    }}>
                         <CardMedia
                             component="img"
                             style={{borderRadius: '100%', objectFit: 'cover', height: '150px', width: '150px'}}
@@ -104,28 +129,51 @@ function RateCard(props: {mission: number}) {
                             alt="association picture"
                         />
                     </div>
-                    <div style={{flex: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start'}}>
+                    <div style={{
+                        flex: 2,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'flex-start'
+                    }}>
                         <div className='mission-header'>
                             <p style={{fontWeight: 'bold'}}> {mission.title} </p>
                         </div>
                         <div className='mission-body'>
                             <div className='mission-body-with-icon'>
-                                <CalendarMonthOutlinedIcon />
-                                <p style={{marginLeft: '10px'}}> {convertDay(mission.start_date)} {convertHour(mission.start_date)}h - {convertHour(mission.end_date)}h </p>
+                                <CalendarMonthOutlinedIcon/>
+                                <p style={{marginLeft: '10px'}}> {convertDay(mission.start_date)} {convertHour(mission.start_date)}h
+                                    - {convertHour(mission.end_date)}h </p>
                             </div>
                             <div className='mission-body-with-icon' style={{marginBottom: '2px'}}>
-                                <NearMeOutlinedIcon />
+                                <NearMeOutlinedIcon/>
                                 <p style={{marginLeft: '10px'}}> Lieu </p>
                             </div>
                         </div>
                     </div>
-                    <div style={{flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', marginRight: '10% auto'}}>
-                        <Button 
+                    <div style={{
+                        flex: 1,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginRight: '10% auto'
+                    }}>
+                        <Button
                             variant="contained"
                             style={{color: 'white'}}
+                            onClick={() => {
+                                handleClickOpen()
+                            }}
                         >
-                            Noter Mission
+                            Noter la mission
                         </Button>
+                        <SimpleDialog
+                            selectedValue={selectedValue}
+                            open={open}
+                            onClose={handleClose}
+                            mission={mission}
+                        />
                     </div>
                 </div>
             </Card.Body>
