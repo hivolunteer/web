@@ -44,7 +44,7 @@ function History() {
                         </div>
                     ) : (
                         <div>
-                            <p> Vous n'avez pas encore participé à de missions. </p>
+                            <p> Vous n'avez pas encore participé à des missions. </p>
                         </div>
                     )
                 }
