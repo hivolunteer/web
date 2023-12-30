@@ -111,6 +111,7 @@ export default function MissionCreation() {
       title: form?.missionName,
       skills: newSkill,
     };
+    console.log(body);
     fetch(`${config.apiUrl}/missions/association/create`, {
       method: "POST",
       headers: {
