@@ -124,7 +124,6 @@ const LocationModal = ({
 
     const parseInfo = (): AddressDB[] => {
 
-        console.log(basicAddress);
         const filterAddresses = (property: keyof Address, basicProperty: string | number | null, infos: Address[]): Address[] => {
             if (basicProperty !== '' && basicProperty !== null && basicProperty !== undefined) {
                 return infos.filter((location: Address) => String(location[property]).includes(String(basicProperty)));

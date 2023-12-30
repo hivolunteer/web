@@ -121,7 +121,6 @@ export default function MissionCreation() {
       body: JSON.stringify(body),
     })
       .then((response) => {
-        console.log(response);
         if (response.status === 201) {
           alert("Mission créée");
           window.location.href = "/";
@@ -142,7 +141,6 @@ export default function MissionCreation() {
         },
         (error) => {
           alert("Erreur lors de la création de la mission");
-          console.log(error);
         }
       );
   };
