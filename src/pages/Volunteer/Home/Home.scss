@@ -1,15 +1,10 @@
 @import 'assets/scss/_colors.scss';
 @import 'assets/scss/_fonts.scss';
 
-body {
-    background-color: $color-background;
-}
-
 .home-container {
     background-color: $color-background;
     display: flex;
     flex-direction: column;
-    margin-top: 20px;
 }
 
 .header-container {
