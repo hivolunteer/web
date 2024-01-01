@@ -123,16 +123,41 @@ const EventCalendar = () => {
     const categoryId = categories.map((category) => category._id);
     useEffect(() => {
         const token = localStorage.getItem("token");
-        fetch(`${config.apiUrl}/calendar/`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + token,
-            },
-        }).then((response) => {
-            if (response.status === 200) {
-                response.json().then((data) => {
-                    const formattedEvents = data.map((task: any) => ({
+
+        // Combine fetch requests
+        Promise.all([
+            fetch(`${config.apiUrl}/calendar/`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + token,
+                },
+            }),
+            fetch(`${config.apiUrl}/missions/association/`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + token,
+                },
+            }),
+        ]).then(([calendarResponse, missionsResponse]) => {
+            // Handle the response for the calendar fetch
+            if (calendarResponse.status === 200) {
+                return calendarResponse.json().then((calendarData) => {
+                    const formattedEvents = calendarData.map((task: any) => ({
+                        title: task.title,
+                        description: task.description,
+                        start: new Date(task.start_date),
+                        end: new Date(task.end_date),
+                    }));
+                    setEvents(formattedEvents);
+                });
+            }
+
+            // Handle the response for the missions fetch
+            if (missionsResponse.status === 200) {
+                return missionsResponse.json().then((missionsData) => {
+                    const formattedEvents = missionsData.map((task: any) => ({
                         title: task.title,
                         description: task.description,
                         start: new Date(task.start_date),
@@ -142,31 +167,9 @@ const EventCalendar = () => {
                 });
             }
         }).catch((error) => {
-                console.error(error);
-            });
-        fetch(`${config.apiUrl}/missions/association/`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + token,
-            },
-        }).then((response) => {
-            if (response.status === 200) {
-                response.json().then((data) => {
-                    const formattedEvents = data.map((task: any) => ({
-                        title: task.title,
-                        description: task.description,
-                        start: new Date(task.start_date),
-                        end: new Date(task.end_date),
-                    }));
-                    setEvents(formattedEvents);
-                });
-            }
-        })
-            .catch((error) => {
-                console.error(error);
-            });
-    }, []);
+            console.error(error);
+        });
+}, []);
 
     const handleSelectEvent = (event: IEventInfo) => {
         setCurrentEvent(event)
