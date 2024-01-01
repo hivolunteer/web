@@ -19,15 +19,22 @@ const EventInfoModal = ({ open, handleClose, onDeleteEvent, currentEvent }: IPro
             <DialogTitle>Event Info</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    <Typography sx={{ fontSize: 14, marginTop: 3 }} color="text.secondary" gutterBottom>
-                        {currentEvent?.description}
+                    <Typography sx={{ fontSize: 16, marginTop: 3 }} color="text.primary" gutterBottom>
+                        Titre: {currentEvent?.title}
                     </Typography>
+                    <Typography sx={{ fontSize: 14, marginTop: 3 }} color="text.secondary" gutterBottom>
+                        Description : {currentEvent?.description}
+                    </Typography>
+
                 </DialogContentText>
                 <Box component="form"></Box>
             </DialogContent>
             <DialogActions>
                 <Button color="error" onClick={onClose}>
-                    Cancel
+                    Annuler
+                </Button>
+                <Button color="warning" onClick={onClose}>
+                    Modifier
                 </Button>
                 <Button color="info" onClick={onDeleteEvent}>
                     Delete Event

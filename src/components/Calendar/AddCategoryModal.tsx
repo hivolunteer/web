@@ -17,23 +17,23 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete"
 
 import { HexColorPicker } from "react-colorful"
-import { ITodo, generateId } from "./EventCalendar"
+import { ICategory, generateId } from "./EventCalendar"
 
 interface IProps {
     open: boolean
     handleClose: Dispatch<SetStateAction<void>>
-    todos: ITodo[]
-    setTodos: Dispatch<SetStateAction<ITodo[]>>
+    categories: ICategory[]
+    setCategories: Dispatch<SetStateAction<ICategory[]>>
 }
 
-export const AddTodoModal = ({ open, handleClose, todos, setTodos }: IProps) => {
-    const [color, setColor] = useState("#b32aa9")
+export const AddCategoryModal = ({ open, handleClose, categories, setCategories }: IProps) => {
+    const [color, setColor] = useState("#4e796e")
     const [title, setTitle] = useState("")
 
-    const onAddTodo = () => {
+    const onAddCategory = () => {
         setTitle("")
-        setTodos([
-            ...todos,
+        setCategories([
+            ...categories,
             {
                 _id: generateId(),
                 color,
@@ -42,15 +42,15 @@ export const AddTodoModal = ({ open, handleClose, todos, setTodos }: IProps) => 
         ])
     }
 
-    const onDeletetodo = (_id: string) => setTodos(todos.filter((todo) => todo._id !== _id))
+    const onDeletecategory = (_id: number) => setCategories(categories.filter((category) => category._id !== _id))
 
     const onClose = () => handleClose()
 
     return (
         <Dialog open={open} onClose={onClose}>
-            <DialogTitle>Ajouter une liste des choses à faire</DialogTitle>
+            <DialogTitle>Ajouter une catégorie</DialogTitle>
             <DialogContent>
-                <DialogContentText>Créer des listes des choses à faire à rajouter à votre calendrier.</DialogContentText>
+                <DialogContentText>Créer des catégories à rajouter à votre calendrier.</DialogContentText>
                 <Box>
                     <TextField
                         name="title"
@@ -74,11 +74,11 @@ export const AddTodoModal = ({ open, handleClose, todos, setTodos }: IProps) => 
                     </Box>
                     <Box>
                         <List sx={{ marginTop: 3 }}>
-                            {todos.map((todo) => (
+                            {categories.map((category) => (
                                 <ListItem
-                                    key={todo.title}
+                                    key={category.title}
                                     secondaryAction={
-                                        <IconButton onClick={() => onDeletetodo(todo._id)} color="error" edge="end">
+                                        <IconButton onClick={() => onDeletecategory(category._id)} color="error" edge="end">
                                             <DeleteIcon />
                                         </IconButton>
                                     }
@@ -86,9 +86,9 @@ export const AddTodoModal = ({ open, handleClose, todos, setTodos }: IProps) => 
                                     <Box
                                         sx={{ height: 40, width: 40, borderRadius: 1, marginRight: 1 }}
                                         className="value"
-                                        style={{ backgroundColor: todo.color }}
+                                        style={{ backgroundColor: category.color }}
                                     ></Box>
-                                    <ListItemText primary={todo.title} />
+                                    <ListItemText primary={category.title} />
                                 </ListItem>
                             ))}
                         </List>
@@ -101,7 +101,7 @@ export const AddTodoModal = ({ open, handleClose, todos, setTodos }: IProps) => 
                     Annuler
                 </Button>
                 <Button
-                    onClick={() => onAddTodo()}
+                    onClick={() => onAddCategory()}
                     disabled={title === "" || color === ""}
                     sx={{ marginRight: 2 }}
                     variant="contained"

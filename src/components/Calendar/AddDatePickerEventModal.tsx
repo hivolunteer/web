@@ -14,16 +14,19 @@ import {
 } from "@mui/material"
 import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers"
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns"
-import { DatePickerEventFormData, ITodo } from "./EventCalendar"
+import {EventCreationData, ICategory} from "./EventCalendar"
+import config from "../../config";
 
 interface IProps {
     open: boolean
     handleClose: Dispatch<SetStateAction<void>>
-    datePickerEventFormData: DatePickerEventFormData
-    setDatePickerEventFormData: Dispatch<SetStateAction<DatePickerEventFormData>>
+    datePickerEventFormData: EventCreationData
+    setDatePickerEventFormData: Dispatch<SetStateAction<EventCreationData>>
     onAddEvent: (e: MouseEvent<HTMLButtonElement>) => void
-    todos: ITodo[]
+    categories: ICategory[]
 }
+
+
 
 const AddDatePickerEventModal = ({
                                      open,
@@ -31,9 +34,9 @@ const AddDatePickerEventModal = ({
                                      datePickerEventFormData,
                                      setDatePickerEventFormData,
                                      onAddEvent,
-                                     todos,
+                                     categories,
                                  }: IProps) => {
-    const { description, start, end, allDay } = datePickerEventFormData
+    const { title, description, start_date, end_date, allDay, category} = datePickerEventFormData
 
     const onClose = () => {
         handleClose()
@@ -53,20 +56,20 @@ const AddDatePickerEventModal = ({
         }))
     }
 
-    const handleTodoChange = (e: React.SyntheticEvent, value: ITodo | null) => {
+    const handleCategoryChange = (e: React.SyntheticEvent, value: ICategory | null) => {
         setDatePickerEventFormData((prevState) => ({
             ...prevState,
-            todoId: value?._id,
+            categoryId: value?._id,
         }))
     }
 
     const isDisabled = () => {
         const checkend = () => {
-            if (!allDay && end === null) {
+            if (!allDay && end_date === null) {
                 return true
             }
         }
-        return description === "" || start === null || checkend();
+        return description === "" || start_date === null || checkend();
 
     }
 
@@ -76,6 +79,17 @@ const AddDatePickerEventModal = ({
             <DialogContent>
                 <DialogContentText> Pour ajouter un évènement, repmlissez les cases s'il vous plaît.</DialogContentText>
                 <Box component="form">
+                    <TextField
+                        name="title"
+                        value={title}
+                        margin="dense"
+                        id="title"
+                        label="Titre"
+                        type="text"
+                        fullWidth
+                        variant="outlined"
+                        onChange={onChange}
+                    />
                     <TextField
                         name="description"
                         value={description}
@@ -91,13 +105,14 @@ const AddDatePickerEventModal = ({
                         <Box mb={2} mt={5}>
                             <DateTimePicker
                                 label="Date de début"
-                                value={start}
+                                value={start_date}
+                                format={"dd/MM/yyyy HH:mm"}
                                 ampm={true}
                                 minutesStep={30}
                                 onChange={(newValue) =>
                                     setDatePickerEventFormData((prevState) => ({
                                         ...prevState,
-                                        start: new Date(newValue!),
+                                        start_date: new Date(newValue!),
                                     }))
                                 }
                                 slotProps={{ textField: { variant: 'outlined' } }}
@@ -114,14 +129,15 @@ const AddDatePickerEventModal = ({
                         <DateTimePicker
                             label="Date de fin"
                             disabled={allDay}
-                            minDate={start}
+                            format={"dd/MM/yyyy HH:mm"}
+                            minDate={start_date}
                             minutesStep={30}
                             ampm={true}
-                            value={allDay ? null : end}
+                            value={allDay ? null : end_date}
                             onChange={(newValue) =>
                                 setDatePickerEventFormData((prevState) => ({
                                     ...prevState,
-                                    end: new Date(newValue!),
+                                    end_date: new Date(newValue!),
                                 }))
                             }
                             slotProps={{ textField: { variant: 'outlined' } }}
@@ -130,22 +146,22 @@ const AddDatePickerEventModal = ({
                         />
                     </LocalizationProvider>
                     <Autocomplete
-                        onChange={handleTodoChange}
+                        onChange={handleCategoryChange}
                         disablePortal
                         id="combo-box-demo"
-                        options={todos}
+                        options={categories}
                         sx={{ marginTop: 4 }}
                         getOptionLabel={(option) => option.title}
-                        renderInput={(params) => <TextField {...params} label="Todo" />}
+                        renderInput={(params) => <TextField {...params} label="Catégorie" />}
                     />
                 </Box>
             </DialogContent>
             <DialogActions>
                 <Button color="error" onClick={onClose}>
-                    Cancel
+                    Annuler
                 </Button>
                 <Button disabled={isDisabled()} color="success" onClick={onAddEvent}>
-                    Add
+                    Ajouter
                 </Button>
             </DialogActions>
         </Dialog>

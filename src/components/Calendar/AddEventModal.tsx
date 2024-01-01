@@ -1,16 +1,16 @@
-import { ChangeEvent, Dispatch, MouseEvent, SetStateAction } from "react"
+import {ChangeEvent, Dispatch, MouseEvent, SetStateAction} from "react"
 import {
-    TextField,
+    Autocomplete,
+    Box,
+    Button,
     Dialog,
     DialogActions,
     DialogContent,
     DialogContentText,
     DialogTitle,
-    Button,
-    Autocomplete,
-    Box,
+    TextField,
 } from "@mui/material"
-import { EventFormData, ITodo } from "./EventCalendar"
+import {EventFormData, ICategory} from "./EventCalendar"
 
 
 interface IProps {
@@ -19,11 +19,11 @@ interface IProps {
     eventFormData: EventFormData
     setEventFormData: Dispatch<SetStateAction<EventFormData>>
     onAddEvent: (e: MouseEvent<HTMLButtonElement>) => void
-    todos: ITodo[]
+    categories: ICategory[]
 }
 
-const AddEventModal = ({ open, handleClose, eventFormData, setEventFormData, onAddEvent, todos }: IProps) => {
-    const { description } = eventFormData
+const AddEventModal = ({open, handleClose, eventFormData, setEventFormData, onAddEvent, categories}: IProps) => {
+    const {title, description} = eventFormData
 
     const onClose = () => handleClose()
 
@@ -34,10 +34,10 @@ const AddEventModal = ({ open, handleClose, eventFormData, setEventFormData, onA
         }))
     }
 
-    const handleTodoChange = (e: React.SyntheticEvent, value: ITodo | null) => {
+    const handleCategoryChange = (e: React.SyntheticEvent, value: ICategory | null) => {
         setEventFormData((prevState) => ({
             ...prevState,
-            todoId: value?._id,
+            categoryId: value?._id,
         }))
     }
 
@@ -45,8 +45,20 @@ const AddEventModal = ({ open, handleClose, eventFormData, setEventFormData, onA
         <Dialog open={open} onClose={onClose}>
             <DialogTitle>Ajouter un évènémént</DialogTitle>
             <DialogContent>
-                <DialogContentText>Pour ajouter un événement, veuillez remplir les informations ci-dessous.</DialogContentText>
+                <DialogContentText>Pour ajouter un événement, veuillez remplir les informations
+                    ci-dessous.</DialogContentText>
                 <Box component="form">
+                    <TextField
+                        name="title"
+                        value={title}
+                        margin="dense"
+                        id="title"
+                        label="Titre"
+                        type="text"
+                        fullWidth
+                        variant="outlined"
+                        onChange={onChange}
+                    />
                     <TextField
                         name="description"
                         value={description}
@@ -59,13 +71,13 @@ const AddEventModal = ({ open, handleClose, eventFormData, setEventFormData, onA
                         onChange={onChange}
                     />
                     <Autocomplete
-                        onChange={handleTodoChange}
+                        onChange={handleCategoryChange}
                         disablePortal
                         id="combo-box-demo"
-                        options={todos}
-                        sx={{ marginTop: 4 }}
+                        options={categories}
+                        sx={{marginTop: 4}}
                         getOptionLabel={(option) => option.title}
-                        renderInput={(params) => <TextField {...params} label="Todo" />}
+                        renderInput={(params) => <TextField {...params} label="Catégorie"/>}
                     />
                 </Box>
             </DialogContent>
