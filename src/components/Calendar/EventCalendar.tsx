@@ -1,7 +1,7 @@
-import React, {useState, MouseEvent, useEffect} from "react"
-import { Box, Button, ButtonGroup, Card, CardContent, CardHeader, Container, Divider } from "@mui/material"
+import React, {MouseEvent, useEffect, useState} from "react"
+import {Box, Button, ButtonGroup, Card, CardContent, CardHeader, Container, Divider} from "@mui/material"
 
-import { Calendar, type Event, dateFnsLocalizer } from "react-big-calendar"
+import {Calendar, dateFnsLocalizer, type Event} from "react-big-calendar"
 
 import format from "date-fns/format"
 import parse from "date-fns/parse"
@@ -13,7 +13,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css"
 import EventInfo from "./EventInfo"
 import AddEventModal from "./AddEventModal"
 import EventInfoModal from "./EventInfoModal"
-import { AddCategoryModal } from "./AddCategoryModal"
+import {AddCategoryModal} from "./AddCategoryModal"
 import AddDatePickerEventModal from "./AddDatePickerEventModal"
 import config from "../../config";
 
@@ -115,7 +115,6 @@ const EventCalendar = () => {
 
     const [existingEvents, setExistingEvents] = useState<IEventInfo[]>([])
 
-    console.log("events", events)
     const handleSelectSlot = (event: Event) => {
         setOpenSlot(true)
         setCurrentEvent(event)
@@ -133,7 +132,13 @@ const EventCalendar = () => {
         }).then((response) => {
             if (response.status === 200) {
                 response.json().then((data) => {
-                    setEvents(data);
+                    const formattedEvents = data.map((task: any) => ({
+                        title: task.title,
+                        description: task.description,
+                        start: new Date(task.start_date),
+                        end: new Date(task.end_date),
+                    }));
+                    setEvents(formattedEvents);
                 });
             }
         }).catch((error) => {
@@ -148,8 +153,13 @@ const EventCalendar = () => {
         }).then((response) => {
             if (response.status === 200) {
                 response.json().then((data) => {
-                    setEvents(data);
-                    console.log("data", data);
+                    const formattedEvents = data.map((task: any) => ({
+                        title: task.title,
+                        description: task.description,
+                        start: new Date(task.start_date),
+                        end: new Date(task.end_date),
+                    }));
+                    setEvents(formattedEvents);
                 });
             }
         })
@@ -331,8 +341,8 @@ const EventCalendar = () => {
                                 const hasCategory = categories.find((category) => category._id === event.categoryId)
                                 return {
                                     style: {
-                                        backgroundColor: hasCategory ? hasCategory.color : "#b64fc8",
-                                        borderColor: hasCategory ? hasCategory.color : "#b64fc8",
+                                        backgroundColor: hasCategory ? hasCategory.color : "rgb(78,121,110)",
+                                        borderColor: hasCategory ? hasCategory.color : "rgb(103,162,147)",
                                     },
                                 }
                             }}
