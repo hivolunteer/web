@@ -82,7 +82,6 @@ function ProfilePage(props: any) {
           console.log(error);
         });
     } */
-  };
   const [color_blind, setColorBlind] = useState(
     localStorage.getItem("color_blind") === "true"
   );

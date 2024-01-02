@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import "./Sidebar.scss";
+import logoWhite from "../images/logo/submark_white.png";
 import logoImage from "../images/logo/submark.png";
 
 const pages = ["Accueil", "Calendrier", "Profile"];
@@ -44,6 +45,26 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
+  const handleMenuItemClick = (setting: string) => {
+    handleCloseUserMenu();
+
+    switch (setting) {
+      case "Profile":
+        navigate("/profile");
+        break;
+      case "Logout":
+        handleLogout();
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.href = "/";
+  };
+
   let color_blind = localStorage.getItem("color_blind") === "true";
 
   return (
@@ -56,7 +77,7 @@ function ResponsiveAppBar() {
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Logo style={{ width: "50px", height: "50px" }} />
+          <Avatar alt="User" src={logoWhite} />
           <Typography
             variant="h6"
             noWrap

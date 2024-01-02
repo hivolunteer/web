@@ -150,7 +150,6 @@ function ProfilePage(props: any) {
           console.log(error);
         });
     } */
-  };
 
   const [color_blind, setColorBlind] = useState(
     localStorage.getItem("color_blind") === "true"
@@ -233,7 +232,7 @@ function ProfilePage(props: any) {
               />
             </div>
             <div className="profile-btn-div">
-              <button className="profile-pic-btn" onClick={updateProfile}>
+              <button className={handleClickColorBlind()} onClick={updateProfile}>
                 Mettre à jour le profile
               </button>
               {/* <button className="delete-account-btn" onClick={deleteAccount}>
