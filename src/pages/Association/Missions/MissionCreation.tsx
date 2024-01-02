@@ -383,7 +383,6 @@ export default function MissionCreation() {
                 onChange={(event, value) => {
                   setNewSkill(value.map((skill) => skill.id));
                 }}
-                placeholder="Compétences"
               />
             </Grid>
           </Grid>
