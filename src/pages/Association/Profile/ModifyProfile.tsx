@@ -229,6 +229,6 @@ function ModifyProfilePage(props: any) {
         </Row>
     </Container>
   );
-};  
+}
 
 export default ModifyProfilePage;

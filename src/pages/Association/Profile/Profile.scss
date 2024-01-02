@@ -135,7 +135,6 @@
   padding: 0.5rem 1rem;
   border: none;
   border-radius: 20px;
-  background-color: #67a191;
   color: #fff;
   cursor: pointer;
 }
@@ -172,17 +171,6 @@
   background-color: rgb(224, 127, 127);
 }
 
-.profile-row-color-blind button,
-.profile-pic-btn-color-blind {
-  display: table-row;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 20px;
-  background-color: #3b3d3c;
-  color: #fff;
-  cursor: pointer;
-}
-
 .rating-color-blind {
   display: flex;
   flex-direction: column;
@@ -195,22 +183,9 @@
   font-weight: 900;
 }
 
-.profile-row-color-blind button[type="submit"]:hover,
-.profile-pic-btn-color-blind:hover {
-  background-color: #3b3d3c;
-}
 
-.delete-account-btn-color-blind {
-  margin-top: 2rem;
-  padding: 0.5rem 1rem;
-  border: none;
-  text-decoration: underline;
-  text-decoration-color: #3b3d3c;
-  color: #3b3d3c;
-  font-size: 1.1rem;
-  cursor: pointer;
-}
+// Color Blind Mode
 
-.delete-account-btn-color-blind:hover {
+.color-blind-bg {
   background-color: #3b3d3c;
 }

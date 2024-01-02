@@ -49,7 +49,7 @@ function Home () {
                     <div className="header-picture">
                         <img src={Association.profile_picture} alt="profile_picture" className="profile-picture" />
                     </div>
-                    <div className="header-rating">
+                    <div className={"header-rating" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")}>
                         <h2 className="asso-rating"> {Association.rating} / 5 </h2>
                     </div>
                     <h1> {Association.name} </h1>

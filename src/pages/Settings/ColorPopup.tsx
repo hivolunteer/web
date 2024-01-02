@@ -1,7 +1,5 @@
-import {Switch, Typography} from "@mui/material";
+import {Checkbox} from "@mui/material";
 import React, {useEffect, useState} from "react";
-import {createTheme} from "@mui/material/styles";
-import useMediaQuery from '@mui/material/useMediaQuery';
 
 import "./Settings.scss";
 
@@ -12,7 +10,7 @@ interface ColorPopupProps {
 }
 
 const ColorPopup: React.FC<ColorPopupProps> = ({onClose, onSelectColor, onCheck}) => {
-    const [checked, setChecked] = useState(true);
+    const [checked, setChecked] = useState(false);
 
     const switchHandler = (event: any) => {
         setChecked(event.target.checked);
@@ -28,28 +26,23 @@ const ColorPopup: React.FC<ColorPopupProps> = ({onClose, onSelectColor, onCheck}
 
     return (
         <div className="color-popup">
-            <h3>Activer le mode daltonien</h3>
-            <h5>
-                {" "}
-                Cette option permet de rendre HiVolunteer plus lisible aux personnes
-                atteintes de troubles de vision{" "}
-            </h5>
-                <Typography
-                    style={{fontSize: "100%"}}
-                >
-                </Typography>
             <div className="color-options">
-                Activer
+                <h3>Activer le mode daltonien</h3>
                 {colorblindOptions.map((mode, index) => (
-                    <Switch
+                    <Checkbox
                         key={index}
                         checked={checked}
                         onClick={() => onSelectColor(mode)}
                         onChange={switchHandler}
                     />
+
                 ))}
-                Désactiver
             </div>
+            <h5>
+                {" "}
+                Cette option permet de rendre HiVolunteer plus lisible aux personnes
+                atteintes de troubles de vision{" "}
+            </h5>
             <button onClick={onClose}>Fermer</button>
         </div>
     );

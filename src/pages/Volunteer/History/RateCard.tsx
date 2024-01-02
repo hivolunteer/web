@@ -2,6 +2,7 @@ import {Button, CardMedia,} from '@mui/material';
 import React, {useEffect, useState} from 'react';
 import Card from 'react-bootstrap/Card';
 import '../Home/Home.scss';
+import './RateCard.scss';
 
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import NearMeOutlinedIcon from '@mui/icons-material/NearMeOutlined';
@@ -160,6 +161,7 @@ function RateCard(props: { mission: number }) {
                         marginRight: '10% auto'
                     }}>
                         <Button
+                            className={"profile-pic-btn" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")}
                             variant="contained"
                             style={{color: 'white'}}
                             onClick={() => {
