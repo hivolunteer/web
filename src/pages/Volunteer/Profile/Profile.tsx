@@ -154,17 +154,6 @@ function ProfilePage(props: any) {
   const [color_blind, setColorBlind] = useState(
     localStorage.getItem("color_blind") === "true"
   );
-  const handleClickColorBlind = () => {
-    let className = "";
-    if (!color_blind) {
-      className = "profile-pic-btn";
-      localStorage.setItem("color_blind", "false");
-    } else {
-      className = "profile-pic-btn-color-blind";
-      localStorage.setItem("color_blind", "true");
-    }
-    return className;
-  };
 
   return (
     <Container className="profile-container">
@@ -176,7 +165,7 @@ function ProfilePage(props: any) {
           <div className="profile-btn-div">
             <label
               htmlFor="profile-pic-upload"
-              className={handleClickColorBlind()}
+              className={"profile-pic-btn" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")}
             >
               Changer la Photo
             </label>
@@ -232,7 +221,7 @@ function ProfilePage(props: any) {
               />
             </div>
             <div className="profile-btn-div">
-              <button className={handleClickColorBlind()} onClick={updateProfile}>
+              <button className={"profile-pic-btn" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")} onClick={updateProfile}>
                 Mettre à jour le profile
               </button>
               {/* <button className="delete-account-btn" onClick={deleteAccount}>

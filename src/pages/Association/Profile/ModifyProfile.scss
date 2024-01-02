@@ -82,21 +82,8 @@
   background-color: #67a191;
 }
 
-.profile-pic-btn-color-blind {
-  padding: 0.5rem 1rem;
-  align-items: center;
-  margin: 0.5rem;
-  border: none;
-  border-radius: 20px;
-  background-color: #3b3d3c;
-}
-
 .profile-pic-btn:hover {
   background-color: #5b8971;
-}
-
-.profile-pic-btn-color-blind:hover {
-  background-color: #3b3d3c;
 }
 
 .profile-info {
@@ -123,36 +110,9 @@
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
 }
 
-.profile-row button,
-.profile-pic-btn {
-  display: table-row;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 20px;
-  background-color: #67a191;
-  color: #fff;
-  cursor: pointer;
-}
-
-.profile-row-color-blind button,
-.profile-pic-btn-color-blind {
-  display: table-row;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 20px;
-  background-color: #3b3d3c;
-  color: #fff;
-  cursor: pointer;
-}
-
 .profile-row button[type="submit"]:hover,
 .profile-pic-btn:hover {
   background-color: #5b8971;
-}
-
-.profile-row-color-blind button[type="submit"]:hover,
-.profile-pic-btn-color-blind:hover {
-  background-color: #3b3d3c;
 }
 
 .delete-account-btn {
@@ -168,19 +128,4 @@
 
 .delete-account-btn:hover {
   background-color: rgb(224, 127, 127);
-}
-
-.delete-account-btn-color-blind {
-  margin-top: 2rem;
-  padding: 0.5rem 1rem;
-  border: none;
-  text-decoration: underline;
-  text-decoration-color: #3b3d3c;
-  color: #3b3d3c;
-  font-size: 1.1rem;
-  cursor: pointer;
-}
-
-.delete-account-btn-color-blind:hover {
-  background-color: #3b3d3c;
 }
