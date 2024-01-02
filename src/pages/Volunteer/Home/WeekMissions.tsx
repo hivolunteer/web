@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
+import MissionCard from '../../../components/HomeMissionCard';
 import config from "../../../config";
-import MissionCard from './MissionCard';
 import './Home.scss';
 
 interface Mission {

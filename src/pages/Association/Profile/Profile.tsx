@@ -5,22 +5,21 @@
 */
 
 import "./Profile.scss";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
 import { useNavigate } from "react-router-dom";
+import { Card, CardContent, Typography } from "@mui/material";
+import './Profile.scss';
 import config from "../../../config";
 
-const src_img = require('../../../images/titleLogo.png');
+import profileImage from "../../../images/logo/submark.png";
 
 function ProfilePage(props: any) {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [profile_picture, setProfilePicture] = useState<string>(src_img);
+  const [profile_picture, setProfilePicture] = useState<string>(profileImage);
   const [rating, setRating] = useState<number>(0);
   const navigate = useNavigate();
 
@@ -61,8 +60,8 @@ function ProfilePage(props: any) {
 
   /* Function to add when back is gonna be done */
 
-  const deleteAccount = () => {
-    /* if (window.confirm('Are you sure you want to delete your account?')) {
+  /*const deleteAccount = () => {
+    if (window.confirm('Are you sure you want to delete your account?')) {
       let url = `${config.apiUrl}/associations/profile`;
       fetch(url, {
         method: 'DELETE',
@@ -82,11 +81,11 @@ function ProfilePage(props: any) {
         .catch((error) => 
           console.log(error);
         });
-    } */
-  };
+    }
+  };*/
 
   return (
-    <Container className="profile-container">
+    <Container>
         <Row className="profile-row">
             <Col sm={12} md={4} lg={3}>
               <div className="profile-pic">

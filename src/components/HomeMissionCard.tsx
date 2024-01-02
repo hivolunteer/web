@@ -1,13 +1,12 @@
-import { CardContent, CardMedia } from '@mui/material';
-import React, { useState, useEffect } from 'react';
+import { CardMedia } from '@mui/material';
+import { useState, useEffect } from 'react';
 import Card from 'react-bootstrap/Card';
-import './Home.scss';
 
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import NearMeOutlinedIcon from '@mui/icons-material/NearMeOutlined';
-import config from "../../../config";
+import config from "../config";
 
-function MisssionCard(props: {mission: number}) {
+function HomeMisssionCard(props: {mission: number}) {
 
     interface Mission {
         owner_id: number,
@@ -125,4 +124,4 @@ function MisssionCard(props: {mission: number}) {
     )
 }
 
-export default MisssionCard;
+export default HomeMisssionCard;

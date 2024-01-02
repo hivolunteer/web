@@ -1,7 +1,7 @@
-import "./App.scss";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import UserTypeChoice from "./pages/UserTypeChoice/UserTypeChoice";
 import "moment/locale/fr";
+import "./App.scss";
+import UserTypeChoice from "./pages/UserTypeChoice/UserTypeChoice";
 
 // import Pages
 // import Home from './pages/Home/Home';
@@ -14,6 +14,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { ThemeProvider, useTheme } from "@mui/material";
 import { myTheme } from "./theme/theme";
+import { useEffect } from "react";
 
 function NoConnectRouter() {
   return (
@@ -45,16 +46,34 @@ function ConnectRouter() {
 function App() {
 
   const theme = useTheme();
+
+  useEffect (() => {
+    localStorage.getItem("token") ? document.body.style.backgroundColor = "#f5f5f5" : document.body.style.backgroundColor = "#DFDFDF"
+  }, []);
+  
   return (
     <ThemeProvider theme={myTheme}>
       <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="fr">
-        <div>
-          {localStorage.getItem("token") ? (
-            <ConnectRouter />
+        {
+          localStorage.getItem("token") ? (
+            <div>
+              <ConnectRouter />
+            </div>
           ) : (
-            <NoConnectRouter />
-          )}
-        </div>
+            <div
+                style={{
+                display: 'flex',
+                justifyContent: 'center',
+                height: '90%',
+                backgroundColor: '#DFDFDF',
+                alignItems: 'center',
+                margin: '5%'
+              }}
+            >
+              <NoConnectRouter />
+            </div>
+          )
+        }
       </LocalizationProvider>
     </ThemeProvider>
   );
