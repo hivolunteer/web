@@ -8,12 +8,19 @@ import './Home.scss';
 import {useEffect, useState } from 'react'
 import config from "../../../config";
 import { Button } from '@mui/material';
+import HomeMisssionCard from '../../../components/HomeMissionCard';
 
 interface Association {
     id: number,
     name: string, 
     rating: string,
     profile_picture: string,
+}
+
+interface Mission {
+    id: number,
+    owner_id: number,
+    status: number
 }
 
 function Home () {
@@ -24,6 +31,10 @@ function Home () {
         rating: "",
         profile_picture: "",
     })
+
+    const [PastMissions, setPastMissions] = useState<Mission[]>([])
+    const [NextMissions, setNextMissions] = useState<Mission[]>([])
+    const [SavedMissions, setSavedMissions] = useState<Mission[]>([])
 
     useEffect(() => {
         fetch(`${config.apiUrl}/associations/profile`, {
@@ -40,7 +51,43 @@ function Home () {
                 })
             }
         })
+
+        fetch(`${config.apiUrl}/missions/association/all/missions`, {
+            method: 'GET',
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        }).then((response) => {
+            if (response.status === 200) {
+                response.json().then((data) => {
+                    console.log(data)
+                    data.map((mission: Mission) => {
+                        console.log(mission.status)
+                        if (mission.status === 0) {
+                            setSavedMissions((prev) => [...prev, mission])
+                        } else if (mission.status === 1) {
+                            setNextMissions((prev) => [...prev, mission])
+                        } else if (mission.status === 3) {
+                            setPastMissions((prev) => [...prev, mission])
+                        }
+                    })
+                })
+            }
+        })
     }, [])
+
+
+    function noDuplicates(array: Mission[]) : Mission[] {
+        let newArray: Mission[] = []
+        // remove duplicates by Mission.id and not Mission.owner_id
+        array.map((mission: Mission) => {
+            if (!newArray.find((item) => item.id === mission.id)) {
+                newArray.push(mission)
+            }
+        })
+        return newArray
+    }
 
     return (
         <div className="home-container">
@@ -75,7 +122,72 @@ function Home () {
                 </div>
             </div>
             <div className="body-container" style={{flex: 2}}>
-                <p className="body-title"> Description </p>
+                <div className="body-row">
+                    <h2> Prochaines missions </h2>
+                    {
+                        (NextMissions.length === 0) ? (
+                            <h3 className="no-mission"> Aucune mission prévue </h3>
+                        ) : (
+                            <div className="missions-container">
+                                {
+                                    noDuplicates(NextMissions).map((mission: Mission) => {
+                                        return (
+                                            <div className="missions-row">
+                                                <HomeMisssionCard
+                                                    mission={mission.id}
+                                                />
+                                            </div>
+                                        )
+                                    })
+                                }
+                            </div>
+                        )
+                    }
+                </div>
+                <div className="body-row">
+                    <h2> Missions sauvegardées </h2>
+                    {
+                        (SavedMissions.length === 0) ? (
+                            <h3 className="no-mission"> Aucune mission sauvegardée </h3>
+                        ) : (
+                            <div className="missions-container">
+                                {
+                                    noDuplicates(SavedMissions).map((mission: Mission) => {
+                                        return (
+                                            <div className="missions-row">
+                                                <HomeMisssionCard
+                                                    mission={mission.id}
+                                                />
+                                            </div>
+                                        )
+                                    })
+                                }
+                            </div>
+                        )
+                    }
+                </div>
+                <div className="body-row">
+                    <h2> Missions passées </h2>
+                    {
+                        (PastMissions.length === 0) ? (
+                            <h3 className="no-mission"> Aucune mission passée </h3>
+                        ) : (
+                            <div className="missions-container">
+                                {
+                                    noDuplicates(PastMissions).map((mission: Mission) => {
+                                        return (
+                                            <div className="missions-row">
+                                                <HomeMisssionCard
+                                                    mission={mission.id}
+                                                />
+                                            </div>
+                                        )
+                                    })
+                                }
+                            </div>
+                        )
+                    }
+                </div>
             </div>
         </div>
     )
