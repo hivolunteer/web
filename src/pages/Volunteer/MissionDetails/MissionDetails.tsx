@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Button, Typography, Container, useTheme } from '@mui/material';
-import { ArrowBack, CalendarToday, LocationOn, Star } from '@mui/icons-material';
+import { CalendarToday, LocationOn, Star } from '@mui/icons-material';
 import Moment from 'moment';
 import { SxProps, Theme } from '@mui/system';
 import { Mission } from '../../../interfaces';

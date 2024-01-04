@@ -1,5 +1,4 @@
-import { Dialog, DialogTitle, TextField, Button, Autocomplete, Checkbox, Chip, InputAdornment } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { Dialog, DialogTitle, TextField, Button, Autocomplete, Checkbox, Chip } from "@mui/material";
 import { useEffect, useState } from "react";
 
 import { Modal, Skill } from "./Interfaces"; 

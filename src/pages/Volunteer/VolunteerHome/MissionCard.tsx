@@ -1,10 +1,11 @@
-import { Button, Card, CardContent, CardMedia, Typography } from '@mui/material';
-import {useState, useEffect} from 'react';
+import { Card, CardContent, CardMedia, Typography } from '@mui/material';
+import { useState, useEffect } from 'react';
 
 export default function MissionCard(props: {mission_id: number}) {
     
         const [mission, setMission] = useState<Mission | undefined>(undefined);
         const [associationLogo, setAssociationLogo] = useState<string>('');
+        const [associationName, setAssociationName] = useState<string>('');
         const [location, setLocation] = useState<string>('');
 
         interface Mission {
@@ -47,6 +48,7 @@ export default function MissionCard(props: {mission_id: number}) {
                     }).then((response) => {
                         if (response.status === 200) {
                             response.json().then((data) => {
+                                setAssociationName(data.association.name)
                                 setAssociationLogo(data.association.profile_picture)
                             })
                         }
@@ -129,10 +131,15 @@ export default function MissionCard(props: {mission_id: number}) {
                         </Typography>
                     </CardContent>
                     <CardContent>
-                        <Typography variant="body2" color="text.secondary" sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', cursor: 'pointer', textDecoration: 'underline'}}
-                        onClick={() => console.log('mission ', mission?.id)}>
-                            Voir plus
-                        </Typography>
+                        <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+                            <Typography style={{ fontSize: "14px", fontWeight: "bold" }}>
+                                <a style={{ fontWeight: "normal" }}>Par</a> {associationName}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary" sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', cursor: 'pointer', textDecoration: 'underline'}}
+                            onClick={() => (window.location.href = 'mission/' + mission?.id)}>
+                                Voir plus
+                            </Typography>
+                        </div>
                     </CardContent>
                 </Card>
             </div>
