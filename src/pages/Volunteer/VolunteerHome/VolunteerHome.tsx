@@ -1,4 +1,3 @@
-import "./VolunteerHome.scss";
 import { useState, useEffect } from "react";
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import { Button, InputAdornment, TextField } from '@mui/material';
@@ -6,6 +5,7 @@ import { styled } from '@mui/material/styles';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
 import Box from "@mui/material/Box";
+import "./VolunteerHome.scss";
 import CustomSwitch from '../../../components/Switch'
 import FilterModal from './FilterModal'
 import FilterModalAsso from './FilterModalAsso'
