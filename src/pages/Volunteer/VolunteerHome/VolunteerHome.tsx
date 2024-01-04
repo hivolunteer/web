@@ -1,18 +1,17 @@
 import "./VolunteerHome.scss";
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import { Button, InputAdornment, TextField } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
-import Card from '@mui/material/Card';
-import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
 import Box from "@mui/material/Box";
-import IconButton, { IconButtonProps } from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import { styled } from '@mui/material/styles';
-import MissionImage from '../../../images/mission_photo.png';
+import CustomSwitch from '../../../components/Switch'
+import FilterModal from './FilterModal'
+import FilterModalAsso from './FilterModalAsso'
+import MissionCard from "./MissionCard";
+import AssociationCard from "./AssociationCard";
+import { Mission, Modal, Association, ModalAsso } from "./Interfaces";
 
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;
@@ -30,24 +29,45 @@ interface ExpandMoreProps extends IconButtonProps {
   }));
 
 function VolunteerHome(props: any) {
-  const [missionList, setMissionList] = useState<Number[]>([]);    
+  const [missionList, setMissionList] = useState<Mission[]>([]);
+  const [associationList, setAssociations] = useState<Association[]>([]);
   const [search, setSearch] = useState<string>('');
-  
-  const [checked, setChecked] = React.useState(true);
+  const [subType, setSubType] = useState<string>('Missions');
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked(event.target.checked);
+
+  //Modal functions
+  const [open, setOpen] = useState<boolean>(false);
+  const [filteredMissions, setFilteredMissions] = useState<Mission[] | []>([]);
+  const [filteredAssociations, setFilteredAssociations] = useState<Association[] | []>([]);
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
-  const [subType, setSubType] = React.useState("Association");
-  
-  const [expanded, setExpanded] = React.useState(false);
+  type CombinedModalPros = Modal | ModalAsso;
+  let modalProps: CombinedModalPros;
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
+  if (subType === 'Missions') {
+    modalProps = {
+      open: open,
+      setOpen: setOpen,
+      filteredMissions: filteredMissions,
+      setFilteredMissions: setFilteredMissions,
+      handleClose: handleClose
+    }
+  } else {
+    modalProps = {
+      open: open,
+      setOpen: setOpen,
+      filteredAssociations: filteredAssociations,
+      setFilteredAssociations: setFilteredAssociations,
+      handleClose: handleClose
+    }
+  }
 
-  const navigate = useNavigate();
+  const FilterModalComponent: React.FC<{ modalProps: CombinedModalPros }> =
+    subType === 'Missions' ? (FilterModal as React.FC<{ modalProps: CombinedModalPros }>) : (FilterModalAsso as React.FC<{ modalProps: CombinedModalPros }>);
+
   useEffect(() => {
     fetch('http://localhost:8000/missions/association', {
         method: 'GET',
@@ -56,121 +76,148 @@ function VolunteerHome(props: any) {
             'Content-Type': 'application/json'
         }
     }).then((response) => {
-        //if (response.status === 200) {
-        //    response.json().then((data) => {
-        //        let mission_list : Number[] = [];
-        //        data.missions.map((mission: any) => {
-        //            mission_list.push(mission.association_mission)
-        //        })
-        //        setMissionList(mission_list)
-        //    })
-        //}
-    })
+        if (response.status === 200) {
+          response.json().then((data) => {
+              let mission_list : Mission[] = [];
+              data.map((mission: any) => {
+                  mission_list.push({id: mission.id, title: mission.title})
+              })
+              console.log(mission_list)
+              setMissionList(mission_list)
+          })
+        }
+     })
   }, [])
 
+  useEffect(() => {
+    fetch('http://localhost:8000/associations/', {
+        method: 'GET',
+        headers: {
+            authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+        }
+    }).then((response) => {
+        if (response.status === 200) {
+          response.json().then((data) => {
+              let association_list : Association[] = [];
+              data.map((association: any) => {
+                  association_list.push({id: association.id, name: association.name})
+              })
+              setAssociations(association_list)
+          })
+        }
+      })
+     }, [])
+
   const handleSearch = (e: any) => {
-    setSearch(e.target.value);
+    setSearch(e.target.value.toLowerCase());
   }
 
   return (
     <div className="page-container">
-        <div className="search-filter">
-            <div className="search-bar-container">
-                <TextField
-                    id="search-bar"
-                    style={{flex: 4}}
-                    label="Recherche par titre de l’association ou de la mission"
-                    InputProps={{
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <SearchOutlinedIcon />
-                            </InputAdornment>
-                        ),
-                }}
-                variant="outlined"
-                sx={{
-                    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                    borderRadius: '10px',            }}
-                />
-                <div className="search-loc"/>
-                <TextField id="outlined-basic" label="Ville, Pays" variant="outlined" onChange={() => {}} className="search-country"
-                InputProps={{
-                    endAdornment: (
-                        <InputAdornment position="end">
-                            <PlaceOutlinedIcon />
-                        </InputAdornment>
-                    ),
-                }}
-                sx={{
-                    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                    borderRadius: '10px',
-                }}
-                />
-                <div className="search-button" />
-                  <button className="search-btn" onClick={() => {}}>
-                    Rechercher
-                  </button>
-            </div>
-        </div>
-        <div className="centered-container">
-            <div className="filter">
-                <button className="filter-btn" onClick={() => {}}>
-                    Afficher les filtres
-                </button>
-            </div>
-            <Box sx={{ display: "center" }}>
-                <Box className="mask-box">
-                    <Box
-                      className="mask"
-                      style={{
-                        transform: `translateX(${subType === "Bénévole" ? 0 : "200px"})`
-                      }}
-                    />
-                    <Button
-                      disableRipple
-                      variant="text"
-                      sx={{ color: subType === "Bénévole" ? "#ffffff" : "#5316AE" }}
-                      onClick={() => setSubType("Bénévole")}
-                      onChange={() => handleChange}
-                    >
-                      Bénévole
-                    </Button>
-                    <Button
-                      disableRipple
-                      variant="text"
-                      sx={{ color: subType === "Association" ? "#ffffff" : "#5316AE" }}
-                      onClick={() => setSubType("Association")}
-                      onChange={() => handleChange}
-                      value="checked"
-                    >
-                      Association
-                    </Button>
-                </Box>
-            </Box>
-        </div>
-        <div className="mission-list">
-          <Card className="card" sx={{ maxWidth: 310 }}>
-            <CardMedia
-              component="img"
-              alt="Pas d'image"
-              height="250"
-              image={MissionImage}
+      <div className="search-filter">
+        <div className="search-bar-container">
+          <TextField id="search-bar"
+                     style={{flex: 4}}
+                     label="Recherche par titre de l'association ou de la mission"
+                     InputProps={{
+                         endAdornment: (
+                             <InputAdornment position="start">
+                                 <SearchOutlinedIcon />
+                             </InputAdornment>
+                         ),
+            }}
+            variant="outlined"
+            sx={{
+                boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                borderRadius: '10px',
+            }}
+            value={search}
+            onChange={handleSearch}
             />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                Lizard
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Lizards are a widespread group of squamate reptiles, with over 6,000
-                species, ranging across all continents except Antarctica
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button size="small">Share</Button>
-              <Button size="small">Learn More</Button>
-            </CardActions>
-          </Card>
+            <div style={{ width: '2%' }} />
+            <TextField id="outlined-basic" label="Ville, Pays" variant="outlined" className="search-country"
+              InputProps={{
+                  endAdornment: (
+                      <InputAdornment position="start">
+                          <PlaceOutlinedIcon />
+                      </InputAdornment>
+                  ),
+              }}
+              sx={{
+                  boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                  borderRadius: '10px'
+              }}
+            />
+          </div>
+      </div>
+      <div className="centered-container">
+        <div className="filter-container">
+          <Button 
+              variant="contained"
+              onClick={() => {setOpen(true)}}
+              sx={{
+                  backgroundColor: '#FFCF56',
+                  color: '#2D2A32',
+                  textTransform: 'none',
+                  borderRadius: '10px',
+                  padding: '1rem 3rem',
+                  boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                  fontWeight: 'bold',
+                  ":hover": {
+                      backgroundColor: '#CCA645',
+                      color: '#1F0812'
+                  }
+              }}
+          > 
+              Afficher les filtres
+          </Button>
+          <FilterModalComponent
+              modalProps={modalProps}
+          />
         </div>
+        <Box sx={{ display: "center", margin: "2%" }}>
+          <CustomSwitch
+              option1="Missions"
+              option2="Associations"
+              subType={subType}
+              setSubType={setSubType}
+          />
+        </Box>
+        {
+          (subType === 'Missions') ? (
+                <div className="missions-container">
+                    {
+                        missionList
+                        .filter((mission: Mission) =>
+                        (filteredMissions.length === 0 || filteredMissions.some((filteredMission: Mission) => mission.id === filteredMission.id)) &&
+                        mission.title.toLowerCase().includes(search.toLowerCase())
+                        )
+                        .map((mission: Mission) => (
+                        <div className="mission-card" key={mission.id}>
+                            <MissionCard mission_id={mission.id} />
+                        </div>
+                        ))
+                    }
+                </div>
+            ) : (
+              <div className="missions-container">
+                  {
+                      associationList
+                      .filter((association: Association) =>
+                      (filteredAssociations.length === 0 || filteredAssociations.some((filteredAssociation: Association) => association.id === filteredAssociation.id)) &&
+                        association.name.toLowerCase().includes(search.toLowerCase())
+                      )
+                      .map((association: Association) => (
+                      <div className="mission-card" key={association.id}>
+                          <AssociationCard association_id={association.id} />
+                      </div>
+                      ))
+                  }
+              </div>
+            )
+          }
+      </div>
     </div>
   );    
 };      
