@@ -28,7 +28,6 @@ export default function MissionCard(props: {mission_id: number}) {
             }).then((response) => {
                 if (response.status === 200) {
                     response.json().then((data) => {
-                        console.log(data.association_mission.title)
                         setMission(data.association_mission)
                     })
                 }

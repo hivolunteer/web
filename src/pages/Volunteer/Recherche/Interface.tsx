@@ -3,12 +3,25 @@ interface Mission {
     title: string,
 }
 
-interface Modal {
+interface Association {
+    id: number,
+    name: string,
+}
+
+interface MissionModal {
     open: boolean,
     setOpen: any,
     handleClose : any,
     filteredMissions: Mission[] | [],
     setFilteredMissions: any,
+}
+
+interface AssociationModal {
+    open: boolean,
+    setOpen: any,
+    handleClose : any,
+    filteredAssociations: Association[] | [],
+    setFilteredAssociations: any,
 }
 
 interface Skill {
@@ -17,4 +30,4 @@ interface Skill {
     color_hex: string
 }
 
-export type {Mission, Modal, Skill}
+export type {Mission, MissionModal, Skill, Association, AssociationModal}

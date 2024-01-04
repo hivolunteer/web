@@ -7,35 +7,50 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
 import CustomSwitch from "../../../components/Switch";
 import MissionCard from "./MissionCard";
-import { type } from "os";
 import FiltreModal from "./MissionFiltreModal";
 // import .Scss file
 
-import { Mission, Modal } from "./Interface";
+import { Association, AssociationModal, Mission, MissionModal } from "./Interface";
 
 function Recherche(props: any) {
 
 
         // gestion de la recherche
-
-        const [missionList, setMissionList] = useState<Mission[] | []>([]); 
         const [search, setSearch] = useState<string>('');
         const [subType, setSubType] = useState<string>('Missions');
 
-        // gestion du modal
-        const [open, setOpen] = useState<boolean>(false); // modal state
+        // gestion du modal Missions & missions
+        const [missionList, setMissionList] = useState<Mission[] | []>([]); 
+        const [missionOpen, setMissionOpen] = useState<boolean>(false); // modal state
         const [filteredMissions, setFilteredMissions] = useState<Mission[] | []>([]); // missions filtered by the modal
 
         const handleClose = () => { // close the modal
-            setOpen(false);
+            setMissionOpen(false);
         };
 
-        let modalProps : Modal = { // modal props
-            open: open,
-            setOpen: setOpen,
+        let modalPropsMission : MissionModal = { // modal props
+            open: missionOpen,
+            setOpen: setMissionOpen,
             filteredMissions: filteredMissions,
             setFilteredMissions: setFilteredMissions,
             handleClose: handleClose
+        }
+
+        // gestion du modal Associations & associations
+        const [associationList, setAssociationList] = useState<Association[] | []>([]);
+        const [associationOpen, setAssociationOpen] = useState<boolean>(false); // modal state
+        const [filteredAssociations, setFilteredAssociations] = useState<Association[] | []>([]); // associations filtered by the modal
+
+        const handleCloseAssociation = () => { // close the modal
+            setAssociationOpen(false);
+        };
+
+        let modalPropsAssociation : AssociationModal = { // modal props
+            open: associationOpen,
+            setOpen: setAssociationOpen,
+            filteredAssociations: filteredAssociations,
+            setFilteredAssociations: setFilteredAssociations,
+            handleClose: handleCloseAssociation
         }
 
         // fetch missions
@@ -104,7 +119,7 @@ function Recherche(props: any) {
                 <div className="filter-container">
                     <Button 
                         variant="contained"
-                        onClick={() => {setOpen(true)}}
+                        onClick={() => {setMissionOpen(true)}}
                         sx={{
                             backgroundColor: '#FFCF56',
                             color: '#1F0812',
@@ -121,7 +136,7 @@ function Recherche(props: any) {
                         Afficher les filtres
                     </Button>
                     <FiltreModal 
-                        modalProps={modalProps}
+                        modalProps={modalPropsMission}
                     />
                 </div>
                 <div className="switch-container">

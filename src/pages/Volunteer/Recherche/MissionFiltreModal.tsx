@@ -3,11 +3,11 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useEffect, useState } from "react";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 
-import { Modal, Mission, Skill } from "./Interface"; 
+import { MissionModal, Mission, Skill } from "./Interface"; 
 import { DatePicker} from "@mui/x-date-pickers";
 
 
-const FiltreModal = (props: {modalProps: Modal}) => {
+const FiltreModal = (props: {modalProps: MissionModal}) => {
 
     const modalProps = props.modalProps;
 
@@ -53,9 +53,9 @@ const FiltreModal = (props: {modalProps: Modal}) => {
             },
             body: JSON.stringify(body)
         }).then((response) => {
-            console.log(response)
             if (response.status === 200) {
                 response.json().then((data) => {
+                    console.log(data)
                     modalProps.setFilteredMissions(data)
                     modalProps.handleClose()
                 })
