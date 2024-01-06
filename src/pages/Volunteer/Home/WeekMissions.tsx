@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import MissionCard from './MissionCard';
+import MissionCard from '../../../components/HomeMissionCard';
 import config from "../../../config";
 import './Home.scss';
 

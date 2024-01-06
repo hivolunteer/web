@@ -8,8 +8,8 @@ function ConnectVolunteerRouter() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/follows" element={<FollowAssociation />} />
       <Route path="/history" element={<History />} />
+      <Route path="/follows" element={<FollowAssociation />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="*" element={<h1> Error 404 Volunteer </h1>} />
     </Routes>
