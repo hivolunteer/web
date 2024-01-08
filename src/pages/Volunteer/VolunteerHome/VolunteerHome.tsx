@@ -12,6 +12,7 @@ import FilterModalAsso from './FilterModalAsso'
 import MissionCard from "./MissionCard";
 import AssociationCard from "./AssociationCard";
 import { Mission, Modal, Association, ModalAsso } from "./Interfaces";
+import config from "../../../config";
 
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;
@@ -69,7 +70,7 @@ function VolunteerHome(props: any) {
     subType === 'Missions' ? (FilterModal as React.FC<{ modalProps: CombinedModalPros }>) : (FilterModalAsso as React.FC<{ modalProps: CombinedModalPros }>);
 
   useEffect(() => {
-    fetch('http://localhost:8000/missions/association', {
+    fetch(`${config.apiUrl}/missions/association`, {
         method: 'GET',
         headers: {
             authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -90,7 +91,7 @@ function VolunteerHome(props: any) {
   }, [])
 
   useEffect(() => {
-    fetch('http://localhost:8000/associations/', {
+    fetch(`${config.apiUrl}/associations/`, {
         method: 'GET',
         headers: {
             authorization: `Bearer ${localStorage.getItem('token')}`,

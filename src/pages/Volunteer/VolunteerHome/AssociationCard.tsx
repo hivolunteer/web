@@ -1,6 +1,7 @@
 import { Card, CardContent, CardMedia, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
 import StarIcon from '@mui/icons-material/Star';
+import config from '../../../config';
 
 export default function AssociationCard(props: {association_id: number}) {
     
@@ -16,7 +17,7 @@ export default function AssociationCard(props: {association_id: number}) {
     
         useEffect(() => {
             console.log('association id ', props.association_id)
-            fetch(`http://localhost:8000/associations/profile/${props.association_id}`, {
+            fetch(`${config.apiUrl}associations/profile/${props.association_id}`, {
                 method: 'GET',
                 headers: {
                     authorization: `Bearer ${localStorage.getItem('token')}`,

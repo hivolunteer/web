@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import './ModifyProfile.scss';
+import config from "../../../config";
 
 const src_img = require('../../../images/logo/primary_logo.png');
 
@@ -26,7 +27,7 @@ function ModifyProfilePage(props: any) {
   useEffect(() => {
     console.log(localStorage)
     const getProfile = () => {
-      let url = 'http://localhost:8000/associations/profile';
+      let url = `${config.apiUrl}associations/profile`;
       fetch(url, {
         method: 'GET',
         headers: {
@@ -77,7 +78,7 @@ function ModifyProfilePage(props: any) {
          setProfilePicture(dataUrl);
          const formData = new FormData();
          formData.append('file', file);
-         const url = 'http://localhost:8000/associations/profile/';
+         const url = `${config.apiUrl}/associations/profile/`;
          fetch(url, {
            method: 'POST',
            headers: {
@@ -118,7 +119,7 @@ function ModifyProfilePage(props: any) {
         profile_picture: profile_picture,
     }
 
-    let url = 'http://localhost:8000/associations/update';
+    let url = `${config.apiUrl}associations/update`;
     fetch(url, {
       method: 'POST',
       headers: {
@@ -133,32 +134,6 @@ function ModifyProfilePage(props: any) {
       console.log(error);
     })
   };
-
-  /* Function to add when back is gonna be done */
-
-  /*const deleteAccount = () => {
-     if (window.confirm('Are you sure you want to delete your account?')) {
-      let url = 'http://localhost:8000/associations/profile';
-      fetch(url, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-      })
-        .then((response) => {
-          if (response.status === 204) {
-            alert('Account deleted successfully');
-            // Redirect to the login page
-            window.location.href = '/';
-          } else {
-            console.log('Error deleting account');
-          }
-        })
-        .catch((error) => 
-          console.log(error);
-        });
-    }
-  };*/
 
   return (
     <Container className="profile-container">
