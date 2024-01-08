@@ -44,7 +44,7 @@ const FilterModal = (props: {modalProps: Modal}) => {
             skillsList: searchSkills,
             dateList: dates
         }
-        fetch('http://localhost:8000/search/missions', {
+        fetch(`${config.apiUrl}search/missions`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
