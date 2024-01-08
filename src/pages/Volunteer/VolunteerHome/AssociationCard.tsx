@@ -17,7 +17,7 @@ export default function AssociationCard(props: {association_id: number}) {
     
         useEffect(() => {
             console.log('association id ', props.association_id)
-            fetch(`${config.apiUrl}associations/profile/${props.association_id}`, {
+            fetch(`${config.apiUrl}/associations/profile/${props.association_id}`, {
                 method: 'GET',
                 headers: {
                     authorization: `Bearer ${localStorage.getItem('token')}`,
