@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Alert, Box, Button, Container, CssBaseline, Grid, IconButton, InputAdornment, Link, TextField, ThemeProvider, Typography, createTheme } from '@mui/material';
-import './Login.scss';
+import { useNavigate } from 'react-router-dom';
+import { Alert, Box, Button, Grid, IconButton, InputAdornment, Link, TextField, Typography } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { AuthenticationService } from '../../../services/authentication.service';
-import { useNavigate } from 'react-router-dom';
-
-const theme = createTheme();
+import './Login.scss';
+import titleLogo from "../../../images/logo/primary_logo.png";
 
 function LoginAssociation() {
     /***
@@ -125,127 +124,145 @@ function LoginAssociation() {
     }
 
     return (
-        <ThemeProvider theme={theme}>
-            <Container
-                component="main"
-                maxWidth="xs"
+        <div className="center-form">
+            <div className="choice-form">
+              <div className="row">
+                  <div className="col-12">
+                      <img className="titleLogo" src={titleLogo} alt=""/>
+                  </div>
+              </div>
+              <Box
                 sx={{
-                    backgroundColor: (theme) =>
-                        theme.palette.mode === 'light'
-                            ? theme.palette.grey[50]
-                            : theme.palette.grey[900],
-                    borderRadius: 8,
-                    borderColor: (theme) =>
-                        theme.palette.mode === 'light'
-                            ? theme.palette.grey[100]
-                            : theme.palette.grey[800],
-                    boxShadow: (theme) =>
-                        theme.palette.mode === 'light'
-                            ? theme.shadows[1]
-                            : 'none',
+                  marginTop: "30px",
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
                 }}
                 >
-                <CssBaseline />
-                <Box
-                    sx={{
-                      marginTop: 8,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                    }}
-                >
-                    <Typography component="h1" variant="h5">
+                    <Typography component="h1" variant="h5" marginBottom="10px">
                         Connexion Association
                     </Typography>
-                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{mt: 3}}>
-            <Grid container spacing={2}>
-                <Grid item xs={12}>
-                    <TextField
-                        autoComplete='name'
-                        name='name'
-                        required
-                        fullWidth
-                        id='name'
-                        label='Nom association'
-                    />
-                    {/* If name is empty, display an error message */}
-                    {!name && (
-                        <Alert severity="error">
-                            Le nom de l'association est requis
-                        </Alert>
-                    )}
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        autoComplete='email'
-                        name='email'
-                        required
-                        fullWidth
-                        id='email'
-                        label='Adresse email'
-                    />
-                    {/* If email is empty, display an error message */}
-                    {!email && (
-                        <Alert severity="error">
-                            L'adresse email est requise
-                        </Alert>
-                    )}
-                    {/* If email is not empty but format is not correct, display a warning message */}
-                    {(email && !emailFormat) && (
-                        <Alert severity="warning">
-                            Le format de l'adresse email doit être au format xxxxxx.xxxx@xxx.com
-                        </Alert>
-                    )}
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        autoComplete='new-password'
-                        name='password'
-                        required
-                        fullWidth
-                        id='password'
-                        label='Mot de passe'
-                        type={showPassword ? 'text' : 'password'}
-                        InputProps={{
-                            endAdornment: (
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        onClick={handleClick}
-                                        edge="end"
-                                    >
-                                        {showPassword ? <Visibility /> : <VisibilityOff />}
-                                    </IconButton>
-                                </InputAdornment>
-                            )
-                        }}
-                    />
-                    {/* If password is empty, display an error message */}
-                    {!password && (
-                        <Alert severity="error">
-                            Un mot de passe est requis
-                        </Alert>
-                    )}
-                    </Grid>
-                    </Grid>
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        sx={{ mt: 3, mb: 2 }}
-                    >
-                        Connexion
-                    </Button>
-                    <Grid container justifyContent='flex-end'>
-                        <Grid item>
-                            <Link href='/associations/register' variant='body2'>
-                                Vous n'avez pas de compte ? Inscrivez-vous
-                            </Link>
+                    <Box
+                         component="form"
+                         noValidate
+                         onSubmit={handleSubmit}
+                         sx={{ mt: 3 }}
+                        >
+                        <Grid container spacing={2} justifyContent="center" flexDirection="column">
+                            <Grid item xs={12} >
+                                <TextField
+                                    autoComplete='name'
+                                    name='name'
+                                    required
+                                    fullWidth
+                                    id='name'
+                                    label='Nom association'
+                                    autoFocus
+                                    sx={{ alignItems: "center" }}
+                                    InputProps={{
+                                        style: { color: "#2D2A32",
+                                                 boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                                 borderRadius: "10px"
+                                               }
+                                    }}
+                                />
+                                {/* If name is empty, display an error message */}
+                                {!name && (
+                                    <Alert severity="error">
+                                        Le nom de l'association est requis
+                                    </Alert>
+                                )}
                         </Grid>
-                    </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                autoComplete='email'
+                                name='email'
+                                required
+                                fullWidth
+                                id='email'
+                                label='Adresse email'
+                                sx={{ alignItems: "center" }}
+                                    InputProps={{
+                                        style: { color: "#2D2A32",
+                                                 boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                                 borderRadius: "10px",
+                                               }
+                                    }}
+                            />
+                            {/* If email is empty, display an error message */}
+                            {!email && (
+                                <Alert severity="error">
+                                    L'adresse email est requise
+                                </Alert>
+                            )}
+                            {/* If email is not empty but format is not correct, display a warning message */}
+                            {(email && !emailFormat) && (
+                                <Alert severity="warning">
+                                    Le format de l'adresse email doit être au format xxxxxx.xxxx@xxx.com
+                                </Alert>
+                            )}
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                autoComplete='new-password'
+                                name='password'
+                                required
+                                fullWidth
+                                id='password'
+                                label='Mot de passe'
+                                type={showPassword ? 'text' : 'password'}
+                                sx={{ alignItems: "center" }}
+                                InputProps={{
+                                    style: { color: "#2D2A32",
+                                             boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                             borderRadius: "10px",
+                                           },
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                onClick={handleClick}
+                                                edge="end"
+                                            >
+                                                {showPassword ? <Visibility /> : <VisibilityOff />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    )
+                                }}
+                            />
+                            {/* If password is empty, display an error message */}
+                            {!password && (
+                                <Alert severity="error">
+                                    Un mot de passe est requis
+                                </Alert>
+                            )}
+                        </Grid>
+                        </Grid>
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 6,
+                                  mb: 3,
+                                  color: "#FFFEFF",
+                                  backgroundColor: "#67A191",
+                                  borderRadius: "10px",
+                                  boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                  width: "200px",
+                                }}
+                        >
+                            Connexion
+                        </Button>
+                        <Grid container justifyContent='flex-end' sx={{ mb: 4 }}>
+                            <Grid item>
+                                <Link href='/associations/register' variant='body2'>
+                                    Vous n'avez pas de compte ? Inscrivez-vous
+                                </Link>
+                            </Grid>
+                        </Grid>
+                    </Box>
                 </Box>
-                </Box>
-            </Container>
-        </ThemeProvider>
+            </div>
+        </div>
     );
 }
 

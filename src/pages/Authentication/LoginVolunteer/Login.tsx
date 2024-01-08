@@ -1,25 +1,10 @@
 import React, { useState } from "react";
-import {
-  Alert,
-  Box,
-  Button,
-  Container,
-  CssBaseline,
-  Grid,
-  IconButton,
-  InputAdornment,
-  Link,
-  TextField,
-  ThemeProvider,
-  Typography,
-  createTheme,
-} from "@mui/material";
-import "./Login.scss";
+import { useNavigate } from "react-router-dom";
+import { Alert, Box, Button, Grid, IconButton, InputAdornment, Link, TextField, Typography } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { AuthenticationService } from "../../../services/authentication.service";
-import { useNavigate } from "react-router-dom";
-
-const theme = createTheme();
+import "./Login.scss";
+import titleLogo from "../../../images/logo/primary_logo.png";
 
 function LoginVolunteer() {
   /***
@@ -149,34 +134,22 @@ function LoginVolunteer() {
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container
-        component="main"
-        maxWidth="xs"
-        sx={{
-          backgroundColor: (theme) =>
-            theme.palette.mode === "light"
-              ? theme.palette.grey[50]
-              : theme.palette.grey[900],
-          borderRadius: 8,
-          borderColor: (theme) =>
-            theme.palette.mode === "light"
-              ? theme.palette.grey[100]
-              : theme.palette.grey[800],
-          boxShadow: (theme) =>
-            theme.palette.mode === "light" ? theme.shadows[1] : "none",
-        }}
-      >
-        <CssBaseline />
+    <div className="center-form">
+      <div className="choice-form">
+        <div className="row">
+            <div className="col-12">
+                <img className="titleLogo" src={titleLogo} alt=""/>
+            </div>
+        </div>
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: "30px",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
           }}
         >
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h5" marginBottom="10px">
             Connexion Bénévole
           </Typography>
           <Box
@@ -185,22 +158,9 @@ function LoginVolunteer() {
             onSubmit={handleSubmit}
             sx={{ mt: 3 }}
           >
-            <Grid container spacing={2}>
+            <Grid container spacing={2}  justifyContent="center" flexDirection="column">
               {/* Input phone number */}
               <Grid item xs={12}>
-                {/*<MuiTelInput
-                                    name='phone'
-                                    label='Numéro de téléphone'
-                                    required
-                                    fullWidth
-                                    id='phone'
-                                    autoComplete='tel'
-                                    continents={['EU']}
-                                    defaultCountry='FR'
-                                    value='phone'
-                                    //value={phoneInput}
-                                    //onChange={setPhoneInput}
-                                />*/}
                 <TextField
                   autoComplete="tel"
                   name="phone"
@@ -208,10 +168,20 @@ function LoginVolunteer() {
                   fullWidth
                   id="phone"
                   label="Numéro de téléphone"
+                  autoFocus
+                  sx={{ alignItems: "center" }}
                   type="tel"
                   /* accept only numbers and symbols + */
-                  inputProps={{ pattern: "[0-9+]*" }}
+                  inputProps={{ pattern: "[0-9+]*",
+                                style: { color: "#2D2A32",
+                                boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                borderRadius: "10px"
+                              }
+                  }}
                   helperText="Format : +336XXXXXXXX"
+                  FormHelperTextProps={{
+                    sx: { marginRight: "auto" }
+                  }}
                   error={!phone || !phoneFormat}
                 />
               </Grid>
@@ -223,6 +193,13 @@ function LoginVolunteer() {
                   fullWidth
                   id="email"
                   label="Adresse email"
+                  sx={{ alignItems: "center" }}
+                                    InputProps={{
+                                        style: { color: "#2D2A32",
+                                                 boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                                 borderRadius: "10px",
+                                               }
+                                    }}
                 />
                 {/* If email is empty, display an error message */}
                 {!email && (
@@ -245,15 +222,20 @@ function LoginVolunteer() {
                   id="password"
                   label="Mot de passe"
                   type={showPassword ? "text" : "password"}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton onClick={handleClick} edge="end">
-                          {showPassword ? <Visibility /> : <VisibilityOff />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
+                  sx={{ alignItems: "center" }}
+                        InputProps={{
+                            style: { color: "#2D2A32",
+                                     boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                     borderRadius: "10px",
+                                   },
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton onClick={handleClick} edge="end">
+                              {showPassword ? <Visibility /> : <VisibilityOff />}
+                            </IconButton>
+                          </InputAdornment>
+                        )
+                      }}
                 />
                 {/* If password is empty, display an error message */}
                 {!password && (
@@ -265,21 +247,28 @@ function LoginVolunteer() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 6,
+                    mb: 3,
+                    color: "#FFFEFF",
+                    backgroundColor: "#67A191",
+                    borderRadius: "10px",
+                    boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                    width: "200px",
+                  }}
             >
               Connexion
             </Button>
-            <Grid container justifyContent="flex-end">
+            <Grid container justifyContent="flex-end" sx={{ mb: 4 }}>
               <Grid item>
-                <Link href="/associations/register" variant="body2">
+                <Link href="/volunteers/register" variant="body2">
                   Vous n'avez pas de compte ? Inscrivez-vous
                 </Link>
               </Grid>
             </Grid>
           </Box>
         </Box>
-      </Container>
-    </ThemeProvider>
+      </div>
+    </div>
   );
 }
 

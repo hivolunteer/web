@@ -1,7 +1,9 @@
+import config from "../config";
+
 export class AuthenticationService {
 
     static async loginVolunteers(user: { [k: string]: FormDataEntryValue; }) {
-        const response = await fetch('/volunteers/login', {
+        const response = await fetch(`${config.apiUrl}/volunteers/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(user)
@@ -13,7 +15,7 @@ export class AuthenticationService {
     }
 
     static async loginAssociations(user: { [k: string]: FormDataEntryValue; }) {
-        const response = await fetch('/associations/login', {
+        const response = await fetch(`${config.apiUrl}/associations/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(user)
@@ -27,7 +29,7 @@ export class AuthenticationService {
 
     static async registerVolunteers(user: { [k: string]: FormDataEntryValue; }) {
         user['profile_picture'] = "HELL";
-        const response = await fetch('/volunteers/create', {
+        const response = await fetch(`${config.apiUrl}/volunteers/create`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(user)
@@ -40,7 +42,7 @@ export class AuthenticationService {
 
     static async registerAssociations(user: { [k: string]: FormDataEntryValue; }) {
         user['profile_picture'] = "HELL";
-        const response = await fetch('/associations/create', {
+        const response = await fetch(`${config.apiUrl}/associations/create`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(user)

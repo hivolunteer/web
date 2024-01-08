@@ -1,19 +1,25 @@
-import "./Profile.scss";
-import React, { useState, useEffect } from "react";
-import { Container, Row, Col } from "react-bootstrap";
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import { useNavigate } from "react-router-dom";
+/**
+ * @module Profile.tsx
+ * @description Association Profile Page
+ * @utility This page is used to display the association's profile page
+*/
 
-const src_img = require('../../../images/titleLogo.png');
+import "./Profile.scss";
+import { useState, useEffect } from "react";
+import { Container, Row, Col } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { Card, CardContent, Typography } from "@mui/material";
+import './Profile.scss';
+import config from "../../../config";
+
+import profileImage from "../../../images/logo/submark.png";
 
 function ProfilePage(props: any) {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [profile_picture, setProfilePicture] = useState<string>(src_img);
+  const [profile_picture, setProfilePicture] = useState<string>(profileImage);
   const [rating, setRating] = useState<number>(0);
   const navigate = useNavigate();
 
@@ -22,8 +28,7 @@ function ProfilePage(props: any) {
   useEffect(() => {
     console.log(localStorage)
     const getProfile = () => {
-      let url = 'http://localhost:8000/associations/profile';
-      fetch(url, {
+      fetch(`${config.apiUrl}/associations/profile`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -55,9 +60,9 @@ function ProfilePage(props: any) {
 
   /* Function to add when back is gonna be done */
 
-  const deleteAccount = () => {
-    /* if (window.confirm('Are you sure you want to delete your account?')) {
-      let url = 'http://localhost:8000/associations/profile';
+  /*const deleteAccount = () => {
+    if (window.confirm('Are you sure you want to delete your account?')) {
+      let url = `${config.apiUrl}/associations/profile`;
       fetch(url, {
         method: 'DELETE',
         headers: {
@@ -76,11 +81,11 @@ function ProfilePage(props: any) {
         .catch((error) => 
           console.log(error);
         });
-    } */
-  };
+    }
+  };*/
 
   return (
-    <Container className="profile-container">
+    <Container>
         <Row className="profile-row">
             <Col sm={12} md={4} lg={3}>
               <div className="profile-pic">
