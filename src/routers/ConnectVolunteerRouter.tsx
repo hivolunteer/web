@@ -5,6 +5,7 @@ import VolunteerHome from "../pages/Volunteer/VolunteerHome/VolunteerHome";
 import History from "../pages/Volunteer/History/History";
 import FollowAssociation from "../pages/Volunteer/FollowAssociation/FollowAssociation";
 import MissionDetails from "../pages/Volunteer/MissionDetails/MissionDetails";
+import Settings from "../pages/Settings/Settings";
 
 function ConnectVolunteerRouter() {
   return (
@@ -15,6 +16,7 @@ function ConnectVolunteerRouter() {
       <Route path="/profile" element={<Profile />} />
       <Route path="/accueil" element={<VolunteerHome />} />
       <Route path="/mission/:missionID" element={<MissionDetails />} />
+      <Route path={"/settings"} element={<Settings />} />
       <Route path="*" element={<h1> Error 404 Volunteer </h1>} />
     </Routes>
   );

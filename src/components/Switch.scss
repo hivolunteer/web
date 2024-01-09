@@ -26,3 +26,20 @@
   .mask-box .MuiButton-root:hover {
     opacity: 0.8;
   }
+
+  .color-blind-bg {
+    background-color: #3b3d3c;
+    background: #3b3d3c;
+    box-shadow: #3b3d3c;
+}
+
+
+.mask-box .masks {
+  width: 200px;
+  height: 40px;
+  border-radius: 20px;
+  background: #3b3d3c;
+  position: absolute;
+  box-shadow: 1px 0 2px #3b3d3c;
+  transition: all 0.5s ease;
+}

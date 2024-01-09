@@ -92,6 +92,20 @@
   background-color: #5b8971;
 }
 
+.profile-pic-btn-color-blind {
+  padding: 0.5rem 1rem;
+  align-items: center;
+  margin: 0.5rem;
+  border: none;
+  border-radius: 20px;
+  background-color: #3b3d3c
+  ;
+}
+
+.profile-pic-btn-color-blind:hover {
+  background-color: #3b3d3c;
+}
+
 .profile-info {
   margin-top: 2rem;
 }
@@ -121,7 +135,6 @@
   padding: 0.5rem 1rem;
   border: none;
   border-radius: 20px;
-  background-color: #67a191;
   color: #fff;
   cursor: pointer;
 }
@@ -156,4 +169,23 @@
 
 .delete-account-btn:hover {
   background-color: rgb(224, 127, 127);
+}
+
+.rating-color-blind {
+  display: flex;
+  flex-direction: column;
+  margin-top: 2rem;
+  margin-right: 2rem;
+  color: #3b3d3c;
+  text-align: right;
+  font-family: Montserrat;
+  font-size: 4rem;
+  font-weight: 900;
+}
+
+
+// Color Blind Mode
+
+.color-blind-bg {
+  background-color: #3b3d3c;
 }
