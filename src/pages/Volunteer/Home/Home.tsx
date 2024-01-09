@@ -23,6 +23,9 @@ function Home(props: any) {
                 })
             }
         })
+    }, [setMissionList])
+
+    useEffect(() => {
 
           fetch(`${config.apiUrl}/volunteers/profile`, {
             method: 'GET',
