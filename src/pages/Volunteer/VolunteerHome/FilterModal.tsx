@@ -137,7 +137,7 @@ const FilterModal = (props: {modalProps: Modal}) => {
                             onChange={(event, value) => {
                                 setSearchSkills(value.map((skill) => skill.id));
                             }}
-                            placeholder="Compétences"
+                            //placeholder="Compétences"
                         />
                     </div>
                 </div>
