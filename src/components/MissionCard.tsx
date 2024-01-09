@@ -1,15 +1,15 @@
 import { CardMedia } from '@mui/material';
 import { useState, useEffect } from 'react';
 import Card from 'react-bootstrap/Card';
+import '../pages/Volunteer/Home/Home.scss';
 
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import NearMeOutlinedIcon from '@mui/icons-material/NearMeOutlined';
 import config from "../config";
 
-function HomeMisssionCard(props: {mission: number}) {
+function MisssionCard(props: {mission: number}) {
 
     interface Mission {
-        id: number,
         owner_id: number,
         title: string,
         end_date: string,
@@ -18,7 +18,6 @@ function HomeMisssionCard(props: {mission: number}) {
     }
 
     let [mission, setMission] = useState<Mission>({
-        id: 0,
         title: '',
         end_date: '',
         start_date: '',
@@ -94,9 +93,6 @@ function HomeMisssionCard(props: {mission: number}) {
                 alignItems: 'center',
                 backgroundColor: '#FFFEFF'
             }}
-            onClick={() => {
-                window.location.href = `/manage/${mission.id}`
-            }}
         >
             <Card.Body style={{width: '100%'}}>
                 <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%'}}>
@@ -129,4 +125,4 @@ function HomeMisssionCard(props: {mission: number}) {
     )
 }
 
-export default HomeMisssionCard;
+export default MisssionCard;
