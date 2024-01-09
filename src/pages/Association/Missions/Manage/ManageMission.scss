@@ -8,7 +8,7 @@
 //     background-image: url("https://www.ukrgate.com/eng/wp-content/uploads/2021/02/A-Reforestation-Campaign-in-Kherson-Region1.jpg");
 
 .mission-firstinformation {
-    margin-top: 5%;
+    margin-top: 3%;
 }
 
 .header-mission-container {
@@ -44,11 +44,15 @@
 
 }
 
+.mission-management {
+    margin-top: 3%;
+}
+
 .mission-button {
     border-radius: 10px;
     border: none;
     padding: 10px !important;
-    margin: 10px;
+    margin: 10px !important;
     font-size: 1.2em;
     font-weight: bold;
 }

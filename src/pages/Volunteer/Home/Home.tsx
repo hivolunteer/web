@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './Home.scss';
 import config from "../../../config";
-import MissionCard from './MissionCard';
+import MissionCard from '../../../components/HomeMissionCard';
 import WeekMissions from './WeekMissions';
 
 function Home(props: any) {

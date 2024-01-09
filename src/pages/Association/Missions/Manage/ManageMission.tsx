@@ -245,6 +245,8 @@ function ManageMission() {
                     { mission?.status === 0 && <Button className="mission-button" onClick={() => publishMission()}
                     style={{backgroundColor: '#67a191', color: 'white'}}> Publier </Button> }             
                 </div>
+                { mission?.status === 1 && (
+                    <>
                 <hr className="mission-separator" />
                 <div className="mission-volunteers">
                     <h2> Volontaires inscrits ({ListVolunteers.length} / {mission?.max_volunteers})  </h2>
@@ -287,6 +289,8 @@ function ManageMission() {
                         </Table>
                     </TableContainer>
                 </div>
+                </>
+                )}
             </div>
         </div>
     )

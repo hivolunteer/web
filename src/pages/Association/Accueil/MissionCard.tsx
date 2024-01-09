@@ -1,64 +1,16 @@
-import { CardMedia } from '@mui/material';
-import { useState, useEffect } from 'react';
-import Card from 'react-bootstrap/Card';
-import './Home.scss';
+import { CardMedia } from "@mui/material";
+import { useState, useEffect } from "react";
+import Card from "react-bootstrap/Card";
+import "./Accueil.scss";
 
-import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
-import NearMeOutlinedIcon from '@mui/icons-material/NearMeOutlined';
+import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
+import NearMeOutlinedIcon from "@mui/icons-material/NearMeOutlined";
 import config from "../../../config";
 
-function MisssionCard(props: {mission: number}) {
-
-    interface Mission {
-        owner_id: number,
-        title: string,
-        end_date: string,
-        start_date: string,
-        pratical_info: string
-    }
-
-    let [mission, setMission] = useState<Mission>({
-        title: '',
-        end_date: '',
-        start_date: '',
-        owner_id: 0,
-        pratical_info: ''
-    })
-
-    let [associationPicture, setAssociationPicture] = useState<string>('')
-
-
-    useEffect(() => {
-
-        fetch(`${config.apiUrl}/missions/association/${props.mission}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then((response) => {
-            if (response.status === 200) {
-                response.json().then((data) => {
-                    setMission(data.association_mission)
-                    fetch(`${config.apiUrl}/associations/profile/` + data.association_mission.owner_id, {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                            'Content-Type': 'application/json'
-                        }
-                    }).then((response) => {
-                        if (response.status === 200) {
-                            response.json().then((data) => {
-                                setAssociationPicture(data.association.profile_picture)
-                            })
-                        }
-                    })
-                })
-            }
-        })
-    }, [])
-
+function MissionCard(props: { mission: any }) {
 
     // misc functions
+    let associationPicture = '';
 
     function convertDay(date: string) {
         if (date === '')
@@ -93,6 +45,9 @@ function MisssionCard(props: {mission: number}) {
                 alignItems: 'center',
                 backgroundColor: '#FFFEFF'
             }}
+            onClick={() => {
+                window.location.href = `/manage/${props.mission.id}`
+            }}
         >
             <Card.Body style={{width: '100%'}}>
                 <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%'}}>
@@ -100,18 +55,18 @@ function MisssionCard(props: {mission: number}) {
                         <CardMedia
                             component="img"
                             style={{borderRadius: '100%', objectFit: 'cover', height: '150px', width: '150px'}}
-                            image={(associationPicture === '') ? 'https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg' : associationPicture}
+                            image={props.mission.picture}
                             alt="association picture"
                         />
                     </div>
                     <div style={{flex: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start'}}>
                         <div className='mission-header'>
-                            <p style={{fontWeight: 'bold'}}> {mission.title} </p>
+                            <p style={{fontWeight: 'bold'}}> {props.mission.title} </p>
                         </div>
                         <div className='mission-body'>
                             <div className='mission-body-with-icon'>
                                 <CalendarMonthOutlinedIcon />
-                                <p style={{marginLeft: '10px'}}> {convertDay(mission.start_date)} {convertHour(mission.start_date)}h - {convertHour(mission.end_date)}h </p>
+                                <p style={{marginLeft: '10px'}}> {convertDay(props.mission.start_date)} {convertHour(props.mission.start_date)}h - {convertHour(props.mission.end_date)}h </p>
                             </div>
                             <div className='mission-body-with-icon' style={{marginBottom: '2px'}}>
                                 <NearMeOutlinedIcon />
@@ -123,6 +78,7 @@ function MisssionCard(props: {mission: number}) {
             </Card.Body>
         </Card>
     )
+
 }
 
-export default MisssionCard;
+export default MissionCard;

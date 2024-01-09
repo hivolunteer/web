@@ -40,7 +40,7 @@ export default function SimpleDialog(props: SimpleDialogProps) {
                 console.log(response)
                 if (response.status === 201) {
                     response.json().then((data) => {
-                            console.log(data)
+                            window.location.reload();
                         }
                     )
                 }

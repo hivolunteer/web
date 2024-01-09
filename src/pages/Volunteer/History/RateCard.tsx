@@ -7,6 +7,7 @@ import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined
 import NearMeOutlinedIcon from '@mui/icons-material/NearMeOutlined';
 import config from "../../../config";
 import SimpleDialog from "./dialog";
+import Rating from "@mui/material/Rating";
 
 function RateCard(props: { mission: number }) {
 
@@ -39,9 +40,31 @@ function RateCard(props: { mission: number }) {
     })
 
     let [associationPicture, setAssociationPicture] = useState<string>('')
+    let [rated, setRated] = useState<boolean>(false)
+    let [stars, setStars] = useState<number>(0)
+
+
 
     useEffect(() => {
-
+        fetch(`${config.apiUrl}/missions/volunteer/rate/${props.mission}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json',
+            }
+        }).then((response) => {
+            if (response.status === 200) {
+                response.json().then((data) => {
+                    if (data.stars_from_volunteer !== -1) {
+                        setStars(data.stars_from_volunteer)
+                        setRated(true)
+                    } else {
+                        setRated(false)
+                    }
+                    console.log(data)
+                })
+            }
+        })
         fetch(`${config.apiUrl}/missions/association/${props.mission}`, {
             method: 'GET',
             headers: {
@@ -67,7 +90,7 @@ function RateCard(props: { mission: number }) {
                 })
             }
         })
-    }, [props.mission])
+    }, [])
 
     // misc functions
 
@@ -159,21 +182,29 @@ function RateCard(props: { mission: number }) {
                         alignItems: 'center',
                         marginRight: '10% auto'
                     }}>
-                        <Button
-                            variant="contained"
-                            style={{color: 'white'}}
-                            onClick={() => {
-                                handleClickOpen()
-                            }}
-                        >
-                            Noter la mission
-                        </Button>
-                        <SimpleDialog
-                            selectedValue={selectedValue}
-                            open={open}
-                            onClose={handleClose}
-                            mission={mission}
-                        />
+                        {!rated ? (
+                            <>
+                                <Button
+                                    variant="contained"
+                                    style={{color: 'white'}}
+                                    onClick={() => {
+                                        handleClickOpen();
+                                    }}
+                                >
+                                    Noter la mission
+                                </Button>
+                                <SimpleDialog
+                                    selectedValue={selectedValue}
+                                    open={open}
+                                    onClose={handleClose}
+                                    mission={mission}/></>) : (
+                            <Rating
+                                readOnly
+                                precision={0.5}
+                                name="simple-controlled"
+                                value={stars}
+                            />
+                        )}
                     </div>
                 </div>
             </Card.Body>
