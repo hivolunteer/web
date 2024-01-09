@@ -9,6 +9,7 @@ import config from "../config";
 function HomeMisssionCard(props: {mission: number}) {
 
     interface Mission {
+        id: number,
         owner_id: number,
         title: string,
         end_date: string,
@@ -17,6 +18,7 @@ function HomeMisssionCard(props: {mission: number}) {
     }
 
     let [mission, setMission] = useState<Mission>({
+        id: 0,
         title: '',
         end_date: '',
         start_date: '',
@@ -91,6 +93,9 @@ function HomeMisssionCard(props: {mission: number}) {
                 justifyContent: 'center',
                 alignItems: 'center',
                 backgroundColor: '#FFFEFF'
+            }}
+            onClick={() => {
+                window.location.href = `/manage/${mission.id}`
             }}
         >
             <Card.Body style={{width: '100%'}}>

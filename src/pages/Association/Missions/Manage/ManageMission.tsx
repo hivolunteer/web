@@ -106,7 +106,7 @@ function ManageMission() {
                     }
                 }) 
             } else {
-                window.location.href = "/accueil";
+                window.location.href = "/";
             }
         })
     }, [])
@@ -132,7 +132,7 @@ function ManageMission() {
                 }
             }).then((response) => {
                 if (response.status === 201) {
-                    window.location.href = "/accueil";
+                    window.location.href = "/";
                 } else {
                     console.log("ERROR");
                     alert("Une erreur est survenue lors de la suppression de la mission");
@@ -147,7 +147,7 @@ function ManageMission() {
                 }
             }).then((response) => {
                 if (response.status === 200) {
-                    window.location.href = "/accueil";
+                    window.location.href = "/";
                 } else {
                     console.log("ERROR");
                     alert("Une erreur est survenue lors de l'annulation de la mission");
