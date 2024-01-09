@@ -80,7 +80,9 @@ function VolunteerHome(props: any) {
         if (response.status === 200) {
           response.json().then((data) => {
               let mission_list : Mission[] = [];
-              data.map((mission: any) => {
+              data
+              .filter((mission: any) => mission.status === 1)
+              .map((mission: any) => {
                   mission_list.push({id: mission.id, title: mission.title, status: mission.status})
               })
               console.log(mission_list)
@@ -102,7 +104,6 @@ function VolunteerHome(props: any) {
           response.json().then((data) => {
               let association_list : Association[] = [];
               data
-              .filter((mission: any) => mission.status === 1)
               .map((association: any) => {
                   association_list.push({id: association.id, name: association.name})
               })

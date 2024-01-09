@@ -23,7 +23,7 @@ function Home(props: any) {
                 })
             }
         })
-    }, [setMissionList])
+    }, [])
 
     useEffect(() => {
 
