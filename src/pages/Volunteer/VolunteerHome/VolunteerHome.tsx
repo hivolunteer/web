@@ -81,7 +81,6 @@ function VolunteerHome(props: any) {
           response.json().then((data) => {
               let mission_list : Mission[] = [];
               data
-              .filter((mission: any) => mission.status === 1)
               .map((mission: any) => {
                   mission_list.push({id: mission.id, title: mission.title, status: mission.status})
               })
