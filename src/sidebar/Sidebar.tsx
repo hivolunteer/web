@@ -87,9 +87,9 @@ function ResponsiveAppBar() {
               mr: 2,
               display: { xs: "none", md: "flex" },
               fontFamily: "montserrat",
-              fontWeight: "semiBold",
+              fontWeight: "bold",
               letterSpacing: ".3rem",
-              color: "inherit",
+              color: "#F5F5F5",
               textDecoration: "none",
             }}
           >
