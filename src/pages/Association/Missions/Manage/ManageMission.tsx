@@ -158,13 +158,13 @@ function ManageMission() {
 
     function publishMission() {
         fetch(`${config.apiUrl}/missions/association/upload/${mission_id}`, {
-            method: 'PUT',
+            method: 'POST',
             headers: {
                 'content-type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         }).then((response) => {
-            if (response.status === 200) {
+            if (response.status === 201) {
                 window.location.href = `/manage/${mission_id}`;
             } else {
                 console.log("ERROR");
