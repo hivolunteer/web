@@ -15,10 +15,7 @@ body {
     *,:after,:before {
         box-sizing: inherit;
     }
-    ::selection {
-        background: $color-hivolunteer;
-        color: white;
-    }
+
 
   /*
   margin: 0;
