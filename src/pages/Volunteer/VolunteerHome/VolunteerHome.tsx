@@ -81,7 +81,7 @@ function VolunteerHome(props: any) {
           response.json().then((data) => {
               let mission_list : Mission[] = [];
               data.map((mission: any) => {
-                  mission_list.push({id: mission.id, title: mission.title})
+                  mission_list.push({id: mission.id, title: mission.title, status: mission.status})
               })
               console.log(mission_list)
               setMissionList(mission_list)
@@ -193,6 +193,9 @@ function VolunteerHome(props: any) {
                         .filter((mission: Mission) =>
                         (filteredMissions.length === 0 || filteredMissions.some((filteredMission: Mission) => mission.id === filteredMission.id)) &&
                         mission.title.toLowerCase().includes(search.toLowerCase())
+                        )
+                        .filter((mission: Mission) =>
+                        (filteredAssociations.length === 0 || filteredAssociations.some((filteredAssociation: Association) => mission.status === 1))
                         )
                         .map((mission: Mission) => (
                         <div className="mission-card" key={mission.id}>

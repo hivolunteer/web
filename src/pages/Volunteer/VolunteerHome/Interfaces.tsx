@@ -1,6 +1,7 @@
 interface Mission {
     id : number,
-    title: string
+    title: string,
+    status: number
 }
 
 interface Association {
