@@ -2,6 +2,7 @@ import { Dialog, DialogTitle, Button, Checkbox, Rating } from "@mui/material";
 import React, { useState } from "react";
 
 import { ModalAsso } from "./Interfaces"; 
+import config from "../../../config";
 
 
 const FilterModal = (props: {modalProps: ModalAsso}) => {
@@ -21,7 +22,7 @@ const FilterModal = (props: {modalProps: ModalAsso}) => {
             friendList: preferences[1],
             noteList: value
         }
-        fetch('http://localhost:8000/search/associations', {
+        fetch(`${config.apiUrl}/search/associations`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",

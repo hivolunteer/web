@@ -1,5 +1,6 @@
 import { Card, CardContent, CardMedia, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
+import config from '../../../config';
 
 export default function MissionCard(props: {mission_id: number}) {
     
@@ -22,7 +23,7 @@ export default function MissionCard(props: {mission_id: number}) {
         }
     
         useEffect(() => {
-            fetch(`http://localhost:8000/missions/association/${props.mission_id}`, {
+            fetch(`${config.apiUrl}/missions/association/${props.mission_id}`, {
                 method: 'GET',
                 headers: {
                     authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -39,7 +40,7 @@ export default function MissionCard(props: {mission_id: number}) {
 
         useEffect(() => {
             if (mission && mission.owner_id) {
-                    fetch(`http://localhost:8000/associations/profile/${mission.owner_id}`, {
+                    fetch(`${config.apiUrl}/associations/profile/${mission.owner_id}`, {
                         method: 'GET',
                         headers: {
                             authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -58,7 +59,7 @@ export default function MissionCard(props: {mission_id: number}) {
 
         useEffect(() => {
             if (mission && mission.location) {
-                fetch(`http://localhost:8000/locations/${mission.location}`, {
+                fetch(`${config.apiUrl}/locations/${mission.location}`, {
                     method: 'GET',
                     headers: {
                         authorization: `Bearer ${localStorage.getItem('token')}`,

@@ -23,6 +23,8 @@ function Home(props: any) {
                 })
             }
         })
+    }, [])
+    useEffect(() => {
 
           fetch(`${config.apiUrl}/volunteers/profile`, {
             method: 'GET',

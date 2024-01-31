@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 import { Modal, Skill } from "./Interfaces"; 
 import { DatePicker} from "@mui/x-date-pickers";
+import config from "../../../config";
 
 
 const FilterModal = (props: {modalProps: Modal}) => {
@@ -16,7 +17,7 @@ const FilterModal = (props: {modalProps: Modal}) => {
 
     useEffect(() => {
         const token = localStorage.getItem("token");
-        fetch("http://localhost:8000/skills", {
+        fetch(`${config.apiUrl}/skills`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -43,7 +44,7 @@ const FilterModal = (props: {modalProps: Modal}) => {
             skillsList: searchSkills,
             dateList: dates
         }
-        fetch('http://localhost:8000/search/missions', {
+        fetch(`${config.apiUrl}/search/missions`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",

@@ -12,6 +12,7 @@ import FilterModalAsso from "./FilterModalAsso";
 import MissionCard from "./MissionCard";
 import AssociationCard from "./AssociationCard";
 import { Mission, Modal, Association, ModalAsso } from "./Interfaces";
+import config from "../../../config";
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -72,48 +73,47 @@ function VolunteerHome(props: any) {
       : (FilterModalAsso as React.FC<{ modalProps: CombinedModalPros }>);
 
   useEffect(() => {
-    fetch("http://localhost:8000/missions/association", {
-      method: "GET",
-      headers: {
-        authorization: `Bearer ${localStorage.getItem("token")}`,
-        "Content-Type": "application/json",
-      },
+    fetch(`${config.apiUrl}/missions/association`, {
+        method: 'GET',
+        headers: {
+            authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+        }
     }).then((response) => {
-      if (response.status === 200) {
-        response.json().then((data) => {
-          let mission_list: Mission[] = [];
-          data.map((mission: any) => {
-            mission_list.push({ id: mission.id, title: mission.title });
-          });
-          console.log(mission_list);
-          setMissionList(mission_list);
-        });
-      }
-    });
-  }, []);
+        if (response.status === 200) {
+          response.json().then((data) => {
+              let mission_list : Mission[] = [];
+              data
+              .map((mission: any) => {
+                  mission_list.push({id: mission.id, title: mission.title, status: mission.status})
+              })
+              console.log(mission_list)
+              setMissionList(mission_list)
+          })
+        }
+     })
+  }, [])
 
   useEffect(() => {
-    fetch("http://localhost:8000/associations/", {
-      method: "GET",
-      headers: {
-        authorization: `Bearer ${localStorage.getItem("token")}`,
-        "Content-Type": "application/json",
-      },
+    fetch(`${config.apiUrl}/associations/`, {
+        method: 'GET',
+        headers: {
+            authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+        }
     }).then((response) => {
-      if (response.status === 200) {
-        response.json().then((data) => {
-          let association_list: Association[] = [];
-          data.map((association: any) => {
-            association_list.push({
-              id: association.id,
-              name: association.name,
-            });
-          });
-          setAssociations(association_list);
-        });
-      }
-    });
-  }, []);
+        if (response.status === 200) {
+          response.json().then((data) => {
+              let association_list : Association[] = [];
+              data
+              .map((association: any) => {
+                  association_list.push({id: association.id, name: association.name})
+              })
+              setAssociations(association_list)
+          })
+        }
+      })
+     }, [])
 
   const handleSearch = (e: any) => {
     setSearch(e.target.value.toLowerCase());
