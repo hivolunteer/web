@@ -149,70 +149,82 @@ function ProfilePage(props: any) {
         .catch((error) => 
           console.log(error);
         });
-    }
-  };*/
+    } */
+
+  const [color_blind, setColorBlind] = useState(
+    localStorage.getItem("color_blind") === "true"
+  );
 
   return (
-    <Container>
-        <Row className="profile-row">
-            <Col sm={12} md={4} lg={3}>
-                <div className="profile-pic">
-                    <img src={profile_picture} alt="" className="profile-img"/>
-                </div>
-                <div className="profile-btn-div">
-                  <label htmlFor="profile-pic-upload" className="profile-pic-btn">
-                    Changer la Photo
-                  </label>
-                  <input className='profile-input' id="profile-pic-upload" type="file" onChange={handleFileChange} accept="image/*"/> 
-                </div>
-            </Col>
-            <Col sm={12} md={8} lg={9}>
-                <div className="profile-info">
-                    <div className="profile-row">
-                        <label>Prénom:</label>
-                        <input
-                            className="filled-text"
-                            type="text"
-                            placeholder="Name"
-                            value={first_name}
-                            onChange={(event) => setFirstName(event.target.value)}
-                        />
-                    </div>
-                    <div className="profile-row">
-                        <label>Nom de famille:</label>
-                        <input
-                            className="filled-text"
-                            type="text"
-                            placeholder="Last Name"
-                            value={last_name}
-                            onChange={(event) => setLastName(event.target.value)}
-                        />
-                    </div>
-                    <div className="profile-row">
-                        <label>Email:</label>
-                        <input
-                            className="filled-text"
-                            type="text"
-                            placeholder="Email"
-                            value={email}
-                            onChange={(event) => setEmail(event.target.value)}
-                        />
-                    </div>
-                    <div className="profile-row">
-                        <label>Numéro de téléphone:</label>
-                        <input
-                            className="filled-text"
-                            type="text"
-                            placeholder="Phone number"
-                            value={phone}
-                            onChange={(event) => setPhone(event.target.value)}
-                        />
-                    </div>
-                    <div className="profile-btn-div">
-                        <button className="profile-pic-btn" onClick={updateProfile}>
-                            Mettre à jour le profile
-                        </button>
-                        {/* <button className="delete-account-btn" onClick={deleteAccount}>
+    <Container className="profile-container">
+      <Row className="profile-row">
+        <Col sm={12} md={4} lg={3}>
+          <div className="profile-pic">
+            <img src={profile_picture} alt="" className="profile-img" />
+          </div>
+          <div className="profile-btn-div">
+            <label
+              htmlFor="profile-pic-upload"
+              className={"profile-pic-btn" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")}
+            >
+              Changer la Photo
+            </label>
+            <input
+              className="profile-input"
+              id="profile-pic-upload"
+              type="file"
+              onChange={handleFileChange}
+              accept="image/*"
+            />
+          </div>
+        </Col>
+        <Col sm={12} md={8} lg={9}>
+          <div className="profile-info">
+            <div className="profile-row">
+              <label>Prénom:</label>
+              <input
+                className="filled-text"
+                type="text"
+                placeholder="Name"
+                value={first_name}
+                onChange={(event) => setFirstName(event.target.value)}
+              />
+            </div>
+            <div className="profile-row">
+              <label>Nom de famille:</label>
+              <input
+                className="filled-text"
+                type="text"
+                placeholder="Last Name"
+                value={last_name}
+                onChange={(event) => setLastName(event.target.value)}
+              />
+            </div>
+            <div className="profile-row">
+              <label>Email:</label>
+              <input
+                className="filled-text"
+                type="text"
+                placeholder="Email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+              />
+            </div>
+            <div className="profile-row">
+              <label>Numéro de téléphone:</label>
+              <input
+                className="filled-text"
+                type="text"
+                placeholder="Phone number"
+                value={phone}
+                onChange={(event) => setPhone(event.target.value)}
+              />
+            </div>
+            <div className="profile-btn-div">
+              <button className={"profile-pic-btn" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")} onClick={updateProfile}>
+                Mettre à jour le profile
+              </button>
+              {/* <button className="delete-account-btn" onClick={deleteAccount}>
                             Supprimer le compte
                         </button> */}
                     </div>
