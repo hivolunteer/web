@@ -20,6 +20,7 @@ const FilterModal = (props: {modalProps: ModalAsso}) => {
         let body = {
             themeList: [],
             friendList: preferences[1],
+            followList: preferences[0],
             noteList: value
         }
         fetch(`${config.apiUrl}/search/associations`, {
@@ -34,7 +35,7 @@ const FilterModal = (props: {modalProps: ModalAsso}) => {
             if (response.status === 200) {
                 response.json().then((data) => {
                     console.log("DATA" + data)
-                    console.log("friends" + preferences[1], "note" + value)
+                    console.log("friends" + preferences[1], "follows" + preferences[0], "note" + value)
                     modalProps.setFilteredAssociations(data)
                     modalProps.handleClose()
                 })
