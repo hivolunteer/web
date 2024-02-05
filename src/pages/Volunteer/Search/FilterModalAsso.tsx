@@ -81,7 +81,7 @@ const FilterModal = (props: {modalProps: ModalAsso}) => {
                                     checked={preferences[1]}
                                     onChange={() => setPreferences([preferences[0], !preferences[1]])}
                                 />
-                                <p style={{flex: 1}}> Amis qui suivent l'association </p>
+                                <p style={{flex: 1}}> Associations suivies par vos amis </p>
                             </div>
                         </div>
                     </div>

@@ -92,7 +92,7 @@ const FilterModal = (props: {modalProps: Modal}) => {
                                     checked={preferences[0]}
                                     onChange={() => setPreferences([!preferences[0], preferences[1]])}
                                 />
-                                <p style={{flex: 1}}> Associations suivies </p>
+                                <p style={{flex: 1}}> Missions des associations suivies </p>
                             </div>
                         </div>
                         <div style={{display: 'flex', flexDirection: 'column'}}>
