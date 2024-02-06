@@ -5,7 +5,7 @@ import { styled } from "@mui/material/styles";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import Box from "@mui/material/Box";
-import "./VolunteerHome.scss";
+import "./Search.scss";
 import CustomSwitch from "../../../components/Switch";
 import FilterModal from "./FilterModal";
 import FilterModalAsso from "./FilterModalAsso";
@@ -29,7 +29,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
-function VolunteerHome(props: any) {
+function Search(props: any) {
   const [missionList, setMissionList] = useState<Mission[]>([]);
   const [associationList, setAssociations] = useState<Association[]>([]);
   const [search, setSearch] = useState<string>("");
@@ -234,4 +234,4 @@ function VolunteerHome(props: any) {
   );
 }
 
-export default VolunteerHome;
+export default Search;

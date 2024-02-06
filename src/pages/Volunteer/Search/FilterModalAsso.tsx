@@ -1,50 +1,29 @@
-import { Dialog, DialogTitle, TextField, Button, Autocomplete, Checkbox, Chip } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Dialog, DialogTitle, Button, Checkbox, Rating } from "@mui/material";
+import React, { useState } from "react";
 
-import { Modal, Skill } from "./Interfaces"; 
-import { DatePicker} from "@mui/x-date-pickers";
+import { ModalAsso } from "./Interfaces"; 
 import config from "../../../config";
 
 
-const FilterModal = (props: {modalProps: Modal}) => {
+const FilterModal = (props: {modalProps: ModalAsso}) => {
 
     const modalProps = props.modalProps;
 
     const [preferences, setPreferences] = useState<boolean[]>([false, false]);
-    const [skills, setSkills] = useState<Skill[]>([]);
-    const [searchSkills, setSearchSkills] = useState<Number[]>([]);
-    const [dates, setDates] = useState<Array<Date | null>>([null, null]);
 
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        fetch(`${config.apiUrl}/skills`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token, // localStorage.getItem("token")
-          },
-        }).then((response) => {
-          if (response.status === 200) {
-            response.json().then((data) => {
-              setSkills(data);
-            });
-          }
-        })
-    }, []);
-    
+    const [value, setValue] = React.useState<number | null>(2);
 
     // valider Modal
 
     const ValidateSearch = async () => {
         const token = localStorage.getItem("token");
         let body = {
-            friendList: preferences[1],
             themeList: [],
-            associationList: preferences[0],
-            skillsList: searchSkills,
-            dateList: dates
+            friendList: preferences[1],
+            followList: preferences[0],
+            noteList: value
         }
-        fetch(`${config.apiUrl}/search/missions`, {
+        fetch(`${config.apiUrl}/search/associations`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
@@ -55,7 +34,9 @@ const FilterModal = (props: {modalProps: Modal}) => {
             console.log(response)
             if (response.status === 200) {
                 response.json().then((data) => {
-                    modalProps.setFilteredMissions(data)
+                    console.log("DATA" + data)
+                    console.log("friends" + preferences[1], "follows" + preferences[0], "note" + value)
+                    modalProps.setFilteredAssociations(data)
                     modalProps.handleClose()
                 })
             }
@@ -68,8 +49,7 @@ const FilterModal = (props: {modalProps: Modal}) => {
         PaperProps={{
             sx: {
                 maxWidth: '60%',
-                minHeight: '80vh',
-                maxHeight: '100vh',
+                minHeight: '60vh',
                 overflowY: 'hidden',
                 overflowX: 'hidden',
             }
@@ -77,8 +57,8 @@ const FilterModal = (props: {modalProps: Modal}) => {
         >
             {/* First Category : Domaine de la mission */}
             <DialogTitle sx={{ m: 0, p: 2 }} style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', maxHeight: '25vh'}}>
-                <div style={{width: '90%', margin: '0 2.5%'}}>
-                    <h3>DOMAINE DE LA MISSION</h3>
+                <div style={{width: '%', margin: '0 2.5%'}}>
+                    <h3>DOMAINE DE L'ASSOCIATION</h3>
                 </div>
             </DialogTitle>
             {/* Second Category : Préférences de la mission */}
@@ -101,66 +81,24 @@ const FilterModal = (props: {modalProps: Modal}) => {
                                     checked={preferences[1]}
                                     onChange={() => setPreferences([preferences[0], !preferences[1]])}
                                 />
-                                <p style={{flex: 1}}> Amis présents dans la mission </p>
+                                <p style={{flex: 1}}> Associations suivies par vos amis </p>
                             </div>
                         </div>
-                    </div>
-                    <div style={{flex: 1}}>
-                        <h3> COMPÉTENCES </h3>
-                        <Autocomplete
-                            multiple
-                            id="skills"
-                            options={skills}
-                            getOptionLabel={(option) => option.skill_name}
-                            filterSelectedOptions
-                            value={skills.filter((skill) => searchSkills.includes(skill.id))}
-                            renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label="Compétences"
-                                placeholder="Compétences"
-                                style={{width: '80%'}}
-                            />
-                            )}
-                            renderTags={(value, getTagProps) =>
-                            value
-                            .map((option, index) => (
-                                <Chip
-                                variant="outlined"
-                                label={option.skill_name}
-                                {...getTagProps({ index })}
-                                style={{ backgroundColor: option.color_hex, border: "none" }}
-                                />
-                            ))
-                            }
-                            // when skill is added
-                            onChange={(event, value) => {
-                                setSearchSkills(value.map((skill) => skill.id));
-                            }}
-                            //placeholder="Compétences"
-                        />
                     </div>
                 </div>
             </DialogTitle>
             {/* Third Category : Dates du début et de la fin de la mission */}
             <DialogTitle sx={{ m: 0, p: 2 }}>
                 <div style={{width: '90%', margin: '0 2.5%', maxHeight: '25vh'}}>
-                    <h3> DATES DU DÉBUT ET DE LA FIN DE LA MISSION </h3>
+                    <h3> NOTE MINIMALE </h3>
                     <div style={{display: 'flex', alignItems: 'center'}}>
-                        <DatePicker
-                            label="Début"
-                            onChange={(newDate) => setDates([newDate, dates[1]])}
-                            views={['year', 'month', 'day']}
-                            defaultValue={null}
-                        />
-                        <div style={{width: '4%'}} />
-                        <DatePicker
-                            label="Fin"
-                            onChange={(newDate) => setDates([dates[0], newDate])}
-                            views={['year', 'month', 'day']}
-                            value={dates[1]}
-                            defaultValue={null}
-                        />
+                    <Rating
+                      name="simple-controlled"
+                      value={value}
+                      onChange={(event, newValue) => {
+                        setValue(newValue);
+                      }}
+                    />
                     </div>
                 </div>
             </DialogTitle>
