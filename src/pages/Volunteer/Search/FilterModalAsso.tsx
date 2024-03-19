@@ -11,7 +11,7 @@ const FilterModal = (props: {modalProps: ModalAsso}) => {
 
     const [preferences, setPreferences] = useState<boolean[]>([false, false]);
 
-    const [value, setValue] = React.useState<number | null>(2);
+    const [value, setValue] = React.useState<number | null>(1);
 
     // valider Modal
 
@@ -21,7 +21,7 @@ const FilterModal = (props: {modalProps: ModalAsso}) => {
             themeList: [],
             friendList: preferences[1],
             followList: preferences[0],
-            noteList: value
+            note: value
         }
         fetch(`${config.apiUrl}/search/associations`, {
             method: 'POST',
@@ -43,31 +43,31 @@ const FilterModal = (props: {modalProps: ModalAsso}) => {
         })
     }
 
+    const setValuesToDefault = () => {
+        setPreferences([false, false]);
+        setValue(1);
+    }
+
   return (
     <div className="FilterModal">
         <Dialog open={modalProps.open} onClose={modalProps.handleClose} fullWidth maxWidth='lg'
         PaperProps={{
             sx: {
                 maxWidth: '60%',
-                minHeight: '60vh',
+                minHeight: '40vh',
+                maxHeight: '65vh',
                 overflowY: 'hidden',
                 overflowX: 'hidden',
             }
         }}
         >
-            {/* First Category : Domaine de la mission */}
-            <DialogTitle sx={{ m: 0, p: 2 }} style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', maxHeight: '25vh'}}>
-                <div style={{width: '%', margin: '0 2.5%'}}>
-                    <h3>DOMAINE DE L'ASSOCIATION</h3>
-                </div>
-            </DialogTitle>
             {/* Second Category : Préférences de la mission */}
             <DialogTitle sx={{ m: 0, p: 2 }}>
                 <div style={{width: '90%', margin: '0 2.5%', display: 'flex', flexDirection: 'row', flexWrap: 'wrap', maxHeight: '25vh'}}>
                     <div style={{flex: 1}}>
                         <h3> PRÉFÉRENCES </h3>
                         <div style={{display: 'flex', flexDirection: 'column'}}>
-                            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', margin: '-2% -2%'}}>
+                            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', margin: '-2% -1%'}}>
                                 <Checkbox
                                     checked={preferences[0]}
                                     onChange={() => setPreferences([!preferences[0], preferences[1]])}
@@ -76,7 +76,7 @@ const FilterModal = (props: {modalProps: ModalAsso}) => {
                             </div>
                         </div>
                         <div style={{display: 'flex', flexDirection: 'column'}}>
-                            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', margin: '-2% -2%'}}>
+                            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', margin: '0% -1%'}}>
                                 <Checkbox
                                     checked={preferences[1]}
                                     onChange={() => setPreferences([preferences[0], !preferences[1]])}
@@ -105,7 +105,7 @@ const FilterModal = (props: {modalProps: ModalAsso}) => {
             {/* Footer */}
             <DialogTitle sx={{ m: 0, p: 2 }} style={{display: 'flex', justifyContent: 'flex-end'}}>
                 <Button 
-                    onClick={modalProps.handleClose}
+                    onClick={() => { setValuesToDefault(); modalProps.handleClose(); }}
                     variant='contained'
                     sx={{
                         background: 'rgba(45, 42, 50, 0.50)',

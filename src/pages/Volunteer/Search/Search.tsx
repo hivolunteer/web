@@ -32,8 +32,11 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 function Search(props: any) {
   const [missionList, setMissionList] = useState<Mission[]>([]);
   const [associationList, setAssociations] = useState<Association[]>([]);
+  const [location_search, setLocation] = useState<string>("");
   const [search, setSearch] = useState<string>("");
   const [subType, setSubType] = useState<string>("Missions");
+  const [locations, setLocations] = useState<{[key: number]: string}>({});
+  const [rating, setRating] = useState<number>(0);
 
   //Modal functions
   const [open, setOpen] = useState<boolean>(false);
@@ -82,13 +85,14 @@ function Search(props: any) {
     }).then((response) => {
         if (response.status === 200) {
           response.json().then((data) => {
-              let mission_list : Mission[] = [];
-              data
-              .map((mission: any) => {
-                  mission_list.push({id: mission.id, title: mission.title, status: mission.status})
-              })
-              console.log(mission_list)
-              setMissionList(mission_list)
+            let mission_list : Mission[] = [];
+            data
+            .map((mission: any) => {
+              console.log(mission)
+              mission_list.push({id: mission.id, title: mission.title, status: mission.status, location: mission.location})
+            })
+            console.log(mission_list)
+            setMissionList(mission_list)
           })
         }
      })
@@ -107,7 +111,7 @@ function Search(props: any) {
               let association_list : Association[] = [];
               data
               .map((association: any) => {
-                  association_list.push({id: association.id, name: association.name})
+                  association_list.push({id: association.id, name: association.name, rating: association.rating})
               })
               setAssociations(association_list)
           })
@@ -115,9 +119,38 @@ function Search(props: any) {
       })
      }, [])
 
+    // Get all location names and ids
+    useEffect(() => {
+      fetch(`${config.apiUrl}/locations/`, {
+          method: 'GET',
+          headers: {
+              authorization: `Bearer ${localStorage.getItem('token')}`,
+              'Content-Type': 'application/json'
+          }
+      }).then((response) => {
+        if (response.status === 200) {
+          response.json().then((data) => {
+            // stock locations and location ids
+            let locs: { [key: number]: string } = {};
+            data
+            .map((location: any) => {
+              locs[location.id] = location.city;
+            })
+            setLocations(locs);
+            console.log(locs);
+          })
+        }
+      })
+    }, [])
   const handleSearch = (e: any) => {
+    // setSearch with value of the input from mission lkist if filter is not empty
     setSearch(e.target.value.toLowerCase());
   };
+
+  const handleLocation = (e: any) => {
+    setLocation(e.target.value.toLowerCase());
+    
+  }
   //className={"header-rating" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")}
   return (
     <div className="page-container">
@@ -155,6 +188,8 @@ function Search(props: any) {
                 </InputAdornment>
               ),
             }}
+            value={location_search}
+            onChange={handleLocation}
             sx={{
               boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
               borderRadius: "10px",
@@ -203,6 +238,7 @@ function Search(props: any) {
                         mission.id === filteredMission.id
                     )) &&
                   mission.title.toLowerCase().includes(search.toLowerCase())
+                  && (locations[mission.location] ? locations[mission.location].toLowerCase().includes(location_search.toLowerCase()) : false)
               )
               .map((mission: Mission) => (
                 <div className="mission-card" key={mission.id}>

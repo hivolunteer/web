@@ -31,6 +31,12 @@ const FilterModal = (props: {modalProps: Modal}) => {
           }
         })
     }, []);
+
+    const setValuesToDefault = () => {
+        setPreferences([false, false]);
+        setSearchSkills([]);
+        setDates([null, null]);
+    }
     
 
     // valider Modal
@@ -68,19 +74,13 @@ const FilterModal = (props: {modalProps: Modal}) => {
         PaperProps={{
             sx: {
                 maxWidth: '60%',
-                minHeight: '80vh',
-                maxHeight: '100vh',
+                minHeight: '45vh',
+                maxHeight: '65vh',
                 overflowY: 'hidden',
                 overflowX: 'hidden',
             }
         }}
         >
-            {/* First Category : Domaine de la mission */}
-            <DialogTitle sx={{ m: 0, p: 2 }} style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', maxHeight: '25vh'}}>
-                <div style={{width: '90%', margin: '0 2.5%'}}>
-                    <h3>DOMAINE DE LA MISSION</h3>
-                </div>
-            </DialogTitle>
             {/* Second Category : Préférences de la mission */}
             <DialogTitle sx={{ m: 0, p: 2 }}>
                 <div style={{width: '90%', margin: '0 2.5%', display: 'flex', flexDirection: 'row', flexWrap: 'wrap', maxHeight: '25vh'}}>
@@ -167,7 +167,7 @@ const FilterModal = (props: {modalProps: Modal}) => {
             {/* Footer */}
             <DialogTitle sx={{ m: 0, p: 2 }} style={{display: 'flex', justifyContent: 'flex-end'}}>
                 <Button 
-                    onClick={modalProps.handleClose}
+                    onClick={() => { setValuesToDefault(); modalProps.handleClose(); }}
                     variant='contained'
                     sx={{
                         background: 'rgba(45, 42, 50, 0.50)',
