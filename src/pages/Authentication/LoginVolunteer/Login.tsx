@@ -5,6 +5,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { AuthenticationService } from "../../../services/authentication.service";
 import "./Login.scss";
 import titleLogo from "../../../images/logo/primary_logo.png";
+import ForgotPasswordModal from "../ForgotPasswordModal/ForgotPasswordModal";
 
 function LoginVolunteer() {
   /***
@@ -22,6 +23,9 @@ function LoginVolunteer() {
   const [password, setPassword] = useState(true);
 
   const navigate = useNavigate();
+
+
+  const [open, setOpen] = React.useState(false);
 
   /* Function to check if all inputs are complete */
   const checkComplete = (data: FormData) => {
@@ -243,6 +247,14 @@ function LoginVolunteer() {
                 )}
               </Grid>
             </Grid>
+            <div style={{ marginTop: "10px", justifyContent: "flex-end", display: "flex" }}> 
+                <a className="forgot-password"
+                    onClick={() => {setOpen(true);
+                }}>
+                  Mot de passe oublié ?
+                </a>
+                <ForgotPasswordModal modalProps={{open: open, handleClose: () => setOpen(false), route: "/volunteers/"}} />
+            </div>
             <Button
               type="submit"
               fullWidth
@@ -254,11 +266,12 @@ function LoginVolunteer() {
                     borderRadius: "10px",
                     boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
                     width: "200px",
+                    marginTop: "20px"
                   }}
             >
               Connexion
             </Button>
-            <Grid container justifyContent="flex-end" sx={{ mb: 4 }}>
+            <Grid container justifyContent="center" sx={{ mb: 1 }}>
               <Grid item>
                 <Link href="/volunteers/register" variant="body2">
                   Vous n'avez pas de compte ? Inscrivez-vous
