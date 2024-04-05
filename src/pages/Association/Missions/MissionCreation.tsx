@@ -1,17 +1,22 @@
-import { Box, Button, Grid, TextField } from "@mui/material";
-import React from "react";
+/**
+ * @module MissionCreation.tsx
+ * @description Mission Creation Page
+ * @utility This page is used to create a mission
+*/
+
+import {Autocomplete, Box, Button, Chip, Grid, TextField} from "@mui/material";
+import React, {useEffect, useState} from "react";
 import { Image } from "mui-image";
-import "moment/locale/de";
-import { DateTimePicker, TimePicker } from "@mui/x-date-pickers";
-import Lottie from "lottie-react";
-import noImage from "../../../images/lottie/noImage.json";
-import AddressAutocomplete, {
-  AddressAutocompleteValue,
-} from "mui-address-autocomplete";
-import { AuthenticationService } from "../../../services/authentication.service";
-import { LocalizationProvider } from "@mui/x-date-pickers";
+import { LocalizationProvider, DateTimePicker, TimePicker } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import Lottie from "lottie-react";
 import moment from "moment";
+import "moment/locale/de";
+import './MissionCreation.scss';
+import config from "../../../config";
+import LocationModal from "./Modal/LocationModal";
+import noImage from "../../../images/lottie/noImage.json";
+
 interface MissionCreationData {
   missionName?: string;
   missionDescription?: string;
@@ -24,10 +29,26 @@ interface MissionCreationData {
   missionSkills?: string;
 }
 
+interface SkillDatabase {
+  id: number;
+  skill_name: string;
+  color_hex: string;
+}
+
+interface Address {
+  street_number: number | null
+  street_number_suffix: string | null,
+  street_name: string,
+  street_type: string | null,
+  city: string,
+  postal_code: number | null,
+  departement_id: number | null
+}
+
 const noImageComponent = () => {
   return (
     <>
-      <p>Vous n'avez pas encore choisi de photo</p>
+      {/* <p>Vous n'avez pas encore choisi de photo</p> */}
       <Lottie animationData={noImage} />
     </>
   );
@@ -35,21 +56,48 @@ const noImageComponent = () => {
 
 export default function MissionCreation() {
   const [image, setImage] = React.useState<any>(null);
-  const [address, setAddress] = React.useState<AddressAutocompleteValue | null>(
-    {
-      place_id: "ChIJD7fiBh9u5kcRYJSMaMOCCwQ",
-      description: "Paris, France",
-      components: {},
-      structured_formatting: {
-        main_text: "Paris",
-        secondary_text: "France",
-        main_text_matched_substrings: [],
-      },
-    }
-  );
   const [form, setForm] = React.useState<MissionCreationData>();
-  const [error, setError] = React.useState<boolean>(false);
+  const [newSkill, setNewSkill] = useState<Array<number>>([]);
+  const [skillDb, setSkillDb] = useState<Array<SkillDatabase>>([]);
 
+  // preparation for adress modal
+  const [open, setOpen] = React.useState<boolean>(false);
+  const [address, setAddress] = useState<Address>({
+    street_number: null,
+    street_number_suffix: null,
+    street_name: "",
+    street_type: "",
+    city: "",
+    departement_id: null,
+    postal_code: null,
+  });
+  const [locationStr, setLocationStr] = useState<string | null>(null);
+  const [locationId, setLocationId] = useState<number | null>(null);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  // useEffect to get skills from database
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    fetch(`${config.apiUrl}/skills`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token, // localStorage.getItem("token")
+      },
+    }).then((response) => {
+      if (response.status === 200) {
+        response.json().then((data) => {
+          setSkillDb(data);
+        });
+      }
+    })
+  }, []);
+
+  // handle creation of new mission
   const createNewMission = () => {
     const token = localStorage.getItem("token");
     const body = {
@@ -57,13 +105,14 @@ export default function MissionCreation() {
       max_volunteers: form?.missionVolunteersNumber,
       description: form?.missionDescription,
       practical_information: form?.missionPracticalInformation,
-      location: "Paris",
+      location: locationId,
       start_date: form?.missionDate,
       end_date: form?.missionEndDate,
       title: form?.missionName,
+      skills: newSkill,
     };
     console.log(body);
-    fetch("http://localhost:8000/missions/association/create", {
+    fetch(`${config.apiUrl}/missions/association/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -72,8 +121,9 @@ export default function MissionCreation() {
       body: JSON.stringify(body),
     })
       .then((response) => {
-        console.log(response);
         if (response.status === 201) {
+          alert("Mission créée");
+          window.location.href = "/";
           return response.body;
         }
       })
@@ -84,44 +134,17 @@ export default function MissionCreation() {
             .read()
             .then(({ done, value }) => {
               if (done) {
+                alert("Mission créée");
                 return;
               }
             });
         },
         (error) => {
-          console.log(error);
+          alert("Erreur lors de la création de la mission");
         }
       );
   };
-  /* checking the response */
-  const responseExecute = (responseStatus: number) => {
-    switch (responseStatus) {
-      case 200:
-        alert("Connexion réussie");
-        //navigate to correct page
-        break;
-      case 401:
-        alert("Connexion échouée");
-        break;
-      default:
-        alert("Erreur inconnue");
-        break;
-    }
-  };
 
-  // sending data to the back
-  const sendData = async (data: FormData) => {
-    // convert FormData to table
-    const mission = Object.fromEntries(data.entries());
-    const response_status = AuthenticationService.loginAssociations(mission);
-    console.log(response_status);
-    responseExecute(await response_status);
-  };
-  const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e) return false;
-    const re = new RegExp("[0-9]+");
-    setError(re.test(e.target.value.trim()));
-  };
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
       <Box>
@@ -149,7 +172,7 @@ export default function MissionCreation() {
             margin: "10",
           }}
         >
-          <p>Remplissez le formulaire ci-dessous pour créer une mission</p>
+          {/* <p>Remplissez le formulaire ci-dessous pour créer une mission</p> */}
 
           {!image ? (
             noImageComponent()
@@ -187,20 +210,24 @@ export default function MissionCreation() {
               }}
             />
 
-            <Button
-              color="secondary"
-              variant="contained"
-              component="span"
-              style={{ marginBottom: "10%" }}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginBottom: 20,
+                textDecoration: 'underline',
+                cursor: 'pointer'
+              }}
             >
               Modifier la photo
-            </Button>
+            </div>
           </label>
         </Box>
 
         <Box component="form">
-          <Grid container spacing={2} direction="column" alignContent="center">
-            <Grid item xs={12} lg={8}>
+          <Grid container spacing={3}  >
+            <Grid item xs={6} lg={6}>
               <TextField
                 name="missionName"
                 required
@@ -213,7 +240,7 @@ export default function MissionCreation() {
                 }}
               />
             </Grid>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={6} lg={6}>
               <TextField
                 name="missionDescription"
                 required
@@ -230,7 +257,7 @@ export default function MissionCreation() {
                 }}
               />
             </Grid>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={6} lg={6}>
               <TextField
                 name="missionPracticalInformation"
                 required
@@ -248,18 +275,28 @@ export default function MissionCreation() {
                 }}
               />
             </Grid>
-            <Grid item xs={12} lg={4}>
-              <AddressAutocomplete
-                apiKey="AIzaSyDq1CgJltdWn8rUq5KoWX5c-PXHeOMFDO0" // add 0
-                label="Adresse de la mission"
-                onChange={(_, value) => {
-                  setAddress(value);
-                  setForm({ ...form, missionAddress: value?.description });
+            <Grid item xs={6} lg={6}>
+              <p
+                style={{
+                  textDecoration: "underline",
+                  cursor: "pointer"
                 }}
-                value={address}
+                onClick={() => {
+                  setOpen(true);
+                }}
+              >
+                {(locationStr !== null) ? locationStr : "Ajouter une adresse"}
+              </p>
+              <LocationModal
+                  open={open}
+                  handleClose={handleClose}
+                  location={address}
+                  setLocation={setAddress}
+                  setLocationString={setLocationStr}
+                  setId={setLocationId}
               />
             </Grid>
-            <Grid item xs={12} lg={4}>
+            <Grid item xs={6} lg={3}>
               <DateTimePicker
                 label="Date de début"
                 format="DD/MM/YYYY HH:mm"
@@ -272,20 +309,20 @@ export default function MissionCreation() {
                 }}
               />
             </Grid>
-            <Grid item xs={12} lg={4}>
+            <Grid item xs={6} lg={3}>
               <TimePicker
-                label="Fin de la mission"
-                format="HH:mm"
-                defaultValue={moment.utc().local()}
-                onChange={(date) => {
-                  setForm({
-                    ...form,
-                    missionEndDate: moment(date).utc().local().toDate(),
-                  });
-                }}
-              />
+                  label="Fin de la mission"
+                  format="HH:mm"
+                  defaultValue={moment.utc().local()}
+                  onChange={(date) => {
+                    setForm({
+                      ...form,
+                      missionEndDate: moment(date).utc().local().toDate(),
+                    });
+                  }}
+                />
             </Grid>
-            <Grid item xs={12} lg={4}>
+            <Grid item xs={6} lg={6}>
               <TextField
                 autoComplete="name"
                 name="missionVolunteersNumber"
@@ -295,6 +332,7 @@ export default function MissionCreation() {
                 id="name"
                 inputMode={"numeric"}
                 label="Nombre de bénévoles"
+                inputProps={{min: 1}}
                 value={form?.missionVolunteersNumber}
                 onChange={(missionVolunteersNumber) => {
                   setForm({
@@ -318,13 +356,33 @@ export default function MissionCreation() {
               />
             </Grid>
             <Grid item xs={12} lg={6}>
-              <TextField
-                autoComplete="name"
-                name="name"
-                multiline={true}
-                fullWidth
-                id="name"
-                label="Compétences requises"
+              <Autocomplete
+                multiple
+                id="skills"
+                options={skillDb}
+                getOptionLabel={(option) => option.skill_name}
+                filterSelectedOptions
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Compétences"
+                    placeholder="Compétences"
+                  />
+                )}
+                renderTags={(value, getTagProps) =>
+                  value.map((option, index) => (
+                    <Chip
+                      variant="outlined"
+                      label={option.skill_name}
+                      {...getTagProps({ index })}
+                      style={{ backgroundColor: option.color_hex, border: "none" }}
+                    />
+                  ))
+                }
+                // when skill is added
+                onChange={(event, value) => {
+                  setNewSkill(value.map((skill) => skill.id));
+                }}
               />
             </Grid>
           </Grid>

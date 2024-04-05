@@ -1,10 +1,10 @@
-import "./ModifyProfile.scss";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
-import { Password } from "@mui/icons-material";
+import './ModifyProfile.scss';
+import config from "../../../config";
 
-const src_img = require('../../../images/titleLogo.png');
+const src_img = require('../../../images/logo/primary_logo.png');
 
 type newProfile = {
     name: string,
@@ -27,7 +27,7 @@ function ModifyProfilePage(props: any) {
   useEffect(() => {
     console.log(localStorage)
     const getProfile = () => {
-      let url = 'http://localhost:8000/associations/profile';
+      let url = `${config.apiUrl}associations/profile`;
       fetch(url, {
         method: 'GET',
         headers: {
@@ -62,11 +62,11 @@ function ModifyProfilePage(props: any) {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
 }
-
+/* 
   function validatePhone(phone: string): boolean {
     const re = /^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/;
     return re.test(phone);
-  }
+  } */
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
      const file = event.target.files ? event.target.files[0] : null;
@@ -78,7 +78,7 @@ function ModifyProfilePage(props: any) {
          setProfilePicture(dataUrl);
          const formData = new FormData();
          formData.append('file', file);
-         const url = 'http://localhost:8000/associations/profile/';
+         const url = `${config.apiUrl}/associations/profile/`;
          fetch(url, {
            method: 'POST',
            headers: {
@@ -119,7 +119,7 @@ function ModifyProfilePage(props: any) {
         profile_picture: profile_picture,
     }
 
-    let url = 'http://localhost:8000/associations/update';
+    let url = `${config.apiUrl}associations/update`;
     fetch(url, {
       method: 'POST',
       headers: {
@@ -133,32 +133,6 @@ function ModifyProfilePage(props: any) {
     }).catch((error) => {
       console.log(error);
     })
-  };
-
-  /* Function to add when back is gonna be done */
-
-  const deleteAccount = () => {
-    /* if (window.confirm('Are you sure you want to delete your account?')) {
-      let url = 'http://localhost:8000/associations/profile';
-      fetch(url, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-      })
-        .then((response) => {
-          if (response.status === 204) {
-            alert('Account deleted successfully');
-            // Redirect to the login page
-            window.location.href = '/';
-          } else {
-            console.log('Error deleting account');
-          }
-        })
-        .catch((error) => 
-          console.log(error);
-        });
-    } */
   };
 
   return (
@@ -230,6 +204,6 @@ function ModifyProfilePage(props: any) {
         </Row>
     </Container>
   );
-};  
+}
 
 export default ModifyProfilePage;
