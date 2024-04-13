@@ -69,7 +69,7 @@ function AssociationReferent() {
     }
 
     return (
-        <div>
+        <div style={{ marginTop: '20px', marginLeft: '10px' }}>
             <p className="association-referent-title"> Association référent </p>
             <p className="association-referent-description">En tant que référent, vous pouvez être associé à une ou plusieurs associations. Vous pouvez également devenir référent pour une association.</p>
             <div className="association-referent-container">
