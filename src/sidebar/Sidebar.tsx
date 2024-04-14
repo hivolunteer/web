@@ -24,7 +24,7 @@ if (localStorage.getItem("token") !== null) {
   pages.push("Accueil", "Calendrier", "Profile");
 }
 
-if (localStorage.getItem("role") === "association") {
+if (localStorage.getItem("token") !== null) {
   settings.push("Créer une mission", "Profile", "Réglages", "Referent", "Logout");
 } else {
   settings.push("Connexion", "Inscription");
