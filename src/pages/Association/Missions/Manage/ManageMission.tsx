@@ -11,46 +11,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
 import NearMeOutlinedIcon from '@mui/icons-material/NearMeOutlined';
 import { Button, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Mission, Location, Volunteer } from "./Interfaces";
 import UserCard from '../../../../components/UserCard';
-
-interface Mission {
-    id: number,
-    max_volunteers: number,
-    description: string,
-    practical_information: string,
-    start_date: Date,
-    end_date: Date,
-    location: number,
-    title: string,
-    status: number,
-    theme_id: number,
-    picture: string,
-}
-
-interface Location {
-    id: number,
-    street_number: string,
-    street_name: string,
-    street_number_suffix: string,
-    street_type: string,
-    departement_id: number,
-    city: number,
-    postal_code: string,
-}
-
-interface Volunteer {
-    id: number,
-    first_name: string,
-    last_name: string,
-    email: string,
-    profile_picture: string,
-    rating: number,
-    status: number,
-    stars_from_volunteer: number,
-    stars_from_association: number,
-    comment_from_volunteer: string,
-    comment_from_association: string,
-}
 
 function ManageMission() {
 
@@ -238,7 +200,7 @@ function ManageMission() {
                     style={
                         {backgroundColor: '#67a191', color: 'white'}                         
                     }> Visualiser </Button>
-                    <Button className="mission-button" onClick={() => window.location.href = `/association/missions/${mission?.id}/edit`}
+                    <Button className="mission-button" onClick={() => window.location.href = `/${mission?.id}/edit`}
                     style={{backgroundColor: '#db8900', color: 'white'}}> Modifier </Button>
                     <Button className="mission-button" onClick={() => deleteMission()}
                     style={{backgroundColor: '#991760', color: 'white'}}> {mission?.status === 0 ? "Supprimer" : "Annuler"} </Button>       
