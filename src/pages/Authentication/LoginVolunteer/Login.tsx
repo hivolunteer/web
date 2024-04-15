@@ -1,12 +1,26 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Alert, Box, Button, Grid, IconButton, InputAdornment, Link, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  InputAdornment,
+  Link,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { AuthenticationService } from "../../../services/authentication.service";
 import "./Login.scss";
 import titleLogo from "../../../images/logo/primary_logo.png";
+import AutohideSnackbar from "../../../components/SnackBar";
 
 function LoginVolunteer() {
+  const [response, setResponse] = useState<{ error: Boolean; message: string }>(
+    { error: false, message: "" }
+  );
   /***
    * Define all states
    ***/
@@ -84,16 +98,25 @@ function LoginVolunteer() {
   const responseExecute = (response_status: number) => {
     switch (response_status) {
       case 200:
-        alert("Connexion réussie");
+        setResponse({
+          error: false,
+          message: "Connexion réussie",
+        });
         localStorage.setItem("role", "volunteer");
         navigate("/");
         window.location.reload();
         break;
       case 401:
-        alert("Connexion échouée");
+        setResponse({
+          error: true,
+          message: "Connexion échouée, veuillez vérifier vos identifiants",
+        });
         break;
       default:
-        alert("Erreur inconnue");
+        setResponse({
+          error: true,
+          message: "Erreur inconnue, veuillez réessayer plus tard",
+        });
         break;
     }
   };
@@ -137,9 +160,9 @@ function LoginVolunteer() {
     <div className="center-form">
       <div className="choice-form">
         <div className="row">
-            <div className="col-12">
-                <img className="titleLogo" src={titleLogo} alt=""/>
-            </div>
+          <div className="col-12">
+            <img className="titleLogo" src={titleLogo} alt="" />
+          </div>
         </div>
         <Box
           sx={{
@@ -158,7 +181,12 @@ function LoginVolunteer() {
             onSubmit={handleSubmit}
             sx={{ mt: 3 }}
           >
-            <Grid container spacing={2}  justifyContent="center" flexDirection="column">
+            <Grid
+              container
+              spacing={2}
+              justifyContent="center"
+              flexDirection="column"
+            >
               {/* Input phone number */}
               <Grid item xs={12}>
                 <TextField
@@ -172,15 +200,17 @@ function LoginVolunteer() {
                   sx={{ alignItems: "center" }}
                   type="tel"
                   /* accept only numbers and symbols + */
-                  inputProps={{ pattern: "[0-9+]*",
-                                style: { color: "#2D2A32",
-                                boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                                borderRadius: "10px"
-                              }
+                  inputProps={{
+                    pattern: "[0-9+]*",
+                    style: {
+                      color: "#2D2A32",
+                      boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                      borderRadius: "10px",
+                    },
                   }}
                   helperText="Format : +336XXXXXXXX"
                   FormHelperTextProps={{
-                    sx: { marginRight: "auto" }
+                    sx: { marginRight: "auto" },
                   }}
                   error={!phone || !phoneFormat}
                 />
@@ -194,12 +224,13 @@ function LoginVolunteer() {
                   id="email"
                   label="Adresse email"
                   sx={{ alignItems: "center" }}
-                                    InputProps={{
-                                        style: { color: "#2D2A32",
-                                                 boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                                                 borderRadius: "10px",
-                                               }
-                                    }}
+                  InputProps={{
+                    style: {
+                      color: "#2D2A32",
+                      boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                      borderRadius: "10px",
+                    },
+                  }}
                 />
                 {/* If email is empty, display an error message */}
                 {!email && (
@@ -223,19 +254,20 @@ function LoginVolunteer() {
                   label="Mot de passe"
                   type={showPassword ? "text" : "password"}
                   sx={{ alignItems: "center" }}
-                        InputProps={{
-                            style: { color: "#2D2A32",
-                                     boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                                     borderRadius: "10px",
-                                   },
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton onClick={handleClick} edge="end">
-                              {showPassword ? <Visibility /> : <VisibilityOff />}
-                            </IconButton>
-                          </InputAdornment>
-                        )
-                      }}
+                  InputProps={{
+                    style: {
+                      color: "#2D2A32",
+                      boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                      borderRadius: "10px",
+                    },
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton onClick={handleClick} edge="end">
+                          {showPassword ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
                 {/* If password is empty, display an error message */}
                 {!password && (
@@ -243,18 +275,26 @@ function LoginVolunteer() {
                 )}
               </Grid>
             </Grid>
+            {response.message !== "" && (
+              <AutohideSnackbar
+                message={response.message}
+                open={true}
+                response={response.error}
+              />
+            )}
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 6,
-                    mb: 3,
-                    color: "#FFFEFF",
-                    backgroundColor: "#67A191",
-                    borderRadius: "10px",
-                    boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                    width: "200px",
-                  }}
+              sx={{
+                mt: 6,
+                mb: 3,
+                color: "#FFFEFF",
+                backgroundColor: "#67A191",
+                borderRadius: "10px",
+                boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                width: "200px",
+              }}
             >
               Connexion
             </Button>
