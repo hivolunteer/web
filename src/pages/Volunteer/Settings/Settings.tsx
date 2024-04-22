@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import "./Settings.scss";
 import { Checkbox } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import ChangePassword from "./ModifyPassword";
 //import { SideBar } from "../../../components/Sidebar";
 
 function Settings() {

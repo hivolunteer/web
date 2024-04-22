@@ -14,11 +14,6 @@ import {
 import { useNavigate } from "react-router-dom";
 import config from "../../../config";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { el } from "date-fns/locale";
-
-interface ChangePasswordProps {
-  userId: string;
-}
 
 function ChangePassword() {
   const history = useNavigate();
@@ -31,10 +26,7 @@ function ChangePassword() {
   const [alert, setAlert] = useState(false);
 
   const handleClose = () => history("/settings");
-  const closeAlert = () => setAlert(false);
-  function handleClick(): void {
-    setShowPassword(!showPassword);
-  }
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     if (name === "oldPassword") {
@@ -78,7 +70,7 @@ function ChangePassword() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            id: "4",
+            id: localStorage.getItem("id"),
             old_password: oldPassword,
             new_password: newPassword,
           }),
@@ -90,11 +82,10 @@ function ChangePassword() {
         throw new Error("Le mot de passe actuel est incorrect");
       }
       // Password changed successfully
-      //alert("Mot de passe changé avec succès");
       setOldPassword("");
       setNewPassword("");
       setConfirmPassword("");
-      closeAlert();
+      handleClose();
     } catch (error) {
       setError((error as Error).message);
     }
