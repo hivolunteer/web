@@ -54,7 +54,7 @@ function ResetPassword() {
         }).then((response) => {
             console.log(response);
             if (response.status === 201) {
-                alert("Mot de passe réinitialisé avec succès ! Vous pouvez maintenant vous connecter.");
+                alert("Mot de passe réinitialisé avec succès ! Vous pouvez maintenant vous connecter")
                 window.location.href = `/${type}/login`;
             }
         }).catch((error) => {

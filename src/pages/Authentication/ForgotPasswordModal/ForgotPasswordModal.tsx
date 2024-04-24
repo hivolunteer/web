@@ -44,16 +44,11 @@ const ForgotPasswordModal = (props: {modalProps: ForgotModal}) => {
                 boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
             }}
         >
-            <div className="row">
-                <div className="col-12">
-                    <img className="logo" src={titleLogo} alt=""/>
-                </div>
-            </div>
             <div className="modal_title">
                 <p>Mot de passe oublié</p>
             </div>
             <div className="modal_body">
-                <p>Veuillez saisir votre adresse e-mail ci-dessous et nous vous enverrons par e-mail les instructions pour la réinitialiser.</p>
+                <p>Veuillez saisir votre adresse e-mail ci-dessous et nous vous enverrons par e-mail les instructions pour le réinitialiser.</p>
             </div>
             <div className="modal_email">
                 <TextField

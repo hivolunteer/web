@@ -58,7 +58,9 @@ function ReturnModal (props: {modalProps: ReturnModalProps}) {
                 <div className="modal_comments">
                     <p> <a style={{fontWeight: 'bolder'}}> {(comments.length === 1) ? "Commentaire" : "Commentaires" }  </a> : </p>
                     <ul>
-                        {comments.map((comment, index) => {
+                        {comments
+                        .filter((comment) => comment.comment !== "NO COMMENT" || comment.rate !== 0)
+                        .map((comment, index) => {
                             return (
                                 <div key={index} className="comment">
                                     <p> <a style={{fontWeight: 'bolder'}}> Note </a> : {(comment.rate === 0) ? "Non noté" : comment.rate} </p>
