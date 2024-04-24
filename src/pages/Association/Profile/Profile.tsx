@@ -4,6 +4,7 @@ import config from "../../../config";
 import "./Profile.scss";
 
 import profileImage from "../../../images/logo/submark.png";
+import EditPasswordModal from "./EditPasswordModal";
 
 type newProfile = {
   first_name: string;
@@ -19,6 +20,13 @@ function ProfilePage(props: any) {
   const [email, setEmail] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [profile_picture, setProfilePicture] = useState<string>(profileImage);
+
+  const [open, setOpen] = useState<boolean>(false);
+  function handleClose() {
+    setOpen(false);
+  }
+
+  let modalProps  = { open, handleClose };
 
   useEffect(() => {
     console.log(localStorage);
@@ -224,6 +232,10 @@ function ProfilePage(props: any) {
                             Supprimer le compte
                         </button> */}
             </div>
+            <button className="profile-pic-btn"  onClick={()=> setOpen(true)}>
+              Editer mot de passe
+            </button>
+            <EditPasswordModal  modalProps={modalProps} />
           </div>
         </Col>
       </Row>
