@@ -46,6 +46,7 @@ const FilterModal = (props: {modalProps: ModalAsso}) => {
     const setValuesToDefault = () => {
         setPreferences([false, false]);
         setValue(1);
+        window.location.reload();
     }
 
   return (
