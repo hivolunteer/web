@@ -214,7 +214,7 @@ function ManageMission() {
 
     return (
         <div>
-            <div className="container header-mission-container" style={{backgroundImage: `url(${mission?.picture})`}}>
+            <div className="manage-container header-mission-container" style={{backgroundImage: `url(${mission?.picture})`}}>
                 <div className="association-logo">
                     {/* <img src="https://th.bing.com/th/id/R.a159530285fe4c5b20f40dc89741304e?rik=3L6mcWO3XWPxxA&pid=ImgRaw&r=0.png" alt="logo" className='association-logo-mission'/> */}
                 </div>
