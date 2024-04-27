@@ -1,6 +1,9 @@
 import { Error } from "@mui/icons-material";
-import { Dialog, DialogTitle, TextField, Button } from "@mui/material";
+import { Dialog, DialogTitle, Button, Alert } from "@mui/material";
 import { useState } from "react";
+import PasswordTextField from "./PasswordTextField";
+import config from "../../../config";
+import checkStrengthPassword from "../../../functions/checkStrengthPassword";
 
 interface Modal {
     open: boolean,
@@ -15,9 +18,58 @@ const EditPasswordModal = (props: {modalProps: Modal}) => {
     const [new_password, setNewPassword] = useState<string>("");
     const [confirm_password, setConfirmPassword] = useState<string>("");
 
-    const [old_password_error, setOldPasswordError] = useState<boolean>(false);
-    const [new_password_error, setNewPasswordError] = useState<boolean>(false);
-    const [confirm_password_error, setConfirmPasswordError] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+
+    async function submitNewPasssword() {
+        try {
+            if (new_password !== confirm_password) {
+                setError("Les mots de passe ne correspondent pas")
+                return
+            }
+
+            if (checkStrengthPassword(new_password) === false) {
+                setError("Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial")
+                return
+            }
+
+            let body = {
+                new_password: new_password,
+            }
+
+            fetch(`${config.apiUrl}/associations/update_password`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+                body: JSON.stringify(body)
+            })
+            .then(response => {
+                if (response.status === 200) {
+                    <Alert severity="success">Mot de passe modifié avec succès</Alert>
+                    // timeout
+                    const timeoutId = setTimeout(() => {
+                        modalProps.onClose()
+                        clearTimeout(timeoutId)
+                    }, 2000)
+                } else {
+                    response.json().then(data => {
+                        if (data === "Password must be different from the previous one")
+                            setError('Le nouveau mot de passe doit être différent de l\'ancien')
+                        else
+                            setError("Erreur lors de la modification du mot de passe")
+                    })
+                }
+            })
+            .catch(err => {
+                console.log(err)
+                setError("Erreur lors de la modification du mot de passe")
+            })
+        } catch (error) {
+            console.log(error)
+            setError("Erreur lors de la modification du mot de passe")
+        }
+    }
 
     return (
         <Dialog 
@@ -25,51 +77,31 @@ const EditPasswordModal = (props: {modalProps: Modal}) => {
             onClose={modalProps.onClose}
             fullWidth 
         >
-            <DialogTitle style={{alignSelf: 'center'}}>Changer votre mot de passe</DialogTitle>
+            <DialogTitle style={{alignSelf: 'center', fontWeight: 'bold', fontSize: '1.5em'}}>Changer votre mot de passe</DialogTitle>
             <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', margin: '20px 50px'}}>
                 <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-                    <TextField
-                        label="Ancien mot de passe"
-                        type="password"
-                        value={old_password}
-                        onChange={(e) => setOldPassword(e.target.value)}
-                        error={old_password_error}
-                        helperText={old_password_error ? "Veuillez entrer votre ancien mot de passe" : ""}
-                    />
-                    {
-                        old_password_error ? <Error> Votre ancien mot de passe est invalide </Error> : null
-                    }
+                    <PasswordTextField password={old_password} setPassword={setOldPassword} />
                 </div>
                 <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-                    <TextField
-                        label="Nouveau mot de passe"
-                        type="password"
-                        value={new_password}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                        error={new_password_error}
-                        helperText={new_password_error ? "Veuillez entrer un nouveau mot de passe" : ""}
-                    />
-                    {
-                        new_password_error ? <Error> Mot de passe invalide </Error> : null
-                    }
+                    <PasswordTextField password={new_password} setPassword={setNewPassword} />
                 </div>
                 <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-                    <TextField
-                        label="Confirmer le mot de passe"
-                        type="password"
-                        value={confirm_password}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        error={confirm_password_error}
-                        helperText={confirm_password_error ? "Veuillez confirmer votre mot de passe" : ""}
-                    />
-                    {
-                        confirm_password_error ? <Error> Les mots de passe ne sont pas identiques </Error> : null
-                    }
+                    <PasswordTextField password={confirm_password} setPassword={setConfirmPassword} />
                 </div>
+            </div>
+            <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '20px 50px'}}>
+                {
+                    error ? (
+                        <div style={{display: 'flex', gap: '1rem', justifyContent: 'center', alignItems: 'center', color: 'red'}}>
+                            <Error />
+                            <p>{error}</p>
+                        </div>
+                    ) : null
+                }
             </div>
             <div style={{display: 'flex', justifyContent: 'space-between', margin: '20px 50px'}}>
                 <Button onClick={modalProps.onClose} variant="contained" color="secondary">Annuler</Button>
-                <Button onClick={() => console.log("Change password")} variant="contained">Valider</Button>
+                <Button onClick={submitNewPasssword} variant="contained">Valider</Button>
             </div>
         </Dialog>
     )
