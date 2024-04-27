@@ -230,7 +230,7 @@ function ProfilePage(props: any) {
               {/* <button className="delete-account-btn" onClick={deleteAccount}>
                             Supprimer le compte
                         </button> */}
-              <button className="profile-pic-btn" onClick={() => setOpenDialog(true)} style={{backgroundColor: "#FFD700", borderWidth: 'null'}}>
+              <button className="profile-pic-btn edit" onClick={() => setOpenDialog(true)} style={{backgroundColor: "#FFD700"}}>
                 Modifier le mot de passe
               </button>
               <EditPasswordModal modalProps={{ open: openDialog, onClose: closeDialog }} />
