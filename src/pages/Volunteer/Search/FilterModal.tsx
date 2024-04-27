@@ -37,6 +37,9 @@ const FilterModal = (props: {modalProps: Modal}) => {
         setPreferences([false, false]);
         setSearchSkills([]);
         setDates([null, null]);
+        setNoskills(false);
+        window.location.reload();
+
     }
     
 
