@@ -12,7 +12,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import NearMeOutlinedIcon from '@mui/icons-material/NearMeOutlined';
 import { Button, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import UserCard from '../../../../components/UserCard';
-import ReturnModal from './ReturnModal';
+import ReturnComments from './ReturnComments';
 
 interface Mission {
     id: number,
@@ -304,13 +304,7 @@ function ManageMission() {
                     mission?.status === 3 && (
                         <>
                         <hr className="mission-separator" />
-                        <Button
-                            style={{backgroundColor: '#67a191', color: 'white'}}
-                            onClick={() => setOpenModal(true)}
-                        >
-                            Visualiser les retours
-                        </Button>
-                        <ReturnModal modalProps={{ open: openModal, handleClose: () => setOpenModal(false), mission_id: mission_id }} />
+                        <ReturnComments mission_id={mission_id} />
                         </>
                     )
                 }
