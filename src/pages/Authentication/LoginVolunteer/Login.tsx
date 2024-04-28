@@ -1,16 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Alert,
-  Box,
-  Button,
-  Grid,
-  IconButton,
-  InputAdornment,
-  Link,
-  TextField,
-  Typography,
-} from "@mui/material";
+import {Alert, Box, Button, Grid, IconButton, InputAdornment, Link, TextField, Typography } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { AuthenticationService } from "../../../services/authentication.service";
 import "./Login.scss";
@@ -246,7 +236,7 @@ function LoginVolunteer() {
             </Grid>
             {response.message !== "" && (
               <AutohideSnackbar
-                message={response.message}
+                message={"L'adresse mail ou le mot de passe est incorrect"}
                 open={true}
                 response={response.error}
               />
