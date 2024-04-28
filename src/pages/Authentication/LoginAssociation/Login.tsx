@@ -1,17 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Alert,
-  Snackbar,
-  Box,
-  Button,
-  Grid,
-  IconButton,
-  InputAdornment,
-  Link,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Alert, Snackbar, Box, Button, Grid, IconButton, InputAdornment, Link, TextField, Typography } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { AuthenticationService } from "../../../services/authentication.service";
 import "./Login.scss";
@@ -262,11 +251,11 @@ function LoginAssociation() {
               </Grid>
             </Grid>
             {response.message !== "" && (
-              <AutohideSnackbar
-                message={response.message}
-                open={true}
-                response={response.error}
-              />
+                <AutohideSnackbar
+                    message={"L'adresse mail ou le mot de passe est incorrect"}
+                    open={true}
+                    response={response.error}
+                />
             )}
             <Button
               type="submit"

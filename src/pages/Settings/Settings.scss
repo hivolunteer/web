@@ -93,3 +93,28 @@ body {
     cursor: pointer;
     outline: none;
 }
+
+.color-blind-button {
+    // rounded green button with white text in Monserrat font in it an green border positioned on the left side
+    border-radius: 20px;
+    background-color: $color-hivolunteer;
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    font-size: 14px;
+    padding: 10px 20px;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    margin-right: 10px;
+    align-items: flex-start;
+}
+
+.sidebar {
+    width: 200px;
+    padding-left: 1px;
+    float: left;
+
+}

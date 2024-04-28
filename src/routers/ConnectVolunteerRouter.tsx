@@ -5,21 +5,23 @@ import Search from "../pages/Volunteer/Search/Search";
 import History from "../pages/Volunteer/History/History";
 import FollowAssociation from "../pages/Volunteer/FollowAssociation/FollowAssociation";
 import MissionDetails from "../pages/Volunteer/MissionDetails/MissionDetails";
-import Settings from "../pages/Settings/Settings";
+import Settings from "../pages/Volunteer/Settings/Settings";
+import ChangePassword from "../pages/Volunteer/Settings/ModifyPassword";
 
 function ConnectVolunteerRouter() {
-  return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/history" element={<History />} />
-      <Route path="/follows" element={<FollowAssociation />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/accueil" element={<Search />} />
-      <Route path="/mission/:missionID" element={<MissionDetails />} />
-      <Route path={"/settings"} element={<Settings />} />
-      <Route path="*" element={<h1> Error 404 Volunteer </h1>} />
-    </Routes>
-  );
+    return (
+        <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/history" element={<History />} />
+            <Route path="/follows" element={<FollowAssociation />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/accueil" element={<Search />} />
+            <Route path="/mission/:missionID" element={<MissionDetails />} />
+            <Route path={"/settings"} element={<Settings />} />
+            <Route path="/settings/modify_password" element={<ChangePassword />} />
+            <Route path="*" element={<h1> Error 404 Volunteer </h1>} />
+        </Routes>
+    );
 }
 
 export default ConnectVolunteerRouter;
