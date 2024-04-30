@@ -5,7 +5,7 @@ import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import CloseIcon from "@mui/icons-material/Close";
 import {Alert, AlertTitle, Button, InputAdornment, TextField, Typography} from "@mui/material";
-import {Visibility, VisibilityOff} from "@mui/icons-material";
+import { Link } from 'react-router-dom';
 import config from "../../../config";
 
 
@@ -100,6 +100,7 @@ function ProfileInformationModal() {
     };
 
     return (
+        <Link to={'/benevoles'}>
         <div>
             <Modal
                 open={true}
@@ -226,6 +227,7 @@ function ProfileInformationModal() {
                 </Box>
             </Modal>
         </div>
+        </Link>
 );
 }
 
