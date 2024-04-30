@@ -110,6 +110,8 @@ export default function MissionCreation() {
       end_date: form?.missionEndDate,
       title: form?.missionName,
       skills: newSkill,
+      theme_id: undefined,
+      picture: image,
     };
     console.log(body);
     fetch(`${config.apiUrl}/missions/close/create`, {
