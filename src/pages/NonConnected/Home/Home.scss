@@ -149,7 +149,30 @@
 .home-contact-container {
     @extend .home-concept-container;
     min-height: 100px;
+    margin-left: 3rem;
+    margin-top: 0;
 }
+
+.home-contact-header {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #67A191;
+    margin-bottom: 0rem;
+}
+
+.home-contact-list-item {
+    @extend .home-user-list-item;
+    padding-left: 2rem;
+}
+
+.home-user-list-item-text {
+    font-size: 0.9rem;
+    color: #333;
+}
+
+// .home-contact-grid-container {
+//     margin-right: 3rem;
+// }
 
 /*
 .home-concept-container {

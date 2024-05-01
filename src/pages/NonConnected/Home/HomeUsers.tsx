@@ -57,9 +57,9 @@ function HomeUsers() {
                 </div>
             </Grid>
         </Grid>
-        <div className="home-user-divider">
-            <img src="/images/home/hive-cropped.svg" alt="home-user"/>
-        </div>
+        {/* <div className="home-user-divider"> */}
+            {/* <img src="/images/home/hive-cropped.svg" alt="home-user"/> */}
+        {/* </div> */}
     </Box>
   );
 }
