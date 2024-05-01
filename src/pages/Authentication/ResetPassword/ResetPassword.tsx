@@ -18,11 +18,12 @@ function ResetPassword() {
     const [token, setToken] = useState<string>("");
 
     useEffect(() => {
+        console.log("TEST")
         const queryParameters = new URLSearchParams(window.location.search)
         setToken(queryParameters.get('token') as string);
         let type = window.location.pathname.split('/')[1];
         setType(type);
-    })
+    }, []);
     /* Function to check strength password */
     const checkStrength = (password: string) => {
         const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@:_#$%.^&*])(?=.{8,})/;
