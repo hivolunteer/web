@@ -38,8 +38,8 @@ function HomeTeam() {
                 <TeamMember id={4} />
                 <TeamMember id={5} />
                 <TeamMember id={6} />
-            </Grid>
-        </Box>
+        </Grid>
+    </Box>
     );
 };
 
