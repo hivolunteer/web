@@ -45,6 +45,16 @@ function Search(props: any) {
     Association[] | []
   >([]);
 
+  /***** QUERY PARAMS FROM HOME PAGE *****/
+  window.onload = function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const query = urlParams.get("query");
+    if (query) {
+      console.log(`Query: ${query}`);
+      setSearch(query);
+    }
+  };
+
   const handleClose = () => {
     setOpen(false);
   };
