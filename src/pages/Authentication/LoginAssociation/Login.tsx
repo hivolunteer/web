@@ -18,27 +18,14 @@ function LoginAssociation() {
     const [name, setName] = useState(true);
     const [email, setEmail] = useState(true);
     const [password, setPassword] = useState(true);
+    const [fodder, setfodder] = useState(true);
+
     const navigate = useNavigate();
 
     /* Function to check if all inputs are complete */
     const checkComplete = (data: FormData) => {
-        /*data.forEach((value, key) => {
-            if (value === '') {
-                setComplete({...complete, [key]: false});
-            } else {
-                setComplete({...complete, [key]: true});
-            }
-        });*/
-        if (data.get('name') === '') {
-            setName(false);
-        } else {
-            setName(true);
-        }
-        if (data.get('email') === '') {
-            setEmail(false);
-        } else {
-            setEmail(true);
-        }
+        setName(data.get("identifier") !== '');
+        setEmail(data.get("identifier") !== '');
         if (data.get('password') === '') {
             setPassword(false);
         } else {
@@ -65,7 +52,9 @@ function LoginAssociation() {
         /* Check if all inputs are complete */
         checkComplete(data);
         /* Check email format */
-        checkEmailFormat(data.get('email') as string);
+        const identifier = data.get("identifier") as string;
+        if (identifier.includes("@"))
+            checkEmailFormat(identifier);
     };
 
     /* Function to execute response */
@@ -90,15 +79,26 @@ function LoginAssociation() {
     const sendData = async (data: FormData) => {
         // convert FormData to table
         const user = Object.fromEntries(data.entries());
+        const identifier = user["identifier"].toString()
+        user['name'] = identifier.includes("@") ? "" : identifier;
+        user["email"] = identifier.includes("@") ? identifier : "";
+
+        const processsLogin = async () => {
+            // call LoginAssociation service
+            const response_status = AuthenticationService.loginAssociations(user);
+            console.log(response_status)
+            responseExecute(await response_status);
+
+        }
 
         /* If all inputs are complete, send data */
-        if (user['name'] && user['email'] && user['password']) {
-            /* If user is major, password is strong enough, email format is correct and phone format is correct, send data */
-            if (checkEmailFormat(user['email'] as string)) {
-                // call LoginAssociation service
-                const response_status = AuthenticationService.loginAssociations(user);
-                console.log(response_status)
-                responseExecute(await response_status);
+        if ((user['name'] || user['email']) && user['password']) {
+            if (identifier.includes("@")) {
+                if (checkEmailFormat(user["email"] as string)) {
+                    await processsLogin();
+                }
+            } else {
+                processsLogin();
             }
         }
     };
@@ -126,73 +126,49 @@ function LoginAssociation() {
     return (
         <div className="center-form">
             <div className="choice-form">
-              <div className="row">
-                  <div className="col-12">
-                      <img className="titleLogo" src={titleLogo} alt=""/>
-                  </div>
-              </div>
-              <Box
-                sx={{
-                  marginTop: "30px",
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                }}
+                <div className="row">
+                    <div className="col-12">
+                        <img className="titleLogo" src={titleLogo} alt="" />
+                    </div>
+                </div>
+                <Box
+                    sx={{
+                        marginTop: "30px",
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
                 >
                     <Typography component="h1" variant="h5" marginBottom="10px">
                         Connexion Association
                     </Typography>
                     <Box
-                         component="form"
-                         noValidate
-                         onSubmit={handleSubmit}
-                         sx={{ mt: 3 }}
-                        >
-                        <Grid container spacing={2} justifyContent="center" flexDirection="column">
-                            <Grid item xs={12} >
-                                <TextField
-                                    autoComplete='name'
-                                    name='name'
-                                    required
-                                    fullWidth
-                                    id='name'
-                                    label='Nom association'
-                                    autoFocus
-                                    sx={{ alignItems: "center" }}
-                                    InputProps={{
-                                        style: { color: "#2D2A32",
-                                                 boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                                                 borderRadius: "10px"
-                                               }
-                                    }}
-                                />
-                                {/* If name is empty, display an error message */}
-                                {!name && (
-                                    <Alert severity="error">
-                                        Le nom de l'association est requis
-                                    </Alert>
-                                )}
-                        </Grid>
+                        component="form"
+                        noValidate
+                        onSubmit={handleSubmit}
+                        sx={{ mt: 3 }}
+                    >
                         <Grid item xs={12}>
                             <TextField
-                                autoComplete='email'
-                                name='email'
+                                autoComplete='identifier'
+                                name='identifier'
                                 required
                                 fullWidth
-                                id='email'
-                                label='Adresse email'
+                                id='identifier'
+                                label="Adresse email, Nom de l'Association"
                                 sx={{ alignItems: "center" }}
-                                    InputProps={{
-                                        style: { color: "#2D2A32",
-                                                 boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                                                 borderRadius: "10px",
-                                               }
-                                    }}
+                                InputProps={{
+                                    style: {
+                                        color: "#2D2A32",
+                                        boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                        borderRadius: "10px",
+                                    }
+                                }}
                             />
                             {/* If email is empty, display an error message */}
-                            {!email && (
+                            {(!email && !name) && (
                                 <Alert severity="error">
-                                    L'adresse email est requise
+                                    L'identifiant est requis
                                 </Alert>
                             )}
                             {/* If email is not empty but format is not correct, display a warning message */}
@@ -213,10 +189,11 @@ function LoginAssociation() {
                                 type={showPassword ? 'text' : 'password'}
                                 sx={{ alignItems: "center" }}
                                 InputProps={{
-                                    style: { color: "#2D2A32",
-                                             boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                                             borderRadius: "10px",
-                                           },
+                                    style: {
+                                        color: "#2D2A32",
+                                        boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                        borderRadius: "10px",
+                                    },
                                     endAdornment: (
                                         <InputAdornment position="end">
                                             <IconButton
@@ -236,33 +213,34 @@ function LoginAssociation() {
                                 </Alert>
                             )}
                         </Grid>
+                    
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        sx={{
+                            mt: 6,
+                            mb: 3,
+                            color: "#FFFEFF",
+                            backgroundColor: "#67A191",
+                            borderRadius: "10px",
+                            boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                            width: "200px",
+                        }}
+                    >
+                        Connexion
+                    </Button>
+                    <Grid container justifyContent='flex-end' sx={{ mb: 4 }}>
+                        <Grid item>
+                            <Link href='/associations/register' variant='body2'>
+                                Vous n'avez pas de compte ? Inscrivez-vous
+                            </Link>
                         </Grid>
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 6,
-                                  mb: 3,
-                                  color: "#FFFEFF",
-                                  backgroundColor: "#67A191",
-                                  borderRadius: "10px",
-                                  boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                                  width: "200px",
-                                }}
-                        >
-                            Connexion
-                        </Button>
-                        <Grid container justifyContent='flex-end' sx={{ mb: 4 }}>
-                            <Grid item>
-                                <Link href='/associations/register' variant='body2'>
-                                    Vous n'avez pas de compte ? Inscrivez-vous
-                                </Link>
-                            </Grid>
-                        </Grid>
-                    </Box>
+                    </Grid>
                 </Box>
-            </div>
+            </Box>
         </div>
+        </div >
     );
 }
 
