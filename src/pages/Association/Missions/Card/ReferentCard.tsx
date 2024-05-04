@@ -32,11 +32,11 @@ function ReferentCard(props: ReferentCardProps) {
         <CardActions sx={{ mt: 2 }}>
           {props.selected ? (
             <Button onClick={() => props.removeReferent(props.referent)} size="small" color="primary" variant="contained">
-              Remove
+              Supprimer
             </Button>
           ) : (
             <Button onClick={() => props.selectReferent(props.referent)} size="small" color="primary" variant="contained">
-              Select
+              Ajouter
             </Button>
           )}
         </CardActions>
