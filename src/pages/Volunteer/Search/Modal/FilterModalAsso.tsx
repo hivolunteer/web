@@ -1,8 +1,8 @@
 import { Dialog, DialogTitle, Button, Checkbox, Rating } from "@mui/material";
 import React, { useState } from "react";
 
-import { ModalAsso } from "./Interfaces"; 
-import config from "../../../config";
+import { ModalAsso } from "../Interfaces"; 
+import config from "../../../../config";
 
 
 const FilterModal = (props: {modalProps: ModalAsso}) => {
@@ -46,6 +46,7 @@ const FilterModal = (props: {modalProps: ModalAsso}) => {
     const setValuesToDefault = () => {
         setPreferences([false, false]);
         setValue(1);
+        window.location.reload();
     }
 
   return (

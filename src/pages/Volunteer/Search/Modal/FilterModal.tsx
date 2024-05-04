@@ -1,9 +1,9 @@
 import { Dialog, DialogTitle, TextField, Button, Autocomplete, Checkbox, Chip } from "@mui/material";
 import { useEffect, useState } from "react";
 
-import { Modal, Skill } from "./Interfaces"; 
+import { Modal, Skill } from "../Interfaces"; 
 import { DatePicker} from "@mui/x-date-pickers";
-import config from "../../../config";
+import config from "../../../../config";
 
 
 const FilterModal = (props: {modalProps: Modal}) => {
@@ -11,6 +11,7 @@ const FilterModal = (props: {modalProps: Modal}) => {
     const modalProps = props.modalProps;
 
     const [preferences, setPreferences] = useState<boolean[]>([false, false]);
+    const [noskills, setNoskills] = useState<boolean>(false);
     const [skills, setSkills] = useState<Skill[]>([]);
     const [searchSkills, setSearchSkills] = useState<Number[]>([]);
     const [dates, setDates] = useState<Array<Date | null>>([null, null]);
@@ -36,6 +37,9 @@ const FilterModal = (props: {modalProps: Modal}) => {
         setPreferences([false, false]);
         setSearchSkills([]);
         setDates([null, null]);
+        setNoskills(false);
+        window.location.reload();
+
     }
     
 
@@ -48,6 +52,7 @@ const FilterModal = (props: {modalProps: Modal}) => {
             themeList: [],
             associationList: preferences[0],
             skillsList: searchSkills,
+            noskills: noskills,
             dateList: dates
         }
         fetch(`${config.apiUrl}/search/missions`, {
@@ -59,6 +64,7 @@ const FilterModal = (props: {modalProps: Modal}) => {
             body: JSON.stringify(body)
         }).then((response) => {
             console.log(response)
+            console.log(body)
             if (response.status === 200) {
                 response.json().then((data) => {
                     modalProps.setFilteredMissions(data)
@@ -96,7 +102,7 @@ const FilterModal = (props: {modalProps: Modal}) => {
                             </div>
                         </div>
                         <div style={{display: 'flex', flexDirection: 'column'}}>
-                            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', margin: '-2% -2%'}}>
+                            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', margin: '-1% -2%'}}>
                                 <Checkbox
                                     checked={preferences[1]}
                                     onChange={() => setPreferences([preferences[0], !preferences[1]])}
@@ -139,6 +145,13 @@ const FilterModal = (props: {modalProps: Modal}) => {
                             }}
                             //placeholder="Compétences"
                         />
+                        <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', margin: '-2% -2%'}}>
+                            <Checkbox
+                                checked={noskills}
+                                onChange={() => setNoskills(!noskills)}
+                            />
+                            <p style={{flex: 1}}> Missions sans compétences seuleument </p>
+                        </div>
                     </div>
                 </div>
             </DialogTitle>
