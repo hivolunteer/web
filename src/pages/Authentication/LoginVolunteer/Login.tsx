@@ -103,8 +103,6 @@ function LoginVolunteer() {
         // call LoginVolunteer service
         const response_status = AuthenticationService.loginVolunteers(user);
         responseExecute(await response_status);
-      } else {
-        alert("RETARDa");
       }
     }
   };
