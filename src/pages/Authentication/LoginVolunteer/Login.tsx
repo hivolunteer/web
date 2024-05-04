@@ -21,6 +21,7 @@ function LoginVolunteer() {
   const [phone, setPhone] = useState(true);
   const [email, setEmail] = useState(true);
   const [password, setPassword] = useState(true);
+  const [fodder, setFodder] = useState(true);
 
   const navigate = useNavigate();
 
@@ -29,18 +30,8 @@ function LoginVolunteer() {
 
   /* Function to check if all inputs are complete */
   const checkComplete = (data: FormData) => {
-    /*data.forEach((value, key) => {
-            if (value === '') {
-                setComplete({...complete, [key]: false});
-            } else {
-                setComplete({...complete, [key]: true});
-            }
-        });*/
-    if (data.get("email") === "") {
-      setEmail(false);
-    } else {
-      setEmail(true);
-    }
+    const identifier = data.get("identifier") as string;
+    setEmail(identifier.includes("@"));
     if (data.get("password") === "") {
       setPassword(false);
     } else {
@@ -78,10 +69,11 @@ function LoginVolunteer() {
   const checkInput = (data: FormData) => {
     /* Check if all inputs are complete */
     checkComplete(data);
+    const identifier = data.get("identifier") as string;
     /* Check email format */
-    checkEmailFormat(data.get("email") as string);
+    checkEmailFormat(identifier);
     /* Check phone format */
-    checkPhoneFormat(data.get("phone") as string);
+    checkPhoneFormat(identifier);
   };
 
   /* Function to execute response */
@@ -106,11 +98,12 @@ function LoginVolunteer() {
   const sendData = async (data: FormData) => {
     // convert FormData to table
     const user = Object.fromEntries(data.entries());
+    user["email"] = user["identifier"].toString().includes("@") ? user["identifier"] : "";
+    user["phone"] = user["identifier"].toString().includes("@") ? "" : user["identifier"];
 
     /* If all inputs are complete, send data */
-    if (user["phone"] && user["email"] && user["password"]) {
-      /* If user is major, password is strong enough, email format is correct and phone format is correct, send data */
-      if (checkEmailFormat(user["email"] as string)) {
+    if ((user["phone"] || user["email"]) && user["password"]) {
+      if ((checkEmailFormat(user["email"] as string)) || (checkPhoneFormat(user["phone"] as string))) {
         // call LoginVolunteer service
         const response_status = AuthenticationService.loginVolunteers(user);
         responseExecute(await response_status);
@@ -141,9 +134,9 @@ function LoginVolunteer() {
     <div className="center-form">
       <div className="choice-form">
         <div className="row">
-            <div className="col-12">
-                <img className="titleLogo" src={titleLogo} alt=""/>
-            </div>
+          <div className="col-12">
+            <img className="titleLogo" src={titleLogo} alt="" />
+          </div>
         </div>
         <Box
           sx={{
@@ -162,60 +155,48 @@ function LoginVolunteer() {
             onSubmit={handleSubmit}
             sx={{ mt: 3 }}
           >
-            <Grid container spacing={2}  justifyContent="center" flexDirection="column">
-              {/* Input phone number */}
+            <Grid container spacing={2} justifyContent="center" flexDirection="column">
               <Grid item xs={12}>
                 <TextField
-                  autoComplete="tel"
-                  name="phone"
+                  autoComplete="identifier"
+                  name="identifier"
                   required
                   fullWidth
-                  id="phone"
-                  label="Numéro de téléphone"
+                  id="identifier"
+                  label="Numéro de téléphone, e-mail"
                   autoFocus
                   sx={{ alignItems: "center" }}
-                  type="tel"
-                  /* accept only numbers and symbols + */
-                  inputProps={{ pattern: "[0-9+]*",
-                                style: { color: "#2D2A32",
-                                boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                                borderRadius: "10px"
-                              }
+                  type="text"
+                  inputProps={{
+                    style: {
+                      color: "#2D2A32",
+                      boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                      borderRadius: "10px"
+                    }
                   }}
-                  helperText="Format : +336XXXXXXXX"
+                  helperText="Format : +336XXXXXXXX ou XX@XX.X"
                   FormHelperTextProps={{
                     sx: { marginRight: "auto" }
                   }}
-                  error={!phone || !phoneFormat}
+                  error={!fodder}
+
                 />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  autoComplete="email"
-                  name="email"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Adresse email"
-                  sx={{ alignItems: "center" }}
-                                    InputProps={{
-                                        style: { color: "#2D2A32",
-                                                 boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                                                 borderRadius: "10px",
-                                               }
-                                    }}
-                />
-                {/* If email is empty, display an error message */}
-                {!email && (
-                  <Alert severity="error">L'adresse email est requise</Alert>
+                {!email && !phone && (
+                  <Alert severity="error">Un identifiant est requis</Alert>
                 )}
-                {/* If email is not empty but format is not correct, display a warning message */}
                 {email && !emailFormat && (
                   <Alert severity="warning">
                     Le format de l'adresse email doit être au format
                     xxxxxx.xxxx@xxx.com
                   </Alert>
                 )}
+                {phone && !phoneFormat && (
+                  <Alert severity="warning">
+                    Le format du numéro de téléphone doit être au format
+                    +336XXXXXXXX
+                  </Alert>
+                )}
+
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -227,19 +208,20 @@ function LoginVolunteer() {
                   label="Mot de passe"
                   type={showPassword ? "text" : "password"}
                   sx={{ alignItems: "center" }}
-                        InputProps={{
-                            style: { color: "#2D2A32",
-                                     boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                                     borderRadius: "10px",
-                                   },
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton onClick={handleClick} edge="end">
-                              {showPassword ? <Visibility /> : <VisibilityOff />}
-                            </IconButton>
-                          </InputAdornment>
-                        )
-                      }}
+                  InputProps={{
+                    style: {
+                      color: "#2D2A32",
+                      boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                      borderRadius: "10px",
+                    },
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton onClick={handleClick} edge="end">
+                          {showPassword ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
                 />
                 {/* If password is empty, display an error message */}
                 {!password && (
@@ -259,15 +241,15 @@ function LoginVolunteer() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 6,
-                    mb: 3,
-                    color: "#FFFEFF",
-                    backgroundColor: "#67A191",
-                    borderRadius: "10px",
-                    boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                    width: "200px",
-                    marginTop: "20px"
-                  }}
+              sx={{
+                mt: 6,
+                mb: 3,
+                color: "#FFFEFF",
+                backgroundColor: "#67A191",
+                borderRadius: "10px",
+                boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                width: "200px",
+              }}
             >
               Connexion
             </Button>

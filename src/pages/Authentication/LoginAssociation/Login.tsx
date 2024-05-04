@@ -8,15 +8,8 @@ import titleLogo from "../../../images/logo/primary_logo.png";
 import ForgotPasswordModal from '../ForgotPasswordModal/ForgotPasswordModal';
 
 function LoginAssociation() {
-    /***
-     * Define all states
-    ***/
-    /* State for password visibility */
     const [showPassword, setShowPassword] = React.useState(false);
-    /* Set mail format state */
     const [emailFormat, setEmailFormat] = useState(true);
-    /* State complete for all inputs*/
-    const [name, setName] = useState(true);
     const [email, setEmail] = useState(true);
     const [password, setPassword] = useState(true);
     const navigate = useNavigate();
@@ -25,18 +18,6 @@ function LoginAssociation() {
 
     /* Function to check if all inputs are complete */
     const checkComplete = (data: FormData) => {
-        /*data.forEach((value, key) => {
-            if (value === '') {
-                setComplete({...complete, [key]: false});
-            } else {
-                setComplete({...complete, [key]: true});
-            }
-        });*/
-        if (data.get('name') === '') {
-            setName(false);
-        } else {
-            setName(true);
-        }
         if (data.get('email') === '') {
             setEmail(false);
         } else {
@@ -95,7 +76,7 @@ function LoginAssociation() {
         const user = Object.fromEntries(data.entries());
 
         /* If all inputs are complete, send data */
-        if (user['name'] && user['email'] && user['password']) {
+        if (user['email'] && user['password']) {
             /* If user is major, password is strong enough, email format is correct and phone format is correct, send data */
             if (checkEmailFormat(user['email'] as string)) {
                 // call LoginAssociation service
@@ -129,116 +110,94 @@ function LoginAssociation() {
     return (
         <div className="center-form">
             <div className="choice-form">
-              <div className="row">
-                  <div className="col-12">
-                      <img className="titleLogo" src={titleLogo} alt=""/>
-                  </div>
-              </div>
-              <Box
-                sx={{
-                  marginTop: "30px",
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                }}
+                <div className="row">
+                    <div className="col-12">
+                        <img className="titleLogo" src={titleLogo} alt="" />
+                    </div>
+                </div>
+                <Box
+                    sx={{
+                        marginTop: "30px",
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
                 >
                     <Typography component="h1" variant="h5" marginBottom="10px">
                         Connexion Association
                     </Typography>
                     <Box
-                         component="form"
-                         noValidate
-                         onSubmit={handleSubmit}
-                         sx={{ mt: 3 }}
-                        >
+                        component="form"
+                        noValidate
+                        onSubmit={handleSubmit}
+                        sx={{ mt: 3 }}
+                    >
                         <Grid container spacing={2} justifyContent="center" flexDirection="column">
-                            <Grid item xs={12} >
+                            <Grid item xs={12}>
                                 <TextField
-                                    autoComplete='name'
-                                    name='name'
+                                    autoComplete='email'
+                                    name='email'
                                     required
                                     fullWidth
-                                    id='name'
-                                    label='Nom association'
-                                    autoFocus
+                                    id='email'
+                                    label='Adresse email'
                                     sx={{ alignItems: "center" }}
                                     InputProps={{
-                                        style: { color: "#2D2A32",
-                                                 boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                                                 borderRadius: "10px"
-                                               }
+                                        style: {
+                                            color: "#2D2A32",
+                                            boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                            borderRadius: "10px",
+                                        }
                                     }}
                                 />
-                                {/* If name is empty, display an error message */}
-                                {!name && (
+                                {/* If email is empty, display an error message */}
+                                {!email && (
                                     <Alert severity="error">
-                                        Le nom de l'association est requis
+                                        L'adresse email est requise
                                     </Alert>
                                 )}
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                autoComplete='email'
-                                name='email'
-                                required
-                                fullWidth
-                                id='email'
-                                label='Adresse email'
-                                sx={{ alignItems: "center" }}
+                                {/* If email is not empty but format is not correct, display a warning message */}
+                                {(email && !emailFormat) && (
+                                    <Alert severity="warning">
+                                        Le format de l'adresse email doit être au format xxxxxx.xxxx@xxx.com
+                                    </Alert>
+                                )}
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    autoComplete='new-password'
+                                    name='password'
+                                    required
+                                    fullWidth
+                                    id='password'
+                                    label='Mot de passe'
+                                    type={showPassword ? 'text' : 'password'}
+                                    sx={{ alignItems: "center" }}
                                     InputProps={{
-                                        style: { color: "#2D2A32",
-                                                 boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                                                 borderRadius: "10px",
-                                               }
+                                        style: {
+                                            color: "#2D2A32",
+                                            boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                            borderRadius: "10px",
+                                        },
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    onClick={handleClick}
+                                                    edge="end"
+                                                >
+                                                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        )
                                     }}
-                            />
-                            {/* If email is empty, display an error message */}
-                            {!email && (
-                                <Alert severity="error">
-                                    L'adresse email est requise
-                                </Alert>
-                            )}
-                            {/* If email is not empty but format is not correct, display a warning message */}
-                            {(email && !emailFormat) && (
-                                <Alert severity="warning">
-                                    Le format de l'adresse email doit être au format xxxxxx.xxxx@xxx.com
-                                </Alert>
-                            )}
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                autoComplete='new-password'
-                                name='password'
-                                required
-                                fullWidth
-                                id='password'
-                                label='Mot de passe'
-                                type={showPassword ? 'text' : 'password'}
-                                sx={{ alignItems: "center" }}
-                                InputProps={{
-                                    style: { color: "#2D2A32",
-                                             boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                                             borderRadius: "10px",
-                                           },
-                                    endAdornment: (
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                onClick={handleClick}
-                                                edge="end"
-                                            >
-                                                {showPassword ? <Visibility /> : <VisibilityOff />}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    )
-                                }}
-                            />
-                            {/* If password is empty, display an error message */}
-                            {!password && (
-                                <Alert severity="error">
-                                    Un mot de passe est requis
-                                </Alert>
-                            )}
-                        </Grid>
+                                />
+                                {/* If password is empty, display an error message */}
+                                {!password && (
+                                    <Alert severity="error">
+                                        Un mot de passe est requis
+                                    </Alert>
+                                )}
+                            </Grid>
                         </Grid>
                         <div style={{ marginTop: "10px", justifyContent: "flex-end", display: "flex" }}> 
                             <a className="forgot-password"
@@ -252,14 +211,15 @@ function LoginAssociation() {
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{ mt: 6,
-                                  mb: 3,
-                                  color: "#FFFEFF",
-                                  backgroundColor: "#67A191",
-                                  borderRadius: "10px",
-                                  boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                                  width: "200px",
-                                }}
+                            sx={{
+                                mt: 6,
+                                mb: 3,
+                                color: "#FFFEFF",
+                                backgroundColor: "#67A191",
+                                borderRadius: "10px",
+                                boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                width: "200px",
+                            }}
                         >
                             Connexion
                         </Button>
