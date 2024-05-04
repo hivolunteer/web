@@ -12,7 +12,7 @@ export const myTheme = createTheme({
             main: '#67A191',
         },
         secondary: {
-            main: '#FFFEFF',
+            main: '#999899',
         },
     },
 });
