@@ -36,7 +36,7 @@ function MissionsPanel() {
                     <a href="/accueil?mymission=true" className="component-missions-panel-see-all">Voir toutes les missions</a>
                 </div>
                 {nextMissions.length === 0 ? (
-                    <p>Tu n'es inscrit à aucune mission 😓</p>
+                    <p className="component-missions-panel-no-mission">Tu n'es inscrit à aucune mission 😓</p>
                 ) : (
                     <MissionsList missions={nextMissions} />
                 )}
@@ -45,7 +45,7 @@ function MissionsPanel() {
                     <a href="/accueil?friendsmission=true" className="component-missions-panel-see-all">Voir toutes les missions</a>
                 </div>
                 {friendsMissions.length === 0 ? (
-                    <p>Tes amis ne sont inscrits à aucune mission 😓</p>
+                    <p className="component-missions-panel-no-mission">Tes amis ne sont inscrits à aucune mission 😓</p>
                 ) : (
                     <MissionsList missions={friendsMissions} />
                 )}
@@ -54,7 +54,7 @@ function MissionsPanel() {
                     <a href="/accueil?missionsassociationfollowed=true" className="component-missions-panel-see-all">Voir toutes les missions</a>
                 </div>
                 {followingMissions.length === 0 ? (
-                    <p>Rien de nouveau du côté des associations que vous suivez</p>
+                    <p className="component-missions-panel-no-mission">Rien de nouveau du côté des associations que vous suivez</p>
                 ) : (
                     <MissionsList missions={followingMissions} />
                 )}
