@@ -7,25 +7,19 @@ import './Login.scss';
 import titleLogo from "../../../images/logo/primary_logo.png";
 
 function LoginAssociation() {
-    /***
-     * Define all states
-    ***/
-    /* State for password visibility */
     const [showPassword, setShowPassword] = React.useState(false);
-    /* Set mail format state */
     const [emailFormat, setEmailFormat] = useState(true);
-    /* State complete for all inputs*/
-    const [name, setName] = useState(true);
     const [email, setEmail] = useState(true);
     const [password, setPassword] = useState(true);
-    const [fodder, setfodder] = useState(true);
-
     const navigate = useNavigate();
 
     /* Function to check if all inputs are complete */
     const checkComplete = (data: FormData) => {
-        setName(data.get("identifier") !== '');
-        setEmail(data.get("identifier") !== '');
+        if (data.get('email') === '') {
+            setEmail(false);
+        } else {
+            setEmail(true);
+        }
         if (data.get('password') === '') {
             setPassword(false);
         } else {
@@ -52,9 +46,7 @@ function LoginAssociation() {
         /* Check if all inputs are complete */
         checkComplete(data);
         /* Check email format */
-        const identifier = data.get("identifier") as string;
-        if (identifier.includes("@"))
-            checkEmailFormat(identifier);
+        checkEmailFormat(data.get('email') as string);
     };
 
     /* Function to execute response */
@@ -79,26 +71,15 @@ function LoginAssociation() {
     const sendData = async (data: FormData) => {
         // convert FormData to table
         const user = Object.fromEntries(data.entries());
-        const identifier = user["identifier"].toString()
-        user['name'] = identifier.includes("@") ? "" : identifier;
-        user["email"] = identifier.includes("@") ? identifier : "";
-
-        const processsLogin = async () => {
-            // call LoginAssociation service
-            const response_status = AuthenticationService.loginAssociations(user);
-            console.log(response_status)
-            responseExecute(await response_status);
-
-        }
 
         /* If all inputs are complete, send data */
-        if ((user['name'] || user['email']) && user['password']) {
-            if (identifier.includes("@")) {
-                if (checkEmailFormat(user["email"] as string)) {
-                    await processsLogin();
-                }
-            } else {
-                processsLogin();
+        if (user['email'] && user['password']) {
+            /* If user is major, password is strong enough, email format is correct and phone format is correct, send data */
+            if (checkEmailFormat(user['email'] as string)) {
+                // call LoginAssociation service
+                const response_status = AuthenticationService.loginAssociations(user);
+                console.log(response_status)
+                responseExecute(await response_status);
             }
         }
     };
@@ -148,99 +129,100 @@ function LoginAssociation() {
                         onSubmit={handleSubmit}
                         sx={{ mt: 3 }}
                     >
-                        <Grid item xs={12}>
-                            <TextField
-                                autoComplete='identifier'
-                                name='identifier'
-                                required
-                                fullWidth
-                                id='identifier'
-                                label="Adresse email, Nom de l'Association"
-                                sx={{ alignItems: "center" }}
-                                InputProps={{
-                                    style: {
-                                        color: "#2D2A32",
-                                        boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                                        borderRadius: "10px",
-                                    }
-                                }}
-                            />
-                            {/* If email is empty, display an error message */}
-                            {(!email && !name) && (
-                                <Alert severity="error">
-                                    L'identifiant est requis
-                                </Alert>
-                            )}
-                            {/* If email is not empty but format is not correct, display a warning message */}
-                            {(email && !emailFormat) && (
-                                <Alert severity="warning">
-                                    Le format de l'adresse email doit être au format xxxxxx.xxxx@xxx.com
-                                </Alert>
-                            )}
+                        <Grid container spacing={2} justifyContent="center" flexDirection="column">
+                            <Grid item xs={12}>
+                                <TextField
+                                    autoComplete='email'
+                                    name='email'
+                                    required
+                                    fullWidth
+                                    id='email'
+                                    label='Adresse email'
+                                    sx={{ alignItems: "center" }}
+                                    InputProps={{
+                                        style: {
+                                            color: "#2D2A32",
+                                            boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                            borderRadius: "10px",
+                                        }
+                                    }}
+                                />
+                                {/* If email is empty, display an error message */}
+                                {!email && (
+                                    <Alert severity="error">
+                                        L'adresse email est requise
+                                    </Alert>
+                                )}
+                                {/* If email is not empty but format is not correct, display a warning message */}
+                                {(email && !emailFormat) && (
+                                    <Alert severity="warning">
+                                        Le format de l'adresse email doit être au format xxxxxx.xxxx@xxx.com
+                                    </Alert>
+                                )}
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    autoComplete='new-password'
+                                    name='password'
+                                    required
+                                    fullWidth
+                                    id='password'
+                                    label='Mot de passe'
+                                    type={showPassword ? 'text' : 'password'}
+                                    sx={{ alignItems: "center" }}
+                                    InputProps={{
+                                        style: {
+                                            color: "#2D2A32",
+                                            boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                            borderRadius: "10px",
+                                        },
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    onClick={handleClick}
+                                                    edge="end"
+                                                >
+                                                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        )
+                                    }}
+                                />
+                                {/* If password is empty, display an error message */}
+                                {!password && (
+                                    <Alert severity="error">
+                                        Un mot de passe est requis
+                                    </Alert>
+                                )}
+                            </Grid>
                         </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                autoComplete='new-password'
-                                name='password'
-                                required
-                                fullWidth
-                                id='password'
-                                label='Mot de passe'
-                                type={showPassword ? 'text' : 'password'}
-                                sx={{ alignItems: "center" }}
-                                InputProps={{
-                                    style: {
-                                        color: "#2D2A32",
-                                        boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                                        borderRadius: "10px",
-                                    },
-                                    endAdornment: (
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                onClick={handleClick}
-                                                edge="end"
-                                            >
-                                                {showPassword ? <Visibility /> : <VisibilityOff />}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    )
-                                }}
-                            />
-                            {/* If password is empty, display an error message */}
-                            {!password && (
-                                <Alert severity="error">
-                                    Un mot de passe est requis
-                                </Alert>
-                            )}
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{
+                                mt: 6,
+                                mb: 3,
+                                color: "#FFFEFF",
+                                backgroundColor: "#67A191",
+                                borderRadius: "10px",
+                                boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                width: "200px",
+                            }}
+                        >
+                            Connexion
+                        </Button>
+                        <Grid container justifyContent='flex-end' sx={{ mb: 4 }}>
+                            <Grid item>
+                                <Link href='/associations/register' variant='body2'>
+                                    Vous n'avez pas de compte ? Inscrivez-vous
+                                </Link>
+                            </Grid>
                         </Grid>
-                    
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        sx={{
-                            mt: 6,
-                            mb: 3,
-                            color: "#FFFEFF",
-                            backgroundColor: "#67A191",
-                            borderRadius: "10px",
-                            boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                            width: "200px",
-                        }}
-                    >
-                        Connexion
-                    </Button>
-                    <Grid container justifyContent='flex-end' sx={{ mb: 4 }}>
-                        <Grid item>
-                            <Link href='/associations/register' variant='body2'>
-                                Vous n'avez pas de compte ? Inscrivez-vous
-                            </Link>
-                        </Grid>
-                    </Grid>
+                    </Box>
                 </Box>
-            </Box>
+            </div>
         </div>
-        </div >
     );
 }
 
