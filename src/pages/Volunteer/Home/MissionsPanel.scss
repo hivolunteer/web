@@ -1,0 +1,23 @@
+.component-missions-panel-title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    flex-direction: row;
+    margin-left: 3rem;
+    margin-right: 4rem;
+}
+
+.component-missions-panel-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #67A191;
+}
+
+.component-missions-panel-see-all {
+    font-size: 1rem;
+    font-weight: lighter;
+    color: #000000;
+    cursor: pointer;
+    text-decoration: none;
+}

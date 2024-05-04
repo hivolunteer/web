@@ -159,7 +159,6 @@ function Search(props: any) {
 
   const handleLocation = (e: any) => {
     setLocation(e.target.value.toLowerCase());
-    
   }
   //className={"header-rating" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")}
   return (
