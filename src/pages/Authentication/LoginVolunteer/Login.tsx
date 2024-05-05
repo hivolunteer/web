@@ -30,8 +30,8 @@ function LoginVolunteer() {
 
   /* Function to check if all inputs are complete */
   const checkComplete = (data: FormData) => {
-    const identifier = data.get("identifier") as string;
-    setEmail(identifier.includes("@"));
+    const credential = data.get("credential") as string;
+    setEmail(credential.includes("@"));
     if (data.get("password") === "") {
       setPassword(false);
     } else {
@@ -69,11 +69,11 @@ function LoginVolunteer() {
   const checkInput = (data: FormData) => {
     /* Check if all inputs are complete */
     checkComplete(data);
-    const identifier = data.get("identifier") as string;
+    const credential = data.get("credential") as string;
     /* Check email format */
-    checkEmailFormat(identifier);
+    checkEmailFormat(credential);
     /* Check phone format */
-    checkPhoneFormat(identifier);
+    checkPhoneFormat(credential);
   };
 
   /* Function to execute response */
@@ -98,8 +98,8 @@ function LoginVolunteer() {
   const sendData = async (data: FormData) => {
     // convert FormData to table
     const user = Object.fromEntries(data.entries());
-    user["email"] = user["identifier"].toString().includes("@") ? user["identifier"] : "";
-    user["phone"] = user["identifier"].toString().includes("@") ? "" : user["identifier"];
+    user["email"] = user["credential"].toString().includes("@") ? user["credential"] : "";
+    user["phone"] = user["credential"].toString().includes("@") ? "" : user["credential"];
 
     /* If all inputs are complete, send data */
     if ((user["phone"] || user["email"]) && user["password"]) {
@@ -158,11 +158,11 @@ function LoginVolunteer() {
             <Grid container spacing={2} justifyContent="center" flexDirection="column">
               <Grid item xs={12}>
                 <TextField
-                  autoComplete="identifier"
-                  name="identifier"
+                  autoComplete="credential"
+                  name="credential"
                   required
                   fullWidth
-                  id="identifier"
+                  id="credential"
                   label="Numéro de téléphone, e-mail"
                   autoFocus
                   sx={{ alignItems: "center" }}
