@@ -115,10 +115,8 @@ function Search(props: any) {
             let mission_list : Mission[] = [];
             data
             .map((mission: any) => {
-              console.log(mission)
               mission_list.push({id: mission.id, title: mission.title, status: mission.status, location: mission.location})
             })
-            console.log(mission_list)
             setMissionList(mission_list)
           })
         }
