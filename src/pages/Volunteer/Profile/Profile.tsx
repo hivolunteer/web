@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import config from "../../../config";
 import "./Profile.scss";
-
+import BlockedUsersList from "../../../components/BlockedUsersList";
 import profileImage from "../../../images/logo/submark.png";
+import { Volunteer } from "../../../interfaces";
 
 type newProfile = {
   first_name: string,
@@ -19,9 +20,30 @@ function ProfilePage(props: any) {
   const [email, setEmail] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [profile_picture, setProfilePicture] = useState<string>(profileImage);
+  const [blocked, setBlocked] = useState<Volunteer[]>([]);
+
+  function refuseVolunteer(id: number) {
+    fetch(`${config.apiUrl}/volunteers/blocked`, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    }).then((response) => {
+      if (response.status === 200) {
+        if (response.body) {
+
+        }
+      } else {
+        console.log("ERROR");
+        alert("Une erreur est survenue lors du refus du volontaire");
+      }
+    })
+  }
 
   useEffect(() => {
-    console.log(localStorage)
+    console.log(localStorage);
+
     const getProfile = () => {
       fetch(`${config.apiUrl}/volunteers/profile`, {
         method: 'GET',
@@ -29,27 +51,47 @@ function ProfilePage(props: any) {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
+      }).then((response) => {
+        if (response.status === 200) {
+          response.json().then((data) => {
+            setFirstName(data.volunteer.first_name);
+            setLastName(data.volunteer.last_name);
+            setEmail(data.volunteer.email);
+            setPhone(data.volunteer.phone);
+            setProfilePicture(data.volunteer.profile_picture);
+          });
+        } else {
+          console.log('Error fetching profile');
+          console.log(response)
+        }
+      }).catch((error) => {
+        console.log(error);
       })
-        .then((response) => {
-          if (response.status === 200) {
-            response.json().then((data) => {
-              setFirstName(data.volunteer.first_name);
-              setLastName(data.volunteer.last_name);
-              setEmail(data.volunteer.email);
-              setPhone(data.volunteer.phone);
-              setProfilePicture(data.volunteer.profile_picture);
-            });
-          } else {
-            console.log('Error fetching profile');
-            console.log(response)
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        })
+    }
+
+    const getBlocked = () => {
+      fetch(`${config.apiUrl}/friends/blocked`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+      }).then((response) => {
+        if (response.status === 200) {
+          response.json().then((data) => {
+            console.warn("BLOCKED DATA: " + JSON.stringify(data));
+            setBlocked(data);
+          });
+        } else {
+          console.warn("ERROR FETCHING BLOCKED : " + response);
+        }
+      }).catch((error) => {
+        console.warn(error);
+      })
     }
 
     getProfile();
+    getBlocked();
   }, []);
 
   function validateEmail(email: string): boolean {
@@ -192,6 +234,7 @@ function ProfilePage(props: any) {
             </div>
           </div>
         </Col>
+
       </Row>
   );
 };
