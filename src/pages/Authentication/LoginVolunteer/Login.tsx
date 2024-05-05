@@ -26,13 +26,22 @@ function LoginVolunteer() {
 
   /* Function to check if all inputs are complete */
   const checkComplete = (data: FormData) => {
-    const identifier = data.get("identifier") as string;
-    setEmail(identifier.includes("@"));
-    if (data.get("password") === "") {
-      setPassword(false);
+    setEmail(false);
+    setPhone(false);
+
+    const credential = data.get("credential") as string;
+    if (credential !== "") {
+      if (credential.includes("@")) {
+        setEmail(true);
+      } else {
+        setPhone(true);
+      }
     } else {
-      setPassword(true);
+      setEmail(false);
+      setPhone(false);
     }
+    // setEmail(credential.includes("@"));
+    setPassword((data.get("password") as string) !== "");
   };
 
   /* Function to check email format */
@@ -65,11 +74,11 @@ function LoginVolunteer() {
   const checkInput = (data: FormData) => {
     /* Check if all inputs are complete */
     checkComplete(data);
-    const identifier = data.get("identifier") as string;
+    const credential = data.get("credential") as string;
     /* Check email format */
-    checkEmailFormat(identifier);
+    checkEmailFormat(credential);
     /* Check phone format */
-    checkPhoneFormat(identifier);
+    checkPhoneFormat(credential);
   };
 
   /* Function to execute response */
@@ -80,6 +89,9 @@ function LoginVolunteer() {
         localStorage.setItem("role", "volunteer");
         navigate("/");
         window.location.reload();
+        break;
+      case 400:
+        alert("Missing Fields");
         break;
       case 401:
         alert("Connexion échouée");
@@ -94,12 +106,10 @@ function LoginVolunteer() {
   const sendData = async (data: FormData) => {
     // convert FormData to table
     const user = Object.fromEntries(data.entries());
-    user["email"] = user["identifier"].toString().includes("@") ? user["identifier"] : "";
-    user["phone"] = user["identifier"].toString().includes("@") ? "" : user["identifier"];
 
     /* If all inputs are complete, send data */
-    if ((user["phone"] || user["email"]) && user["password"]) {
-      if ((checkEmailFormat(user["email"] as string)) || (checkPhoneFormat(user["phone"] as string))) {
+    if (user["credential"] && user["password"]) {
+      if ((checkEmailFormat(user["credential"] as string)) || (checkPhoneFormat(user["credential"] as string))) {
         // call LoginVolunteer service
         const response_status = AuthenticationService.loginVolunteers(user);
         responseExecute(await response_status);
@@ -154,11 +164,11 @@ function LoginVolunteer() {
             <Grid container spacing={2} justifyContent="center" flexDirection="column">
               <Grid item xs={12}>
                 <TextField
-                  autoComplete="identifier"
-                  name="identifier"
+                  autoComplete="credential"
+                  name="credential"
                   required
                   fullWidth
-                  id="identifier"
+                  id="credential"
                   label="Numéro de téléphone, e-mail"
                   autoFocus
                   sx={{ alignItems: "center" }}
