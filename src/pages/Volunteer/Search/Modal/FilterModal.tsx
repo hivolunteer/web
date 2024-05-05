@@ -109,6 +109,15 @@ const FilterModal = (props: {modalProps: Modal}) => {
                                 <p style={{flex: 1}}> Amis présents dans la mission </p>
                             </div>
                         </div>
+                        <div style={{display: 'flex', flexDirection: 'column'}}>
+                            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                                <Checkbox
+                                    checked={allowMinors}
+                                    onChange={() => setAllowMinors(!allowMinors)}
+                                />
+                                <p style={{flex: 1}}> Mineurs autorisés dans la mission </p>
+                            </div> 
+                        </div>
                     </div>
                     <div style={{flex: 1}}>
                         <h3> COMPÉTENCES </h3>
@@ -150,14 +159,7 @@ const FilterModal = (props: {modalProps: Modal}) => {
                                 onChange={() => setNoskills(!noskills)}
                             />
                             <p style={{flex: 1}}> Missions sans compétences seuleument </p>
-                        </div>
-                        <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                            <Checkbox
-                                checked={allowMinors}
-                                onChange={() => setAllowMinors(!allowMinors)}
-                            />
-                            <p style={{flex: 1}}> Mineurs autorisés dans la mission </p>
-                        </div>                    
+                        </div>                   
                     </div>
                 </div>
             </DialogTitle>
