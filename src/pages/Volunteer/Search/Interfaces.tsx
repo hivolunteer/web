@@ -1,12 +1,14 @@
 interface Mission {
     id : number,
     title: string,
-    status: number
+    status: number,
+    location: number
 }
 
 interface Association {
     id: number,
-    name: string
+    name: string,
+    rating: number
 }
 
 interface Modal {

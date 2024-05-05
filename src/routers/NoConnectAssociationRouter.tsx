@@ -4,10 +4,21 @@ import LoginAssociation from '../pages/Authentication/LoginAssociation/Login';
 
 function AssociationRouter() {
     return(
+        <div
+        style={{
+        display: 'flex',
+        justifyContent: 'center',
+        height: '90%',
+        backgroundColor: '#DFDFDF',
+        alignItems: 'center',
+        margin: '5%'
+      }}
+      >
         <Routes>
             <Route path="/login" element={<LoginAssociation />} />
             <Route path="/register" element={<RegisterAssociation />} />
         </Routes>
+        </div>
     )
 }
 

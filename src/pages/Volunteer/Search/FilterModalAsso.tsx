@@ -11,7 +11,7 @@ const FilterModal = (props: {modalProps: ModalAsso}) => {
 
     const [preferences, setPreferences] = useState<boolean[]>([false, false]);
 
-    const [value, setValue] = React.useState<number | null>(2);
+    const [value, setValue] = React.useState<number | null>(1);
 
     // valider Modal
 
@@ -20,7 +20,8 @@ const FilterModal = (props: {modalProps: ModalAsso}) => {
         let body = {
             themeList: [],
             friendList: preferences[1],
-            noteList: value
+            followList: preferences[0],
+            note: value
         }
         fetch(`${config.apiUrl}/search/associations`, {
             method: 'POST',
@@ -34,12 +35,17 @@ const FilterModal = (props: {modalProps: ModalAsso}) => {
             if (response.status === 200) {
                 response.json().then((data) => {
                     console.log("DATA" + data)
-                    console.log("friends" + preferences[1], "note" + value)
+                    console.log("friends" + preferences[1], "follows" + preferences[0], "note" + value)
                     modalProps.setFilteredAssociations(data)
                     modalProps.handleClose()
                 })
             }
         })
+    }
+
+    const setValuesToDefault = () => {
+        setPreferences([false, false]);
+        setValue(1);
     }
 
   return (
@@ -48,25 +54,20 @@ const FilterModal = (props: {modalProps: ModalAsso}) => {
         PaperProps={{
             sx: {
                 maxWidth: '60%',
-                minHeight: '60vh',
+                minHeight: '40vh',
+                maxHeight: '65vh',
                 overflowY: 'hidden',
                 overflowX: 'hidden',
             }
         }}
         >
-            {/* First Category : Domaine de la mission */}
-            <DialogTitle sx={{ m: 0, p: 2 }} style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', maxHeight: '25vh'}}>
-                <div style={{width: '%', margin: '0 2.5%'}}>
-                    <h3>DOMAINE DE L'ASSOCIATION</h3>
-                </div>
-            </DialogTitle>
             {/* Second Category : Préférences de la mission */}
             <DialogTitle sx={{ m: 0, p: 2 }}>
                 <div style={{width: '90%', margin: '0 2.5%', display: 'flex', flexDirection: 'row', flexWrap: 'wrap', maxHeight: '25vh'}}>
                     <div style={{flex: 1}}>
                         <h3> PRÉFÉRENCES </h3>
                         <div style={{display: 'flex', flexDirection: 'column'}}>
-                            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', margin: '-2% -2%'}}>
+                            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', margin: '-2% -1%'}}>
                                 <Checkbox
                                     checked={preferences[0]}
                                     onChange={() => setPreferences([!preferences[0], preferences[1]])}
@@ -75,12 +76,12 @@ const FilterModal = (props: {modalProps: ModalAsso}) => {
                             </div>
                         </div>
                         <div style={{display: 'flex', flexDirection: 'column'}}>
-                            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', margin: '-2% -2%'}}>
+                            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', margin: '0% -1%'}}>
                                 <Checkbox
                                     checked={preferences[1]}
                                     onChange={() => setPreferences([preferences[0], !preferences[1]])}
                                 />
-                                <p style={{flex: 1}}> Amis qui suivent l'association </p>
+                                <p style={{flex: 1}}> Associations suivies par vos amis </p>
                             </div>
                         </div>
                     </div>
@@ -104,7 +105,7 @@ const FilterModal = (props: {modalProps: ModalAsso}) => {
             {/* Footer */}
             <DialogTitle sx={{ m: 0, p: 2 }} style={{display: 'flex', justifyContent: 'flex-end'}}>
                 <Button 
-                    onClick={modalProps.handleClose}
+                    onClick={() => { setValuesToDefault(); modalProps.handleClose(); }}
                     variant='contained'
                     sx={{
                         background: 'rgba(45, 42, 50, 0.50)',
