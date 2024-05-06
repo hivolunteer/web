@@ -1,8 +1,7 @@
 import { CardMedia } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Card from 'react-bootstrap/Card';
 import "./BlockedUsersList.scss"
-import NearMeOutlinedIcon from '@mui/icons-material/NearMeOutlined';
 import config from "../config";
 import { Volunteer } from '../interfaces';
 
@@ -12,6 +11,7 @@ export default function BlockedUsersList(props: { blockedUsers: Volunteer[] }) {
   const BlockButton = (props: { id: number }) => {
     const id = props.id;
     const [block, setblock] = useState(false);
+
     const poyo = async () => {
       const isblock = block ? "block" : "unblock";
       fetch(`${config.apiUrl}/friends/${isblock}/${id.toString()}`, {
@@ -30,33 +30,38 @@ export default function BlockedUsersList(props: { blockedUsers: Volunteer[] }) {
     }
 
     return (
-        <button onClick={poyo} className={block ? "block-button" : "unblock-button"}>{block ? "block" : "unblock"}</button>
+      <button onClick={poyo} className={`block-button ${block ? "blocked" : "unblocked"}`}>
+        {block ? "Bloquer" : "Débloquer"}
+      </button>
     );
   }
+
+  const longestName = blockedUsers.reduce((longest, volunteer) => {
+    const fullName = `${volunteer.first_name} ${volunteer.last_name}`;
+    return (fullName.length > longest.length ? fullName : longest) + 1;
+  }, '');
 
   return (
     <div className="blocked-users-container">
       {blockedUsers.map((v: Volunteer) => (
-        <div
-          key={v.id}
-          className="blocked-user-card"
-          style={{ display: 'flex', alignItems: 'center', gap: '10px', textAlign: "center" }}
-        >
-          <Card className="user-card">
-            <CardMedia
-              component="img"
-              height="140"
-              image={v.profile_picture}
-              alt="user profile picture"
-            />
-            <Card.Body>
-              <Card.Title>
-                {v.first_name} {v.last_name}
-              </Card.Title>
-            </Card.Body>
-            <BlockButton id={v.id} />
-          </Card>
+        <div key={v.id} className="volunteer-card-container">
+          <div className="volunteer-card" style={{ width: `${longestName.length * 0.65}em` }}>
+            <div className="profile-picture-container">
+              <img
+                src={v.profile_picture}
+                alt={`${v.first_name} ${v.last_name}`}
+                className="profile-picture"
+              />
+            </div>
+            <div className='volunteer-info'>
+              <div className="volunteer-name">
+                <span>{v.first_name} {v.last_name}</span>
+              </div>
+              <BlockButton id={v.id} />
+            </div>
+          </div>
         </div>
       ))}
     </div>
-  );}
+  );
+}
