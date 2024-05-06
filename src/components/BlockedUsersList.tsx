@@ -9,27 +9,54 @@ import { Volunteer } from '../interfaces';
 export default function BlockedUsersList(props: { blockedUsers: Volunteer[] }) {
   const blockedUsers: Volunteer[] = props.blockedUsers;
 
-  const BlockButton = (props: {id: number}) => {
+  const BlockButton = (props: { id: number }) => {
     const id = props.id;
     const [block, setblock] = useState(false);
-    const poyo = () => {
-      console.warn(`FOR ID ${id} : ${block}`);
-      setblock(!block);
+    const poyo = async () => {
+      const isblock = block ? "block" : "unblock";
+      fetch(`${config.apiUrl}/friends/${isblock}/${id.toString()}`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      }).then((response) => {
+        if (response.status === 201) {
+          setblock(!block);
+        } else {
+          console.log(`error trying to ${isblock} id ${id}`);
+        }
+      })
     }
 
     return (
-      <button onClick={poyo} className={block ? "unblock-button" : "block-button"}>{block ? "unblock" : "block"}</button>
+        <button onClick={poyo} className={block ? "block-button" : "unblock-button"}>{block ? "block" : "unblock"}</button>
     );
   }
 
   return (
-    <div>
+    <div className="blocked-users-container">
       {blockedUsers.map((v: Volunteer) => (
-        <div key={v.id} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <span>name: {v.first_name} id: {v.last_name} pp: {v.profile_picture}</span>
-          <BlockButton id={v.id}/>
+        <div
+          key={v.id}
+          className="blocked-user-card"
+          style={{ display: 'flex', alignItems: 'center', gap: '10px', textAlign: "center" }}
+        >
+          <Card className="user-card">
+            <CardMedia
+              component="img"
+              height="140"
+              image={v.profile_picture}
+              alt="user profile picture"
+            />
+            <Card.Body>
+              <Card.Title>
+                {v.first_name} {v.last_name}
+              </Card.Title>
+            </Card.Body>
+            <BlockButton id={v.id} />
+          </Card>
         </div>
       ))}
     </div>
-  );
-}
+  );}
