@@ -70,6 +70,7 @@ function ProfilePage(props: any) {
     }
 
     const getBlocked = () => {
+      alert("FETCHING BLOCKED");
       fetch(`${config.apiUrl}/friends/blocked`, {
         method: 'GET',
         headers: {
@@ -79,11 +80,11 @@ function ProfilePage(props: any) {
       }).then((response) => {
         if (response.status === 200) {
           response.json().then((data) => {
-            console.warn("BLOCKED DATA: " + JSON.stringify(data));
+            alert("BLOCKED DATA: " + JSON.stringify(data));
             setBlocked(data);
           });
         } else {
-          console.warn("ERROR FETCHING BLOCKED : " + response);
+          alert("ERROR FETCHING BLOCKED : " + JSON.stringify(response.body));
         }
       }).catch((error) => {
         console.warn(error);
@@ -91,6 +92,7 @@ function ProfilePage(props: any) {
     }
 
     getProfile();
+    console.warn("GET BLOCKED");
     getBlocked();
   }, []);
 
@@ -234,7 +236,7 @@ function ProfilePage(props: any) {
             </div>
           </div>
         </Col>
-
+      <BlockedUsersList blockedUsers={blocked}/>
       </Row>
   );
 };
