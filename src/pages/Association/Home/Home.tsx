@@ -8,19 +8,13 @@ import './Home.scss';
 import {useEffect, useState } from 'react'
 import config from "../../../config";
 import { Button } from '@mui/material';
-import HomeMisssionCard from '../../../components/HomeMissionCard';
-
+import MissionCard from '../../../components/MissionCard';
+import { Mission } from '../../../interfaces';
 interface Association {
     id: number,
     name: string, 
     rating: string,
     profile_picture: string,
-}
-
-interface Mission {
-    id: number,
-    owner_id: number,
-    status: number
 }
 
 function Home () {
@@ -133,8 +127,8 @@ function Home () {
                                     noDuplicates(NextMissions).map((mission: Mission) => {
                                         return (
                                             <div className="missions-row">
-                                                <HomeMisssionCard
-                                                    mission={mission.id}
+                                                <MissionCard
+                                                    mission={mission}
                                                 />
                                             </div>
                                         )
@@ -155,8 +149,8 @@ function Home () {
                                     noDuplicates(SavedMissions).map((mission: Mission) => {
                                         return (
                                             <div className="missions-row">
-                                                <HomeMisssionCard
-                                                    mission={mission.id}
+                                                <MissionCard
+                                                    mission={mission}
                                                 />
                                             </div>
                                         )
@@ -177,8 +171,8 @@ function Home () {
                                     noDuplicates(PastMissions).map((mission: Mission) => {
                                         return (
                                             <div className="missions-row">
-                                                <HomeMisssionCard
-                                                    mission={mission.id}
+                                                <MissionCard
+                                                    mission={mission}
                                                 />
                                             </div>
                                         )
