@@ -25,7 +25,6 @@ interface MissionCreationData {
   missionDate?: Date;
   missionEndDate?: Date;
   missionVolunteersNumber?: number;
-  missionReferent?: string;
   missionSkills?: string;
 }
 
