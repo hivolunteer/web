@@ -142,7 +142,7 @@ function ProfilePage(props: any) {
   /* Function to add when back is gonna be done */
 
   const deleteAccount = () => {
-     if (window.confirm('Are you sure you want to delete your account?')) {
+    if (window.confirm('Are you sure you want to delete your account?')) {
       let url = `${config.apiUrl}/volunteers/delete`;
       fetch(url, {
         method: 'DELETE',
@@ -236,29 +236,23 @@ function ProfilePage(props: any) {
               onChange={(event) => setPhone(event.target.value)}
             />
           </div>
-          <div className="profile-btn-div">
-            <button className={"profile-pic-btn" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")} onClick={updateProfile}>
-              Mettre à jour le profile
-            </button>
-          </div>
+        </div>
+        <div className="profile-btn-div">
+          <button className={"profile-pic-btn" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")} onClick={updateProfile}>
+            Mettre à jour le profile
+          </button>
         </div>
       </Col>
       <div className="profile-btn-div">
-            <button className={"profile-pic-btn" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")} onClick={() => {navigate("/profile/blocked")}}>
-              Gérer les utilisateurs Bloqués
-            </button>
-          </div>
+        <button className={"profile-pic-btn" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")} onClick={() => { navigate("/profile/blocked") }}>
+          Gérer les utilisateurs Bloqués
+        </button>
+      </div>
+      <button className="delete-account-btn" onClick={deleteAccount}>
+        Supprimer le compte
+      </button>
+
     </Row>
-
-
-              <button className="delete-account-btn" onClick={deleteAccount}>
-                            Supprimer le compte
-                      </button>
-                    </div>
-                </div>
-            </Col>
-        </Row>
-    </Container>
   );
 };
 
