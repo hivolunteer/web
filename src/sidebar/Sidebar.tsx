@@ -19,7 +19,7 @@ import logoWhite from "../images/logo/submark_white.png";
 import logoImage from "../images/logo/submark.png";
 
 const pages = ["Accueil", "Calendrier", "Profile"];
-const settings = ["Créer une mission", "Profile", "Réglages", "Logout"];
+const settings = ["Créer une mission", "Profile", "Réglages", "Referent", "Logout"];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -211,6 +211,9 @@ function ResponsiveAppBar() {
                           break;
                         case "Réglages":
                           window.location.href = "/settings";
+                          break;
+                        case "Referent":
+                          window.location.href = "/settings/referents";
                           break;
                         case "Logout":
                           console.log("logout");
