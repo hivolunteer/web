@@ -3,7 +3,8 @@ import { useState, useEffect } from 'react';
 import Card from 'react-bootstrap/Card';
 import '../pages/Volunteer/Home/Home.scss';
 
-
+import BusinessIcon from '@mui/icons-material/Business';
+import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import NearMeOutlinedIcon from '@mui/icons-material/NearMeOutlined';
 import config from "../config";
@@ -77,6 +78,7 @@ function MissionCard(props: { mission: Mission }) {
                         }
                     });
                 }
+                getOwner();
             });
 
         }
@@ -144,6 +146,11 @@ function MissionCard(props: { mission: Mission }) {
                                 <NearMeOutlinedIcon />
                                 <p style={{ marginLeft: '10px' }}> {location} </p>
                             </div>
+                            <div className='mission-body-with-icon' style={{ marginBottom: '2px' }}>
+                            {(isVol) ? <EmojiEmotionsIcon/> : <BusinessIcon />}
+                            <p style={{ marginLeft: '10px' }}>{isVol ? "Bénévole" : "Association"}</p>
+                            </div>
+
                         </div>
                     </div>
                 </div>
