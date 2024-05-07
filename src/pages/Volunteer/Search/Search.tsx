@@ -232,12 +232,9 @@ function Search(props: any) {
         <div className="filter-container">
           <Button
             className={
-              "filter-btn " +
-              (localStorage.getItem("color_blind") === "true"
-                ? " color-blind-bg"
-                : "")
+              "filter-btn-search"
             }
-            sx={{ background: "#3b3d3c" }}
+            sx={{ background: (localStorage.getItem('color_blind') === 'true') ? '#dedede' : '#ffcf56', ":hover": {background: (localStorage.getItem('color_blind') === 'true') ? '#dedede' : '#ffcf56'}}}
             variant="contained"
             onClick={() => {
               setOpen(true);
