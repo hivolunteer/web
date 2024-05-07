@@ -4,14 +4,11 @@ import { Button, InputAdornment, Tab, Tabs, TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
-import Box from "@mui/material/Box";
 import "./Search.scss";
-import CustomSwitch from "../../../components/Switch";
 import FilterModal from "./Modal/FilterModal";
 import FilterModalAsso from "./Modal/FilterModalAsso";
-import MissionCard from "./Cards/MissionCard";
-import AssociationCard from "./Cards/AssociationCard";
-import { Mission, Modal, Association, ModalAsso } from "./Interfaces";
+import { Mission, Association } from "../../../interfaces"
+import { Modal, ModalAsso } from "./Interfaces";
 import config from "../../../config";
 import TabPanel from "./Panels/TabPanel";
 import MissionPanel from "./Panels/MissionPanel";
@@ -113,9 +110,8 @@ function Search(props: any) {
         if (response.status === 200) {
           response.json().then((data) => {
             let mission_list : Mission[] = [];
-            data
-            .map((mission: any) => {
-              mission_list.push({id: mission.id, title: mission.title, status: mission.status, location: mission.location})
+            data.map((mission: Mission) => {
+              mission_list.push(mission)
             })
             setMissionList(mission_list)
           })
@@ -135,8 +131,8 @@ function Search(props: any) {
           response.json().then((data) => {
               let association_list : Association[] = [];
               data
-              .map((association: any) => {
-                  association_list.push({id: association.id, name: association.name, rating: association.rating})
+              .map((association: Association) => {
+                  association_list.push(association)
               })
               setAssociations(association_list)
           })

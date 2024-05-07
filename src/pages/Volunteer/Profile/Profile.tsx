@@ -139,6 +139,35 @@ function ProfilePage(props: any) {
     })
   };
 
+  /* Function to add when back is gonna be done */
+
+  const deleteAccount = () => {
+     if (window.confirm('Are you sure you want to delete your account?')) {
+      let url = `${config.apiUrl}/volunteers/delete`;
+      fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            alert('Account deleted successfully');
+            // Redirect to the login page
+            localStorage.removeItem('token');
+            localStorage.removeItem('role');
+            window.location.reload();
+            window.location.href = '/';
+          } else {
+            console.log('Error deleting account');
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }
+
   const [color_blind, setColorBlind] = useState(
     localStorage.getItem("color_blind") === "true"
   );
@@ -220,6 +249,16 @@ function ProfilePage(props: any) {
             </button>
           </div>
     </Row>
+
+
+              <button className="delete-account-btn" onClick={deleteAccount}>
+                            Supprimer le compte
+                      </button>
+                    </div>
+                </div>
+            </Col>
+        </Row>
+    </Container>
   );
 };
 

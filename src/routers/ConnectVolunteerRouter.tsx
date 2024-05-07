@@ -7,8 +7,12 @@ import FollowAssociation from "../pages/Volunteer/FollowAssociation/FollowAssoci
 import MissionDetails from "../pages/Volunteer/MissionDetails/MissionDetails";
 import Settings from "../pages/Settings/Settings";
 import BlockedUsersList from "../components/BlockedUsersList";
+
+import MissionCreation from "../pages/Volunteer/Missions/MissionCreation";
+
 import AssociationReferent from "../pages/Volunteer/Settings/Referents/AssociationReferent";
 import AssociationProfile from "../pages/Volunteer/Association/Profile/AssociationProfile";
+
 
 function ConnectVolunteerRouter() {
   return (
@@ -21,6 +25,7 @@ function ConnectVolunteerRouter() {
       <Route path="/accueil" element={<Search />} />
       <Route path="/association/:associationID" element={<AssociationProfile />} />
       <Route path="/mission/:missionID" element={<MissionDetails />} />
+      <Route path="/missionCreation" element={<MissionCreation/>} />
       <Route path={"/settings"} element={<Settings />} />
       <Route path="/settings/referents" element={<AssociationReferent />} />
       <Route path="*" element={<h1> Error 404 Volunteer </h1>} />
