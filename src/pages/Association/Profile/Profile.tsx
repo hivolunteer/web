@@ -23,8 +23,7 @@ export default function FullWidthGrid(props: any) {
     const [description, setDescription] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [phone, setPhone] = useState<string>("");
-    const image =
-        "https://urgo.fr/wp-content/uploads/2022/03/Logo-Reforestaction.png";
+    const [image, setProfilePicture] = useState<string>("");
 
 
     useEffect(() => {
@@ -44,6 +43,7 @@ export default function FullWidthGrid(props: any) {
                             setDescription(data.association.description);
                             setEmail(data.association.email);
                             setPhone(data.association.phone);
+                            setProfilePicture(data.association.profile_picture);
                         });
                     } else {
                         console.log("Error fetching profile");
@@ -69,7 +69,7 @@ export default function FullWidthGrid(props: any) {
                 padding: "20px",
             }}>
                 <img src={image} alt="Logo de profil" className={"container-div"}/>
-                <h1>Association {name}</h1>
+                <h1>Association: {name}</h1>
             </div>
             <div className="container-div">
 

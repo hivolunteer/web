@@ -7,6 +7,7 @@ import FollowAssociation from "../pages/Volunteer/FollowAssociation/FollowAssoci
 import MissionDetails from "../pages/Volunteer/MissionDetails/MissionDetails";
 import Settings from "../pages/Volunteer/Settings/Settings";
 import ChangePassword from "../pages/Volunteer/Settings/ModifyPassword";
+import ProfileInformationModal from "../pages/Volunteer/Settings/ProfileInformation";
 
 function ConnectVolunteerRouter() {
     return (
@@ -19,6 +20,7 @@ function ConnectVolunteerRouter() {
             <Route path="/mission/:missionID" element={<MissionDetails />} />
             <Route path={"/settings"} element={<Settings />} />
             <Route path="/settings/modify_password" element={<ChangePassword />} />
+            <Route path="/settings/profile_information" element={<ProfileInformationModal />} />
             <Route path="*" element={<h1> Error 404 Volunteer </h1>} />
         </Routes>
     );
