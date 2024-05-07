@@ -7,13 +7,14 @@ import '../pages/Volunteer/Home/Home.scss';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import NearMeOutlinedIcon from '@mui/icons-material/NearMeOutlined';
 import config from "../config";
-import { Mission, Association } from '../interfaces';
+import { Mission, Association, Volunteer } from '../interfaces';
 
-function MissionCard(props: {mission: Mission}) {
+function MissionCard(props: { mission: Mission }) {
     const mission: Mission = props.mission;
 
     const [location, setlocation] = useState("");
-    const [owner, setowner] = useState<Association | null>(null);
+    const [missionPicture, setMissionPicture] = useState("");
+    const [isVol, setisvol] = useState<boolean | null>(null);
 
     function getLocation() {
         fetch(`${config.apiUrl}/locations/${mission.location.toString()}`, {
@@ -31,7 +32,8 @@ function MissionCard(props: {mission: Mission}) {
         });
     }
     function getOwner() {
-        fetch(`${config.apiUrl}/associations/profile/${mission.owner_id.toString()}`, {
+        const owner = (isVol) ? "volunteers" : "associations";
+        fetch(`${config.apiUrl}/${owner}/profile/${mission.owner_id.toString()}`, {
             method: 'GET',
             headers: {
                 authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -40,8 +42,8 @@ function MissionCard(props: {mission: Mission}) {
         }).then((response) => {
             if (response.status === 200) {
                 response.json().then((data) => {
-                    console.log("PP: " + JSON.stringify(data.association as Association))
-                    setowner(data.association as Association);
+                    const profile_picture = isVol ? (data.volunteer as Volunteer).profile_picture : (data.association as Association).profile_picture;
+                    setMissionPicture(profile_picture);
                 });
             } else {
                 console.log("FAILURE: " + response.status);
@@ -56,40 +58,29 @@ function MissionCard(props: {mission: Mission}) {
     }, [location]);
 
     useEffect(() => {
-        if (!owner) {
-            getOwner();
+        if (isVol === null) {
+            fetch(`${config.apiUrl}/missions/close`, {
+                method: 'GET',
+                headers: {
+                    authorization: `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'application/json'
+                }
+            }).then((response) => {
+                setisvol(false);
+                if (response.status === 200) {
+                    response.json().then((data: Mission[]) => {
+                        for (const fodder of data) {
+                            if (fodder.title === mission.title && fodder.description === mission.description) {
+                                setisvol(true);
+                                break;
+                            }
+                        }
+                    });
+                }
+            });
+
         }
-    }, [owner]);
-
-    /*useEffect(() => {
-
-        fetch(`${config.apiUrl}/missions/association/${props.mission}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then((response) => {
-            if (response.status === 200) {
-                response.json().then((data) => {
-                    setMission(data.association_mission)
-                    fetch(`${config.apiUrl}/associations/profile/` + data.association_mission.owner_id, {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                            'Content-Type': 'application/json'
-                        }
-                    }).then((response) => {
-                        if (response.status === 200) {
-                            response.json().then((data) => {
-                                setAssociationPicture(data.association.profile_picture)
-                            })
-                        }
-                    })
-                })
-            }
-        })
-    }, [])*/
-
+    }, [isVol]);
 
     // misc functions
 
@@ -109,10 +100,10 @@ function MissionCard(props: {mission: Mission}) {
         let minutes = date.split('T')[1].split(':')[1]
         return `${hour}:${minutes}`
     }
-        
+
 
     // page rendering
-    return(
+    return (
         <Card
             style={{
                 width: '110%',
@@ -130,28 +121,28 @@ function MissionCard(props: {mission: Mission}) {
                 window.location.href = `/manage/${mission.id}`
             }}
         >
-            <Card.Body style={{width: '100%'}}>
-                <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%'}}>
-                    <div style={{flex: 1, margin: '10px 20px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
+            <Card.Body style={{ width: '100%' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                    <div style={{ flex: 1, margin: '10px 20px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
                         <CardMedia
                             component="img"
-                            style={{borderRadius: '100%', objectFit: 'cover', height: '150px', width: '150px'}}
-                            image={(owner?.profile_picture === '') ? 'https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg' : owner?.profile_picture}
-                            alt="association picture"
+                            style={{ borderRadius: '100%', objectFit: 'cover', height: '150px', width: '150px' }}
+                            image={(missionPicture === '') ? 'https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg' : missionPicture}
+                            alt="mission picture"
                         />
                     </div>
-                    <div style={{flex: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start'}}>
+                    <div style={{ flex: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' }}>
                         <div className='mission-header'>
-                            <p style={{fontWeight: 'bold'}}> {mission.title} </p>
+                            <p style={{ fontWeight: 'bold' }}> {mission.title} </p>
                         </div>
                         <div className='mission-body'>
                             <div className='mission-body-with-icon'>
                                 <CalendarMonthOutlinedIcon />
-                                <p style={{marginLeft: '10px'}}> {convertDay(mission.start_date.toString())} {convertHour(mission.start_date.toString())}h - {convertDay(mission.end_date.toString())} {convertHour(mission.end_date.toString())}h </p>
+                                <p style={{ marginLeft: '10px' }}> {convertDay(mission.start_date.toString())} {convertHour(mission.start_date.toString())}h - {convertDay(mission.end_date.toString())} {convertHour(mission.end_date.toString())}h </p>
                             </div>
-                            <div className='mission-body-with-icon' style={{marginBottom: '2px'}}>
+                            <div className='mission-body-with-icon' style={{ marginBottom: '2px' }}>
                                 <NearMeOutlinedIcon />
-                                <p style={{marginLeft: '10px'}}> {location} </p>
+                                <p style={{ marginLeft: '10px' }}> {location} </p>
                             </div>
                         </div>
                     </div>
