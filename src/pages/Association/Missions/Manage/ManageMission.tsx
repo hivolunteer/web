@@ -60,7 +60,6 @@ function ManageMission() {
     const [ListVolunteers, setListVolunteers] = useState<Volunteer[]>([])
 
 
-    const [openModal, setOpenModal] = useState(false);
     // get id from url
     const url = window.location.href;
     const mission_id = url.split("/").pop();
@@ -173,7 +172,7 @@ function ManageMission() {
                 console.log("ERROR");
                 alert("Une erreur est survenue lors de la publication de la mission");
             }
-        })
+        });
     }
 
     function acceptVolunteer(id: number) {
