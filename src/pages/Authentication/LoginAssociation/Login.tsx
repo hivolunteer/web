@@ -5,6 +5,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { AuthenticationService } from '../../../services/authentication.service';
 import './Login.scss';
 import titleLogo from "../../../images/logo/primary_logo.png";
+import ForgotPasswordModal from '../ForgotPasswordModal/ForgotPasswordModal';
 
 function LoginAssociation() {
     const [showPassword, setShowPassword] = React.useState(false);
@@ -12,6 +13,8 @@ function LoginAssociation() {
     const [email, setEmail] = useState(true);
     const [password, setPassword] = useState(true);
     const navigate = useNavigate();
+
+    const [open, setOpen] = useState(false);
 
     /* Function to check if all inputs are complete */
     const checkComplete = (data: FormData) => {
@@ -196,6 +199,14 @@ function LoginAssociation() {
                                 )}
                             </Grid>
                         </Grid>
+                        <div style={{ marginTop: "10px", justifyContent: "flex-end", display: "flex" }}> 
+                            <a className="forgot-password"
+                                onClick={() => {setOpen(true);
+                            }}>
+                                Mot de passe oublié ?
+                            </a>
+                            <ForgotPasswordModal modalProps={{open: open, handleClose: () => setOpen(false), route: "/associations/"}} />
+                        </div>
                         <Button
                             type="submit"
                             fullWidth

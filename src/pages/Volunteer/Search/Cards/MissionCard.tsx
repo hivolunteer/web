@@ -1,6 +1,6 @@
 import { Card, CardContent, CardMedia, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
-import config from '../../../config';
+import config from '../../../../config';
 
 export default function MissionCard(props: {mission_id: number}) {
     
