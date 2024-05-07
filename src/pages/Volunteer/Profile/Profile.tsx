@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import config from "../../../config";
 import "./Profile.scss";
-import BlockedUsersList from "../../../components/BlockedUsersList";
 import profileImage from "../../../images/logo/submark.png";
 import { Volunteer } from "../../../interfaces";
+import { useNavigate } from "react-router-dom";
 
 type newProfile = {
   first_name: string,
@@ -15,12 +15,13 @@ type newProfile = {
 }
 
 function ProfilePage(props: any) {
+  const navigate = useNavigate();
+
   const [first_name, setFirstName] = useState<string>("");
   const [last_name, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [profile_picture, setProfilePicture] = useState<string>(profileImage);
-  const [blocked, setBlocked] = useState<Volunteer[]>([]);
 
   function refuseVolunteer(id: number) {
     fetch(`${config.apiUrl}/volunteers/blocked`, {
@@ -69,31 +70,8 @@ function ProfilePage(props: any) {
       })
     }
 
-    const getBlocked = () => {
-      alert("FETCHING BLOCKED");
-      fetch(`${config.apiUrl}/friends/blocked`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-      }).then((response) => {
-        if (response.status === 200) {
-          response.json().then((data) => {
-            alert("BLOCKED DATA: " + JSON.stringify(data));
-            setBlocked(data);
-          });
-        } else {
-          alert("ERROR FETCHING BLOCKED : " + JSON.stringify(response.body));
-        }
-      }).catch((error) => {
-        console.warn(error);
-      })
-    }
 
     getProfile();
-    console.warn("GET BLOCKED");
-    getBlocked();
   }, []);
 
   function validateEmail(email: string): boolean {
@@ -166,78 +144,82 @@ function ProfilePage(props: any) {
   );
 
   return (
-      <Row className="profile-row">
-        <Col sm={12} md={4} lg={3}>
-          <div className="profile-pic">
-            <img src={profile_picture} alt="" className="profile-img" />
-          </div>
-          <div className="profile-btn-div">
-            <label
-              htmlFor="profile-pic-upload"
-              className={"profile-pic-btn" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")}
-            >
-              Changer la Photo
-            </label>
+    <Row className="profile-row">
+      <Col sm={12} md={4} lg={3}>
+        <div className="profile-pic">
+          <img src={profile_picture} alt="" className="profile-img" />
+        </div>
+        <div className="profile-btn-div">
+          <label
+            htmlFor="profile-pic-upload"
+            className={"profile-pic-btn" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")}
+          >
+            Changer la Photo
+          </label>
+          <input
+            className="profile-input"
+            id="profile-pic-upload"
+            type="file"
+            onChange={handleFileChange}
+            accept="image/*"
+          />
+        </div>
+      </Col>
+      <Col sm={12} md={8} lg={9}>
+        <div className="profile-info">
+          <div className="profile-row">
+            <label>Prénom:</label>
             <input
-              className="profile-input"
-              id="profile-pic-upload"
-              type="file"
-              onChange={handleFileChange}
-              accept="image/*"
+              className="filled-text"
+              type="text"
+              placeholder="Name"
+              value={first_name}
+              onChange={(event) => setFirstName(event.target.value)}
             />
           </div>
-        </Col>
-        <Col sm={12} md={8} lg={9}>
-          <div className="profile-info">
-            <div className="profile-row">
-              <label>Prénom:</label>
-              <input
-                className="filled-text"
-                type="text"
-                placeholder="Name"
-                value={first_name}
-                onChange={(event) => setFirstName(event.target.value)}
-              />
-            </div>
-            <div className="profile-row">
-              <label>Nom de famille:</label>
-              <input
-                className="filled-text"
-                type="text"
-                placeholder="Last Name"
-                value={last_name}
-                onChange={(event) => setLastName(event.target.value)}
-              />
-            </div>
-            <div className="profile-row">
-              <label>Email:</label>
-              <input
-                className="filled-text"
-                type="text"
-                placeholder="Email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-              />
-            </div>
-            <div className="profile-row">
-              <label>Numéro de téléphone:</label>
-              <input
-                className="filled-text"
-                type="text"
-                placeholder="Phone number"
-                value={phone}
-                onChange={(event) => setPhone(event.target.value)}
-              />
-            </div>
-            <div className="profile-btn-div">
-              <button className={"profile-pic-btn" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")} onClick={updateProfile}>
-                Mettre à jour le profile
-              </button>
-            </div>
+          <div className="profile-row">
+            <label>Nom de famille:</label>
+            <input
+              className="filled-text"
+              type="text"
+              placeholder="Last Name"
+              value={last_name}
+              onChange={(event) => setLastName(event.target.value)}
+            />
           </div>
-        </Col>
-      <BlockedUsersList blockedUsers={blocked}/>
-      </Row>
+          <div className="profile-row">
+            <label>Email:</label>
+            <input
+              className="filled-text"
+              type="text"
+              placeholder="Email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+            />
+          </div>
+          <div className="profile-row">
+            <label>Numéro de téléphone:</label>
+            <input
+              className="filled-text"
+              type="text"
+              placeholder="Phone number"
+              value={phone}
+              onChange={(event) => setPhone(event.target.value)}
+            />
+          </div>
+          <div className="profile-btn-div">
+            <button className={"profile-pic-btn" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")} onClick={updateProfile}>
+              Mettre à jour le profile
+            </button>
+          </div>
+        </div>
+      </Col>
+      <div className="profile-btn-div">
+            <button className={"profile-pic-btn" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")} onClick={() => {navigate("/profile/blocked")}}>
+              Gérer les utilisateurs Bloqués
+            </button>
+          </div>
+    </Row>
   );
 };
 
