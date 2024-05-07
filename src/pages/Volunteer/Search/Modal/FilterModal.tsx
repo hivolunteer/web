@@ -15,6 +15,7 @@ const FilterModal = (props: {modalProps: Modal}) => {
     const [skills, setSkills] = useState<Skill[]>([]);
     const [searchSkills, setSearchSkills] = useState<Number[]>([]);
     const [dates, setDates] = useState<Array<Date | null>>([null, null]);
+    const [allowMinors, setAllowMinors] = useState<boolean>(false)
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -38,8 +39,8 @@ const FilterModal = (props: {modalProps: Modal}) => {
         setSearchSkills([]);
         setDates([null, null]);
         setNoskills(false);
+        setAllowMinors(false);
         window.location.reload();
-
     }
     
 
@@ -53,7 +54,8 @@ const FilterModal = (props: {modalProps: Modal}) => {
             associationList: preferences[0],
             skillsList: searchSkills,
             noskills: noskills,
-            dateList: dates
+            dateList: dates,
+            allow_minors: allowMinors
         }
         fetch(`${config.apiUrl}/search/missions`, {
             method: 'POST',
@@ -64,7 +66,6 @@ const FilterModal = (props: {modalProps: Modal}) => {
             body: JSON.stringify(body)
         }).then((response) => {
             console.log(response)
-            console.log(body)
             if (response.status === 200) {
                 response.json().then((data) => {
                     modalProps.setFilteredMissions(data)
@@ -80,8 +81,6 @@ const FilterModal = (props: {modalProps: Modal}) => {
         PaperProps={{
             sx: {
                 maxWidth: '60%',
-                minHeight: '45vh',
-                maxHeight: '65vh',
                 overflowY: 'hidden',
                 overflowX: 'hidden',
             }
@@ -89,11 +88,11 @@ const FilterModal = (props: {modalProps: Modal}) => {
         >
             {/* Second Category : Préférences de la mission */}
             <DialogTitle sx={{ m: 0, p: 2 }}>
-                <div style={{width: '90%', margin: '0 2.5%', display: 'flex', flexDirection: 'row', flexWrap: 'wrap', maxHeight: '25vh'}}>
-                    <div style={{flex: 1}}>
+                <div style={{width: '90%', margin: '0 2.5%', display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
+                    <div style={{flex: 1, display: 'flex', flexDirection: 'column'}}>
                         <h3> PRÉFÉRENCES </h3>
-                        <div style={{display: 'flex', flexDirection: 'column'}}>
-                            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', margin: '-2% -2%'}}>
+                        <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+                            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                                 <Checkbox
                                     checked={preferences[0]}
                                     onChange={() => setPreferences([!preferences[0], preferences[1]])}
@@ -102,13 +101,22 @@ const FilterModal = (props: {modalProps: Modal}) => {
                             </div>
                         </div>
                         <div style={{display: 'flex', flexDirection: 'column'}}>
-                            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', margin: '-1% -2%'}}>
+                            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                                 <Checkbox
                                     checked={preferences[1]}
                                     onChange={() => setPreferences([preferences[0], !preferences[1]])}
                                 />
                                 <p style={{flex: 1}}> Amis présents dans la mission </p>
                             </div>
+                        </div>
+                        <div style={{display: 'flex', flexDirection: 'column'}}>
+                            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                                <Checkbox
+                                    checked={allowMinors}
+                                    onChange={() => setAllowMinors(!allowMinors)}
+                                />
+                                <p style={{flex: 1}}> Mineurs autorisés dans la mission </p>
+                            </div> 
                         </div>
                     </div>
                     <div style={{flex: 1}}>
@@ -145,13 +153,13 @@ const FilterModal = (props: {modalProps: Modal}) => {
                             }}
                             //placeholder="Compétences"
                         />
-                        <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', margin: '-2% -2%'}}>
+                        <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                             <Checkbox
                                 checked={noskills}
                                 onChange={() => setNoskills(!noskills)}
                             />
                             <p style={{flex: 1}}> Missions sans compétences seuleument </p>
-                        </div>
+                        </div>                   
                     </div>
                 </div>
             </DialogTitle>
