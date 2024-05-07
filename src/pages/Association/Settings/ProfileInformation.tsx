@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState } from 'react';
 import Modal from "@mui/material/Modal";
 import { useNavigate } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
@@ -17,23 +17,21 @@ interface ProfileInformationModalProps {
 
 function ProfileInformationModal() {
     const history = useNavigate();
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
+    const onSave = (name: string, email: string, phone: string, profilePicture: string) => {
+        console.log("Email:", email);
+    }
+    const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
     const [profilePicture, setProfilePicture] = useState("");
-    const [showModal, setShowModal] = useState(true);
+    const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState("");
     const [alert, setAlert] = useState(false);
 
     const handleClose = () => history("/settings");
 
-    const handleFirstNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setFirstName(event.target.value);
-    }
-
-    const handleLastNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setLastName(event.target.value);
+    const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setName(event.target.value);
     }
 
     const handlePhoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,47 +46,22 @@ function ProfileInformationModal() {
         setProfilePicture(event.target.value);
     };
 
+    const handleSaveClick = () => {
+        onSave(name, email, phone, profilePicture);
+        setShowModal(false);
+    };
+
     const handleCloseClick = () => {
         setShowModal(false);
     };
 
-    useEffect(() => {
-        const getProfile = async () => {
-            await fetch(`${config.apiUrl}/volunteers/profile`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-            })
-                .then((response) => {
-                    if (response.status === 200) {
-                        response.json().then((data) => {
-                            setFirstName(data.volunteer.first_name);
-                            setLastName(data.volunteer.last_name);
-                            setEmail(data.volunteer.email);
-                            setPhone(data.volunteer.phone);
-                            setProfilePicture(data.volunteer.profile_picture);
-                        });
-                    } else {
-                        console.log("Error fetching profile");
-                        console.log(response);
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        };
-
-        getProfile();
-    }, []);
-
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+        // Check if new password matches confirm password
 
         try {
             const response = await fetch(
-                `${config.apiUrl}/volunteers/update`,
+                `${config.apiUrl}/associations/update`,
                 {
                     method: "POST",
                     headers: {
@@ -97,8 +70,7 @@ function ProfileInformationModal() {
                     },
                     body: JSON.stringify({
                         id: localStorage.getItem("id"),
-                        first_name: firstName,
-                        last_name: lastName,
+                        name: name,
                         email: email,
                         phone: phone,
                         profile_picture: profilePicture,
@@ -109,8 +81,7 @@ function ProfileInformationModal() {
                 setAlert(true)
                 setError("Une information est manquante")
             }
-            setFirstName("");
-            setLastName("");
+            setName("");
             setEmail("");
             setPhone("");
             setProfilePicture("");
@@ -121,9 +92,10 @@ function ProfileInformationModal() {
     };
 
     return (
+        <Link to={'/associations'}>
         <div>
             <Modal
-                open={showModal}
+                open={true}
                 onClose={handleClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
@@ -141,6 +113,7 @@ function ProfileInformationModal() {
                     >
                         <CloseIcon/>
                     </IconButton>
+
                     <form
                         onSubmit={handleSubmit}
                         style={{
@@ -161,26 +134,8 @@ function ProfileInformationModal() {
                                 id="initialFirstName"
                                 name="initialFirstName"
                                 type="text"
-                                value={firstName}
-                                onChange={handleFirstNameChange}
-                                margin="normal"
-                            />
-                        </div>
-                        <div style={{marginTop: "20px"}}>
-                            <Typography style={{
-                                fontWeight: "bold"
-                            }}>
-                                Nom
-                            </Typography>
-                            <TextField
-                                fullWidth
-                                label="Nom de famille"
-                                variant="outlined"
-                                id="initialLastName"
-                                name="initialLastName"
-                                type="text"
-                                value={lastName}
-                                onChange={handleLastNameChange}
+                                value={name}
+                                onChange={handleNameChange}
                                 margin="normal"
                             />
                         </div>
@@ -214,7 +169,7 @@ function ProfileInformationModal() {
                                 variant="outlined"
                                 id="phone"
                                 name="phone"
-                                type="text"
+                                type="number"
                                 value={phone}
                                 onChange={handlePhoneChange}
                                 margin="normal"
@@ -246,6 +201,7 @@ function ProfileInformationModal() {
                 </Box>
             </Modal>
         </div>
+        </Link>
 );
 }
 

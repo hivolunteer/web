@@ -9,6 +9,7 @@ import Settings from "../pages/Volunteer/Settings/Settings";
 import ChangePassword from "../pages/Volunteer/Settings/ModifyPassword";
 import AssociationReferent from "../pages/Volunteer/Settings/Referents/AssociationReferent";
 import AssociationProfile from "../pages/Volunteer/Association/Profile/AssociationProfile";
+import ProfileInformationModal from "../pages/Volunteer/Settings/ProfileInformation";
 
 function ConnectVolunteerRouter() {
     return (
@@ -23,6 +24,7 @@ function ConnectVolunteerRouter() {
             <Route path={"/settings"} element={<Settings />} />
             <Route path="/settings/modify_password" element={<ChangePassword />} />
             <Route path="/settings/referents" element={<AssociationReferent />} />
+            <Route path="/settings/profile_information" element={<ProfileInformationModal />} />
       <Route path="*" element={<h1> Error 404 Volunteer </h1>} />
         </Routes>
     );

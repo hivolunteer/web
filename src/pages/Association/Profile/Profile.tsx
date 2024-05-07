@@ -1,15 +1,10 @@
 import * as React from "react";
 import Card from '@mui/material/Card';
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import CssBaseline from "@mui/material/CssBaseline";
-import { Container } from "@mui/material";
 import {useEffect, useState} from "react";
 import config from "../../../config";
 import "./Profile.scss";
 
-import profileImage from "../../../images/logo/submark.png";
 import EditPasswordModal from "./EditPasswordModal";
 
 type newProfile = {
@@ -54,6 +49,7 @@ export default function ProfilePage(props: any) {
                             setDescription(data.association.description);
                             setEmail(data.association.email);
                             setPhone(data.association.phone);
+                            setProfilePicture(data.association.profile_picture);
                         });
                     } else {
                         console.log("Error fetching profile");
@@ -145,18 +141,19 @@ export default function ProfilePage(props: any) {
       });
   };
     return (
-    <>
-      <div style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "flex-start",
-        alignSelf: "self-start",
-        textAlign: "center",
-        padding: "20px",
-      }}>
-        <img src={image} alt="Logo de profil" className={"container-div"} />
-        <h1>Association {name}</h1>
-      </div><div className="container-div">
+        <>
+            <div style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-start",
+                alignSelf: "self-start",
+                textAlign: "center",
+                padding: "20px",
+            }}>
+                <img src={image} alt="Logo de profil" className={"container-div"}/>
+                <h1>Association: {name}</h1>
+            </div>
+            <div className="container-div">
 
           <h2>
             Bénévoles
