@@ -6,6 +6,7 @@ import History from "../pages/Volunteer/History/History";
 import FollowAssociation from "../pages/Volunteer/FollowAssociation/FollowAssociation";
 import MissionDetails from "../pages/Volunteer/MissionDetails/MissionDetails";
 import Settings from "../pages/Settings/Settings";
+import BlockedUsersList from "../components/BlockedUsersList";
 
 function ConnectVolunteerRouter() {
   return (
@@ -14,6 +15,7 @@ function ConnectVolunteerRouter() {
       <Route path="/history" element={<History />} />
       <Route path="/follows" element={<FollowAssociation />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/profile/blocked" element={<BlockedUsersList />} />
       <Route path="/accueil" element={<Search />} />
       <Route path="/mission/:missionID" element={<MissionDetails />} />
       <Route path={"/settings"} element={<Settings />} />
