@@ -2,8 +2,9 @@ import { Dialog, DialogTitle, TextField, Button, Autocomplete, Checkbox, Chip } 
 import { useEffect, useState } from "react";
 
 import { Modal, Skill } from "../Interfaces"; 
-import { DatePicker} from "@mui/x-date-pickers";
+import { DatePicker, TimePicker} from "@mui/x-date-pickers";
 import config from "../../../../config";
+import React from "react";
 
 
 const FilterModal = (props: {modalProps: Modal}) => {
@@ -16,6 +17,7 @@ const FilterModal = (props: {modalProps: Modal}) => {
     const [searchSkills, setSearchSkills] = useState<Number[]>([]);
     const [dates, setDates] = useState<Array<Date | null>>([null, null]);
     const [allowMinors, setAllowMinors] = useState<boolean>(false)
+    const [duration, setDuration] = useState<Date | null>(null)
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -46,8 +48,18 @@ const FilterModal = (props: {modalProps: Modal}) => {
 
     // valider Modal
 
+    function transformDurationMinutes(duration: Date) : number {
+        let date = new Date(duration);
+        let hours = date.getHours();
+        let minutes = date.getMinutes();
+
+        let totalMinutes = hours * 60 + minutes;
+        return totalMinutes;
+    }
+
     const ValidateSearch = async () => {
         const token = localStorage.getItem("token");
+        let minutes = (duration === null) ? null : transformDurationMinutes(duration as Date); 
         let body = {
             friendList: preferences[1],
             themeList: [],
@@ -55,7 +67,8 @@ const FilterModal = (props: {modalProps: Modal}) => {
             skillsList: searchSkills,
             noskills: noskills,
             dateList: dates,
-            allow_minors: allowMinors
+            allow_minors: allowMinors,
+            duration: minutes
         }
         fetch(`${config.apiUrl}/search/missions`, {
             method: 'POST',
@@ -87,7 +100,7 @@ const FilterModal = (props: {modalProps: Modal}) => {
         }}
         >
             {/* Second Category : Préférences de la mission */}
-            <DialogTitle sx={{ m: 0, p: 2 }}>
+            <div style={{display: 'flex'}}>
                 <div style={{width: '90%', margin: '0 2.5%', display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
                     <div style={{flex: 1, display: 'flex', flexDirection: 'column'}}>
                         <h3> PRÉFÉRENCES </h3>
@@ -162,29 +175,45 @@ const FilterModal = (props: {modalProps: Modal}) => {
                         </div>                   
                     </div>
                 </div>
-            </DialogTitle>
+            </div>
             {/* Third Category : Dates du début et de la fin de la mission */}
-            <DialogTitle sx={{ m: 0, p: 2 }}>
-                <div style={{width: '90%', margin: '0 2.5%', maxHeight: '25vh'}}>
-                    <h3> DATES DU DÉBUT ET DE LA FIN DE LA MISSION </h3>
-                    <div style={{display: 'flex', alignItems: 'center'}}>
-                        <DatePicker
-                            label="Début"
-                            onChange={(newDate) => setDates([newDate, dates[1]])}
-                            views={['year', 'month', 'day']}
-                            defaultValue={null}
-                        />
-                        <div style={{width: '4%'}} />
-                        <DatePicker
-                            label="Fin"
-                            onChange={(newDate) => setDates([dates[0], newDate])}
-                            views={['year', 'month', 'day']}
-                            value={dates[1]}
-                            defaultValue={null}
-                        />
+            <div style={{display: 'flex', margin: '0 2.5%', flexDirection: 'column'}}>
+                <div style={{display: 'flex', flexDirection: 'column'}}>
+                    <div style={{width: '90%', display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center'}}>
+                        <h3> DATES DU DÉBUT ET DE LA FIN DE LA MISSION </h3>
+                        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                            <DatePicker
+                                label="Début"
+                                onChange={(newDate) => setDates([newDate, dates[1]])}
+                                views={['year', 'month', 'day']}
+                                defaultValue={null}
+                            />
+                            <div style={{width: '4%'}} />
+                            <DatePicker
+                                label="Fin"
+                                onChange={(newDate) => setDates([dates[0], newDate])}
+                                views={['year', 'month', 'day']}
+                                value={dates[1]}
+                                defaultValue={null}
+                            />
+                        </div>
+                    </div>
+                    <div style={{width: '90%', textAlign: 'center'}}>
+                        <h3> SELECTIONNER LA DUREE MAXIMALE DE LA MISSION </h3>
+                        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                            <TimePicker
+                                label="Durée"
+                                value={duration}
+                                onChange={(newValue) => setDuration(newValue)}
+                                views={['hours', 'minutes']}
+                                sx={{
+                                    width: '35%'
+                                }}
+                            />
+                        </div>
                     </div>
                 </div>
-            </DialogTitle>
+            </div>
             {/* Footer */}
             <DialogTitle sx={{ m: 0, p: 2 }} style={{display: 'flex', justifyContent: 'flex-end'}}>
                 <Button 
