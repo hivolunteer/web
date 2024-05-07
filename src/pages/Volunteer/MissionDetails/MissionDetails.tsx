@@ -19,13 +19,12 @@ const MissionDetails = () => {
 
 
     function Register() {
-        fetch(`${config.apiUrl}/missions/volunteer`, {
+        fetch(`${config.apiUrl}/missions/volunteer/add/${id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-            body: JSON.stringify({ association_mission: id })
+            }
         })
             .then(response => response.json())
             .then((data: any) => {
@@ -34,13 +33,12 @@ const MissionDetails = () => {
     }
 
     function Unregister() {
-        fetch(`${config.apiUrl}/missions/volunteer`, {
-            method: 'DELETE',
+        fetch(`${config.apiUrl}/missions/volunteer/remove/${id}`, {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-            body: JSON.stringify({ association_mission: id })
+            }
         })
             .then(response => response.json())
             .then((data: any) => {
@@ -76,27 +74,33 @@ const MissionDetails = () => {
         })
             .then(response => response.json())
             .then(data => {
-                setMissionSkills(data)
-            })
-
-        fetch(`${config.apiUrl}/locations/${mission?.location}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        })
-            .then((response: any) => {
-                if (response.status === 200) {
-                    response.json().then((data: any) => {
-                        let locationStr: string = String(data.street_number)
-                        if (data.street_number_suffix)
-                            locationStr += " " + data.street_number_suffix
-                        locationStr += " " + data.street_name + ", " + data.city
-                        setLocation(locationStr)
-                    })
+                if (data.error) {
+                    setMissionSkills([])
+                } else {
+                    setMissionSkills(data)
                 }
             })
+
+        if (mission?.location) {
+            fetch(`${config.apiUrl}/locations/${mission?.location}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+                .then((response: any) => {
+                    if (response.status === 200) {
+                        response.json().then((data: any) => {
+                            let locationStr: string = String(data.street_number)
+                            if (data.street_number_suffix)
+                                locationStr += " " + data.street_number_suffix
+                            locationStr += " " + data.street_name + ", " + data.city
+                            setLocation(locationStr)
+                        })
+                    }
+                })
+        }
         
         fetch(`${config.apiUrl}/missions/volunteer`, {
             method: 'GET',
@@ -107,12 +111,15 @@ const MissionDetails = () => {
         })
             .then(response => response.json())
             .then((data: any) => {
-                data.association_mission.forEach((mission: any) => {
-                    if (mission.association_mission === id) {
-                        setIsRegistered(true)
-                    }
-                })
-                // @ts-ignore
+                if (data.active.length === 0) 
+                    setIsRegistered(false)
+                else {
+                    data.active.forEach((mission: any) => {
+                        if (mission.id === Number(id)) {
+                            setIsRegistered(true)
+                        }
+                    })
+                }
             })
         }, [id, location_id]);
 
@@ -130,7 +137,7 @@ const MissionDetails = () => {
                 </div>
             </div>
             {
-                (mission && mission_skills) ? <SkillDisplay skills={mission_skills} /> : null
+                (mission_skills.length !== 0) ? <SkillDisplay skills={mission_skills} /> : null
             }
             <div className='mission-details-content-center'>
                 <Button 
@@ -148,7 +155,7 @@ const MissionDetails = () => {
                         }
                     }}
                 > 
-                    {isRegistered ? "Se désinscrire" : "Postuler"}
+                    {isRegistered ? "Se désinscrire" : "S'inscrire"}
                 </Button>
             </div>
         </div>
