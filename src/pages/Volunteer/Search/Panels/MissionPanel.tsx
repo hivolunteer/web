@@ -1,5 +1,5 @@
-import { Mission } from "../Interfaces"
-import MissionCard from "../Cards/MissionCard";
+import MissionCard from "../../../../components/MissionCard";
+import { Mission } from "../../../../interfaces";
 
 interface MissionPanelProps {
     missionList: Array<Mission>;
@@ -28,7 +28,7 @@ function MissionPanel(props: MissionPanelProps) {
               )
               .map((mission: Mission) => (
                 <div className="mission-card" key={mission.id}>
-                  <MissionCard mission_id={mission.id} />
+                  <MissionCard mission={mission} />
                 </div>
               ))}
           </div>
