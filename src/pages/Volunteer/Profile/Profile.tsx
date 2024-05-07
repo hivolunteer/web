@@ -128,9 +128,9 @@ function ProfilePage(props: any) {
 
   /* Function to add when back is gonna be done */
 
-  /*const deleteAccount = () => {
+  const deleteAccount = () => {
      if (window.confirm('Are you sure you want to delete your account?')) {
-      let url = `${config.apiUrl}/volunteers/profile`;
+      let url = `${config.apiUrl}/volunteers/delete`;
       fetch(url, {
         method: 'DELETE',
         headers: {
@@ -138,18 +138,22 @@ function ProfilePage(props: any) {
         },
       })
         .then((response) => {
-          if (response.status === 204) {
+          if (response.status === 200) {
             alert('Account deleted successfully');
             // Redirect to the login page
+            localStorage.removeItem('token');
+            localStorage.removeItem('role');
+            window.location.reload();
             window.location.href = '/';
           } else {
             console.log('Error deleting account');
           }
         })
-        .catch((error) => 
+        .catch((error) => {
           console.log(error);
         });
-    } */
+    }
+  }
 
   const [color_blind, setColorBlind] = useState(
     localStorage.getItem("color_blind") === "true"
@@ -224,9 +228,9 @@ function ProfilePage(props: any) {
               <button className={"profile-pic-btn" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")} onClick={updateProfile}>
                 Mettre à jour le profile
               </button>
-              {/* <button className="delete-account-btn" onClick={deleteAccount}>
+              <button className="delete-account-btn" onClick={deleteAccount}>
                             Supprimer le compte
-                        </button> */}
+                      </button>
                     </div>
                 </div>
             </Col>
