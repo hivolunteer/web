@@ -40,7 +40,10 @@ export interface Mission {
   location: number,
   title: string,
   rrating: Rating | null,
-  picture: string
+  picture: string,
+  theme_id: number,
+  accept_minors: boolean,
+  status: number
 }
 
 export interface Association {
