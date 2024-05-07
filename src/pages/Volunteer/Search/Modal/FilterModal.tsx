@@ -199,7 +199,7 @@ const FilterModal = (props: {modalProps: Modal}) => {
                         </div>
                     </div>
                     <div style={{width: '90%', textAlign: 'center'}}>
-                        <h3> DUREE DE LA MISSION </h3>
+                        <h3> SELECTIONNER LA DUREE MAXIMALE DE LA MISSION </h3>
                         <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                             <TimePicker
                                 label="Durée"
