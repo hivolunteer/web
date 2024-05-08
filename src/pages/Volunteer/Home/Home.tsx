@@ -10,7 +10,7 @@ function Home(props: any) {
     const [profile, setProfile] = useState<any>({})
 
     useEffect(() => {
-        fetch(`${config.apiUrl}/missions/volunteer/active`, {
+        fetch(`${config.apiUrl}/missions/volunteer/`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -19,7 +19,7 @@ function Home(props: any) {
         }).then((response) => {
             if (response.status === 200) {
                 response.json().then((data) => {
-                    setMissionList(data.active_missions)
+                    setMissionList(data.active)
                 })
             }
         })
