@@ -33,7 +33,7 @@ function VolunteerPanel(props: VolunteerPanelProps) {
             {
                 volunteersList
                     .map((volunteer: Volunteer) => (
-                        <div className="mission-card" key={volunteer.id}>
+                        <div className="mission-card-volunteer" key={volunteer.id}>
                             <VolunteerCard volunteer={volunteer} />
                         </div>
                     ))

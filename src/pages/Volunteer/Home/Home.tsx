@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import './Home.scss';
 import config from "../../../config";
-import MissionCard from '../../../components/MissionCard';
 import WeekMissions from './WeekMissions';
+import MissionCardHome from '../../../components/MissionCardHome';
 
 function Home(props: any) {
 
@@ -61,7 +61,7 @@ function Home(props: any) {
                                 missionList.map((mission: any) => {
                                     return(
                                         <div style={{width: '100%', margin: '10px'}}>
-                                            <MissionCard mission={mission} />
+                                            <MissionCardHome mission={mission} />
                                         </div>
                                     )
                                 })
