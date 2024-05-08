@@ -8,6 +8,12 @@ import MissionDetails from "../pages/Volunteer/MissionDetails/MissionDetails";
 import Settings from "../pages/Volunteer/Settings/Settings";
 import ChangePassword from "../pages/Volunteer/Settings/ModifyPassword";
 
+import MissionCreation from "../pages/Volunteer/Missions/MissionCreation";
+
+import AssociationReferent from "../pages/Volunteer/Settings/Referents/AssociationReferent";
+import AssociationProfile from "../pages/Volunteer/Association/Profile/AssociationProfile";
+
+
 function ConnectVolunteerRouter() {
   return (
     <Routes>
@@ -16,9 +22,12 @@ function ConnectVolunteerRouter() {
       <Route path="/follows" element={<FollowAssociation />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/accueil" element={<Search />} />
+      <Route path="/association/:associationID" element={<AssociationProfile />} />
       <Route path="/mission/:missionID" element={<MissionDetails />} />
+      <Route path="/missionCreation" element={<MissionCreation/>} />
       <Route path={"/settings"} element={<Settings />} />
       <Route path="/settings/modify_password" element={<ChangePassword />} />
+      <Route path="/settings/referents" element={<AssociationReferent />} />
       <Route path="*" element={<h1> Error 404 Volunteer </h1>} />
     </Routes>
   );

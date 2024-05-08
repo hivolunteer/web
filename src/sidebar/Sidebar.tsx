@@ -18,8 +18,17 @@ import "./Sidebar.scss";
 import logoWhite from "../images/logo/submark_white.png";
 import logoImage from "../images/logo/submark.png";
 
-const pages = ["Accueil", "Calendrier", "Profile"];
-const settings = ["Créer une mission", "Profile", "Réglages", "Logout"];
+const pages: string[] = [];
+const settings: string[] = [];
+if (localStorage.getItem("token") !== null) {
+  pages.push("Accueil", "Calendrier", "Profile");
+}
+
+if (localStorage.getItem("token") !== null) {
+  settings.push("Créer une mission", "Profile", "Réglages", "Referent", "Logout");
+} else {
+  settings.push("Connexion", "Inscription");
+}
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -212,6 +221,9 @@ function ResponsiveAppBar() {
                         case "Réglages":
                           window.location.href = "/settings";
                           break;
+                        case "Referent":
+                          window.location.href = "/settings/referents";
+                          break;
                         case "Logout":
                           console.log("logout");
                           localStorage.removeItem("token");
@@ -219,6 +231,10 @@ function ResponsiveAppBar() {
                           window.location.reload();
                           window.location.href = "/";
                           break;
+                        case "Connexion" || "Inscription":
+                          window.location.href = "/auth";
+                          break;
+                        
                         default:
                           break;
                       }

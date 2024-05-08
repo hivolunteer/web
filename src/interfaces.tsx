@@ -39,7 +39,11 @@ export interface Mission {
   trueLocation: Location | null,
   location: number,
   title: string,
-  rrating: Rating | null
+  rrating: Rating | null,
+  picture: string,
+  theme_id: number,
+  accept_minors: boolean,
+  status: number
 }
 
 export interface Association {
@@ -72,4 +76,10 @@ export interface Rating {
   comment_from_volunteer: string,
   stars_from_association: number,
   comment_from_association: string
+}
+
+export interface Skill {
+  skill_name: string;
+  skill_id: number;
+  color_hex: string;
 }
