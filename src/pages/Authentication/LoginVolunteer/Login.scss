@@ -1,1 +1,10 @@
 @import 'assets/scss/_colors.scss';
+
+.forgot-password {
+    color: $color-text;
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    text-decoration: underline;
+}

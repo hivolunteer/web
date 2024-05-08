@@ -16,6 +16,8 @@ import './MissionCreation.scss';
 import config from "../../../config";
 import LocationModal from "./Modal/LocationModal";
 import noImage from "../../../images/lottie/noImage.json";
+import { Referent } from "./Interface/Referent";
+import ReferentModal from "./Modal/ReferentModal";
 
 interface MissionCreationData {
   missionName?: string;
@@ -78,6 +80,13 @@ export default function MissionCreation() {
     setOpen(false);
   };
 
+  const [openReferent, setOpenReferent] = React.useState<boolean>(false);
+  const [referentListSelected, setReferentListSelected] = useState<Array<Referent>>([]);
+
+  const handleCloseReferent = () => {
+    setOpenReferent(false);
+  }
+
   // useEffect to get skills from database
 
   useEffect(() => {
@@ -99,9 +108,9 @@ export default function MissionCreation() {
 
   // handle creation of new mission
   const createNewMission = () => {
+    let referents = referentListSelected.map((referent) => referent.id);
     const token = localStorage.getItem("token");
     const body = {
-      owner_id: Math.floor(Math.random() * 600) + 1,
       max_volunteers: form?.missionVolunteersNumber,
       description: form?.missionDescription,
       practical_information: form?.missionPracticalInformation,
@@ -110,6 +119,7 @@ export default function MissionCreation() {
       end_date: form?.missionEndDate,
       title: form?.missionName,
       skills: newSkill,
+      referents: referents,
     };
     console.log(body);
     fetch(`${config.apiUrl}/missions/association/create`, {
@@ -345,14 +355,22 @@ export default function MissionCreation() {
               />
             </Grid>
             <Grid item xs={12} lg={6}>
-              <TextField
-                autoComplete="name"
-                name="name"
-                required
-                multiline={true}
-                fullWidth
-                id="name"
-                label="Coordonnées de referent de la mission"
+              <p
+                style={{
+                  textDecoration: "underline",
+                  cursor: "pointer"
+                }}
+                onClick={() => {
+                  setOpenReferent(true);
+                }}
+              >
+                {(referentListSelected.length !== 0) ? referentListSelected.map((referent) => referent.complete_name).join(", ") : "Ajouter un référent"}
+              </p>
+              <ReferentModal
+                open={openReferent}
+                handleClose={handleCloseReferent}
+                referentListSelected={referentListSelected}
+                setReferentListSelected={setReferentListSelected}
               />
             </Grid>
             <Grid item xs={12} lg={6}>

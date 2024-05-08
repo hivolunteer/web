@@ -74,6 +74,8 @@
     "@types/mocha": "^10.0.6",
     "@types/mui-image": "^1.0.1",
     "jest-dom": "^4.0.0",
+    "@babel/plugin-proposal-private-property-in-object": "^7.16.7",
+    "react-icons": "^5.1.0",
     "react-router-dom": "^6.11.2"
   }
 }

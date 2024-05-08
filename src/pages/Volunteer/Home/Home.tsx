@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import './Home.scss';
 import './NewHome.scss';
 import config from "../../../config";
-import MissionCard from '../../../components/HomeMissionCard';
+import MissionCard from '../../../components/MissionCard';
 import WeekMissions from './WeekMissions';
 import { Box, Grid } from '@mui/material';
 import SearchSection from './SearchSection';
