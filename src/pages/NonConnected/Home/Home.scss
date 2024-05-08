@@ -1,0 +1,186 @@
+/*
+ * Home Concept
+*/
+.home-concept-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+    margin-top: 3rem;
+}
+
+.home-concept-image1 {
+    width: 65%;
+    height: 100%;
+}
+
+.home-concept-image2 {
+    width: 30%;
+    height: 100%;
+}
+
+.home-concept {
+    width: 100%;
+    display: flex;
+    min-height: 400px;
+    align-items: center;
+    justify-content: center;
+}
+
+.home-concept-grid-container {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column !important;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.home-concept-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #67A191;
+    margin-bottom: auto;
+}
+
+.home-concept-description {
+    font-size: medium;
+    margin-top: 3rem;
+}
+
+/*
+ * Home Users
+*/
+.home-user-container {
+    @extend .home-concept-container;
+    background-color: #67A191;
+}
+
+.home-user-grid-container {
+    @extend .home-concept-grid-container;
+}
+
+.home-user-subtitle {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 3rem;
+}
+
+.home-user-list {
+    display: flex;
+    justify-content: left;
+    align-items: stretch;
+    flex-wrap: wrap;
+    flex-direction: column;
+    margin-left: 5rem;
+    margin-top: 2rem;
+}
+
+.home-user-list-item {
+    display: flex;
+    align-items: center;
+    flex-direction: row; 
+}
+
+.home-user-list-item img {
+    width: 30px;
+    height: 30px;
+    margin-right: 1rem;
+}
+
+.home-user-divider {
+    position: absolute;
+    margin-bottom: -12.5%;
+}
+
+.home-user-divider img {
+    width: 70%;
+    height: 70%;
+}
+
+/*
+ * Home Team members
+*/
+
+.home-team-container {
+    @extend .home-concept-container;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+.home-team-grid-container {
+    @extend .home-concept-grid-container;
+    flex-direction: unset !important;
+}
+
+.home-team-title {
+    @extend .home-user-subtitle;
+    color: #67A191;
+    font-size: 2.5rem;
+}
+
+.team-member img {
+    width: 60%;
+    height: 60%;
+}
+
+/*
+ * Home Evolution
+*/
+.home-evolution-container {
+    @extend .home-user-container;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+.home-evolution-title {
+    @extend .home-team-title;
+    color: #fff;
+    margin-bottom: 5rem;
+    margin-top: -1rem;
+}
+
+/*
+ * Home Contact
+*/
+
+.home-contact-container {
+    @extend .home-concept-container;
+    min-height: 100px;
+    margin-left: 3rem;
+    margin-top: 0;
+}
+
+.home-contact-header {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #67A191;
+    margin-bottom: 0rem;
+}
+
+.home-contact-list-item {
+    @extend .home-user-list-item;
+    padding-left: 2rem;
+}
+
+.home-user-list-item-text {
+    font-size: 0.9rem;
+    color: #333;
+}
+
+// .home-contact-grid-container {
+//     margin-right: 3rem;
+// }
+
+/*
+.home-concept-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+    margin-top: 3rem;
+}
+*/
