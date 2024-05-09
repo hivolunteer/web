@@ -20,47 +20,6 @@ import logoImage from "../images/logo/submark.png";
 import config from "../config";
 
 
-const pages: string[] = [];
-const settings: string[] = [];
-const pagesLink: { [pageName: string]: string } = {};
-
-const isReferent = async () => {
-  try {
-    const token = localStorage.getItem("token");
-    if (token == null) {
-      return;
-    }
-    fetch(`${config.apiUrl}/referent/volunteer`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
-      },
-    }).then((response) => {
-      // Cette route renvoie 200 uniquement si le Volontaire est le référent d'au moins 1 Asso
-      // tous les autres codes sont des erreurs, ou le Volontaire n'est lié à aucune Asso -> dans tous les cas, pas de Missions Assignées
-      if (response.status === 200) {
-        pages.push("Missions Assignées");
-        pagesLink["Missions Assignées"] = "settings/referents";
-      }
-    });
-  } catch (e) {
-    console.warn(e);
-  }
-}
-
-if (localStorage.getItem("token") !== null) {
-  settings.push("Profile", "Réglages", "Déconnexion");
-  pages.push("Accueil", "Recherche", "Mes Missions");
-  pagesLink["Accueil"] = "";
-  pagesLink["Recherche"] = "accueil";
-  pagesLink["Mes Missions"] = "history";
-  isReferent();
-} else {
-  settings.push("Connexion", "Inscription");
-}
-
-
 export default function VolunteerSidebar() {
   let color_blind = localStorage.getItem("color_blind") === "true";
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -70,6 +29,54 @@ export default function VolunteerSidebar() {
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => { setAnchorElUser(event.currentTarget); };
   const handleCloseNavMenu = () => { setAnchorElNav(null); };
   const handleCloseUserMenu = () => { setAnchorElUser(null); };
+  const [pages, setPages] = React.useState<string[]>([]);
+  const [settings, setsettings] = React.useState<string[]>([]);
+  const [pagesLink, setPagesLink] = React.useState<{ [pageName: string]: string}>({})
+  const [isFetchRef, setIsFetchRef] = React.useState(false);
+
+  React.useEffect(() => {
+    if (settings.length === 0) {
+      if (localStorage.getItem("token") !== null) {
+        settings.push("Profile", "Réglages", "Déconnexion");
+        pages.push("Accueil", "Recherche", "Mes Missions");
+        pagesLink["Accueil"] = "";
+        pagesLink["Recherche"] = "accueil";
+        pagesLink["Mes Missions"] = "history";
+      } else {
+        settings.push("Connexion", "Inscription");
+      }
+    }
+  }, [settings]);
+
+  React.useEffect(() => {
+    if (!isFetchRef) {
+      isReferent();
+      setIsFetchRef(true);
+    }
+  }, [isFetchRef]);
+
+  const isReferent = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (token == null) {
+        return;
+      }
+      fetch(`${config.apiUrl}/referent/volunteer`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      }).then((response) => {
+        if (response.status === 200 && !pages.includes("Missions Assignées")) {
+          setPages([...pages, "Missions Assignées"]);
+          pagesLink["Missions Assignées"] = "settings/referents";
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   const handleMenuItemClick = (setting: string) => {
     handleCloseUserMenu();
