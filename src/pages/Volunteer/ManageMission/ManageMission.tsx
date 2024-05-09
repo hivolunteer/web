@@ -3,45 +3,14 @@ import config from "../../../config";
 import ManageMissionInformation from './Components/ManageMissionInformation';
 import { Button } from '@mui/material';
 import './ManageMission.scss';
-
-interface Volunteer {
-    id: number,
-    first_name: string,
-    last_name: string,
-    email: string,
-    profile_picture: string,
-    rating: number,
-    status: number,
-    stars_from_volunteer: number,
-    stars_from_association: number,
-    comment_from_volunteer: string,
-    comment_from_association: string,
-}
+import ManageMissionVolunteers from './Components/ManageMissionVolunteers';
 
 function ManageMission() {
-    const [ListVolunteers, setListVolunteers] = useState<Volunteer[]>([]);
     const [MissionStatus, setMissionStatus] = useState<number>(0);
 
     // get id from url
     const url = window.location.href;
     const mission_id = url.split("/").pop();
-
-    async function getVolunteers() {
-        fetch(`${config.apiUrl}/missions/volunteer/${mission_id}`, {
-            method: 'GET',
-            headers: {
-                'content-type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        }).then((response) => {
-            if (response.status === 200) {
-                response.json().then((data) => {
-                    setListVolunteers(data)
-                    console.log("VOLUNTEERS", data);
-                })
-            }
-        })
-    }
 
     function publishMission() {
         fetch(`${config.apiUrl}/missions/close/upload/${mission_id}`, {
@@ -96,7 +65,12 @@ function ManageMission() {
 
     return (
         <div>
-            <ManageMissionInformation mission_id={mission_id} onPublish={getVolunteers} setMissionStatus={setMissionStatus} MissionStatus={MissionStatus} />
+            <ManageMissionInformation mission_id={mission_id} setMissionStatus={setMissionStatus} MissionStatus={MissionStatus} />
+            
+            { (MissionStatus === 1 || MissionStatus === 3) &&
+                <ManageMissionVolunteers mission_id={mission_id} />
+            }
+            
             <div className='manage-mission-button-container'>
                 { MissionStatus === 0 &&
                     <>

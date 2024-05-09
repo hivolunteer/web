@@ -50,7 +50,6 @@ function TextDisplayer(props: any) {
 
 type ManageMissionInformationProps = {
   mission_id: string | undefined,
-  onPublish: any,
   setMissionStatus: any,
   MissionStatus: number,
 }
@@ -60,7 +59,6 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
   const [location, setLocation] = useState<Location>();
 
   const mission_id = props.mission_id;
-  const onPublish = props.onPublish;
   const SetMissionStatus = props.setMissionStatus;
 
   function formatDate(date: string) {
@@ -99,52 +97,12 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
                         })
                     }
                 })
-                if (data.association_mission?.status === 1) {
-                  onPublish();
-                }
             }) 
         } else {
             window.location.href = "/";
         }
     })
-  }, [])
-
-  function acceptVolunteer(id: number) {
-    fetch(`${config.apiUrl}/missions/close/${mission_id}/${id}/accept`, {
-        method: 'POST',
-        headers: {
-            'content-type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-    }).then((response) => {
-        if (response.status === 201) {
-            alert("Le volontaire a été accepté");
-            window.location.href = `/manage/${mission_id}`;
-        } else {
-            console.log("ERROR");
-            alert("Une erreur est survenue lors de l'acceptation du volontaire");
-        }
-    })
-  }
-
-  function refuseVolunteer(id: number) {
-    fetch(`${config.apiUrl}/missions/close/${mission_id}/${id}/refuse`, {
-        method: 'POST',
-        headers: {
-            'content-type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-    }).then((response) => {
-        if (response.status === 201) {
-            alert("Le volontaire a été refusé");
-            window.location.href = `/manage/${mission_id}`;
-        } else {
-            console.log("ERROR");
-            alert("Une erreur est survenue lors du refus du volontaire");
-        }
-    })
-  }
-
+  }, []);
 
     return (
       <div>
