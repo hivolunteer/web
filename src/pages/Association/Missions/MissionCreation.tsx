@@ -4,10 +4,9 @@
  * @utility This page is used to create a mission
 */
 
-import {Autocomplete, Box, Button, Chip, Grid, TextField} from "@mui/material";
+import {Autocomplete, Box, Button, Chip, Grid, TextField, FormControlLabel, Checkbox} from "@mui/material";
 import React, {useEffect, useState} from "react";
-import { Image } from "mui-image";
-import { LocalizationProvider, DateTimePicker, TimePicker } from "@mui/x-date-pickers";
+import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import Lottie from "lottie-react";
 import moment from "moment";
@@ -18,6 +17,7 @@ import LocationModal from "./Modal/LocationModal";
 import noImage from "../../../images/lottie/noImage.json";
 import { Referent } from "./Interface/Referent";
 import ReferentModal from "./Modal/ReferentModal";
+import MissionPanel from "../../Volunteer/Search/Panels/MissionPanel";
 
 interface MissionCreationData {
   missionName?: string;
@@ -29,6 +29,7 @@ interface MissionCreationData {
   missionVolunteersNumber?: number;
   missionReferent?: string;
   missionSkills?: string;
+  missionAcceptMinors?: boolean;
 }
 
 interface SkillDatabase {
@@ -76,6 +77,25 @@ export default function MissionCreation() {
   const [locationStr, setLocationStr] = useState<string | null>(null);
   const [locationId, setLocationId] = useState<number | null>(null);
 
+  const [missionDateRanges, setMissionDateRanges] = useState<
+    { start: Date | null; end: Date | null }[]
+  >([{ start: null, end: null }]);
+
+  interface AcceptMinorRadioProps {
+    checked: boolean;
+    onChange: (value: boolean) => void;
+  }
+
+  const handleAddDateRange = () => {
+    setMissionDateRanges([...missionDateRanges, { start: null, end: null }]);
+  };
+
+  const handleRemoveDateRange = (index: number) => {
+    const updatedDateRanges = [...missionDateRanges];
+    updatedDateRanges.splice(index, 1);
+    setMissionDateRanges(updatedDateRanges);
+  };
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -86,7 +106,50 @@ export default function MissionCreation() {
   const handleCloseReferent = () => {
     setOpenReferent(false);
   }
+  function InputFileUpload({ onFileChange }: { onFileChange: (file: File) => void }) {
+    const [preview, setPreview] = useState<string | null>(null);
+  
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files && event.target.files.length > 0) {
+        const file = event.target.files[0];
+        onFileChange(file);
+        setPreview(URL.createObjectURL(file)); // Set the image preview
+      }
+    };
+  
+    return (
+      <label htmlFor="upload-photo">
+        {preview ? (
+          <img src={preview} alt="Preview" style={{ width: "100px", height: "100px", objectFit: "contain" }} />
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginBottom: 20,
+              textDecoration: 'underline',
+              cursor: 'pointer'
+            }}
+          >
+            Modifier la photo
+          </div>
+        )}
+        <input
+          style={{ display: "none" }}
+          id="upload-photo"
+          name="upload-photo"
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+        />
+      </label>
+    );
+  }  
 
+  const handleImageChange = (file: File) => {
+    setImage(file);
+  };
   // useEffect to get skills from database
 
   useEffect(() => {
@@ -110,16 +173,29 @@ export default function MissionCreation() {
   const createNewMission = () => {
     let referents = referentListSelected.map((referent) => referent.id);
     const token = localStorage.getItem("token");
+    let startDates: Date[] = [];
+    let endDates: Date[] = [];
+
+    missionDateRanges
+    .map((mission: {start: Date | null; end: Date | null}) => {
+      if ((mission.start === null) || (mission.end === null)) {
+        alert("Pas de dates entrées")
+      }
+      if (mission.start) startDates.push(mission.start)
+      if (mission.end) endDates.push(mission.end)
+    })
+     
     const body = {
       max_volunteers: form?.missionVolunteersNumber,
       description: form?.missionDescription,
       practical_information: form?.missionPracticalInformation,
       location: locationId,
-      start_date: form?.missionDate,
-      end_date: form?.missionEndDate,
+      start_dates: startDates,
+      end_dates: endDates,
       title: form?.missionName,
       skills: newSkill,
       referents: referents,
+      accept_minors: form?.missionAcceptMinors,
     };
     console.log(body);
     fetch(`${config.apiUrl}/missions/association/create`, {
@@ -129,30 +205,44 @@ export default function MissionCreation() {
         Authorization: "Bearer " + token, // localStorage.getItem("token")
       },
       body: JSON.stringify(body),
-    })
-      .then((response) => {
-        if (response.status === 201) {
-          alert("Mission créée");
-          window.location.href = "/";
-          return response.body;
-        }
-      })
-      .then(
-        (data) => {
-          data
-            ?.getReader()
-            .read()
-            .then(({ done, value }) => {
-              if (done) {
-                alert("Mission créée");
-                return;
+    }).then((response) => {
+      if (response.status === 201) {
+        response.json().then((data) => {
+          console.log(data)
+          const formData = new FormData();
+          if (image) {
+            formData.append("file", image);
+          }
+          data.association_missions.forEach((mission: any) => {
+            const missionId = mission.id
+            fetch(`${config.apiUrl}/uploads/${localStorage.getItem('role')}/mission/${missionId}`, {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+              },
+              body: formData
+            }).then(
+              (response) => {
+                if (response.status === 201) {
+                  console.log("Image uploaded");
+                  window.location.href = "/";
+                }
               }
-            });
-        },
-        (error) => {
-          alert("Erreur lors de la création de la mission");
-        }
-      );
+            )
+            .catch(
+              (error) => {
+                console.error("Error while uploading image");
+              }  )
+          });
+        
+        });
+      }
+    })
+    .catch(
+      (error) => {
+        console.error("Error while creating mission");
+      }
+    )
   };
 
   return (
@@ -182,157 +272,38 @@ export default function MissionCreation() {
             margin: "10",
           }}
         >
-          {/* <p>Remplissez le formulaire ci-dessous pour créer une mission</p> */}
-
           {!image ? (
             noImageComponent()
           ) : (
-            <Image
-              src={image}
-              height="20%"
-              width="20%"
-              fit="contain"
-              showLoading={true}
-              shiftDuration={100}
-              errorIcon={true}
-              style={{ marginBottom: "10%" }}
-            />
+            <img src={URL.createObjectURL(image)} alt="Preview" style={{ width: "20%", height: "20%", objectFit: "contain", marginBottom: "2%" }} />
           )}
-          <label htmlFor="upload-photo">
-            <input
-              style={{ display: "none" }}
-              id="upload-photo"
-              name="upload-photo"
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                if (e.target.files) {
-                  const file = e.target.files[0];
-                  let reader = new FileReader();
-                  reader.readAsDataURL(file);
-                  reader.onloadend = () => {
-                    setImage(reader.result);
-                  };
-                  reader.onerror = () => {
-                    console.log(reader.error);
-                  };
-                }
-              }}
-            />
-
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                marginBottom: 20,
-                textDecoration: 'underline',
-                cursor: 'pointer'
-              }}
-            >
-              Modifier la photo
-            </div>
-          </label>
+          <InputFileUpload onFileChange={handleImageChange} />
         </Box>
-
         <Box component="form">
-          <Grid container spacing={3}  >
-            <Grid item xs={6} lg={6}>
+          <Grid container spacing={3} className="wrapper" style={{ display: "flex", justifyContent: "center" }}>
+            <LocationModal
+                open={open}
+                handleClose={handleClose}
+                location={address}
+                setLocation={setAddress}
+                setLocationString={setLocationStr}
+                setId={setLocationId}
+            />
+            <Grid item xs={8} lg={8} display="flex" justifyContent="center">
               <TextField
                 name="missionName"
                 required
                 fullWidth
                 id="missionName"
                 label="Nom de la mission"
+                rows={1}
                 value={form?.missionName}
                 onChange={(missionName) => {
                   setForm({ ...form, missionName: missionName.target.value });
                 }}
               />
             </Grid>
-            <Grid item xs={6} lg={6}>
-              <TextField
-                name="missionDescription"
-                required
-                multiline={true}
-                fullWidth
-                id="missionDescription"
-                label="Description de la mission"
-                value={form?.missionDescription}
-                onChange={(missionDescription) => {
-                  setForm({
-                    ...form,
-                    missionDescription: missionDescription.target.value,
-                  });
-                }}
-              />
-            </Grid>
-            <Grid item xs={6} lg={6}>
-              <TextField
-                name="missionPracticalInformation"
-                required
-                multiline={true}
-                fullWidth
-                id="missionPracticalInformation"
-                label="Informations pratiques"
-                value={form?.missionPracticalInformation}
-                onChange={(missionPracticalInformation) => {
-                  setForm({
-                    ...form,
-                    missionPracticalInformation:
-                      missionPracticalInformation.target.value,
-                  });
-                }}
-              />
-            </Grid>
-            <Grid item xs={6} lg={6}>
-              <p
-                style={{
-                  textDecoration: "underline",
-                  cursor: "pointer"
-                }}
-                onClick={() => {
-                  setOpen(true);
-                }}
-              >
-                {(locationStr !== null) ? locationStr : "Ajouter une adresse"}
-              </p>
-              <LocationModal
-                  open={open}
-                  handleClose={handleClose}
-                  location={address}
-                  setLocation={setAddress}
-                  setLocationString={setLocationStr}
-                  setId={setLocationId}
-              />
-            </Grid>
-            <Grid item xs={6} lg={3}>
-              <DateTimePicker
-                label="Date de début"
-                format="DD/MM/YYYY HH:mm"
-                defaultValue={moment.utc().local()}
-                onChange={(date) => {
-                  setForm({
-                    ...form,
-                    missionDate: moment(date).utc().local().toDate(),
-                  });
-                }}
-              />
-            </Grid>
-            <Grid item xs={6} lg={3}>
-              <TimePicker
-                  label="Fin de la mission"
-                  format="HH:mm"
-                  defaultValue={moment.utc().local()}
-                  onChange={(date) => {
-                    setForm({
-                      ...form,
-                      missionEndDate: moment(date).utc().local().toDate(),
-                    });
-                  }}
-                />
-            </Grid>
-            <Grid item xs={6} lg={6}>
+            <Grid item xs={8} lg={8}>
               <TextField
                 autoComplete="name"
                 name="missionVolunteersNumber"
@@ -354,18 +325,66 @@ export default function MissionCreation() {
                 }}
               />
             </Grid>
-            <Grid item xs={12} lg={6}>
-              <p
+            <Grid item xs={8} lg={8} style={{ display: "flex", justifyContent: "center" }}>
+              <Button
+                variant="outlined"
+                style={{ width: "100%" }}
+                onClick={() => {
+                  setOpen(true);
+                }}
+              >
+                {(locationStr !== null) ? locationStr : "Ajouter une adresse"}
+              </Button>
+            </Grid>
+            <Grid item xs={8} lg={8}>
+              <TextField
+                name="missionDescription"
+                required
+                multiline={true}
+                fullWidth
+                id="missionDescription"
+                label="Description de la mission"
+                rows={4}
+                value={form?.missionDescription}
+                onChange={(missionDescription) => {
+                  setForm({
+                    ...form,
+                    missionDescription: missionDescription.target.value,
+                  });
+                }}
+              />
+            </Grid>
+            <Grid item xs={8} lg={8}>
+              <TextField
+                name="missionPracticalInformation"
+                required
+                multiline={true}
+                fullWidth
+                rows={4}
+                id="missionPracticalInformation"
+                label="Informations pratiques"
+                value={form?.missionPracticalInformation}
+                onChange={(missionPracticalInformation) => {
+                  setForm({
+                    ...form,
+                    missionPracticalInformation:
+                      missionPracticalInformation.target.value,
+                  });
+                }}
+              />
+            </Grid>
+            <Grid item xs={8} lg={8}>
+              <Button
+              variant="outlined"
                 style={{
-                  textDecoration: "underline",
-                  cursor: "pointer"
+                  width: "100%"
                 }}
                 onClick={() => {
                   setOpenReferent(true);
                 }}
               >
                 {(referentListSelected.length !== 0) ? referentListSelected.map((referent) => referent.complete_name).join(", ") : "Ajouter un référent"}
-              </p>
+              </Button>
               <ReferentModal
                 open={openReferent}
                 handleClose={handleCloseReferent}
@@ -373,7 +392,85 @@ export default function MissionCreation() {
                 setReferentListSelected={setReferentListSelected}
               />
             </Grid>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={8} lg={8}>
+              {missionDateRanges.map((dateRange, index) => (
+                <Box key={index} display={"flex"} marginBottom={"10px"} alignItems="center">
+                  <Grid container spacing={3}>
+                    <Grid item xs={6}>
+                      <DateTimePicker
+                        label="Date et heure de début de la mission"
+                        format="DD/MM/YYYY HH:mm"
+                        defaultValue={moment.utc().local()}
+                        value={dateRange.start ? moment(dateRange.start) : null}
+                        slotProps={{ textField: { fullWidth: true } }}
+                        onChange={(date) => {
+                          if (date) {
+                            const updatedDateRanges = [...missionDateRanges];
+                            updatedDateRanges[index].start = date.toDate();
+                            if (index === updatedDateRanges.length - 1) {
+                              setForm({
+                                ...form,
+                                missionEndDate: date.toDate(),
+                              });
+                            }
+                            setMissionDateRanges(updatedDateRanges);
+                          }
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <DateTimePicker
+                        label="Date et heure de fin de la mission"
+                        format="DD/MM/YYYY HH:mm"
+                        defaultValue={moment.utc().local()}
+                        value={dateRange.end ? moment(dateRange.end) : null}
+                        slotProps={{ textField: { fullWidth: true } }}
+                        onChange={(date) => {
+                          if (date) {
+                            const updatedDateRanges = [...missionDateRanges];
+                            updatedDateRanges[index].end = date.toDate();
+                            if (index === updatedDateRanges.length - 1) {
+                              setForm({
+                                ...form,
+                                missionEndDate: date.toDate(),
+                              });
+                            }
+                            setMissionDateRanges(updatedDateRanges);
+                          }
+                        }}
+                      />
+                    </Grid>
+                  </Grid>
+                </Box>
+              ))}
+              <Box
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginTop: "20px",
+                }}
+              >
+                <Button
+                  onClick={handleAddDateRange}
+                  variant="outlined"
+                  color="primary"
+                  style={{ width: "100%" }}
+                >
+                  Ajouter une nouvelle plage horaire
+                </Button>
+                {missionDateRanges.length > 1 && (
+                  <Button
+                    variant="outlined"
+                    style={{marginLeft: "10px"}}
+                    color="error"
+                    onClick={() => handleRemoveDateRange(missionDateRanges.length - 1)}
+                  >
+                    Supprimer
+                  </Button>
+                )}
+              </Box>
+            </Grid>
+            <Grid item xs={8} lg={8}>
               <Autocomplete
                 multiple
                 id="skills"
@@ -403,13 +500,19 @@ export default function MissionCreation() {
                 }}
               />
             </Grid>
+            <Grid item xs={8} lg={8} sx={{ display: "flex", justifyContent: "space-evenly" }}>
+              <FormControlLabel
+                control={<Checkbox checked={form?.missionAcceptMinors} onChange={(e) => setForm({ ...form, missionAcceptMinors: e.target.checked })} />}
+                label="Accepter les personnes mineures"
+              />
+            </Grid>
           </Grid>
           <Box
             style={{
               display: "flex",
               justifyContent: "center",
               alignContent: "center",
-              margin: "1%",
+              margin: "40px",
             }}
           >
             <Button
