@@ -38,9 +38,8 @@ export default function VolunteerSidebar() {
     if (settings.length === 0) {
       if (localStorage.getItem("token") !== null) {
         settings.push("Profile", "Réglages", "Déconnexion");
-        pages.push("Accueil", "Recherche", "Mes Missions");
-        pagesLink["Accueil"] = "accueil";
-        pagesLink["Recherche"] = "";
+        pages.push("Recherche", "Mes Missions");
+        pagesLink["Recherche"] = "accueil";
         pagesLink["Mes Missions"] = "history";
       } else {
         settings.push("Connexion", "Inscription");
