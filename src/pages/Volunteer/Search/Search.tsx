@@ -68,15 +68,16 @@ function Search(props: any) {
   const [filteredAssociations, setFilteredAssociations] = useState<
     Association[] | []
   >([]);
+
   /***** QUERY PARAMS FROM HOME PAGE *****/
   window.onload = function () {
     const urlParams = new URLSearchParams(window.location.search);
     const query = urlParams.get("query");
     if (query) {
-      console.log(`Query: ${query}`);
       setSearch(query);
     }
   };
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -179,7 +180,6 @@ function Search(props: any) {
 
   const handleLocation = (e: any) => {
     setLocation(e.target.value.toLowerCase());
-    
   }
   //className={"header-rating" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")}
   return (
