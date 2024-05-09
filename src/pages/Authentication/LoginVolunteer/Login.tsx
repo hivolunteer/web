@@ -6,6 +6,7 @@ import { AuthenticationService } from "../../../services/authentication.service"
 import "./Login.scss";
 import titleLogo from "../../../images/logo/primary_logo.png";
 import ForgotPasswordModal from "../ForgotPasswordModal/ForgotPasswordModal";
+import config from "../../../config";
 
 function LoginVolunteer() {
   /***
@@ -27,6 +28,34 @@ function LoginVolunteer() {
 
 
   const [open, setOpen] = React.useState(false);
+
+  const isReferent = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      fetch(`${config.apiUrl}/referent/volunteer`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      }).then((response) => {
+
+        if (response.status === 200) {
+          console.log("LOGOS");
+          response.json().then((body: any[]) => {
+            console.log("SET REF ASSOOOOOOOOOOOO: " + body.toString());
+            localStorage.setItem('ReferentAssos', body.toString());
+          });
+          console.log("LOGOS OK");
+        } else {
+          localStorage.setItem('ReferentAssos', [].toString());
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
 
   /* Function to check if all inputs are complete */
   const checkComplete = (data: FormData) => {
@@ -80,10 +109,13 @@ function LoginVolunteer() {
   const responseExecute = (response_status: number) => {
     switch (response_status) {
       case 200:
-        alert("Connexion réussie");
-        localStorage.setItem("role", "volunteer");
-        navigate("/");
-        window.location.reload();
+        isReferent().then(() => {
+          alert("Connexion réussie");
+          localStorage.setItem("role", "volunteer");
+          navigate("/");
+          window.location.reload();
+          return ;
+        });
         break;
       case 401:
         alert("Connexion échouée");
@@ -229,13 +261,14 @@ function LoginVolunteer() {
                 )}
               </Grid>
             </Grid>
-            <div style={{ marginTop: "10px", justifyContent: "flex-end", display: "flex" }}> 
-                <a className="forgot-password"
-                    onClick={() => {setOpen(true);
+            <div style={{ marginTop: "10px", justifyContent: "flex-end", display: "flex" }}>
+              <a className="forgot-password"
+                onClick={() => {
+                  setOpen(true);
                 }}>
-                  Mot de passe oublié ?
-                </a>
-                <ForgotPasswordModal modalProps={{open: open, handleClose: () => setOpen(false), route: "/volunteers/"}} />
+                Mot de passe oublié ?
+              </a>
+              <ForgotPasswordModal modalProps={{ open: open, handleClose: () => setOpen(false), route: "/volunteers/" }} />
             </div>
             <Button
               type="submit"
