@@ -11,33 +11,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
 import NearMeOutlinedIcon from '@mui/icons-material/NearMeOutlined';
 import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Grid from '@mui/material/Unstable_Grid2';
-
-interface Mission {
-    id: number,
-    max_volunteers: number,
-    description: string,
-    practical_information: string,
-    start_date: Date,
-    end_date: Date,
-    location: number,
-    title: string,
-    status: number,
-    theme_id: number,
-    picture: string,
-}
-
-interface Location {
-    id: number,
-    street_number: string,
-    street_name: string,
-    street_number_suffix: string,
-    street_type: string,
-    departement_id: number,
-    city: number,
-    postal_code: string,
-}
+import ManageMissionInformation from './ManageMissionInformation';
 
 interface Volunteer {
     id: number,
@@ -54,17 +29,15 @@ interface Volunteer {
 }
 
 function ManageMission() {
-
-    const [mission, setMission] = useState<Mission>()
-    const [location, setLocation] = useState<Location>()
-    const [ListVolunteers, setListVolunteers] = useState<Volunteer[]>([])
+    const [ListVolunteers, setListVolunteers] = useState<Volunteer[]>([]);
+    const [missionStatus, setMissionStatus] = useState<number>(0);
 
     // get id from url
     const url = window.location.href;
     const mission_id = url.split("/").pop();
 
-    useEffect(() => {
-        fetch(`${config.apiUrl}/missions/close/${mission_id}`, {
+    async function getVolunteers() {
+        fetch(`${config.apiUrl}/missions/volunteer/${mission_id}`, {
             method: 'GET',
             headers: {
                 'content-type': 'application/json',
@@ -73,56 +46,15 @@ function ManageMission() {
         }).then((response) => {
             if (response.status === 200) {
                 response.json().then((data) => {
-                    setMission(data.close_mission);
-                    fetch(`${config.apiUrl}/locations/${data.close_mission?.location}`, {
-                        method: 'GET',
-                        headers: {
-                            'content-type': 'application/json',
-                            'Authorization': `Bearer ${localStorage.getItem('token')}`
-                        }
-                    }).then((response) => {
-                        if (response.status === 200) {
-                            response.json().then((data) => {
-                                setLocation(data);
-                            })
-                        }
-                    })
-                    if (data.association_mission?.status === 1) {
-                        fetch(`${config.apiUrl}/missions/volunteer/${mission_id}`, {
-                            method: 'GET',
-                            headers: {
-                                'content-type': 'application/json',
-                                'Authorization': `Bearer ${localStorage.getItem('token')}`
-                            }
-                        }).then((response) => {
-                            if (response.status === 200) {
-                                response.json().then((data) => {
-                                    setListVolunteers(data)
-                                    console.log("VOLUNTEERS", data);
-                                })
-                            }
-                        })
-                    }
-                }) 
-            } else {
-                window.location.href = "/";
+                    setListVolunteers(data)
+                    console.log("VOLUNTEERS", data);
+                })
             }
         })
-    }, [])
-
-    function formatDate(date: string) {
-        if (date === '')
-            return ''
-        let day = date.split('T')[0].split('-')[2]
-        let month = date.split('T')[0].split('-')[1]
-        let year = date.split('T')[0].split('-')[0]
-        let hour = date.split('T')[1].split(':')[0]
-        let minutes = date.split('T')[1].split(':')[1]
-        return `${day}/${month}/${year} à ${hour}:${minutes}`
     }
 
     function deleteMission() {
-        if (mission?.status === 0) {
+        if (missionStatus === 0) {
             fetch(`${config.apiUrl}/missions/close/delete/${mission_id}`, {
                 method: 'DELETE',
                 headers: {
@@ -153,106 +85,13 @@ function ManageMission() {
                 }
             })
         }
-    }
-
-    function publishMission() {
-        fetch(`${config.apiUrl}/missions/close/upload/${mission_id}`, {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        }).then((response) => {
-            if (response.status === 201) {
-                window.location.href = `/manage/${mission_id}`;
-            } else {
-                console.log("ERROR");
-                alert("Une erreur est survenue lors de la publication de la mission");
-            }
-        })
-    }
-
-    function acceptVolunteer(id: number) {
-        fetch(`${config.apiUrl}/missions/close/${mission_id}/${id}/accept`, {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        }).then((response) => {
-            if (response.status === 201) {
-                alert("Le volontaire a été accepté");
-                window.location.href = `/manage/${mission_id}`;
-            } else {
-                console.log("ERROR");
-                alert("Une erreur est survenue lors de l'acceptation du volontaire");
-            }
-        })
-    }
-    
-    function refuseVolunteer(id: number) {
-        fetch(`${config.apiUrl}/missions/close/${mission_id}/${id}/refuse`, {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        }).then((response) => {
-            if (response.status === 201) {
-                alert("Le volontaire a été refusé");
-                window.location.href = `/manage/${mission_id}`;
-            } else {
-                console.log("ERROR");
-                alert("Une erreur est survenue lors du refus du volontaire");
-            }
-        })
-    }
+      }    
 
     return (
         <div>
-            <div className="container header-mission-container" style={{backgroundImage: `url(${mission?.picture})`}}>
-                <div className="association-logo">
-                    <img src="https://th.bing.com/th/id/R.a159530285fe4c5b20f40dc89741304e?rik=3L6mcWO3XWPxxA&pid=ImgRaw&r=0.png" alt="logo" className='association-logo-mission'/>
-                </div>
-                <div className="mission-title">
-                    <h1> {mission?.title } </h1>
-                </div>
-            </div>
-            <Accordion className="volunteer-manage-mission-accordion" defaultExpanded={true}>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                >
-                    Informations de la mission
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Grid container spacing={3}>
-                        <Grid xs={6}>
-                            <h4> Date de la mission </h4>
-                            Du {formatDate(mission?.start_date?.toString() ?? '')} au {formatDate(mission?.end_date?.toString() ?? '')}
-                            <h4> Lieu </h4>
-                            {location?.street_number} {location?.street_number_suffix} {location?.street_type} {location?.street_name}, {location?.postal_code} {location?.city}
-                            <h4> Nombre de volontaires </h4>
-                            { ListVolunteers.length } / { mission?.max_volunteers }
-                            <h4> Thème </h4>
-                            { mission?.theme_id }
-                        </Grid>
-                        <Grid xs={6}>
-                            <h4> Description de la mission </h4>
-                            { mission?.description }
-                            <h4> Informations pratiques </h4>
-                            { mission?.practical_information }
-                        </Grid>
-                    </Grid>
-                </AccordionDetails>
-                <AccordionActions>
-                    <Button size="small" color="warning" onClick={() => window.location.href = `/close/missions/${mission?.id}/edit`}>Modifier</Button>
-                    <Button size="small" color="info" onClick={() => window.location.href = `/close/missions/${mission?.id}`}>Visualiser</Button>
-                </AccordionActions>
-            </Accordion>
+            <ManageMissionInformation mission_id={mission_id} onPublish={getVolunteers} setMissionStatus={setMissionStatus} />
 
-            { mission?.status !== 0 && (
+            {/* { mission?.status !== 0 && (
             <Accordion className="volunteer-manage-mission-accordion" defaultExpanded={true}>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
@@ -302,8 +141,8 @@ function ManageMission() {
                     </TableContainer>
                 </AccordionDetails>
             </Accordion>
-            )}
-            <Button className="volunteer-manage-mission-accordion" variant="outlined" color="error" onClick={() => deleteMission()}> {mission?.status === 0 ? "Supprimer" : "Annuler"} </Button>
+            )} */}
+            <Button className="manage-mission-button" variant="outlined" color="error" onClick={() => deleteMission()}> {missionStatus === 0 ? "Supprimer" : "Annuler"} </Button>
 
             {/* <div className="container body-mission-container">
                 <div className="mission-firstinformation">

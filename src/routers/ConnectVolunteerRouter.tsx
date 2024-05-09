@@ -11,6 +11,7 @@ import MissionCreation from "../pages/Volunteer/Missions/MissionCreation";
 
 import AssociationReferent from "../pages/Volunteer/Settings/Referents/AssociationReferent";
 import AssociationProfile from "../pages/Volunteer/Association/Profile/AssociationProfile";
+import ManageMission from "../pages/Volunteer/ManageMission/ManageMission";
 
 
 function ConnectVolunteerRouter() {
@@ -26,6 +27,7 @@ function ConnectVolunteerRouter() {
       <Route path="/missionCreation" element={<MissionCreation/>} />
       <Route path={"/settings"} element={<Settings />} />
       <Route path="/settings/referents" element={<AssociationReferent />} />
+      <Route path="/manage/:id" element={<ManageMission />} />
       <Route path="*" element={<h1> Error 404 Volunteer </h1>} />
     </Routes>
   );
