@@ -72,7 +72,6 @@ export default function MissionModification() {
   })
   const [newSkill, setNewSkill] = useState<Array<number>>([]);
   const [skillDb, setSkillDb] = useState<Array<SkillDatabase>>([]);
-  const [mission, setMissionData] = useState<Mission>();
   const [error, setError] = useState<string | null>(null);
 
   // preparation for adress modal
@@ -130,7 +129,6 @@ export default function MissionModification() {
               +data.street_name+", "+
               data.city +" "+ String(data.postal_code))
             console.log(locationStr);
-            setMissionData(mission as Mission);
             setForm({
               ...form,
               missionName: mission.title,
