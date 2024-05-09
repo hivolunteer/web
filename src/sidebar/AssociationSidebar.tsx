@@ -24,38 +24,13 @@ const pages: string[] = [];
 const settings: string[] = [];
 const pagesLink: { [pageName: string]: string } = {};
 
-const isReferent = async () => {
-  try {
-    const token = localStorage.getItem("token");
-    if (token == null) {
-      return;
-    }
-    fetch(`${config.apiUrl}/referent/volunteer`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
-      },
-    }).then((response) => {
-      // Cette route renvoie 200 uniquement si le Volontaire est le référent d'au moins 1 Asso
-      // tous les autres codes sont des erreurs, ou le Volontaire n'est lié à aucune Asso -> dans tous les cas, pas de Missions Assignées
-      if (response.status === 200) {
-        pages.push("Missions Assignées");
-        pagesLink["Missions Assignées"] = "settings/referents";
-      }
-    });
-  } catch (e) {
-    console.warn(e);
-  }
-}
-
 if (localStorage.getItem("token") !== null) {
   settings.push("Profile", "Réglages", "Déconnexion");
-  pages.push("Accueil", "Recherche", "Mes Missions");
-  pagesLink["Accueil"] = "";
-  pagesLink["Recherche"] = "accueil";
-  pagesLink["Mes Missions"] = "history";
-  isReferent();
+  pages.push("Accueil", "Missions", "Calendrier", "Référents");
+  pagesLink["Accueil"] = "accueil";
+  pagesLink["Missions"] = "";
+  pagesLink["Calendrier"] = "calendrier";
+  pagesLink["Référents"] = "referent";
 } else {
   settings.push("Connexion", "Inscription");
 }
