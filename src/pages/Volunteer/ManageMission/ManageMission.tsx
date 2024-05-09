@@ -67,7 +67,7 @@ function ManageMission() {
         <div>
             <ManageMissionInformation mission_id={mission_id} setMissionStatus={setMissionStatus} MissionStatus={MissionStatus} />
             
-            { (MissionStatus === 1 || MissionStatus === 3) &&
+            { (MissionStatus != 0) &&
                 <ManageMissionVolunteers mission_id={mission_id} />
             }
             
