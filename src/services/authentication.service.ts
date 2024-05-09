@@ -10,6 +10,7 @@ export class AuthenticationService {
         });
         response.json().then((data) => {
             localStorage.setItem('token', data.token)
+            localStorage.setItem('color_blind', 'false')
         })
         return response.status;
     }
@@ -22,6 +23,7 @@ export class AuthenticationService {
         });
         response.json().then((data) => {
             localStorage.setItem('token', data.token)
+            localStorage.setItem('color_blind', 'false')
         })
         console.log("token: " + localStorage.getItem("token"));
         return response.status;

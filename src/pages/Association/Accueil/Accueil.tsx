@@ -8,7 +8,7 @@ import '../../Volunteer/Home/Home.scss';
 import {useEffect, useState } from 'react'
 import config from "../../../config";
 import { Button } from '@mui/material';
-import MissionCard from './MissionCard';
+import MissionCard from '../../../components/MissionCard';
 
 interface Mission {
     id: number,

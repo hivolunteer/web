@@ -8,6 +8,7 @@ import ManageMission from '../pages/Association/Missions/Manage/ManageMission';
 import MissionModification from '../pages/Association/Missions/Manage/MissionModification';
 import Accueil from '../pages/Association/Accueil/Accueil';
 import EventCalendar from "../components/Calendar/EventCalendar";
+import ReferentPage from '../pages/Association/Referent/ReferentPage';
 
 function ConnectAssociationRouter() {
     return(
@@ -20,6 +21,7 @@ function ConnectAssociationRouter() {
             <Route path="/:id/edit" element={<MissionModification />} />
             <Route path="/accueil" element={<Accueil />} />
             <Route path="/calendrier" element={<EventCalendar />} />
+            <Route path="/referent" element={<ReferentPage />} />
             <Route path="*" element={<h1> Error 404 Asso </h1>} />
         </Routes>
     )

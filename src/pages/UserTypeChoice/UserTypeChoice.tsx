@@ -38,6 +38,16 @@ const UserTypeChoice = () => {
     };
 
     return (
+        <div
+        style={{
+        display: 'flex',
+        justifyContent: 'center',
+        height: '90%',
+        backgroundColor: '#DFDFDF',
+        alignItems: 'center',
+        margin: '5%'
+      }}
+      >
         <div className="center-form">
           <form className="choice-form">
             <div className="row">
@@ -89,6 +99,7 @@ const UserTypeChoice = () => {
             </Box>
           </form>
         </div>
+      </div>
     );
 };
 
