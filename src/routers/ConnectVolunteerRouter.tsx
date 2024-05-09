@@ -18,8 +18,8 @@ function ConnectVolunteerRouter() {
       <Route path="/profile" element={<Profile />} />
       <Route path="/accueil" element={<Search />} />
       <Route path="/mission/:missionID" element={<MissionDetails />} />
-      <Route path="/missionCreation" element={<MissionCreation/>} />
-      <Route path="/missionModification/:missionID" element={<MissionModification/>} />
+      <Route path="/mission/create" element={<MissionCreation/>} />
+      <Route path="/mission/edit/:missionID" element={<MissionModification/>} />
       <Route path={"/settings"} element={<Settings />} />
       <Route path="*" element={<h1> Error 404 Volunteer </h1>} />
     </Routes>

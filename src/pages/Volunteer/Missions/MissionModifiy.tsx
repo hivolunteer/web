@@ -4,7 +4,7 @@
  * @utility This page is used to create a mission
 */
 
-import {Autocomplete, Box, Button, Chip, Grid, TextField} from "@mui/material";
+import { Alert, Autocomplete, Box, Button, Chip, Grid, TextField} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import { Image } from "mui-image";
 import { LocalizationProvider, DateTimePicker, TimePicker } from "@mui/x-date-pickers";
@@ -17,8 +17,6 @@ import config from "../../../config";
 import LocationModal from "../../Association/Missions/Modal/LocationModal";
 import noImage from "../../../images/lottie/noImage.json";
 import { useParams } from 'react-router-dom';
-import { Mission } from '../../../interfaces';
-import { NULL } from "sass";
 
 
 interface MissionModificationData {
@@ -73,6 +71,7 @@ export default function MissionModification() {
   const [newSkill, setNewSkill] = useState<Array<number>>([]);
   const [skillDb, setSkillDb] = useState<Array<SkillDatabase>>([]);
   const [error, setError] = useState<string | null>(null);
+  const [response, setResponse] = useState<{error: boolean, message: string}>({error: false, message: ""});
 
   // preparation for adress modal
   const [open, setOpen] = React.useState<boolean>(false);
@@ -207,8 +206,9 @@ export default function MissionModification() {
     })
       .then((response) => {
         if (response.status === 201) {
-          alert("Mission modifiée");
-          window.location.href = "/";
+          setResponse({error: false, message: "La mission a bien été modifiée"});
+          new Promise((resolve) => setTimeout(resolve, 2000));
+          window.location.href = `/manage/${missionID}`;
           return response.body;
         }
       })
@@ -483,6 +483,11 @@ export default function MissionModification() {
           </Box>
         </Box>
       </Box>
+      { response.message &&
+        <Alert severity={ response.error ? "error" : "success" }>
+          { response.message }
+        </Alert>
+      }
     </LocalizationProvider>
   );
 }
