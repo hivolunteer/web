@@ -31,7 +31,7 @@ export default function VolunteerSidebar() {
   const handleCloseUserMenu = () => { setAnchorElUser(null); };
   const [pages, setPages] = React.useState<string[]>([]);
   const [settings, setsettings] = React.useState<string[]>([]);
-  const [pagesLink, setPagesLink] = React.useState<{ [pageName: string]: string}>({})
+  const [pagesLink, setPagesLink] = React.useState<{ [pageName: string]: string }>({})
   const [isFetchRef, setIsFetchRef] = React.useState(false);
 
   React.useEffect(() => {
@@ -39,44 +39,22 @@ export default function VolunteerSidebar() {
       if (localStorage.getItem("token") !== null) {
         settings.push("Profile", "Réglages", "Déconnexion");
         pages.push("Accueil", "Recherche", "Mes Missions");
-        pagesLink["Accueil"] = "";
-        pagesLink["Recherche"] = "accueil";
+        pagesLink["Accueil"] = "accueil";
+        pagesLink["Recherche"] = "";
         pagesLink["Mes Missions"] = "history";
       } else {
         settings.push("Connexion", "Inscription");
       }
+      console.log("REF ASSO: " + localStorage.getItem("ReferentAssos"));
+      if (localStorage.getItem("ReferentAssos") !== null && localStorage.getItem("ReferentAssos") !== [].toString()) {
+        console.log("REF ASSO OKKI DOKKI");
+        //pages.push("Missions Assignées");
+        setPages([...pages, "Missions Assignées"]);
+        pagesLink["Missions Assignées"] = "settings/referents";
+
+      }
     }
   }, [settings]);
-
-  React.useEffect(() => {
-    if (!isFetchRef) {
-      isReferent();
-      setIsFetchRef(true);
-    }
-  }, [isFetchRef]);
-
-  const isReferent = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (token == null) {
-        return;
-      }
-      fetch(`${config.apiUrl}/referent/volunteer`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-      }).then((response) => {
-        if (response.status === 200 && !pages.includes("Missions Assignées")) {
-          setPages([...pages, "Missions Assignées"]);
-          pagesLink["Missions Assignées"] = "settings/referents";
-        }
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  }
 
   const handleMenuItemClick = (setting: string) => {
     handleCloseUserMenu();
