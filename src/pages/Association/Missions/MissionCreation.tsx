@@ -76,15 +76,10 @@ export default function MissionCreation() {
   });
   const [locationStr, setLocationStr] = useState<string | null>(null);
   const [locationId, setLocationId] = useState<number | null>(null);
-  const [acceptMinor, setAcceptMinor] = useState(true);
 
   const [missionDateRanges, setMissionDateRanges] = useState<
     { start: Date | null; end: Date | null }[]
   >([{ start: null, end: null }]);
-
-  const handleAcceptMinorChange = (value: boolean) => {
-    setAcceptMinor(value);
-  };
 
   interface AcceptMinorRadioProps {
     checked: boolean;
@@ -111,7 +106,50 @@ export default function MissionCreation() {
   const handleCloseReferent = () => {
     setOpenReferent(false);
   }
+  function InputFileUpload({ onFileChange }: { onFileChange: (file: File) => void }) {
+    const [preview, setPreview] = useState<string | null>(null);
+  
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files && event.target.files.length > 0) {
+        const file = event.target.files[0];
+        onFileChange(file);
+        setPreview(URL.createObjectURL(file)); // Set the image preview
+      }
+    };
+  
+    return (
+      <label htmlFor="upload-photo">
+        {preview ? (
+          <img src={preview} alt="Preview" style={{ width: "100px", height: "100px", objectFit: "contain" }} />
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginBottom: 20,
+              textDecoration: 'underline',
+              cursor: 'pointer'
+            }}
+          >
+            Modifier la photo
+          </div>
+        )}
+        <input
+          style={{ display: "none" }}
+          id="upload-photo"
+          name="upload-photo"
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+        />
+      </label>
+    );
+  }  
 
+  const handleImageChange = (file: File) => {
+    setImage(file);
+  };
   // useEffect to get skills from database
 
   useEffect(() => {
@@ -135,11 +173,11 @@ export default function MissionCreation() {
   const createNewMission = () => {
     let referents = referentListSelected.map((referent) => referent.id);
     const token = localStorage.getItem("token");
-    const promises: Promise<Response>[] = missionDateRanges
+    missionDateRanges
     .filter(dateRange => dateRange.start && dateRange.end)
-    .map((dateRange) => {
+    .map(async (dateRange) => {
       const body = {
-          max_volunteers: form?.missionVolunteersNumber,
+        max_volunteers: form?.missionVolunteersNumber,
         description: form?.missionDescription,
         practical_information: form?.missionPracticalInformation,
         location: locationId,
@@ -151,28 +189,47 @@ export default function MissionCreation() {
         accept_minors: form?.missionAcceptMinors,
       };
       console.log(body);
-      return fetch(`${config.apiUrl}/missions/association/create`, {
+      fetch(`${config.apiUrl}/missions/association/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + token, // localStorage.getItem("token")
         },
         body: JSON.stringify(body),
+      }).then((response) => {
+        if (response.status === 201) {
+          response.json().then((data) => {
+            const formData = new FormData();
+            if (image) {
+              formData.append("file", image);
+            }
+            fetch(`${config.apiUrl}/uploads/${localStorage.getItem('role')}/mission/${data.id}`, {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+              },
+              body: formData
+            }).then(
+              (response) => {
+                if (response.status === 201) {
+                  console.log("Image uploaded");
+                }
+              }
+            )
+            .catch(
+              (error) => {
+                console.error("Error while uploading image");
+              }
+            )
+          });
+        }
       })
-    });
-    Promise.all(promises)
-    .then((responses) => {
-      const success = responses.every((response) => response.status === 201);
-      if (success) {
-        alert("Missions créées");
-        window.location.href = "/";
-      } else {
-        alert("Erreur lors de la création de certaines missions");
-      }
+      .catch(
+        (error) => {
+          console.error("Error while creating mission");
+        }
+      )
     })
-    .catch((error) => {
-      alert("Erreur lors de la création des missions");
-    });
   };
 
   return (
@@ -202,60 +259,13 @@ export default function MissionCreation() {
             margin: "10",
           }}
         >
-          {/* <p>Remplissez le formulaire ci-dessous pour créer une mission</p> */}
-
           {!image ? (
             noImageComponent()
           ) : (
-            <Image
-              src={image}
-              height="20%"
-              width="20%"
-              fit="contain"
-              showLoading={true}
-              shiftDuration={100}
-              errorIcon={true}
-              style={{ marginBottom: "10%" }}
-            />
+            <img src={URL.createObjectURL(image)} alt="Preview" style={{ width: "20%", height: "20%", objectFit: "contain", marginBottom: "2%" }} />
           )}
-          <label htmlFor="upload-photo">
-            <input
-              style={{ display: "none" }}
-              id="upload-photo"
-              name="upload-photo"
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                if (e.target.files) {
-                  const file = e.target.files[0];
-                  let reader = new FileReader();
-                  reader.readAsDataURL(file);
-                  reader.onloadend = () => {
-                    setImage(reader.result);
-                  };
-                  reader.onerror = () => {
-                    console.log(reader.error);
-                  };
-                }
-              }}
-            />
-
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                marginBottom: 20,
-                textDecoration: 'underline',
-                cursor: 'pointer'
-              }}
-            >
-              Modifier la photo
-            </div>
-          </label>
+          <InputFileUpload onFileChange={handleImageChange} />
         </Box>
-
-        
         <Box component="form">
           <Grid container spacing={3} className="wrapper" style={{ display: "flex", justifyContent: "center" }}>
             <LocationModal
@@ -351,17 +361,17 @@ export default function MissionCreation() {
               />
             </Grid>
             <Grid item xs={8} lg={8}>
-              <p
+              <Button
+              variant="outlined"
                 style={{
-                  textDecoration: "underline",
-                  cursor: "pointer"
+                  width: "100%"
                 }}
                 onClick={() => {
                   setOpenReferent(true);
                 }}
               >
                 {(referentListSelected.length !== 0) ? referentListSelected.map((referent) => referent.complete_name).join(", ") : "Ajouter un référent"}
-              </p>
+              </Button>
               <ReferentModal
                 open={openReferent}
                 handleClose={handleCloseReferent}
