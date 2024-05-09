@@ -51,19 +51,18 @@ const FilterModal = (props: {modalProps: ModalAsso}) => {
         <Dialog open={modalProps.open} onClose={modalProps.handleClose} fullWidth maxWidth='lg'
         PaperProps={{
             sx: {
-                maxWidth: '60%',
-                minHeight: '40vh',
-                maxHeight: '65vh',
                 overflowY: 'hidden',
                 overflowX: 'hidden',
+                height: 'auto',
+                width: (modalProps.width > 768) ? '40%' : '70%',
             }
         }}
         >
             {/* Second Category : Préférences de la mission */}
-            <DialogTitle sx={{ m: 0, p: 2 }}>
-                <div style={{width: '90%', margin: '0 2.5%', display: 'flex', flexDirection: 'row', flexWrap: 'wrap', maxHeight: '25vh'}}>
+            <div style={{display: 'flex', justifyContent: 'center'}}>
+                <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around'}}>
                     <div style={{flex: 1}}>
-                        <h3> PRÉFÉRENCES </h3>
+                        <h3> Préférences </h3>
                         <div style={{display: 'flex', flexDirection: 'column'}}>
                             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', margin: '-2% -1%'}}>
                                 <Checkbox
@@ -84,11 +83,11 @@ const FilterModal = (props: {modalProps: ModalAsso}) => {
                         </div>
                     </div>
                 </div>
-            </DialogTitle>
+            </div>
             {/* Third Category : Dates du début et de la fin de la mission */}
-            <DialogTitle sx={{ m: 0, p: 2 }}>
-                <div style={{width: '90%', margin: '0 2.5%', maxHeight: '25vh'}}>
-                    <h3> NOTE MINIMALE </h3>
+            <div style={{display: 'flex', flexDirection: 'column'}}>
+            <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around'}}>
+                    <h3> Note Minimale </h3>
                     <div style={{display: 'flex', alignItems: 'center'}}>
                     <Rating
                       name="simple-controlled"
@@ -99,9 +98,9 @@ const FilterModal = (props: {modalProps: ModalAsso}) => {
                     />
                     </div>
                 </div>
-            </DialogTitle>
+            </div>
             {/* Footer */}
-            <DialogTitle sx={{ m: 0, p: 2 }} style={{display: 'flex', justifyContent: 'flex-end'}}>
+            <div className='modal-bottom'>
                 <Button 
                     onClick={() => { setValuesToDefault(); modalProps.handleClose(); }}
                     variant='contained'
@@ -140,7 +139,7 @@ const FilterModal = (props: {modalProps: ModalAsso}) => {
                 >
                     Valider
                 </Button>
-            </DialogTitle>
+            </div>
         </Dialog>
     </div>
   );
