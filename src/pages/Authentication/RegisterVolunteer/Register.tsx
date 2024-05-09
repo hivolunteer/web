@@ -155,7 +155,6 @@ function RegisterVolunteer() {
             case 201:
                 alert("Inscription réussie");
                 localStorage.setItem("role", "association");
-                localStorage.setItem('ReferentAssos', [].toString());
                 navigate("/profile");
                 window.location.reload();
                 break;

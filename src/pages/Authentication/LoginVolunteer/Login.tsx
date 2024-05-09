@@ -29,34 +29,6 @@ function LoginVolunteer() {
 
   const [open, setOpen] = React.useState(false);
 
-  const isReferent = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      fetch(`${config.apiUrl}/referent/volunteer`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-      }).then((response) => {
-
-        if (response.status === 200) {
-          console.log("LOGOS");
-          response.json().then((body: any[]) => {
-            console.log("SET REF ASSOOOOOOOOOOOO: " + body.toString());
-            localStorage.setItem('ReferentAssos', body.toString());
-          });
-          console.log("LOGOS OK");
-        } else {
-          localStorage.setItem('ReferentAssos', [].toString());
-        }
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-
   /* Function to check if all inputs are complete */
   const checkComplete = (data: FormData) => {
     const credential = data.get("credential") as string;
@@ -99,6 +71,8 @@ function LoginVolunteer() {
     /* Check if all inputs are complete */
     checkComplete(data);
     const credential = data.get("credential") as string;
+    setPhone(!credential.includes("@"));
+    setEmail(credential.includes("@"));
     /* Check email format */
     checkEmailFormat(credential);
     /* Check phone format */
@@ -109,13 +83,10 @@ function LoginVolunteer() {
   const responseExecute = (response_status: number) => {
     switch (response_status) {
       case 200:
-        isReferent().then(() => {
-          alert("Connexion réussie");
-          localStorage.setItem("role", "volunteer");
-          navigate("/");
-          window.location.reload();
-          return ;
-        });
+        alert("Connexion réussie");
+        localStorage.setItem("role", "volunteer");
+        navigate("/");
+        window.location.reload();
         break;
       case 401:
         alert("Connexion échouée");

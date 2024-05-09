@@ -34,6 +34,35 @@ export default function VolunteerSidebar() {
   const [pagesLink, setPagesLink] = React.useState<{ [pageName: string]: string }>({})
   const [isFetchRef, setIsFetchRef] = React.useState(false);
 
+  const isReferent = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      fetch(`${config.apiUrl}/referent/volunteer`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      }).then((response) => {
+        if (response.status === 200) {
+          response.json().then((body: any[]) => {
+            setPages([...pages, "Missions Assignées"]);
+            pagesLink["Missions Assignées"] = "settings/referents";
+          });
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  React.useEffect(() => {
+    if (!isFetchRef) {
+      setIsFetchRef(true);
+      isReferent();
+    }
+  }, [isFetchRef]);
+
   React.useEffect(() => {
     if (settings.length === 0) {
       if (localStorage.getItem("token") !== null) {
@@ -44,14 +73,7 @@ export default function VolunteerSidebar() {
       } else {
         settings.push("Connexion", "Inscription");
       }
-      console.log("REF ASSO: " + localStorage.getItem("ReferentAssos"));
-      if (localStorage.getItem("ReferentAssos") !== null && localStorage.getItem("ReferentAssos") !== [].toString()) {
-        console.log("REF ASSO OKKI DOKKI");
-        //pages.push("Missions Assignées");
-        setPages([...pages, "Missions Assignées"]);
-        pagesLink["Missions Assignées"] = "settings/referents";
 
-      }
     }
   }, [settings]);
 
