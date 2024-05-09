@@ -150,10 +150,10 @@ export default function ProfilePage(props: any) {
                 textAlign: "center",
                 padding: "20px",
             }}>
-                <img src={image} alt="Logo de profil" className={"container-div"}/>
+                <img src={image} alt="Logo de profil"/>
                 <h1>Association: {name}</h1>
             </div>
-            <div className="container-div">
+            <div className="profile-asso-container-div">
 
           <h2>
             Bénévoles
@@ -205,23 +205,16 @@ export default function ProfilePage(props: any) {
             textAlign: "center",
             padding: "20px",
           }}>
+           <label>E-mail:</label>
             <h4>
               {email}
             </h4>
+            <label>Numéro de téléphone:</label>
             <h4>
               {phone}
             </h4>
           </div>
-
-
         </div><div className="profile-row">
-          <label>Numéro de téléphone:</label>
-          <input
-            className="filled-text"
-            type="text"
-            placeholder="Phone number"
-            value={phone}
-            onChange={(event) => setPhone(event.target.value)} />
         </div><div className="profile-btn-div">
           <button className="profile-pic-btn" onClick={updateProfile}>
             Mettre à jour le profile

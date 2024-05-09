@@ -80,13 +80,13 @@ const EditPasswordModal = (props: {modalProps: Modal}) => {
             <DialogTitle style={{alignSelf: 'center', fontWeight: 'bold', fontSize: '1.5em'}}>Changer votre mot de passe</DialogTitle>
             <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', margin: '20px 50px'}}>
                 <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-                    <PasswordTextField password={old_password} setPassword={setOldPassword} />
+                    <PasswordTextField password={old_password} setPassword={setOldPassword} label={"Ancien mot de passe"} />
                 </div>
                 <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-                    <PasswordTextField password={new_password} setPassword={setNewPassword} />
+                    <PasswordTextField password={new_password} setPassword={setNewPassword} label={"Nouveau mot de passe"} />
                 </div>
                 <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-                    <PasswordTextField password={confirm_password} setPassword={setConfirmPassword} />
+                    <PasswordTextField password={confirm_password} setPassword={setConfirmPassword} label={"Confirmer le nouveau mot de passe"} />
                 </div>
             </div>
             <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '20px 50px'}}>

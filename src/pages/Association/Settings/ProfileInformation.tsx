@@ -1,34 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Modal from "@mui/material/Modal";
 import { useNavigate } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import CloseIcon from "@mui/icons-material/Close";
-import {Alert, AlertTitle, Button, InputAdornment, TextField, Typography} from "@mui/material";
-import { Link } from 'react-router-dom';
+import {Alert, AlertTitle, Button, TextField, Typography} from "@mui/material";
 import config from "../../../config";
-
-
-interface ProfileInformationModalProps {
-    initialName: string;
-    initialEmail: string;
-    onSave: (name: string, email: string) => void;
-}
 
 function ProfileInformationModal() {
     const history = useNavigate();
-    const onSave = (name: string, email: string, phone: string, profilePicture: string) => {
-        console.log("Email:", email);
-    }
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
     const [profilePicture, setProfilePicture] = useState("");
-    const [showModal, setShowModal] = useState(false);
+    const [description, setDescription] = useState("");
+    const [rna, setRna] = useState("");
+    const [showModal, setShowModal] = useState(true);
     const [error, setError] = useState("");
     const [alert, setAlert] = useState(false);
 
     const handleClose = () => history("/settings");
+
+    function validateEmail(email: string): boolean {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return emailRegex.test(email);
+      }
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
@@ -42,22 +38,53 @@ function ProfileInformationModal() {
         setEmail(event.target.value);
     };
 
+    const handleDescription = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setDescription(event.target.value);
+    };
+
+    const handleRna = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setRna(event.target.value);
+    };
+
     const handleProfilePictureChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setProfilePicture(event.target.value);
     };
 
-    const handleSaveClick = () => {
-        onSave(name, email, phone, profilePicture);
-        setShowModal(false);
-    };
+    useEffect(() => {
+        const getProfile = async () => {
+            await fetch(`${config.apiUrl}/associations/profile`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+            })
+                .then((response) => {
+                    if (response.status === 200) {
+                        response.json().then((data) => {
+                            setName(data.association.name);
+                            setEmail(data.association.email);
+                            setPhone(data.association.phone);
+                            setProfilePicture(data.association.profile_picture);
+                            setDescription(data.association.description);
+                            setRna(data.association.rna);
+                        });
+                    } else {
+                        console.log("Error fetching profile");
+                        console.log(response);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        };
 
-    const handleCloseClick = () => {
-        setShowModal(false);
-    };
+        getProfile();
+    }, []);
+
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        // Check if new password matches confirm password
 
         try {
             const response = await fetch(
@@ -71,6 +98,8 @@ function ProfileInformationModal() {
                     body: JSON.stringify({
                         id: localStorage.getItem("id"),
                         name: name,
+                        description: description,
+                        rna: rna,
                         email: email,
                         phone: phone,
                         profile_picture: profilePicture,
@@ -81,7 +110,10 @@ function ProfileInformationModal() {
                 setAlert(true)
                 setError("Une information est manquante")
             }
+            console.log("response: ", response);
             setName("");
+            setDescription("");
+            setRna("");
             setEmail("");
             setPhone("");
             setProfilePicture("");
@@ -92,16 +124,15 @@ function ProfileInformationModal() {
     };
 
     return (
-        <Link to={'/associations'}>
-        <div>
+        <div >
             <Modal
-                open={true}
+                open={showModal}
                 onClose={handleClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <h2 id="modal-modal-title">Profile Information</h2>
+                    <h2 id="modal-modal-title">Informations du Profil</h2>
                     <p id="modal-modal-description">Changer les informations du profil</p>
                     <IconButton
                         style={{
@@ -113,7 +144,6 @@ function ProfileInformationModal() {
                     >
                         <CloseIcon/>
                     </IconButton>
-
                     <form
                         onSubmit={handleSubmit}
                         style={{
@@ -125,17 +155,68 @@ function ProfileInformationModal() {
                             <Typography style={{
                                 fontWeight: "bold"
                             }}>
-                                Prénom
+                                Image de profil
                             </Typography>
                             <TextField
                                 fullWidth
-                                label="Prénom"
                                 variant="outlined"
-                                id="initialFirstName"
-                                name="initialFirstName"
+                                id="profilePicture"
+                                name="profilePicture"
+                                type="text"
+                                value={profilePicture}
+                                onChange={handleProfilePictureChange}
+                                margin="normal"
+                            />
+                        </div>
+                        <div style={{marginTop: "20px"}}>
+                            <Typography style={{
+                                fontWeight: "bold"
+                            }}>
+                                Nom d'association
+                            </Typography>
+                            <TextField
+                                fullWidth
+                                variant="outlined"
+                                id="associationName"
+                                name="associationName"
                                 type="text"
                                 value={name}
                                 onChange={handleNameChange}
+                                margin="normal"
+                            />
+                        </div>
+                        <div style={{marginTop: "20px"}}>
+                            <Typography style={{
+                                fontWeight: "bold"
+                            }}>
+                                Description
+                            </Typography>
+                            <TextField
+                                fullWidth
+                                variant="outlined"
+                                id="Description"
+                                name="Description"
+                                multiline={true}
+                                type="text"
+                                value={description}
+                                onChange={handleDescription}
+                                margin="normal"
+                            />
+                        </div>
+                        <div style={{marginTop: "20px"}}>
+                            <Typography style={{
+                                fontWeight: "bold"
+                            }}>
+                                RNA
+                            </Typography>
+                            <TextField
+                                fullWidth
+                                variant="outlined"
+                                id="rna"
+                                name="rna"
+                                type="text"
+                                value={rna}
+                                onChange={handleRna}
                                 margin="normal"
                             />
                         </div>
@@ -147,7 +228,6 @@ function ProfileInformationModal() {
                             </Typography>
                             <TextField
                                 fullWidth
-                                label="Adresse mail"
                                 variant="outlined"
                                 id="email"
                                 name="email"
@@ -165,11 +245,10 @@ function ProfileInformationModal() {
                             </Typography>
                             <TextField
                                 fullWidth
-                                label="Numero de telephone"
                                 variant="outlined"
                                 id="phone"
                                 name="phone"
-                                type="number"
+                                type="text"
                                 value={phone}
                                 onChange={handlePhoneChange}
                                 margin="normal"
@@ -201,8 +280,7 @@ function ProfileInformationModal() {
                 </Box>
             </Modal>
         </div>
-        </Link>
-);
+        );
 }
 
 const style = {

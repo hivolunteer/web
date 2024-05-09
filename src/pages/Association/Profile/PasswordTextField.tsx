@@ -4,7 +4,7 @@ import { useState } from "react";
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 
-function PasswordTextField({ password, setPassword }: { password: string, setPassword: any }) {
+function PasswordTextField({ password, setPassword, label }: { password: string, setPassword: any, label: any }) {
 
     const [password_eye, setPasswordEye] = useState<boolean>(false)
     const [visibility, setVisibility] = useState<boolean>(false)
@@ -19,7 +19,7 @@ function PasswordTextField({ password, setPassword }: { password: string, setPas
             required
             id="text-field-password"
             type={password_eye ? "text" : "password"}
-            placeholder="Mot de passe"
+            placeholder={label}
             variant="outlined"
             onChange={changePassword}
             fullWidth

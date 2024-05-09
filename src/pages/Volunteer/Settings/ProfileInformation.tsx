@@ -4,16 +4,8 @@ import { useNavigate } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import CloseIcon from "@mui/icons-material/Close";
-import {Alert, AlertTitle, Button, InputAdornment, TextField, Typography} from "@mui/material";
-import { Link } from 'react-router-dom';
+import {Alert, AlertTitle, Button, TextField, Typography} from "@mui/material";
 import config from "../../../config";
-
-
-interface ProfileInformationModalProps {
-    initialName: string;
-    initialEmail: string;
-    onSave: (name: string, email: string) => void;
-}
 
 function ProfileInformationModal() {
     const history = useNavigate();
@@ -46,10 +38,6 @@ function ProfileInformationModal() {
 
     const handleProfilePictureChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setProfilePicture(event.target.value);
-    };
-
-    const handleCloseClick = () => {
-        setShowModal(false);
     };
 
     useEffect(() => {
@@ -148,6 +136,23 @@ function ProfileInformationModal() {
                             gap: "10px",
                         }}
                     >
+                        <div>
+                            <Typography style={{
+                                fontWeight: "bold"
+                            }}>
+                                Photo de profil
+                            </Typography>
+                            <TextField
+                                fullWidth
+                                variant="outlined"
+                                id="profilePicture"
+                                name="profilePicture"
+                                type="text"
+                                value={profilePicture}
+                                onChange={handleProfilePictureChange}
+                                margin="normal"
+                            />
+                        </div>
                         <div style={{marginTop: "20px"}}>
                             <Typography style={{
                                 fontWeight: "bold"
@@ -156,7 +161,6 @@ function ProfileInformationModal() {
                             </Typography>
                             <TextField
                                 fullWidth
-                                label="Prénom"
                                 variant="outlined"
                                 id="initialFirstName"
                                 name="initialFirstName"
@@ -174,7 +178,6 @@ function ProfileInformationModal() {
                             </Typography>
                             <TextField
                                 fullWidth
-                                label="Nom de famille"
                                 variant="outlined"
                                 id="initialLastName"
                                 name="initialLastName"
@@ -192,7 +195,6 @@ function ProfileInformationModal() {
                             </Typography>
                             <TextField
                                 fullWidth
-                                label="Adresse mail"
                                 variant="outlined"
                                 id="email"
                                 name="email"
@@ -210,7 +212,6 @@ function ProfileInformationModal() {
                             </Typography>
                             <TextField
                                 fullWidth
-                                label="Numero de telephone"
                                 variant="outlined"
                                 id="phone"
                                 name="phone"

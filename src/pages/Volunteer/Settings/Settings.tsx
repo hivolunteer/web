@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import "./Settings.scss";
 import { Checkbox } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import ProfileInformationModal from "./ProfileInformation";
 import Divider from "@mui/material/Divider";
 //import { SideBar } from "../../../components/Sidebar";
 
@@ -83,7 +82,6 @@ function Settings() {
                 Changer le mot de passe
             </button>
             <Divider orientation="vertical" variant="middle" flexItem />
-
         </div>
     );
 }
