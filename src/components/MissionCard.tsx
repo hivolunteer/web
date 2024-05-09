@@ -1,6 +1,7 @@
 import { Card, CardContent, CardMedia, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
 import config from '../config';
+import { BorderBottom } from '@mui/icons-material';
 
 export default function MissionCard(props: {mission_id: number}) {
     
@@ -102,7 +103,8 @@ export default function MissionCard(props: {mission_id: number}) {
 
         return(
             <div>
-                <Card sx={{width: '100%', height: '100%'}}>
+                <Card sx={{width: '100%', height: '100%', borderBottom: '5px solid #5d9082'}}
+                >
                     <CardMedia
                         component="img"
                         height="185"

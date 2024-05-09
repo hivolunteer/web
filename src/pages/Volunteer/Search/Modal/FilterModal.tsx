@@ -5,6 +5,7 @@ import { Modal, Skill } from "../Interfaces";
 import { DatePicker, TimePicker} from "@mui/x-date-pickers";
 import config from "../../../../config";
 import React from "react";
+import useWindowSize from "../../../../functions/useWindowSize";
 
 
 const FilterModal = (props: {modalProps: Modal}) => {
@@ -18,6 +19,7 @@ const FilterModal = (props: {modalProps: Modal}) => {
     const [dates, setDates] = useState<Array<Date | null>>([null, null]);
     const [allowMinors, setAllowMinors] = useState<boolean>(false)
     const [duration, setDuration] = useState<Date | null>(null)
+
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -42,7 +44,6 @@ const FilterModal = (props: {modalProps: Modal}) => {
         setDates([null, null]);
         setNoskills(false);
         setAllowMinors(false);
-        window.location.reload();
     }
     
 
@@ -88,175 +89,189 @@ const FilterModal = (props: {modalProps: Modal}) => {
         })
     }
 
+    /***** QUERY PARAMS FROM HOME PAGE *****/
+    window.onload = function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        console.log(urlParams)
+        const friendsmission = urlParams.get("friendsmission");
+        const missionsassociationfollowed = urlParams.get("missionsassociationfollowed");
+        setValuesToDefault();
+        setPreferences([missionsassociationfollowed ? true : false, friendsmission ? true : false]);
+        ValidateSearch();
+    };
+
   return (
     <div className="FilterModal">
         <Dialog open={modalProps.open} onClose={modalProps.handleClose} fullWidth maxWidth='lg'
         PaperProps={{
             sx: {
-                maxWidth: '60%',
                 overflowY: 'hidden',
                 overflowX: 'hidden',
+                height: 'auto',
+                width: (modalProps.width > 768) ? '50%' : '100%',
             }
         }}
         >
-            {/* Second Category : Préférences de la mission */}
-            <div style={{display: 'flex'}}>
-                <div style={{width: '90%', margin: '0 2.5%', display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
-                    <div style={{flex: 1, display: 'flex', flexDirection: 'column'}}>
-                        <h3> PRÉFÉRENCES </h3>
-                        <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
-                            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                                <Checkbox
-                                    checked={preferences[0]}
-                                    onChange={() => setPreferences([!preferences[0], preferences[1]])}
-                                />
-                                <p style={{flex: 1}}> Missions des associations suivies </p>
+            <div>
+                {/* Second Category : Préférences de la mission */}
+                <div style={{display: 'flex', justifyContent: 'center'}}>
+                    <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around'}}>
+                        <div style={{flex: 1, display: 'flex', flexDirection: 'column'}}>
+                            <h3> Préférences </h3>
+                            <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+                                <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                                    <Checkbox
+                                        checked={preferences[0]}
+                                        onChange={() => setPreferences([!preferences[0], preferences[1]])}
+                                    />
+                                    <p style={{flex: 1}}> Missions des associations suivies </p>
+                                </div>
+                            </div>
+                            <div style={{display: 'flex', flexDirection: 'column'}}>
+                                <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                                    <Checkbox
+                                        checked={preferences[1]}
+                                        onChange={() => setPreferences([preferences[0], !preferences[1]])}
+                                    />
+                                    <p style={{flex: 1}}> Amis présents dans la mission </p>
+                                </div>
+                            </div>
+                            <div style={{display: 'flex', flexDirection: 'column'}}>
+                                <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                                    <Checkbox
+                                        checked={allowMinors}
+                                        onChange={() => setAllowMinors(!allowMinors)}
+                                    />
+                                    <p style={{flex: 1}}> Mineurs autorisés dans la mission </p>
+                                </div> 
                             </div>
                         </div>
-                        <div style={{display: 'flex', flexDirection: 'column'}}>
-                            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                                <Checkbox
-                                    checked={preferences[1]}
-                                    onChange={() => setPreferences([preferences[0], !preferences[1]])}
+                        <div style={{flex: 1}}>
+                            <h3> Compétences </h3>
+                            <Autocomplete
+                                multiple
+                                id="skills"
+                                options={skills}
+                                getOptionLabel={(option) => option.skill_name}
+                                filterSelectedOptions
+                                value={skills.filter((skill) => searchSkills.includes(skill.id))}
+                                renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Compétences"
+                                    placeholder="Compétences"
+                                    style={{width: '80%'}}
                                 />
-                                <p style={{flex: 1}}> Amis présents dans la mission </p>
-                            </div>
-                        </div>
-                        <div style={{display: 'flex', flexDirection: 'column'}}>
-                            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                                <Checkbox
-                                    checked={allowMinors}
-                                    onChange={() => setAllowMinors(!allowMinors)}
-                                />
-                                <p style={{flex: 1}}> Mineurs autorisés dans la mission </p>
-                            </div> 
-                        </div>
-                    </div>
-                    <div style={{flex: 1}}>
-                        <h3> COMPÉTENCES </h3>
-                        <Autocomplete
-                            multiple
-                            id="skills"
-                            options={skills}
-                            getOptionLabel={(option) => option.skill_name}
-                            filterSelectedOptions
-                            value={skills.filter((skill) => searchSkills.includes(skill.id))}
-                            renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label="Compétences"
-                                placeholder="Compétences"
-                                style={{width: '80%'}}
-                            />
-                            )}
-                            renderTags={(value, getTagProps) =>
-                            value
-                            .map((option, index) => (
-                                <Chip
-                                variant="outlined"
-                                label={option.skill_name}
-                                {...getTagProps({ index })}
-                                style={{ backgroundColor: option.color_hex, border: "none" }}
-                                />
-                            ))
-                            }
-                            // when skill is added
-                            onChange={(event, value) => {
-                                setSearchSkills(value.map((skill) => skill.id));
-                            }}
-                            //placeholder="Compétences"
-                        />
-                        <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                            <Checkbox
-                                checked={noskills}
-                                onChange={() => setNoskills(!noskills)}
-                            />
-                            <p style={{flex: 1}}> Missions sans compétences seuleument </p>
-                        </div>                   
-                    </div>
-                </div>
-            </div>
-            {/* Third Category : Dates du début et de la fin de la mission */}
-            <div style={{display: 'flex', margin: '0 2.5%', flexDirection: 'column'}}>
-                <div style={{display: 'flex', flexDirection: 'column'}}>
-                    <div style={{width: '90%', display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center'}}>
-                        <h3> DATES DU DÉBUT ET DE LA FIN DE LA MISSION </h3>
-                        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                            <DatePicker
-                                label="Début"
-                                onChange={(newDate) => setDates([newDate, dates[1]])}
-                                views={['year', 'month', 'day']}
-                                defaultValue={null}
-                            />
-                            <div style={{width: '4%'}} />
-                            <DatePicker
-                                label="Fin"
-                                onChange={(newDate) => setDates([dates[0], newDate])}
-                                views={['year', 'month', 'day']}
-                                value={dates[1]}
-                                defaultValue={null}
-                            />
-                        </div>
-                    </div>
-                    <div style={{width: '90%', textAlign: 'center'}}>
-                        <h3> SELECTIONNER LA DUREE MAXIMALE DE LA MISSION </h3>
-                        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                            <TimePicker
-                                label="Durée"
-                                value={duration}
-                                onChange={(newValue) => setDuration(newValue)}
-                                views={['hours', 'minutes']}
-                                sx={{
-                                    width: '35%'
+                                )}
+                                renderTags={(value, getTagProps) =>
+                                value
+                                .map((option, index) => (
+                                    <Chip
+                                    variant="outlined"
+                                    label={option.skill_name}
+                                    {...getTagProps({ index })}
+                                    style={{ backgroundColor: option.color_hex, border: "none" }}
+                                    />
+                                ))
+                                }
+                                // when skill is added
+                                onChange={(event, value) => {
+                                    setSearchSkills(value.map((skill) => skill.id));
                                 }}
+                                //placeholder="Compétences"
                             />
+                            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                                <Checkbox
+                                    checked={noskills}
+                                    onChange={() => setNoskills(!noskills)}
+                                />
+                                <p style={{flex: 1}}> Missions sans compétences seuleument </p>
+                            </div>                   
                         </div>
                     </div>
                 </div>
-            </div>
-            {/* Footer */}
-            <DialogTitle sx={{ m: 0, p: 2 }} style={{display: 'flex', justifyContent: 'flex-end'}}>
-                <Button 
-                    onClick={() => { setValuesToDefault(); modalProps.handleClose(); }}
-                    variant='contained'
-                    sx={{
-                        background: 'rgba(45, 42, 50, 0.50)',
-                        color: '#FFFEFF',
-                        textTransform: 'none',
-                        borderRadius: '10px',
-                        padding: '1rem 3rem',
-                        boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                        fontWeight: 'bold',
-                        "&:hover": {
-                            background: 'rgba(45, 42, 50, 0.60)',
-                        }
-                    }}
-                >
-                    Annuler 
-                </Button>
-                <Button
-                    onClick={() => {
-                        ValidateSearch()
-                    }}
-                    sx={{
-                        margin: '0 5%',
-                        background: 'rgba(103, 161, 145)',
-                        color: '#FFFEFF',
-                        textTransform: 'none',
-                        borderRadius: '10px',
-                        padding: '1rem 3rem',
-                        boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                        fontWeight: 'bold',
-                        "&:hover": {
-                            background: 'rgba(88, 138, 124)',
-                        }
-                    }}
-                >
-                    Valider
-                </Button>
-            </DialogTitle>
-        </Dialog>
-    </div>
+                {/* Third Category : Dates du début et de la fin de la mission */}
+                <div style={{display: 'flex', flexDirection: 'column'}}>
+                    <div style={{display: 'flex', flexDirection: 'column'}}>
+                        <div style={{width: '90%', display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center'}}>
+                            <h3> Dates du début et de la fin de la mission </h3>
+                            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                <DatePicker
+                                    label="Début"
+                                    onChange={(newDate) => setDates([newDate, dates[1]])}
+                                    views={['year', 'month', 'day']}
+                                    defaultValue={null}
+                                />
+                                <div style={{width: '4%'}} />
+                                <DatePicker
+                                    label="Fin"
+                                    onChange={(newDate) => setDates([dates[0], newDate])}
+                                    views={['year', 'month', 'day']}
+                                    value={dates[1]}
+                                    defaultValue={null}
+                                />
+                            </div>
+                        </div>
+                        <div style={{width: '90%', textAlign: 'center'}}>
+                            <h3> Séléctionner la durée maximale de la mission </h3>
+                            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                <TimePicker
+                                    label="Durée"
+                                    value={duration}
+                                    onChange={(newValue) => setDuration(newValue)}
+                                    views={['hours', 'minutes']}
+                                    sx={{
+                                        width: '35%'
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/* Footer */}
+                <div className='modal-bottom'>
+                    <Button 
+                        onClick={() => { setValuesToDefault(); ValidateSearch(); }}
+                        variant='contained'
+                        sx={{
+                            background: 'rgba(45, 42, 50, 0.50)',
+                            color: '#FFFEFF',
+                            textTransform: 'none',
+                            borderRadius: '10px',
+                            padding: '1rem 3rem',
+                            boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                            fontWeight: 'bold',
+                            "&:hover": {
+                                background: 'rgba(45, 42, 50, 0.60)',
+                            }
+                        }}
+                    >
+                        Annuler 
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            ValidateSearch()
+                        }}
+                        sx={{
+                            margin: '0 5%',
+                            background: 'rgba(103, 161, 145)',
+                            color: '#FFFEFF',
+                            textTransform: 'none',
+                            borderRadius: '10px',
+                            padding: '1rem 3rem',
+                            boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                            fontWeight: 'bold',
+                            "&:hover": {
+                                background: 'rgba(88, 138, 124)',
+                            }
+                        }}
+                    >
+                        Valider
+                    </Button>
+                </div>
+                </div>
+            </Dialog>
+        </div>
   );
 };
 

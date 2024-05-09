@@ -6,11 +6,12 @@ import VolunteerCard from "../Cards/VolunteerCard";
 interface VolunteerPanelProps {
     volunteerFilteredList: Array<Volunteer>;
     search: string;
+    width: number
 }
 
 function VolunteerPanel(props: VolunteerPanelProps) {
 
-    const { volunteerFilteredList, search } = props;
+    const { volunteerFilteredList, search, width } = props;
 
     const [volunteersList, setVolunteersList] = useState<Array<Volunteer>>([]);
 
@@ -32,8 +33,11 @@ function VolunteerPanel(props: VolunteerPanelProps) {
         <div className="missions-container">
             {
                 volunteersList
+                    .filter((volunteer: Volunteer) => {
+                        return volunteer.first_name.toLowerCase().includes(search.toLowerCase()) || volunteer.last_name.toLowerCase().includes(search.toLowerCase()) || volunteer.email.toLowerCase().includes(search.toLowerCase())
+                    })
                     .map((volunteer: Volunteer) => (
-                        <div className="mission-card-volunteer" key={volunteer.id}>
+                        <div className='mission-card-assovol' key={volunteer.id}>
                             <VolunteerCard volunteer={volunteer} />
                         </div>
                     ))

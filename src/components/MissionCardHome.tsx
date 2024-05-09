@@ -109,7 +109,7 @@ function MissionCardHome(props: { mission: Mission }) {
     return (
         <Card
             style={{
-                width: '110%',
+                width: '100%',
                 height: '100%',
                 border: 'none',
                 borderRadius: '10px',
@@ -143,9 +143,9 @@ function MissionCardHome(props: { mission: Mission }) {
                                 <CalendarMonthOutlinedIcon />
                                 <p style={{ marginLeft: '10px' }}> {convertDay(mission.start_date.toString())} {convertHour(mission.start_date.toString())}h - {convertHour(mission.end_date.toString())}h </p>
                             </div>
-                            <div className='mission-body-with-icon' style={{ marginBottom: '2px' }}>
+                            <div className='mission-body-with-icon' style={{ marginBottom: '2px', display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
                                 <NearMeOutlinedIcon />
-                                <p style={{ marginLeft: '10px' }}> {location} </p>
+                                <p style={{ marginLeft: '10px', width: '80%' }}> {location} </p>
                             </div>
                             <div className='mission-body-with-icon' style={{ marginBottom: '2px' }}>
                             {(isVol) ? <EmojiEmotionsIcon/> : <BusinessIcon />}

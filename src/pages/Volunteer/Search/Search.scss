@@ -98,6 +98,7 @@
     display: flex;
     justify-content: flex-start;
     margin: 0% 5%;
+    margin-bottom: 10px;
 }
 
 .search-bar {
@@ -121,6 +122,7 @@
     flex-wrap: wrap;
     margin: 0 5%;
     flex-direction: row;
+    justify-content: center;
 }
 
 .mission-card {
@@ -129,10 +131,26 @@
 }
 
 
-.mission-card-volunteer {
+/* For Tablets and Mini-PCs */
+@media screen and (min-width: 0px) and (max-width: 1440px) {
+    .mission-card {
+        width: 100%;
+    }
+}
+
+.mission-card-assovol {
     margin: 1% 2.5%;
     width: 20%;
 }
+
+
+/* For Tablets and Mini-PCs */
+@media screen and (min-width: 0px) and (max-width: 780px) {
+    .mission-card-assovol {
+        width: 40%;
+    }
+}
+
 
 .color-blind-bg {
     background-color: #3b3d3c;
@@ -142,4 +160,28 @@
 .color-blind-bg:hover {
     background-color: #3b3d3c;
     color: #faf8fc;
+}
+
+.modal-bottom {
+    display: flex;
+    justify-content: flex-end;
+    margin: 10px 0;
+}
+
+// TABLETTE
+
+@media screen and (min-width: 0px) and (max-width: 768px) {
+    .tabs-container {
+        width: 100%;
+        margin: 0%
+    }
+}
+
+// MINI-PC
+
+@media screen and (min-width: 768px) and (max-width: 1440px) {
+    .tabs-container {
+        width: auto;
+        margin: 0% 15%;
+    }
 }
