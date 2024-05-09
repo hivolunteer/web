@@ -82,11 +82,6 @@ export default function MissionCreation() {
     { start: Date | null; end: Date | null }[]
   >([{ start: null, end: null }]);
 
-  interface AcceptMinorRadioProps {
-    checked: boolean;
-    onChange: (value: boolean) => void;
-  }
-
   const handleAddDateRange = () => {
     setMissionDateRanges([...missionDateRanges, { start: null, end: null }]);
   };
@@ -237,7 +232,7 @@ export default function MissionCreation() {
               (error) => {
                 setResponse({ error: true, message: "Erreur lors de l'upload de l'image" });
                 console.error("Error while uploading image");
-              }  )
+              })
           });
         
         });

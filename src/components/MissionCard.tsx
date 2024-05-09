@@ -18,19 +18,21 @@ function MissionCard(props: { mission: Mission }) {
     const [isVol, setisvol] = useState<boolean | null>(null);
 
     function getLocation() {
-        fetch(`${config.apiUrl}/locations/${mission.location.toString()}`, {
-            method: 'GET',
-            headers: {
-                authorization: `Bearer ${localStorage.getItem('token')}`,
-                'Content-Type': 'application/json'
-            }
-        }).then((response) => {
-            if (response.status === 200) {
-                response.json().then((data) => {
-                    setlocation(`${data.street_number} ${data.street_number_suffix} ${data.street_type} ${data.street_name}, ${data.postal_code} ${data.city}`);
-                });
-            }
-        });
+        if (mission.location) {
+            fetch(`${config.apiUrl}/locations/${mission.location.toString()}`, {
+                method: 'GET',
+                headers: {
+                    authorization: `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'application/json'
+                }
+            }).then((response) => {
+                if (response.status === 200) {
+                    response.json().then((data) => {
+                        setlocation(`${data.street_number} ${data.street_number_suffix} ${data.street_type} ${data.street_name}, ${data.postal_code} ${data.city}`);
+                    });
+                }
+            });
+        }
     }
     // function getOwner() {
     //     const owner = (isVol) ? "volunteers" : "associations";
