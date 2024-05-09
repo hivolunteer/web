@@ -69,15 +69,6 @@ function Search(props: any) {
     Association[] | []
   >([]);
 
-  /***** QUERY PARAMS FROM HOME PAGE *****/
-  window.onload = function () {
-    const urlParams = new URLSearchParams(window.location.search);
-    const query = urlParams.get("query");
-    if (query) {
-      setSearch(query);
-    }
-  };
-
   const handleClose = () => {
     setOpen(false);
   };
@@ -91,6 +82,7 @@ function Search(props: any) {
       setOpen: setOpen,
       filteredMissions: filteredMissions,
       setFilteredMissions: setFilteredMissions,
+      setSearch: setSearch,
       handleClose: handleClose,
       width: width
     };

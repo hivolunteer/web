@@ -16,6 +16,7 @@ interface Modal {
     setOpen: any,
     filteredMissions: Mission[] | [],
     setFilteredMissions: any,
+    setSearch: any,
     handleClose : any,
     width: number
 }

@@ -95,6 +95,10 @@ const FilterModal = (props: {modalProps: Modal}) => {
         console.log(urlParams)
         const friendsmission = urlParams.get("friendsmission");
         const missionsassociationfollowed = urlParams.get("missionsassociationfollowed");
+        const query = urlParams.get("query");
+        if (query) {
+            modalProps.setSearch(query);
+        }
         setValuesToDefault();
         setPreferences([missionsassociationfollowed ? true : false, friendsmission ? true : false]);
         ValidateSearch();
