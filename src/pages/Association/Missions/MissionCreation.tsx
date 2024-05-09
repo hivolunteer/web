@@ -17,6 +17,7 @@ import LocationModal from "./Modal/LocationModal";
 import noImage from "../../../images/lottie/noImage.json";
 import { Referent } from "./Interface/Referent";
 import ReferentModal from "./Modal/ReferentModal";
+import MissionPanel from "../../Volunteer/Search/Panels/MissionPanel";
 
 interface MissionCreationData {
   missionName?: string;
@@ -189,7 +190,7 @@ export default function MissionCreation() {
       description: form?.missionDescription,
       practical_information: form?.missionPracticalInformation,
       location: locationId,
-      start_date: startDates,
+      start_dates: startDates,
       end_dates: endDates,
       title: form?.missionName,
       skills: newSkill,
@@ -207,28 +208,33 @@ export default function MissionCreation() {
     }).then((response) => {
       if (response.status === 201) {
         response.json().then((data) => {
+          console.log(data)
           const formData = new FormData();
           if (image) {
             formData.append("file", image);
-          } 
-          fetch(`${config.apiUrl}/uploads/${localStorage.getItem('role')}/mission/${data.id}`, {
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`
-            },
-            body: formData
-          }).then(
-            (response) => {
-              if (response.status === 201) {
-                console.log("Image uploaded");
+          }
+          data.association_missions.forEach((mission: any) => {
+            const missionId = mission.id
+            fetch(`${config.apiUrl}/uploads/${localStorage.getItem('role')}/mission/${missionId}`, {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+              },
+              body: formData
+            }).then(
+              (response) => {
+                if (response.status === 201) {
+                  console.log("Image uploaded");
+                  window.location.href = "/";
+                }
               }
-            }
-          )
-          .catch(
-            (error) => {
-              console.error("Error while uploading image");
-            }
-          )
+            )
+            .catch(
+              (error) => {
+                console.error("Error while uploading image");
+              }  )
+          });
+        
         });
       }
     })

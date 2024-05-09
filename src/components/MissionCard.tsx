@@ -43,8 +43,9 @@ function MissionCard(props: { mission: Mission }) {
         }).then((response) => {
             if (response.status === 200) {
                 response.json().then((data) => {
-                    const profile_picture = isVol ? (data.volunteer as Volunteer).profile_picture : (data.association as Association).profile_picture;
-                    setMissionPicture(profile_picture);
+                    const path_picture = window.location.origin + mission.picture
+                    //const profile_picture = isVol ? (data.volunteer as Volunteer).profile_picture : (data.association as Association).profile_picture;
+                    setMissionPicture(path_picture);
                 });
             } else {
                 console.log("FAILURE: " + response.status);

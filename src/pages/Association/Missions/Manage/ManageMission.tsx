@@ -13,6 +13,7 @@ import NearMeOutlinedIcon from '@mui/icons-material/NearMeOutlined';
 import { Button, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import UserCard from '../../../../components/UserCard';
 import ReturnComments from './ReturnComments';
+import { log } from 'console';
 
 interface Mission {
     id: number,
@@ -56,6 +57,7 @@ interface Volunteer {
 function ManageMission() {
 
     const [mission, setMission] = useState<Mission>()
+    const [missionPicture, setMissionPicture] = useState("");
     const [location, setLocation] = useState<Location>()
     const [ListVolunteers, setListVolunteers] = useState<Volunteer[]>([])
 
@@ -75,6 +77,8 @@ function ManageMission() {
             if (response.status === 200) {
                 response.json().then((data) => {
                     setMission(data.association_mission);
+                    console.log(data)
+                    setMissionPicture(data.association_mission?.picture);
                     fetch(`${config.apiUrl}/locations/${data.association_mission?.location}`, {
                         method: 'GET',
                         headers: {
@@ -213,7 +217,7 @@ function ManageMission() {
 
     return (
         <div>
-            <div className="manage-container header-mission-container" style={{backgroundImage: `url(${mission?.picture})`}}>
+            <div className="manage-container header-mission-container" style={{backgroundImage: `url('${window.location.origin + missionPicture}')`}}>
                 <div className="association-logo">
                     {/* <img src="https://th.bing.com/th/id/R.a159530285fe4c5b20f40dc89741304e?rik=3L6mcWO3XWPxxA&pid=ImgRaw&r=0.png" alt="logo" className='association-logo-mission'/> */}
                 </div>
