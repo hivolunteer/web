@@ -82,6 +82,7 @@ function ResponsiveAppBar() {
       background-color="#F5F5F5"
       style={{
         background: !color_blind ? "#67A191" : "#3b3d3c",
+        width: '100%'
       }}
     >
       <Container maxWidth="xl">

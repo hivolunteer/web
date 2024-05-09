@@ -8,7 +8,7 @@ import '../../Volunteer/Home/Home.scss';
 import {useEffect, useState } from 'react'
 import config from "../../../config";
 import { Button } from '@mui/material';
-import MissionCard from '../../../components/MissionCard';
+import MissionCardHome from '../../../components/MissionCardHome';
 
 interface Mission {
     id: number,
@@ -38,7 +38,7 @@ function Accueil () {
         }).then((response) => {
             if (response.status === 200) {
                 response.json().then((data) => {
-                    setMissionList(data.association_missions)
+                    setMissionList(data.active)
                 })
             }
         })
@@ -56,7 +56,7 @@ function Accueil () {
                                 missionList.map((mission: any) => {
                                     return(
                                         <div style={{width: '100%', margin: '10px'}}>
-                                            <MissionCard mission={mission} />
+                                            <MissionCardHome mission={mission} />
                                         </div>
                                     )
                                 })

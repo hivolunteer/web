@@ -31,16 +31,10 @@ function ReferentPage() {
                     res.json().then(data => {
                         setAssociation(data.association as Association)
                     })
-                } else {
-                    alert("Erreur dans la base de données. Veuillez contactez un administrateur si le probléme persiste.")
-                    window.location.href = "/";
-                    window.location.reload();
                 }
             })
             .catch(err => {
-                alert("Erreur dans la base de données. Veuillez contactez un administrateur si le probléme persiste.")
-                window.location.href = "/";
-                window.location.reload();
+                console.log(err)
             })
 
         fetch(`${config.apiUrl}/referent/list`, {
@@ -51,14 +45,11 @@ function ReferentPage() {
             }
         })
             .then((res: any) => {
-                if (res.status === 201) {
+                console.log(res)
+                if (res.status === 200) {
                     res.json().then((data: Referent[]) => {
                         setReferentList(data as Referent[])
                     })
-                } else {
-                    alert("Erreur dans la base de données. Veuillez contactez un administrateur si le probléme persiste.")
-                    window.location.href = "/";
-                    window.location.reload();
                 }
             })
     }, [])
@@ -166,14 +157,17 @@ function ReferentPage() {
             </div>
             <div className="referent-list">
                 <h1 className="referent-list-title"> Liste des référents </h1>
-                <div className="referent-list-header">
+                <div className="referent-list-header" style={{
+                    display: 'flex',
+                    justifyContent: 'center'
+                }}>
                 {
                     (referentList.length === 0) ?
                         <p> Aucun référent pour le moment </p>
                     :
                         referentList.map((referent: Referent) => {
                             return (
-                                <div className="referent-row" style={{ width: "100%" }}>
+                                <div className="referent-row" style={{ width: "50%" }}>
                                     <div className="referent-picture">
                                         <img 
                                             src={(referent.profile_picture !== null) ? referent.profile_picture : profileImage}

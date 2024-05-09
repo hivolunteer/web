@@ -1,162 +1,150 @@
-import { CardMedia } from '@mui/material';
+import { Card, CardContent, CardMedia, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
-import Card from 'react-bootstrap/Card';
-import '../pages/Volunteer/Home/Home.scss';
+import config from '../config';
+import { BorderBottom } from '@mui/icons-material';
 
-import BusinessIcon from '@mui/icons-material/Business';
-import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
-import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
-import NearMeOutlinedIcon from '@mui/icons-material/NearMeOutlined';
-import config from "../config";
-import { Mission, Association, Volunteer } from '../interfaces';
+export default function MissionCard(props: {mission_id: number}) {
+    
+        const [mission, setMission] = useState<Mission | undefined>(undefined);
+        const [associationLogo, setAssociationLogo] = useState<string>('');
+        const [associationName, setAssociationName] = useState<string>('');
+        const [location, setLocation] = useState<string>('');
 
-function MissionCard(props: { mission: Mission }) {
-    const mission: Mission = props.mission;
-
-    const [location, setlocation] = useState("");
-    const [missionPicture, setMissionPicture] = useState("");
-    const [isVol, setisvol] = useState<boolean | null>(null);
-
-    function getLocation() {
-        fetch(`${config.apiUrl}/locations/${mission.location.toString()}`, {
-            method: 'GET',
-            headers: {
-                authorization: `Bearer ${localStorage.getItem('token')}`,
-                'Content-Type': 'application/json'
-            }
-        }).then((response) => {
-            if (response.status === 200) {
-                response.json().then((data) => {
-                    setlocation(`${data.street_number} ${data.street_number_suffix} ${data.street_type} ${data.street_name}, ${data.postal_code} ${data.city}`);
-                });
-            }
-        });
-    }
-    function getOwner() {
-        const owner = (isVol) ? "volunteers" : "associations";
-        fetch(`${config.apiUrl}/${owner}/profile/${mission.owner_id.toString()}`, {
-            method: 'GET',
-            headers: {
-                authorization: `Bearer ${localStorage.getItem('token')}`,
-                'Content-Type': 'application/json'
-            }
-        }).then((response) => {
-            if (response.status === 200) {
-                response.json().then((data) => {
-                    const profile_picture = isVol ? (data.volunteer as Volunteer).profile_picture : (data.association as Association).profile_picture;
-                    setMissionPicture(profile_picture);
-                });
-            } else {
-                console.log("FAILURE: " + response.status);
-            }
-        });
-    }
-
-    useEffect(() => {
-        if (location === "") {
-            getLocation();
+        interface Mission {
+            id : number,
+            end_date: string,
+            start_date: string,
+            description: string,
+            location: number,
+            max_volunteers: number,
+            owner_id: number,
+            title: string,
+            pratical_information: string,
+            picture: string,
         }
-    }, [location]);
-
-    useEffect(() => {
-        if (isVol === null) {
-            fetch(`${config.apiUrl}/missions/close`, {
+    
+        useEffect(() => {
+            fetch(`${config.apiUrl}/missions/association/${props.mission_id}`, {
                 method: 'GET',
                 headers: {
                     authorization: `Bearer ${localStorage.getItem('token')}`,
                     'Content-Type': 'application/json'
                 }
             }).then((response) => {
-                setisvol(false);
                 if (response.status === 200) {
-                    response.json().then((data: Mission[]) => {
-                        for (const fodder of data) {
-                            if (fodder.title === mission.title && fodder.description === mission.description) {
-                                setisvol(true);
-                                break;
-                            }
-                        }
-                    });
+                    response.json().then((data) => {
+                        setMission(data.association_mission)
+                    })
                 }
-                getOwner();
-            });
+            })
+        }, [])
 
+        useEffect(() => {
+            if (mission && mission.owner_id) {
+                    fetch(`${config.apiUrl}/associations/profile/${mission.owner_id}`, {
+                        method: 'GET',
+                        headers: {
+                            authorization: `Bearer ${localStorage.getItem('token')}`,
+                            'Content-Type': 'application/json'
+                        }
+                    }).then((response) => {
+                        if (response.status === 200) {
+                            response.json().then((data) => {
+                                setAssociationName(data.association.name)
+                                setAssociationLogo(data.association.profile_picture)
+                            })
+                        }
+                    })
+            }
+        }, [mission])
+
+        useEffect(() => {
+            if (mission && mission.location) {
+                fetch(`${config.apiUrl}/locations/${mission.location}`, {
+                    method: 'GET',
+                    headers: {
+                        authorization: `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'application/json'
+                    }
+                }).then((response) => {
+                    if (response.status === 200) {
+                        response.json().then((data) => {
+                            setLocation(data.city)
+                        })
+                    }
+                })
+            }
         }
-    }, [isVol]);
-
-    // misc functions
-
-    function convertDay(date: string) {
-        if (date === '')
-            return ''
-        let day = date.split('T')[0].split('-')[2]
-        let month = date.split('T')[0].split('-')[1]
-        let year = date.split('T')[0].split('-')[0]
-        return `${day}/${month}/${year}`
-    }
-
-    function convertHour(date: string) {
-        if (date === '')
-            return ''
-        let hour = date.split('T')[1].split(':')[0]
-        let minutes = date.split('T')[1].split(':')[1]
-        return `${hour}:${minutes}`
-    }
+        , [mission])
 
 
-    // page rendering
-    return (
-        <Card
-            style={{
-                width: '110%',
-                height: '100%',
-                border: 'none',
-                borderRadius: '10px',
-                boxShadow: '0px 5px 5px -5px #2d2a32',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: '#FFFEFF'
-            }}
-            onClick={() => {
-                window.location.href = `/manage/${mission.id}`
-            }}
-        >
-            <Card.Body style={{ width: '100%' }}>
-                <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-                    <div style={{ flex: 1, margin: '10px 20px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
-                        <CardMedia
-                            component="img"
-                            style={{ borderRadius: '100%', objectFit: 'cover', height: '150px', width: '150px' }}
-                            image={(missionPicture === '') ? 'https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg' : missionPicture}
-                            alt="mission picture"
-                        />
-                    </div>
-                    <div style={{ flex: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' }}>
-                        <div className='mission-header'>
-                            <p style={{ fontWeight: 'bold' }}> {mission.title} </p>
+        const findDay = (date: string | undefined) => {
+            if (!date)
+                return;
+            let day = date.slice(8, 10);
+            let month = date.slice(5, 7);
+            let year = date.slice(0, 4);
+            return `${day}.${month}.${year}`
+        }
+
+        const findHour = (date: string | undefined) => {
+            if (!date)
+                return;
+            let hour = date.slice(11, 13);
+            let minute = date.slice(14, 16);
+            return (minute === '00') ? `${hour}h` : `${hour}h${minute}`;
+        }
+
+        const findLocation = (location: string | undefined) => {
+            if (!location)
+                return "";
+            return ("| " + location);
+        }
+
+        return(
+            <div>
+                <Card sx={{width: '100%', height: '100%', borderBottom: '5px solid #5d9082'}}
+                >
+                    <CardMedia
+                        component="img"
+                        height="185"
+                        image={mission?.picture ? mission?.picture : "d "}
+                        alt="Association logo"
+                    />
+                    <CardContent sx={{backgroundColor: "rgba(0, 0, 0, 0.70)", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                        <Typography variant="body2" color="white">
+                            {findDay(mission?.start_date)} {findHour(mission?.start_date)} - {findHour(mission?.end_date)} {findLocation(location)}
+                        </Typography>
+                    </CardContent>
+                    <CardContent sx={{backgroundColor: 'white', minHeight: '100px', maxHeight: '100px'}}>
+                        <Typography variant="h6" component="div" color="#2D2A32" fontWeight={550} marginBottom={1} sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+                            {mission?.title}
+                        </Typography>
+                        <Typography variant="body2" display="inline-block" style={{
+                                                                           width: '100%',
+                                                                           display: 'block',
+                                                                           whiteSpace: 'normal',
+                                                                           overflow: 'hidden',
+                                                                           textOverflow: 'ellipsis',
+                                                                           lineHeight: '1.4em',
+                                                                           maxHeight: '5.6em',
+                                                                           position: 'relative'
+                                                                         }}>
+                            {mission?.description}
+                        </Typography>
+                    </CardContent>
+                    <CardContent>
+                        <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+                            <Typography style={{ fontSize: "14px", fontWeight: "bold" }}>
+                                <a style={{ fontWeight: "normal" }}>Par</a> {associationName}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary" sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', cursor: 'pointer', textDecoration: 'underline'}}
+                            onClick={() => (window.location.href = 'mission/' + mission?.id)}>
+                                Voir plus
+                            </Typography>
                         </div>
-                        <div className='mission-body'>
-                            <div className='mission-body-with-icon'>
-                                <CalendarMonthOutlinedIcon />
-                                <p style={{ marginLeft: '10px' }}> {convertDay(mission.start_date.toString())} {convertHour(mission.start_date.toString())}h - {convertDay(mission.end_date.toString())} {convertHour(mission.end_date.toString())}h </p>
-                            </div>
-                            <div className='mission-body-with-icon' style={{ marginBottom: '2px' }}>
-                                <NearMeOutlinedIcon />
-                                <p style={{ marginLeft: '10px' }}> {location} </p>
-                            </div>
-                            <div className='mission-body-with-icon' style={{ marginBottom: '2px' }}>
-                            {(isVol) ? <EmojiEmotionsIcon/> : <BusinessIcon />}
-                            <p style={{ marginLeft: '10px' }}>{isVol ? "Bénévole" : "Association"}</p>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </Card.Body>
-        </Card>
-    )
+                    </CardContent>
+                </Card>
+            </div>
+        )
 }
-
-export default MissionCard;
