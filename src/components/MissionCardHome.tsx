@@ -121,7 +121,7 @@ function MissionCardHome(props: { mission: Mission }) {
                 backgroundColor: '#FFFEFF'
             }}
             onClick={() => {
-                window.location.href = `/manage/${mission.id}`
+                window.location.href = isVol ? `/manage/${mission.id}` : `/mission/${mission.id}`
             }}
         >
             <Card.Body style={{ width: '100%' }}>
