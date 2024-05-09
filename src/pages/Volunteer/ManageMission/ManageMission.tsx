@@ -1,18 +1,8 @@
-/**
- * @module ManageMission.tsx
- * @description Association Manage Mission Page
- * @utility This page is used to display the association's manage mission page
- */
-import './ManageMission.scss';
-import { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import config from "../../../config";
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import CloseIcon from '@mui/icons-material/Close';
-import CheckIcon from '@mui/icons-material/Check';
-import NearMeOutlinedIcon from '@mui/icons-material/NearMeOutlined';
-import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
-import ManageMissionInformation from './ManageMissionInformation';
+import ManageMissionInformation from './Components/ManageMissionInformation';
+import { Button } from '@mui/material';
+import './ManageMission.scss';
 
 interface Volunteer {
     id: number,
@@ -30,7 +20,7 @@ interface Volunteer {
 
 function ManageMission() {
     const [ListVolunteers, setListVolunteers] = useState<Volunteer[]>([]);
-    const [missionStatus, setMissionStatus] = useState<number>(0);
+    const [MissionStatus, setMissionStatus] = useState<number>(0);
 
     // get id from url
     const url = window.location.href;
@@ -53,8 +43,25 @@ function ManageMission() {
         })
     }
 
+    function publishMission() {
+        fetch(`${config.apiUrl}/missions/close/upload/${mission_id}`, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        }).then((response) => {
+            if (response.status === 201) {
+                setMissionStatus(1);
+            } else {
+                console.log("ERROR");
+                alert("Une erreur est survenue lors de la publication de la mission");
+            }
+        })
+    }
+
     function deleteMission() {
-        if (missionStatus === 0) {
+        if (MissionStatus === 0) {
             fetch(`${config.apiUrl}/missions/close/delete/${mission_id}`, {
                 method: 'DELETE',
                 headers: {
@@ -63,7 +70,7 @@ function ManageMission() {
                 }
             }).then((response) => {
                 if (response.status === 201) {
-                    window.location.href = "/";
+                    window.history.back();
                 } else {
                     console.log("ERROR");
                     alert("Une erreur est survenue lors de la suppression de la mission");
@@ -78,7 +85,7 @@ function ManageMission() {
                 }
             }).then((response) => {
                 if (response.status === 200) {
-                    window.location.href = "/";
+                    setMissionStatus(2);
                 } else {
                     console.log("ERROR");
                     alert("Une erreur est survenue lors de l'annulation de la mission");
@@ -89,8 +96,18 @@ function ManageMission() {
 
     return (
         <div>
-            <ManageMissionInformation mission_id={mission_id} onPublish={getVolunteers} setMissionStatus={setMissionStatus} />
-
+            <ManageMissionInformation mission_id={mission_id} onPublish={getVolunteers} setMissionStatus={setMissionStatus} MissionStatus={MissionStatus} />
+            <div className='manage-mission-button-container'>
+                { MissionStatus === 0 &&
+                    <>
+                        <Button className='manage-mission-button' variant="outlined" color="success" onClick={() => publishMission()}> Mettre en ligne </Button>
+                        <div className='manage-mission-button-separator'/>
+                    </>
+                    }
+                { (MissionStatus === 0 || MissionStatus === 1) &&
+                    <Button className='manage-mission-button' variant="outlined" color="error" onClick={() => deleteMission()}> {MissionStatus === 0 ? "Supprimer" : "Annuler"} </Button>
+                }
+            </div>
             {/* { mission?.status !== 0 && (
             <Accordion className="volunteer-manage-mission-accordion" defaultExpanded={true}>
                 <AccordionSummary
@@ -142,7 +159,6 @@ function ManageMission() {
                 </AccordionDetails>
             </Accordion>
             )} */}
-            <Button className="manage-mission-button" variant="outlined" color="error" onClick={() => deleteMission()}> {missionStatus === 0 ? "Supprimer" : "Annuler"} </Button>
 
             {/* <div className="container body-mission-container">
                 <div className="mission-firstinformation">

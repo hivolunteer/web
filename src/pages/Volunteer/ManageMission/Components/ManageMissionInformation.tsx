@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button } from "@mui/material";
 import Grid from "@mui/system/Unstable_Grid";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import config from "../../../config";
+import config from "../../../../config";
 import './ManageMissionInformation.scss';
 
 interface Mission {
@@ -48,13 +48,20 @@ function TextDisplayer(props: any) {
   }
 }
 
-function ManageMissionInformation(props: any) {
+type ManageMissionInformationProps = {
+  mission_id: string | undefined,
+  onPublish: any,
+  setMissionStatus: any,
+  MissionStatus: number,
+}
+
+function ManageMissionInformation(props: ManageMissionInformationProps) {
   const [mission, setMission] = useState<Mission>();
   const [location, setLocation] = useState<Location>();
 
   const mission_id = props.mission_id;
   const onPublish = props.onPublish;
-  const setMissionStatus = props.setMissionStatus;
+  const SetMissionStatus = props.setMissionStatus;
 
   function formatDate(date: string) {
     if (date === '')
@@ -78,7 +85,7 @@ function ManageMissionInformation(props: any) {
         if (response.status === 200) {
             response.json().then((data) => {
                 setMission(data.close_mission);
-                setMissionStatus(data.close_mission?.status);
+                SetMissionStatus(data.close_mission?.status);
                 fetch(`${config.apiUrl}/locations/${data.close_mission?.location}`, {
                     method: 'GET',
                     headers: {
@@ -100,25 +107,7 @@ function ManageMissionInformation(props: any) {
             window.location.href = "/";
         }
     })
-}, [])
-
-
-  function publishMission() {
-    fetch(`${config.apiUrl}/missions/close/upload/${mission_id}`, {
-        method: 'POST',
-        headers: {
-            'content-type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-    }).then((response) => {
-        if (response.status === 201) {
-            window.location.href = `/manage/${mission_id}`;
-        } else {
-            console.log("ERROR");
-            alert("Une erreur est survenue lors de la publication de la mission");
-        }
-    })
-  }
+  }, [])
 
   function acceptVolunteer(id: number) {
     fetch(`${config.apiUrl}/missions/close/${mission_id}/${id}/accept`, {
@@ -191,8 +180,8 @@ function ManageMissionInformation(props: any) {
                       <h4> Thème </h4>
                       <TextDisplayer element={mission?.theme_id} />
                       <h4> Status </h4>
-                      <p className={mission?.status === 1 ? "manage-mission-information-status-published" : mission?.status === 2 ? "manage-mission-information-status-canceled" : mission?.status === 3 ? "manage-mission-information-status-passed" : "manage-mission-information-status-draft"}>
-                        { mission?.status === 1 ? "En ligne" : mission?.status === 2 ? "Annulée" : mission?.status === 3 ? "Passée" : "Brouillon" }
+                      <p className={props.MissionStatus === 1 ? "manage-mission-information-status-published" : props.MissionStatus === 2 ? "manage-mission-information-status-canceled" : props.MissionStatus === 3 ? "manage-mission-information-status-passed" : "manage-mission-information-status-draft"}>
+                        { props.MissionStatus === 1 ? "En ligne" : props.MissionStatus === 2 ? "Annulée" : props.MissionStatus === 3 ? "Passée" : "Brouillon" }
                       </p>
 
                   </Grid>
