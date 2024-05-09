@@ -111,9 +111,9 @@ const MissionDetails = () => {
         })
             .then(response => response.json())
             .then((data: any) => {
-                if (data.active.length === 0) 
+                if (data.active && data.active.length === 0)
                     setIsRegistered(false)
-                else {
+                else if (data.active) {
                     data.active.forEach((mission: any) => {
                         if (mission.id === Number(id)) {
                             setIsRegistered(true)
