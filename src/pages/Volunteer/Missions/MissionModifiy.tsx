@@ -25,7 +25,7 @@ interface MissionModificationData {
   missionName?: string;
   missionDescription?: string;
   missionPracticalInformation?: string;
-  missionAddress?: string;
+  missionAddress?: string | null;
   missionDate?: Date;
   missionEndDate?: Date;
   missionVolunteersNumber?: number;
@@ -60,7 +60,16 @@ const noImageComponent = () => {
 export default function MissionModification() {
   const { missionID } = useParams<{ missionID: string }>();
   const [image, setImage] = React.useState<any>(null);
-  const [form, setForm] = React.useState<MissionModificationData>();
+  const [form, setForm] = React.useState<MissionModificationData>({
+    missionName: "",
+    missionDescription: "",
+    missionPracticalInformation: "",
+    missionAddress: null,
+    missionDate: new Date(),
+    missionEndDate: new Date(),
+    missionVolunteersNumber: 0,
+    missionSkills: "",
+  })
   const [newSkill, setNewSkill] = useState<Array<number>>([]);
   const [skillDb, setSkillDb] = useState<Array<SkillDatabase>>([]);
   const [mission, setMissionData] = useState<Mission>();
@@ -98,13 +107,13 @@ export default function MissionModification() {
       }
 
       const data = await response.json();
-      if (!data.association_mission) {
+      if (!data.close_mission) {
         setError(`Mission with ID ${missionId} does not exist.`);
         return;
       }
       let mission = data.close_mission;
-      setLocationId(mission.association_mission.location);
-      fetch(`${config.apiUrl}/locations/${mission.association_mission?.location}`, {
+      setLocationId(mission.location);
+      fetch(`${config.apiUrl}/locations/${mission.location}`, {
         method: 'GET',
         headers: {
           'content-type': 'application/json',
@@ -116,31 +125,30 @@ export default function MissionModification() {
           response.json().then((data) => {
             console.log(data);
             //setLocation(data);
-            let loc = data;
-            setLocationStr(loc.street_number+
-              loc.street_name+
-              +loc.street_number_suffix+
-              +loc.street_type+
-              +loc.departement_id+
-              +loc.city+
-              +loc.postal_code)
+
+            setLocationStr(String(data.street_number) + " " + data.street_type + " "
+              +data.street_name+", "+
+              data.city +" "+ String(data.postal_code))
+            console.log(locationStr);
+            setMissionData(mission as Mission);
+            setForm({
+              ...form,
+              missionName: mission.title,
+              missionDescription: mission.description,
+              missionPracticalInformation: mission.practical_information,
+              missionAddress: locationStr,
+              missionDate: mission.start_date,
+              missionEndDate: mission.end_date,
+              missionVolunteersNumber: mission.max_volunteers,
+              missionSkills: undefined,
+            })
+            console.log(form);
             
           })
         }
       })
       // should have a model for close mission too
-      setMissionData(mission.association_mission as Mission);
-      setForm({...form, 
-        missionName: mission.association_mission.title,
-        missionDescription: mission.association_mission.description,
-        missionPracticalInformation: mission.association_mission.practical_information,
-        missionAddress: locationStr,
-        missionDate: mission.association_mission.start_date,
-        missionEndDate: mission.association_mission.end_date,
-        missionVolunteersNumber: mission.association_mission.max_volunteers,
-        missionSkills: undefined,
-      })
-      console.log(form);
+      
       //fetchIfVolunteerIsRegistered(); // Call fetchIfVolunteerIsRegistered here
     } catch (error) {
       console.log("error");
@@ -223,6 +231,7 @@ export default function MissionModification() {
         }
       );
   };
+  console.log(form);
 
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
@@ -313,7 +322,7 @@ export default function MissionModification() {
                 fullWidth
                 id="missionName"
                 label="Nom de la mission"
-                value={form?.missionName}
+                value={form?.missionName as string}
                 onChange={(missionName) => {
                   setForm({ ...form, missionName: missionName.target.value });
                 }}
@@ -471,7 +480,7 @@ export default function MissionModification() {
                 ModifyMission();
               }}
             >
-              Créer la mission
+              Modifier la mission
             </Button>
           </Box>
         </Box>
