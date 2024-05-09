@@ -1,20 +1,30 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Alert, Box, Button, Grid, IconButton, InputAdornment, Link, TextField, Typography } from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { AuthenticationService } from '../../../services/authentication.service';
-import './Login.scss';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Alert, Snackbar, Box, Button, Grid, IconButton, InputAdornment, Link, TextField, Typography } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { AuthenticationService } from "../../../services/authentication.service";
+import "./Login.scss";
 import titleLogo from "../../../images/logo/primary_logo.png";
 import ForgotPasswordModal from '../ForgotPasswordModal/ForgotPasswordModal';
+import AutohideSnackbar from "../../../components/SnackBar";
 
 function LoginAssociation() {
-    const [showPassword, setShowPassword] = React.useState(false);
-    const [emailFormat, setEmailFormat] = useState(true);
-    const [email, setEmail] = useState(true);
-    const [password, setPassword] = useState(true);
-    const navigate = useNavigate();
+  const [response, setResponse] = useState<{ error: Boolean; message: string }>(
+    { error: false, message: "" }
+  );
 
-    const [open, setOpen] = useState(false);
+  /***
+   * Define all states
+   ***/
+  /* State for password visibility */
+  const [showPassword, setShowPassword] = React.useState(false);
+  /* Set mail format state */
+  const [emailFormat, setEmailFormat] = useState(true);
+  /* State complete for all inputs*/
+  const [email, setEmail] = useState(true);
+  const [password, setPassword] = useState(true);
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
     /* Function to check if all inputs are complete */
     const checkComplete = (data: FormData) => {
@@ -31,81 +41,89 @@ function LoginAssociation() {
     };
 
 
-    /* Function to check email format */
-    const checkEmailFormat = (email: string) => {
-        const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-        // regex :  1 @, 1 point, 2 to 4 characters
-        if (regex.test(email)) {
-            setEmailFormat(true);
-            return true;
-        } else {
-            setEmailFormat(false);
-            return false;
-        }
-    };
+  /* Function to check email format */
+  const checkEmailFormat = (email: string) => {
+    const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    // regex :  1 @, 1 point, 2 to 4 characters
+    if (regex.test(email)) {
+      setEmailFormat(true);
+      return true;
+    } else {
+      setEmailFormat(false);
+      return false;
+    }
+  };
 
-    /* Function to check Inputs */
-    const checkInput = (data: FormData) => {
-        /* Check if all inputs are complete */
-        checkComplete(data);
-        /* Check email format */
-        checkEmailFormat(data.get('email') as string);
-    };
+  /* Function to check Inputs */
+  const checkInput = (data: FormData) => {
+    /* Check if all inputs are complete */
+    checkComplete(data);
+    /* Check email format */
+    checkEmailFormat(data.get("email") as string);
+  };
 
-    /* Function to execute response */
-    const responseExecute = (response_status: number) => {
-        switch (response_status) {
-            case 200:
-                alert('Connexion réussie');
-                localStorage.setItem('role', 'association')
-                navigate('/');
-                window.location.reload();
-                break;
-            case 401:
-                alert('Connexion échouée');
-                break;
-            default:
-                alert('Erreur inconnue');
-                break;
-        }
-    };
+  /* Function to execute response */
+  const responseExecute = (response_status: number) => {
+    switch (response_status) {
+      case 200:
+        setResponse({
+          error: false,
+          message: "Connexion réussie",
+        });
+        localStorage.setItem("role", "association");
+        navigate("/");
+        window.location.reload();
+        break;
+      case 401:
+        setResponse({
+          error: true,
+          message: "Connexion échouée, veuillez vérifier vos identifiants",
+        });
+        break;
+      default:
+        setResponse({
+          error: true,
+          message: "Erreur inconnue, veuillez réessayer plus tard",
+        });
+        break;
+    }
+  };
 
-    /* Function to send data and print user token receive */
-    const sendData = async (data: FormData) => {
-        // convert FormData to table
-        const user = Object.fromEntries(data.entries());
+  /* Function to send data and print user token receive */
+  const sendData = async (data: FormData) => {
+    // convert FormData to table
+    const user = Object.fromEntries(data.entries());
 
         /* If all inputs are complete, send data */
         if (user['email'] && user['password']) {
             /* If user is major, password is strong enough, email format is correct and phone format is correct, send data */
-            if (checkEmailFormat(user['email'] as string)) {
-                // call LoginAssociation service
-                const response_status = AuthenticationService.loginAssociations(user);
-                console.log(response_status)
-                responseExecute(await response_status);
+            if (checkEmailFormat(user["email"] as string)) {
+              // call LoginAssociation service
+              const response_status = AuthenticationService.loginAssociations(user);
+              console.log(response_status);
+              responseExecute(await response_status);
             }
         }
     };
 
-    /* Function to submit form */
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        /* Prevent default behavior of form */
-        const form = event.currentTarget;
-        event.preventDefault();
-        const data = new FormData(form);
-        /* Check all inputs x2 */
-        for (let i = 0; i < 2; i++) {
-            checkInput(data);
-        }
-        /* If all states are true, send data */
-        console.log(email, password, emailFormat);
-        sendData(data);
-    };
-
-
-    function handleClick(): void {
-        setShowPassword(!showPassword);
+  /* Function to submit form */
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    /* Prevent default behavior of form */
+    const form = event.currentTarget;
+    event.preventDefault();
+    const data = new FormData(form);
+    /* Check all inputs x2 */
+    for (let i = 0; i < 2; i++) {
+      checkInput(data);
     }
+    /* If all states are true, send data */
+    console.log(email, password, emailFormat);
+    sendData(data);
+  };
+
+  function handleClick(): void {
+    setShowPassword(!showPassword);
+  }
 
     return (
         <div className="center-form">
@@ -207,6 +225,13 @@ function LoginAssociation() {
                             </a>
                             <ForgotPasswordModal modalProps={{open: open, handleClose: () => setOpen(false), route: "/associations/"}} />
                         </div>
+                          {response.message !== "" && (
+                          <AutohideSnackbar
+                            message={response.message}
+                            open={true}
+                            response={response.error}
+                          />
+                        )}
                         <Button
                             type="submit"
                             fullWidth

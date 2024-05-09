@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Alert, Box, Button, Grid, IconButton, InputAdornment, Link, TextField, Typography } from "@mui/material";
+import {Alert, Box, Button, Grid, IconButton, InputAdornment, Link, TextField, Typography } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { AuthenticationService } from "../../../services/authentication.service";
 import "./Login.scss";
 import titleLogo from "../../../images/logo/primary_logo.png";
 import ForgotPasswordModal from "../ForgotPasswordModal/ForgotPasswordModal";
+import AutohideSnackbar from "../../../components/SnackBar";
 
 function LoginVolunteer() {
+  const [response, setResponse] = useState<{ error: Boolean; message: string }>(
+    { error: false, message: "" }
+  );
   /***
    * Define all states
    ***/
@@ -18,7 +22,6 @@ function LoginVolunteer() {
   /* Set phone format state */
   const [phoneFormat, setPhoneFormat] = useState(true);
   /* State complete for all inputs*/
-  const [phone, setPhone] = useState(true);
   const [email, setEmail] = useState(true);
   const [password, setPassword] = useState(true);
   const [fodder, setFodder] = useState(true);
@@ -80,16 +83,25 @@ function LoginVolunteer() {
   const responseExecute = (response_status: number) => {
     switch (response_status) {
       case 200:
-        alert("Connexion réussie");
+        setResponse({
+          error: false,
+          message: "Connexion réussie",
+        });
         localStorage.setItem("role", "volunteer");
         navigate("/");
         window.location.reload();
         break;
       case 401:
-        alert("Connexion échouée");
+        setResponse({
+          error: true,
+          message: "Connexion échouée, veuillez vérifier vos identifiants",
+        });
         break;
       default:
-        alert("Erreur inconnue");
+        setResponse({
+          error: true,
+          message: "Erreur inconnue, veuillez réessayer plus tard",
+        });
         break;
     }
   };
@@ -176,12 +188,12 @@ function LoginVolunteer() {
                   }}
                   helperText="Format : +336XXXXXXXX ou XX@XX.X"
                   FormHelperTextProps={{
-                    sx: { marginRight: "auto" }
+                    sx: { marginRight: "auto" },
                   }}
                   error={!fodder}
 
                 />
-                {!email && !phone && (
+                {!email && (
                   <Alert severity="error">Un identifiant est requis</Alert>
                 )}
                 {email && !emailFormat && (
@@ -190,13 +202,6 @@ function LoginVolunteer() {
                     xxxxxx.xxxx@xxx.com
                   </Alert>
                 )}
-                {phone && !phoneFormat && (
-                  <Alert severity="warning">
-                    Le format du numéro de téléphone doit être au format
-                    +336XXXXXXXX
-                  </Alert>
-                )}
-
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -229,6 +234,13 @@ function LoginVolunteer() {
                 )}
               </Grid>
             </Grid>
+            {response.message !== "" && (
+              <AutohideSnackbar
+                message={"L'adresse mail ou le mot de passe est incorrect"}
+                open={true}
+                response={response.error}
+              />
+            )}
             <div style={{ marginTop: "10px", justifyContent: "flex-end", display: "flex" }}> 
                 <a className="forgot-password"
                     onClick={() => {setOpen(true);
