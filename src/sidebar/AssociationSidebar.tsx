@@ -18,8 +18,10 @@ import "./Sidebar.scss";
 import logoWhite from "../images/logo/submark_white.png";
 import logoImage from "../images/logo/submark.png";
 
+
 const pages: string[] = [];
 const settings: string[] = [];
+
 if (localStorage.getItem("token") !== null) {
   pages.push("Accueil", "Calendrier", "Profile");
 }
@@ -30,7 +32,7 @@ if (localStorage.getItem("token") !== null) {
   settings.push("Connexion", "Inscription");
 }
 
-function ResponsiveAppBar() {
+export default function AssociationSidebar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -251,4 +253,3 @@ function ResponsiveAppBar() {
     </AppBar>
   );
 }
-export default ResponsiveAppBar;

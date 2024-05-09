@@ -18,19 +18,22 @@ import "./Sidebar.scss";
 import logoWhite from "../images/logo/submark_white.png";
 import logoImage from "../images/logo/submark.png";
 
+
 const pages: string[] = [];
 const settings: string[] = [];
+
 if (localStorage.getItem("token") !== null) {
-  pages.push("Accueil", "Calendrier", "Profile");
+  pages.push("Accueil", "Recherche", "Mes Missions", "Missions Assignées");
 }
 
 if (localStorage.getItem("token") !== null) {
-  settings.push("Créer une mission", "Profile", "Réglages", "Referent", "Logout");
+  settings.push("Profile", "Réglages", "Déconnexion");
 } else {
   settings.push("Connexion", "Inscription");
 }
 
-function ResponsiveAppBar() {
+
+export default function VolunteerSidebar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -251,4 +254,3 @@ function ResponsiveAppBar() {
     </AppBar>
   );
 }
-export default ResponsiveAppBar;
