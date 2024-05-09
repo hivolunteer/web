@@ -17,54 +17,66 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Sidebar.scss";
 import logoWhite from "../images/logo/submark_white.png";
 import logoImage from "../images/logo/submark.png";
+import config from "../config";
 
 
 const pages: string[] = [];
 const settings: string[] = [];
+const pagesLink: {[pageName: string]: string} = {};
 
-if (localStorage.getItem("token") !== null) {
-  pages.push("Accueil", "Recherche", "Mes Missions", "Missions Assignées");
+const isReferent = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (token == null) {
+      return;
+    }
+    fetch(`${config.apiUrl}/referent/volunteer`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+    }).then((response) => {
+      // Cette route renvoie 200 uniquement si le Volontaire est le référent d'au moins 1 Asso
+      // tous les autres codes sont des erreurs, ou le Volontaire n'est lié à aucune Asso -> dans tous les cas, pas de Missions Assignées
+      if (response.status === 200) {
+        pages.push("Missions Assignées");
+        pagesLink["Missions Assignées"] = "settings/referents";
+      }
+    });
+  } catch (e) {
+    console.warn(e);
+  }
 }
 
 if (localStorage.getItem("token") !== null) {
   settings.push("Profile", "Réglages", "Déconnexion");
+  pages.push("Accueil", "Recherche", "Mes Missions");
+  pagesLink["Accueil"] = "";
+  pagesLink["Recherche"] = "accueil";
+  pagesLink["Mes Missions"] = "history";
+  isReferent();
 } else {
   settings.push("Connexion", "Inscription");
 }
 
-
 export default function VolunteerSidebar() {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null
-  );
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null
-  );
+  let color_blind = localStorage.getItem("color_blind") === "true";
+  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
+  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
-
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => { setAnchorElNav(event.currentTarget); };
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => { setAnchorElUser(event.currentTarget); };
+  const handleCloseNavMenu = () => { setAnchorElNav(null); };
+  const handleCloseUserMenu = () => { setAnchorElUser(null); };
 
   const handleMenuItemClick = (setting: string) => {
     handleCloseUserMenu();
-
     switch (setting) {
       case "Profile":
         navigate("/profile");
         break;
-      case "Logout":
+      case "Déconnexion":
         handleLogout();
         break;
       default:
@@ -77,24 +89,16 @@ export default function VolunteerSidebar() {
     window.location.href = "/";
   };
 
-  let color_blind = localStorage.getItem("color_blind") === "true";
+
+
+
 
   return (
-    <AppBar
-      position="static"
-      background-color="#F5F5F5"
-      style={{
-        background: !color_blind ? "#598b7d" : "#3b3d3c",
-      }}
-    >
+    <AppBar position="static" background-color="#F5F5F5" style={{ background: !color_blind ? "#598b7d" : "#3b3d3c" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Avatar alt="User" src={logoWhite} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
+          <Typography variant="h6" noWrap component="a" href="/"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -109,51 +113,30 @@ export default function VolunteerSidebar() {
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
+            <IconButton size="large" aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true" color="inherit"
               onClick={handleOpenNavMenu}
-              color="inherit"
             >
               <MenuIcon />
             </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
+            <Menu id="menu-appbar" anchorEl={anchorElNav} keepMounted open={Boolean(anchorElNav)} onClose={handleCloseNavMenu}
               anchorOrigin={{
                 vertical: "bottom",
                 horizontal: "left",
               }}
-              keepMounted
               transformOrigin={{
                 vertical: "top",
                 horizontal: "left",
               }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
               sx={{
                 display: { xs: "block", md: "none" },
               }}
             >
               {pages.map((page) => (
-                <MenuItem
-                  key={page}
-                  onClick={() => {
-                    console.log("hd");
-                  }}
-                >
-                  {page}
-                </MenuItem>
+                <MenuItem key={page} onClick={() => { console.log("hd"); }}>{page}</MenuItem>
               ))}
             </Menu>
           </Box>
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href=""
+          <Typography variant="h5" noWrap component="a" href=""
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -169,13 +152,7 @@ export default function VolunteerSidebar() {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
-              <Button
-                key={page}
-                component={Link}
-                to={`/${page.toLowerCase()}`}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
+              <Button key={page} component={Link} to={`/${pagesLink[page]}`} onClick={handleCloseNavMenu} sx={{ my: 2, color: "white", display: "block" }}>
                 {page}
               </Button>
             ))}
@@ -187,47 +164,29 @@ export default function VolunteerSidebar() {
                 <Avatar alt="User" src={logoImage} />
               </IconButton>
             </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
+            <Menu id="menu-appbar" anchorEl={anchorElUser} sx={{ mt: "45px" }} keepMounted open={Boolean(anchorElUser)} onClose={handleCloseUserMenu}
               anchorOrigin={{
                 vertical: "top",
                 horizontal: "right",
               }}
-              keepMounted
               transformOrigin={{
                 vertical: "top",
                 horizontal: "right",
               }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem
-                  key={setting}
-                  onClick={() => handleMenuItemClick(setting)}
-                >
-                  <Typography
-                    textAlign="center"
-                    component={Link}
-                    to={setting === "Profile" ? "/profile" : "/"}
+                <MenuItem key={setting} onClick={() => handleMenuItemClick(setting)} >
+                  <Typography textAlign="center" component={Link} to={setting === "Profile" ? "/profile" : "/"}
                     onClick={() => {
                       handleCloseUserMenu();
                       switch (setting) {
-                        case "Créer une mission":
-                          window.location.href = "/missionCreation";
-                          break;
                         case "Profile":
                           navigate("/profile");
                           break;
                         case "Réglages":
                           window.location.href = "/settings";
                           break;
-                        case "Referent":
-                          window.location.href = "/settings/referents";
-                          break;
-                        case "Logout":
+                        case "Déconnexion":
                           localStorage.removeItem("token");
                           localStorage.removeItem("role");
                           window.location.reload();
@@ -236,7 +195,6 @@ export default function VolunteerSidebar() {
                         case "Connexion" || "Inscription":
                           window.location.href = "/auth";
                           break;
-
                         default:
                           break;
                       }

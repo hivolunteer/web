@@ -9,7 +9,6 @@ import AssociationRouter from "./routers/NoConnectAssociationRouter";
 import AssociationRouterConnected from "./routers/ConnectAssociationRouter";
 import VolunteerRouter from "./routers/NoConnectVolunteerRouter";
 import VolunteerRouterConnected from "./routers/ConnectVolunteerRouter";
-import ResponsiveAppBar from "./sidebar/Sidebar";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { ThemeProvider, useTheme } from "@mui/material";
