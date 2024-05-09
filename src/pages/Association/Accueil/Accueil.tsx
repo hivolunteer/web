@@ -52,8 +52,8 @@ function Accueil () {
                     <div>
                         <h2> Prochaines missions : </h2>
                         <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
-                            {
-                                missionList.map((mission: any) => {
+                            { missionList &&
+                                missionList.map((mission: Mission) => {
                                     return(
                                         <div style={{width: '100%', margin: '10px'}}>
                                             <MissionCardHome mission={mission} />
