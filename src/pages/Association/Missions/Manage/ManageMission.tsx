@@ -12,6 +12,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import NearMeOutlinedIcon from '@mui/icons-material/NearMeOutlined';
 import { Button, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import UserCard from '../../../../components/UserCard';
+import ReturnComments from './ReturnComments';
 
 interface Mission {
     id: number,
@@ -57,6 +58,7 @@ function ManageMission() {
     const [mission, setMission] = useState<Mission>()
     const [location, setLocation] = useState<Location>()
     const [ListVolunteers, setListVolunteers] = useState<Volunteer[]>([])
+
 
     // get id from url
     const url = window.location.href;
@@ -170,7 +172,7 @@ function ManageMission() {
                 console.log("ERROR");
                 alert("Une erreur est survenue lors de la publication de la mission");
             }
-        })
+        });
     }
 
     function acceptVolunteer(id: number) {
@@ -211,9 +213,9 @@ function ManageMission() {
 
     return (
         <div>
-            <div className="container header-mission-container" style={{backgroundImage: `url(${mission?.picture})`}}>
+            <div className="manage-container header-mission-container" style={{backgroundImage: `url(${mission?.picture})`}}>
                 <div className="association-logo">
-                    <img src="https://th.bing.com/th/id/R.a159530285fe4c5b20f40dc89741304e?rik=3L6mcWO3XWPxxA&pid=ImgRaw&r=0.png" alt="logo" className='association-logo-mission'/>
+                    {/* <img src="https://th.bing.com/th/id/R.a159530285fe4c5b20f40dc89741304e?rik=3L6mcWO3XWPxxA&pid=ImgRaw&r=0.png" alt="logo" className='association-logo-mission'/> */}
                 </div>
                 <div className="mission-title">
                     <h1> {mission?.title } </h1>
@@ -233,18 +235,24 @@ function ManageMission() {
                     <h4> Description </h4>
                     { mission?.description }
                 </div>
-                <div className="mission-management">
-                    <Button className="mission-button" onClick={() => window.location.href = `/association/missions/${mission?.id}`} 
-                    style={
-                        {backgroundColor: '#67a191', color: 'white'}                         
-                    }> Visualiser </Button>
-                    <Button className="mission-button" onClick={() => window.location.href = `/association/missions/${mission?.id}/edit`}
-                    style={{backgroundColor: '#db8900', color: 'white'}}> Modifier </Button>
-                    <Button className="mission-button" onClick={() => deleteMission()}
-                    style={{backgroundColor: '#991760', color: 'white'}}> {mission?.status === 0 ? "Supprimer" : "Annuler"} </Button>       
-                    { mission?.status === 0 && <Button className="mission-button" onClick={() => publishMission()}
-                    style={{backgroundColor: '#67a191', color: 'white'}}> Publier </Button> }             
-                </div>
+                {
+                    mission?.status !== 3 && (
+                    <>
+                        <div className="mission-management">
+                            <Button className="mission-button" onClick={() => window.location.href = `/association/missions/${mission?.id}`} 
+                            style={
+                                {backgroundColor: '#67a191', color: 'white'}                         
+                            }> Visualiser </Button>
+                            <Button className="mission-button" onClick={() => window.location.href = `/association/missions/${mission?.id}/edit`}
+                            style={{backgroundColor: '#db8900', color: 'white'}}> Modifier </Button>
+                            <Button className="mission-button" onClick={() => deleteMission()}
+                            style={{backgroundColor: '#991760', color: 'white'}}> {mission?.status === 0 ? "Supprimer" : "Annuler"} </Button>       
+                            { mission?.status === 0 && <Button className="mission-button" onClick={() => publishMission()}
+                            style={{backgroundColor: '#67a191', color: 'white'}}> Publier </Button> }             
+                        </div>
+                    </>
+                    )
+                }
                 { mission?.status === 1 && (
                     <>
                 <hr className="mission-separator" />
@@ -291,6 +299,14 @@ function ManageMission() {
                 </div>
                 </>
                 )}
+                {
+                    mission?.status === 3 && (
+                        <>
+                        <hr className="mission-separator" />
+                        <ReturnComments mission_id={mission_id} />
+                        </>
+                    )
+                }
             </div>
         </div>
     )

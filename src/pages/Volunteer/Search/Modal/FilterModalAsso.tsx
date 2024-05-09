@@ -1,8 +1,8 @@
 import { Dialog, DialogTitle, Button, Checkbox, Rating } from "@mui/material";
 import React, { useState } from "react";
 
-import { ModalAsso } from "./Interfaces"; 
-import config from "../../../config";
+import { ModalAsso } from "../Interfaces"; 
+import config from "../../../../config";
 
 
 const FilterModal = (props: {modalProps: ModalAsso}) => {
@@ -31,11 +31,8 @@ const FilterModal = (props: {modalProps: ModalAsso}) => {
             },
             body: JSON.stringify(body)
         }).then((response) => {
-            console.log(response)
             if (response.status === 200) {
                 response.json().then((data) => {
-                    console.log("DATA" + data)
-                    console.log("friends" + preferences[1], "follows" + preferences[0], "note" + value)
                     modalProps.setFilteredAssociations(data)
                     modalProps.handleClose()
                 })

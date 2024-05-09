@@ -18,8 +18,17 @@ import "./Sidebar.scss";
 import logoWhite from "../images/logo/submark_white.png";
 import logoImage from "../images/logo/submark.png";
 
-const pages = ["Accueil", "Calendrier", "Profile"];
-const settings = ["Créer une mission", "Profile", "Réglages", "Logout"];
+const pages: string[] = [];
+const settings: string[] = [];
+if (localStorage.getItem("token") !== null) {
+  pages.push("Accueil", "Calendrier", "Profile");
+}
+
+if (localStorage.getItem("token") !== null) {
+  settings.push("Créer une mission", "Profile", "Réglages", "Referent", "Logout");
+} else {
+  settings.push("Connexion", "Inscription");
+}
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -72,7 +81,7 @@ function ResponsiveAppBar() {
       position="static"
       background-color="#F5F5F5"
       style={{
-        background: !color_blind ? "#598b7d" : "#3b3d3c",
+        background: !color_blind ? "#67A191" : "#3b3d3c",
       }}
     >
       <Container maxWidth="xl">
@@ -88,7 +97,7 @@ function ResponsiveAppBar() {
               display: { xs: "none", md: "flex" },
               fontFamily: "montserrat",
               fontWeight: "bold",
-              letterSpacing: ".3rem",
+              // letterSpacing: ".3rem",
               color: "#F5F5F5",
               textDecoration: "none",
             }}
@@ -146,8 +155,9 @@ function ResponsiveAppBar() {
               mr: 2,
               display: { xs: "flex", md: "none" },
               flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
+              fontFamily: "montserrat",
+              fontWeight: "bold",
+              fontSize: "1.5rem",
               letterSpacing: ".3rem",
               color: "inherit",
               textDecoration: "none",
@@ -212,6 +222,9 @@ function ResponsiveAppBar() {
                         case "Réglages":
                           window.location.href = "/settings";
                           break;
+                        case "Referent":
+                          window.location.href = "/settings/referents";
+                          break;
                         case "Logout":
                           console.log("logout");
                           localStorage.removeItem("token");
@@ -219,6 +232,10 @@ function ResponsiveAppBar() {
                           window.location.reload();
                           window.location.href = "/";
                           break;
+                        case "Connexion" || "Inscription":
+                          window.location.href = "/auth";
+                          break;
+                        
                         default:
                           break;
                       }

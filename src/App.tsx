@@ -15,14 +15,17 @@ import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { ThemeProvider, useTheme } from "@mui/material";
 import { myTheme } from "./theme/theme";
 import { useEffect } from "react";
+import Home from "./pages/NonConnected/Home/Home";
 
 function NoConnectRouter() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<UserTypeChoice />} />
-        <Route path="/volunteers/*" element={<VolunteerRouter />} />
-        <Route path="/associations/*" element={<AssociationRouter />} />
+        <Route path="/" element={<Home />} />
+          <Route path="/auth" element={<UserTypeChoice />} />
+          <Route path="/volunteers/*" element={<VolunteerRouter />} />
+          <Route path="/associations/*" element={<AssociationRouter />} />
+          <Route path="*" element={<Home />} />
       </Routes>
     </Router>
   );
@@ -60,18 +63,7 @@ function App() {
               <ConnectRouter />
             </div>
           ) : (
-            <div
-                style={{
-                display: 'flex',
-                justifyContent: 'center',
-                height: '90%',
-                backgroundColor: '#DFDFDF',
-                alignItems: 'center',
-                margin: '5%'
-              }}
-            >
-              <NoConnectRouter />
-            </div>
+            <NoConnectRouter />
           )
         }
       </LocalizationProvider>
