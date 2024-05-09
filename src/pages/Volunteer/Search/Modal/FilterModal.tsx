@@ -88,6 +88,14 @@ const FilterModal = (props: {modalProps: Modal}) => {
         })
     }
 
+    /***** QUERY PARAMS FROM HOME PAGE *****/
+    window.onload = function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const friendsmission = urlParams.get("friendsmission");
+        const missionsassociationfollowed = urlParams.get("missionsassociationfollowed");
+        setPreferences([missionsassociationfollowed ? true : false, friendsmission ? true : false]);
+    };
+
   return (
     <div className="FilterModal">
         <Dialog open={modalProps.open} onClose={modalProps.handleClose} fullWidth maxWidth='lg'
