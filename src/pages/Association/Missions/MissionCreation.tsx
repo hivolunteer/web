@@ -4,9 +4,8 @@
  * @utility This page is used to create a mission
 */
 
-import {Autocomplete, Box, Button, Chip, Grid, TextField, Radio, FormControlLabel, Checkbox} from "@mui/material";
+import {Autocomplete, Box, Button, Chip, Grid, TextField, FormControlLabel, Checkbox} from "@mui/material";
 import React, {useEffect, useState} from "react";
-import { Image } from "mui-image";
 import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import Lottie from "lottie-react";
@@ -173,63 +172,71 @@ export default function MissionCreation() {
   const createNewMission = () => {
     let referents = referentListSelected.map((referent) => referent.id);
     const token = localStorage.getItem("token");
+    let startDates: Date[] = [];
+    let endDates: Date[] = [];
+
     missionDateRanges
-    .filter(dateRange => dateRange.start && dateRange.end)
-    .map(async (dateRange) => {
-      const body = {
-        max_volunteers: form?.missionVolunteersNumber,
-        description: form?.missionDescription,
-        practical_information: form?.missionPracticalInformation,
-        location: locationId,
-        start_date: dateRange?.start,
-        end_date: dateRange?.end,
-        title: form?.missionName,
-        skills: newSkill,
-        referents: referents,
-        accept_minors: form?.missionAcceptMinors,
-      };
-      console.log(body);
-      fetch(`${config.apiUrl}/missions/association/create`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token, // localStorage.getItem("token")
-        },
-        body: JSON.stringify(body),
-      }).then((response) => {
-        if (response.status === 201) {
-          response.json().then((data) => {
-            const formData = new FormData();
-            if (image) {
-              formData.append("file", image);
-            }
-            fetch(`${config.apiUrl}/uploads/${localStorage.getItem('role')}/mission/${data.id}`, {
-              method: 'POST',
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`
-              },
-              body: formData
-            }).then(
-              (response) => {
-                if (response.status === 201) {
-                  console.log("Image uploaded");
-                }
-              }
-            )
-            .catch(
-              (error) => {
-                console.error("Error while uploading image");
-              }
-            )
-          });
-        }
-      })
-      .catch(
-        (error) => {
-          console.error("Error while creating mission");
-        }
-      )
+    .map((mission: {start: Date | null; end: Date | null}) => {
+      if ((mission.start === null) || (mission.end === null)) {
+        alert("Pas de dates entrées")
+      }
+      if (mission.start) startDates.push(mission.start)
+      if (mission.end) endDates.push(mission.end)
     })
+     
+    const body = {
+      max_volunteers: form?.missionVolunteersNumber,
+      description: form?.missionDescription,
+      practical_information: form?.missionPracticalInformation,
+      location: locationId,
+      start_date: startDates,
+      end_dates: endDates,
+      title: form?.missionName,
+      skills: newSkill,
+      referents: referents,
+      accept_minors: form?.missionAcceptMinors,
+    };
+    console.log(body);
+    fetch(`${config.apiUrl}/missions/association/create`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token, // localStorage.getItem("token")
+      },
+      body: JSON.stringify(body),
+    }).then((response) => {
+      if (response.status === 201) {
+        response.json().then((data) => {
+          const formData = new FormData();
+          if (image) {
+            formData.append("file", image);
+          } 
+          fetch(`${config.apiUrl}/uploads/${localStorage.getItem('role')}/mission/${data.id}`, {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            },
+            body: formData
+          }).then(
+            (response) => {
+              if (response.status === 201) {
+                console.log("Image uploaded");
+              }
+            }
+          )
+          .catch(
+            (error) => {
+              console.error("Error while uploading image");
+            }
+          )
+        });
+      }
+    })
+    .catch(
+      (error) => {
+        console.error("Error while creating mission");
+      }
+    )
   };
 
   return (
