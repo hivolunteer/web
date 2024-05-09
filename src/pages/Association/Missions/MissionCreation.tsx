@@ -4,7 +4,7 @@
  * @utility This page is used to create a mission
 */
 
-import {Autocomplete, Box, Button, Chip, Grid, TextField, FormControlLabel, Checkbox} from "@mui/material";
+import {Autocomplete, Box, Button, Chip, Grid, TextField, FormControlLabel, Checkbox, Alert} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
@@ -62,6 +62,7 @@ export default function MissionCreation() {
   const [form, setForm] = React.useState<MissionCreationData>();
   const [newSkill, setNewSkill] = useState<Array<number>>([]);
   const [skillDb, setSkillDb] = useState<Array<SkillDatabase>>([]);
+  const [response, setResponse] = useState<{ error: boolean; message: string }>({ error: false, message: "" });
 
   // preparation for adress modal
   const [open, setOpen] = React.useState<boolean>(false);
@@ -213,9 +214,9 @@ export default function MissionCreation() {
           if (image) {
             formData.append("file", image);
           }
-          data.association_missions.forEach((mission: any) => {
-            const missionId = mission.id
-            fetch(`${config.apiUrl}/uploads/${localStorage.getItem('role')}/mission/${missionId}`, {
+          console.log("MISSIONS LENGTH  = ", data.association_missions.length);
+          data.association_missions.forEach((association_mission: any) => {
+            fetch(`${config.apiUrl}/uploads/association/mission/${association_mission.id}`, {
               method: 'POST',
               headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -225,12 +226,16 @@ export default function MissionCreation() {
               (response) => {
                 if (response.status === 201) {
                   console.log("Image uploaded");
-                  window.location.href = "/";
+                  setResponse({ error: false, message: "La ou les missions ont bien été créées" });
+                  // wait for 2 seconds before redirecting
+                  new Promise((resolve) => setTimeout(resolve, 2000));
+                  window.location.href = '/';
                 }
               }
             )
             .catch(
               (error) => {
+                setResponse({ error: true, message: "Erreur lors de l'upload de l'image" });
                 console.error("Error while uploading image");
               }  )
           });
@@ -240,10 +245,18 @@ export default function MissionCreation() {
     })
     .catch(
       (error) => {
+        setResponse({ error: true, message: "Erreur lors de la création de la mission" });
         console.error("Error while creating mission");
       }
     )
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setResponse({ error: false, message: '' });
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [response]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
@@ -528,6 +541,13 @@ export default function MissionCreation() {
           </Box>
         </Box>
       </Box>
+      {
+        response.message !== "" && (
+          <Alert severity={response.error ? "error" : "success"}>
+            {response.message}
+          </Alert>
+        )
+      }
     </LocalizationProvider>
   );
 }
