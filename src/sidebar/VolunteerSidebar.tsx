@@ -22,7 +22,7 @@ import config from "../config";
 
 const pages: string[] = [];
 const settings: string[] = [];
-const pagesLink: {[pageName: string]: string} = {};
+const pagesLink: { [pageName: string]: string } = {};
 
 const isReferent = async () => {
   try {
@@ -60,6 +60,7 @@ if (localStorage.getItem("token") !== null) {
   settings.push("Connexion", "Inscription");
 }
 
+
 export default function VolunteerSidebar() {
   let color_blind = localStorage.getItem("color_blind") === "true";
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -88,10 +89,6 @@ export default function VolunteerSidebar() {
     localStorage.clear();
     window.location.href = "/";
   };
-
-
-
-
 
   return (
     <AppBar position="static" background-color="#F5F5F5" style={{ background: !color_blind ? "#598b7d" : "#3b3d3c" }}>
