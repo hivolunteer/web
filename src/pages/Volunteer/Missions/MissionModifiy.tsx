@@ -16,8 +16,12 @@ import './MissionCreation.scss';
 import config from "../../../config";
 import LocationModal from "../../Association/Missions/Modal/LocationModal";
 import noImage from "../../../images/lottie/noImage.json";
+import { useParams } from 'react-router-dom';
+import { Mission } from '../../../interfaces';
+import { NULL } from "sass";
 
-interface MissionCreationData {
+
+interface MissionModificationData {
   missionName?: string;
   missionDescription?: string;
   missionPracticalInformation?: string;
@@ -53,11 +57,14 @@ const noImageComponent = () => {
   );
 };
 
-export default function MissionCreation() {
+export default function MissionModification() {
+  const { missionID } = useParams<{ missionID: string }>();
   const [image, setImage] = React.useState<any>(null);
-  const [form, setForm] = React.useState<MissionCreationData>();
+  const [form, setForm] = React.useState<MissionModificationData>();
   const [newSkill, setNewSkill] = useState<Array<number>>([]);
   const [skillDb, setSkillDb] = useState<Array<SkillDatabase>>([]);
+  const [mission, setMissionData] = useState<Mission>();
+  const [error, setError] = useState<string | null>(null);
 
   // preparation for adress modal
   const [open, setOpen] = React.useState<boolean>(false);
@@ -70,12 +77,83 @@ export default function MissionCreation() {
     departement_id: null,
     postal_code: null,
   });
-  const [locationStr, setLocationStr] = useState<string | null>(null);
+  const [locationStr, setLocationStr] = useState<string | undefined>(undefined);
   const [locationId, setLocationId] = useState<number | null>(null);
 
   const handleClose = () => {
     setOpen(false);
   };
+
+  async function getMissionById(missionId: number) {
+    try {
+      const response = await fetch(`${config.apiUrl}/missions/close/${missionId}`, {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      console.log(response);
+      if (!response.ok) {
+        throw new Error('HTTP error ' + response.status);
+      }
+
+      const data = await response.json();
+      if (!data.association_mission) {
+        setError(`Mission with ID ${missionId} does not exist.`);
+        return;
+      }
+      let mission = data.close_mission;
+      setLocationId(mission.association_mission.location);
+      fetch(`${config.apiUrl}/locations/${mission.association_mission?.location}`, {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      }).then((response) => {
+        console.log("RESPONSE", response);
+        if (response.status === 200) {
+          response.json().then((data) => {
+            console.log(data);
+            //setLocation(data);
+            let loc = data;
+            setLocationStr(loc.street_number+
+              loc.street_name+
+              +loc.street_number_suffix+
+              +loc.street_type+
+              +loc.departement_id+
+              +loc.city+
+              +loc.postal_code)
+            
+          })
+        }
+      })
+      // should have a model for close mission too
+      setMissionData(mission.association_mission as Mission);
+      setForm({...form, 
+        missionName: mission.association_mission.title,
+        missionDescription: mission.association_mission.description,
+        missionPracticalInformation: mission.association_mission.practical_information,
+        missionAddress: locationStr,
+        missionDate: mission.association_mission.start_date,
+        missionEndDate: mission.association_mission.end_date,
+        missionVolunteersNumber: mission.association_mission.max_volunteers,
+        missionSkills: undefined,
+      })
+      console.log(form);
+      //fetchIfVolunteerIsRegistered(); // Call fetchIfVolunteerIsRegistered here
+    } catch (error) {
+      console.log("error");
+      console.error('Load Error:', error);
+      setError(`An error occurred: ${(error as Error).message}`);
+    }
+  }
+
+  useEffect(() => {
+    if (missionID) {
+      getMissionById(parseInt(missionID));
+    }
+  }, [missionID]);
 
   // useEffect to get skills from database
 
@@ -96,11 +174,11 @@ export default function MissionCreation() {
     })
   }, []);
 
-  // handle creation of new mission
-  const createNewMission = () => {
+  // handle modification of a mission
+  const ModifyMission = () => {
     const token = localStorage.getItem("token");
     const body = {
-      owner_id: Math.floor(Math.random() * 600) + 1,
+      //owner_id: Math.floor(Math.random() * 600) + 1,
       max_volunteers: form?.missionVolunteersNumber,
       description: form?.missionDescription,
       practical_information: form?.missionPracticalInformation,
@@ -113,7 +191,7 @@ export default function MissionCreation() {
       picture: image,
     };
     console.log(body);
-    fetch(`${config.apiUrl}/missions/close/create`, {
+    fetch(`${config.apiUrl}/missions/close/update/${missionID}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -123,7 +201,7 @@ export default function MissionCreation() {
     })
       .then((response) => {
         if (response.status === 201) {
-          alert("Mission créée");
+          alert("Mission modifiée");
           window.location.href = "/";
           return response.body;
         }
@@ -157,7 +235,7 @@ export default function MissionCreation() {
             height: "10vh",
           }}
         >
-          <h1>Créer une mission</h1>
+          <h1>Modifier une mission</h1>
         </Box>
         <Box
           sx={{
@@ -390,7 +468,7 @@ export default function MissionCreation() {
               variant="contained"
               component="span"
               onClick={() => {
-                createNewMission();
+                ModifyMission();
               }}
             >
               Créer la mission
