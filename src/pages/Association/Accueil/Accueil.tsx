@@ -9,21 +9,7 @@ import {useEffect, useState } from 'react'
 import config from "../../../config";
 import { Button } from '@mui/material';
 import MissionCardHome from '../../../components/MissionCardHome';
-
-interface Mission {
-    id: number,
-    max_volunteers: number,
-    description: string,
-    practical_informations: string,
-    start_date: string,
-    end_date: string,
-    location: number,
-    title: string,
-    status: number,
-    theme_id: number,
-    picture: string,
-}
-
+import { Mission } from '../../../interfaces';
 
 function Accueil () {
     const [missionList, setMissionList] = useState<Mission[]>([])
