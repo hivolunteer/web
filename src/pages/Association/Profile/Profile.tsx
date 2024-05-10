@@ -4,6 +4,7 @@ import Grid from "@mui/material/Grid";
 import {useEffect, useState} from "react";
 import config from "../../../config";
 import "./Profile.scss";
+import { useNavigate } from "react-router-dom";
 
 import EditPasswordModal from "./EditPasswordModal";
 
@@ -24,7 +25,8 @@ export default function ProfilePage(props: any) {
     const [profilePicture, setProfilePicture] = useState<string>("");
     const image =
         "https://urgo.fr/wp-content/uploads/2022/03/Logo-Reforestaction.png";
-
+        
+    const navigate = useNavigate();
 
 
   const [openDialog, setOpenDialog] = useState<boolean>(false);
@@ -216,7 +218,7 @@ export default function ProfilePage(props: any) {
           </div>
         </div><div className="profile-row">
         </div><div className="profile-btn-div">
-          <button className="profile-pic-btn" onClick={updateProfile}>
+          <button className="profile-pic-btn" onClick={() => { navigate("/settings/profile_information"); }}>
             Mettre à jour le profile
           </button>
           {/* <button className="delete-account-btn" onClick={deleteAccount}>

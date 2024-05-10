@@ -56,30 +56,14 @@ function LoginVolunteer() {
     }
   };
 
-  /* Function to check phone format */
-  const checkPhoneFormat = (phone: string) => {
-    const regex = /^\+(?:[0-9] ?){6,14}[0-9]$/;
-    // regex : "+" or "00", 1 to 3 numbers country code, 1 to 12 numbers
-    if (regex.test(phone)) {
-      setPhoneFormat(true);
-      return true;
-    } else {
-      setPhoneFormat(false);
-      return false;
-    }
-  };
-
   /* Function to check Inputs */
   const checkInput = (data: FormData) => {
     /* Check if all inputs are complete */
     checkComplete(data);
     const credential = data.get("credential") as string;
-    setPhone(!credential.includes("@"));
     setEmail(credential.includes("@"));
     /* Check email format */
     checkEmailFormat(credential);
-    /* Check phone format */
-    checkPhoneFormat(credential);
   };
 
   /* Function to execute response */
@@ -118,7 +102,7 @@ function LoginVolunteer() {
 
     /* If all inputs are complete, send data */
     if ((user["phone"] || user["email"]) && user["password"]) {
-      if ((checkEmailFormat(user["email"] as string)) || (checkPhoneFormat(user["phone"] as string))) {
+      if ((checkEmailFormat(user["email"] as string))) {
         // call LoginVolunteer service
         const response_status = AuthenticationService.loginVolunteers(user);
         responseExecute(await response_status);
