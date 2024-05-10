@@ -12,7 +12,7 @@ import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import Lottie from "lottie-react";
 import moment from "moment";
 import "moment/locale/de";
-import './MissionCreation.scss';
+//import './MissionCreation.scss';
 import config from "../../../config";
 import LocationModal from "../../Association/Missions/Modal/LocationModal";
 import noImage from "../../../images/lottie/noImage.json";
@@ -55,7 +55,7 @@ const noImageComponent = () => {
   );
 };
 
-export default function MissionModification() {
+export default function EditMission() {
   const { missionID } = useParams<{ missionID: string }>();
   const [image, setImage] = React.useState<any>(null);
   const [form, setForm] = React.useState<MissionModificationData>({
@@ -195,7 +195,6 @@ export default function MissionModification() {
       theme_id: undefined,
       picture: image,
     };
-    console.log(body);
     fetch(`${config.apiUrl}/missions/close/update/${missionID}`, {
       method: "POST",
       headers: {
@@ -206,30 +205,25 @@ export default function MissionModification() {
     })
       .then((response) => {
         if (response.status === 201) {
-          setResponse({error: false, message: "La mission a bien été modifiée"});
-          new Promise((resolve) => setTimeout(resolve, 2000));
-          window.location.href = `/manage/${missionID}`;
+          setResponse({ error: false, message: "La mission a bien été modifiée" });
+      
+          // Wait for approximately 2 seconds before redirecting
+          setTimeout(() => {
+              window.location.href = `/manage/${missionID}`;
+          }, 2000);
+      
           return response.body;
         }
+      }).catch((e) => {
+        console.log(e)
+
+        setResponse({error: true, message: "Erreur lors de la modification de mission"});
+        setTimeout(() => {
+          window.location.href = `/manage/${missionID}`;
+        }, 2000);
       })
-      .then(
-        (data) => {
-          data
-            ?.getReader()
-            .read()
-            .then(({ done, value }) => {
-              if (done) {
-                alert("Mission créée");
-                return;
-              }
-            });
-        },
-        (error) => {
-          alert("Erreur lors de la création de la mission");
-        }
-      );
+      
   };
-  console.log(form);
 
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
