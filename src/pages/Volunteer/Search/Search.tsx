@@ -117,6 +117,10 @@ function Search(props: any) {
       .map((mission: Mission) => {
         mission_list.push(mission)
       })
+      let volunteer_missions = data.close_missions
+      volunteer_missions.map((mission: Mission) => {
+        mission_list.push(mission)
+      });
       setMissionList(mission_list)
      })
   }, [])

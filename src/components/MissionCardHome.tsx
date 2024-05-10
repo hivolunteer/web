@@ -15,7 +15,7 @@ function MissionCardHome(props: { mission: Mission }) {
 
     const [location, setlocation] = useState("");
     const [missionPicture, setMissionPicture] = useState("");
-    const [isVol, setisvol] = useState<boolean | null>(null);
+    const [isVolunteerMission, setIsVolunteerMission] = useState<boolean | null>(null);
 
     function getLocation() {
         fetch(`${config.apiUrl}/locations/${mission.location.toString()}`, {
@@ -33,25 +33,6 @@ function MissionCardHome(props: { mission: Mission }) {
             }
         });
     }
-    function getOwner() {
-        const owner = (isVol) ? "volunteers" : "associations";
-        fetch(`${config.apiUrl}/${owner}/profile/${mission.owner_id.toString()}`, {
-            method: 'GET',
-            headers: {
-                authorization: `Bearer ${localStorage.getItem('token')}`,
-                'Content-Type': 'application/json'
-            }
-        }).then((response) => {
-            if (response.status === 200) {
-                response.json().then((data) => {
-                    //const profile_picture = isVol ? (data.volunteer as Volunteer).profile_picture : (data.association as Association).profile_picture;
-                    //setMissionPicture(profile_picture);
-                });
-            } else {
-                console.log("FAILURE: " + response.status);
-            }
-        });
-    }
 
     useEffect(() => {
         if (location === "") {
@@ -60,9 +41,8 @@ function MissionCardHome(props: { mission: Mission }) {
     }, [location]);
 
     useEffect(() => {
-        // si la string de mission.picture ne commence pas par /uploads, c'est que c'est une URL externe
         if (mission && mission.picture && mission.picture.startsWith('/uploads')) {
-            fetch(`${config.apiUrl}/uploads/association/mission/${mission.id}`, {
+            fetch(`${config.apiUrl}/uploads/${isVolunteerMission ? 'volunteer' : 'association'}/mission/${mission.id}`, {
                 method: 'GET',
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -84,30 +64,26 @@ function MissionCardHome(props: { mission: Mission }) {
     }, []);    
 
     useEffect(() => {
-        if (isVol === null) {
-            fetch(`${config.apiUrl}/missions/close`, {
+        if (isVolunteerMission === null) {
+            fetch(`${config.apiUrl}/missions/close/${mission.id}`, {
                 method: 'GET',
                 headers: {
                     authorization: `Bearer ${localStorage.getItem('token')}`,
                     'Content-Type': 'application/json'
                 }
             }).then((response) => {
-                setisvol(false);
+                setIsVolunteerMission(false);
                 if (response.status === 200) {
-                    response.json().then((data: Mission[]) => {
-                        for (const fodder of data) {
-                            if (fodder.title === mission.title && fodder.description === mission.description) {
-                                setisvol(true);
-                                break;
-                            }
-                        }
+                    response.json().then((data) => {
+                        const close_mission = data.close_mission;
+                        if (close_mission && close_mission.title === mission.title && close_mission.description === mission.description)
+                        setIsVolunteerMission(true);
                     });
                 }
-                getOwner();
             });
 
         }
-    }, [isVol]);
+    }, [isVolunteerMission]);
 
     // misc functions
 
@@ -145,7 +121,7 @@ function MissionCardHome(props: { mission: Mission }) {
                 backgroundColor: '#FFFEFF'
             }}
             onClick={() => {
-                window.location.href = isVol ? `/manage/${mission.id}` : `/manage/${mission.id}`
+                window.location.href = isVolunteerMission ? `/manage/${mission.id}` : `/manage/${mission.id}`
             }}
         >
             <Card.Body style={{ width: '100%' }}>
@@ -172,8 +148,8 @@ function MissionCardHome(props: { mission: Mission }) {
                                 <p style={{ marginLeft: '10px', width: '80%' }}> {location} </p>
                             </div>
                             <div className='mission-body-with-icon' style={{ marginBottom: '2px' }}>
-                            {(isVol) ? <EmojiEmotionsIcon/> : <BusinessIcon />}
-                            <p style={{ marginLeft: '10px' }}>{isVol ? "Bénévole" : "Association"}</p>
+                            {(isVolunteerMission) ? <EmojiEmotionsIcon/> : <BusinessIcon />}
+                            <p style={{ marginLeft: '10px' }}>{isVolunteerMission ? "Bénévole" : "Association"}</p>
                             </div>
 
                         </div>
