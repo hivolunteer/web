@@ -202,16 +202,16 @@ export default function MissionCreation() {
       },
       body: JSON.stringify(body),
     }).then((response) => {
-      if (response.status === 201) {
+      if (response.status === 200) {
         response.json().then((data) => {
-          console.log(data)
+          console.log("DATA", data)
           const formData = new FormData();
           if (image) {
             formData.append("file", image);
           }
-          console.log("MISSIONS LENGTH  = ", data.association_missions.length);
+          console.log(data.association_missions.length)
           data.association_missions.forEach((association_mission: any) => {
-            fetch(`${config.apiUrl}/uploads/association/mission/${association_mission.id}`, {
+            fetch(`${config.apiUrl}/uploads/association/mission/${String(association_mission)}`, {
               method: 'POST',
               headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
