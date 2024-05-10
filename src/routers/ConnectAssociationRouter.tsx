@@ -8,12 +8,14 @@ import ManageMission from '../pages/Association/Missions/Manage/ManageMission';
 import Accueil from '../pages/Association/Accueil/Accueil';
 import EventCalendar from "../components/Calendar/EventCalendar";
 import ReferentPage from '../pages/Association/Referent/ReferentPage';
+import ExternalProfile from '../pages/Association/ExternalProfile/ExternalProfile';
 
 function ConnectAssociationRouter() {
     return(
         <Routes>
             <Route path="/" element={<Home/>} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/:id" element={<ExternalProfile />} />
             <Route path="/missionCreation" element={<MissionCreation />} />
             <Route path="/modifyProfile" element={<ModifyProfilePage />} />
             <Route path="/manage/:id" element={<ManageMission />} />

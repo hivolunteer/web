@@ -24,7 +24,7 @@ function associationPanel(props: associationPanelProps) {
               association.name.toLowerCase().includes(search.toLowerCase())
           )
           .map((association: Association) => (
-            <div className="mission-card" key={association.id}>
+            <div className="mission-card-assovol" key={association.id}>
               <AssociationCard association_id={association.id} />
             </div>
           ))}
