@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import StarIcon from '@mui/icons-material/Star';
 import config from '../../../../config';
 import FollowButton from './FollowButton';
+import { set } from 'date-fns';
 
 export default function AssociationCard(props: {association_id: number}) {
     
@@ -18,7 +19,6 @@ export default function AssociationCard(props: {association_id: number}) {
         }
     
         useEffect(() => {
-            console.log('association id ', props.association_id)
             fetch(`${config.apiUrl}/associations/profile/${props.association_id}`, {
                 method: 'GET',
                 headers: {
@@ -28,15 +28,27 @@ export default function AssociationCard(props: {association_id: number}) {
             }).then((response) => {
                 if (response.status === 200) {
                     response.json().then((data) => {
-                        console.log(data)
+                        console.log("data ", data)
                         setAssociation(data.association)
                     })
                 }
             })
         }, [])
 
-        const handleFollow = () => {
-            // API call to follow or unfollow the association
+        const handleFollow = async () => {
+            try {
+                await fetch(`${config.apiUrl}/follows`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ association_id: association?.id }),
+                });
+                console.log('followed', association?.id)
+                setIsFollowing(!isFollowing);
+            } catch (error) {
+                console.error('Error following association', error);
+            }
             setIsFollowing(!isFollowing);
           };
 
@@ -73,7 +85,7 @@ export default function AssociationCard(props: {association_id: number}) {
                         </Typography>
                     </CardContent>
                     <CardContent sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer'}}>
-                    <FollowButton isFollowing={isFollowing} onFollow={handleFollow} />
+                        <FollowButton isFollowing={isFollowing} onFollow={handleFollow} />
                         <Typography variant="body2" color="text.secondary" sx={{ cursor: 'pointer', textDecoration: 'underline'}}
                         onClick={() => console.log('association ', association?.id)}>
                             Voir plus

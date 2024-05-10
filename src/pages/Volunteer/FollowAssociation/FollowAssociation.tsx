@@ -17,6 +17,7 @@ export default function FollowAssociation() {
         }).then((response: any) => {
             if (response.status === 200) {
                 response.json().then((data: any) => {
+                    console.log(data)
                     setAssociations(data);
                 })
             }
