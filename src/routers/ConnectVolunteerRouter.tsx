@@ -6,11 +6,13 @@ import History from "../pages/Volunteer/History/History";
 import FollowAssociation from "../pages/Volunteer/FollowAssociation/FollowAssociation";
 import MissionDetails from "../pages/Volunteer/MissionDetails/MissionDetails";
 import Settings from "../pages/Settings/Settings";
+import BlockedUsersList from "../components/BlockedUsersList";
 
 import MissionCreation from "../pages/Volunteer/Missions/MissionCreation";
 
 import AssociationReferent from "../pages/Volunteer/Settings/Referents/AssociationReferent";
 import AssociationProfile from "../pages/Volunteer/Association/Profile/AssociationProfile";
+import ManageMission from "../pages/Volunteer/ManageMission/ManageMission";
 
 
 function ConnectVolunteerRouter() {
@@ -20,12 +22,14 @@ function ConnectVolunteerRouter() {
       <Route path="/history" element={<History />} />
       <Route path="/follows" element={<FollowAssociation />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/profile/blocked" element={<BlockedUsersList />} />
       <Route path="/accueil" element={<Search />} />
       <Route path="/association/:associationID" element={<AssociationProfile />} />
       <Route path="/manage/:missionID" element={<MissionDetails />} />
       <Route path="/missionCreation" element={<MissionCreation/>} />
       <Route path={"/settings"} element={<Settings />} />
       <Route path="/settings/referents" element={<AssociationReferent />} />
+      <Route path="/manage/:id" element={<ManageMission />} />
       <Route path="*" element={<h1> Error 404 Volunteer </h1>} />
     </Routes>
   );
