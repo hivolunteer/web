@@ -15,6 +15,7 @@ import MissionPanel from "./Panels/MissionPanel";
 import AssociationPanel from "./Panels/AssociationPanel";
 import VolunteerPanel from "./Panels/VolunteerPanel";
 import useWindowSize from "../../../functions/useWindowSize";
+import { useNavigate } from "react-router-dom";
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -38,6 +39,7 @@ function Search(props: any) {
   const [search, setSearch] = useState<string>("");
   const [locations, setLocations] = useState<{[key: number]: string}>({});
   const width = useWindowSize().width as number;
+  const navigate = useNavigate();
 
   // Subtype of the search
 
@@ -250,6 +252,35 @@ function Search(props: any) {
             <FilterModalComponent modalProps={modalProps} />
           </div>
         }
+        <div className="filter-container">
+          <Button
+            className={
+              "filter-btn-search"
+            }
+            sx={{
+                background: (localStorage.getItem('color_blind') === 'true') ? '#dedede' : '#ffcf56', ":hover": {background: (localStorage.getItem('color_blind') === 'true') ? '#dedede' : '#ffcf56',
+            }}}
+            variant="contained"
+            onClick={() => {
+              setOpen(true);
+            }}
+          >
+            Afficher les filtres
+          </Button>
+          <FilterModalComponent modalProps={modalProps} />
+          <Button sx={{
+            marginLeft: "10%",
+            background: '#5d9082',
+            ":hover": {background: '#5d9082'},
+            variant: "contained",
+            color: "white",
+          }}
+          onClick={() => {
+                    navigate("/follows");
+                  }} >
+            Associations suivies
+          </Button>
+        </div>
         <div className="tabs-container">
           <Tabs
             value={subType.name}
