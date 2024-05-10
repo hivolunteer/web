@@ -24,16 +24,16 @@ function ConnectVolunteerRouter() {
             <Route path="/history" element={<History />} />
             <Route path="/follows" element={<FollowAssociation />} />
             <Route path="/profile" element={<Profile />} />
-      <Route path="/profile/blocked" element={<BlockedUsersList />} />
+            <Route path="/profile/blocked" element={<BlockedUsersList />} />
             <Route path="/accueil" element={<Search />} />
             <Route path="/association/:associationID" element={<AssociationProfile />} />
             <Route path="/mission/:missionID" element={<MissionDetails />} />
             <Route path="/missionCreation" element={<MissionCreation/>} />
             <Route path="/volunteer/:volunteerId" element={<PublicProfile/>} />
-      <Route path={"/settings"} element={<Settings />} />
+            <Route path={"/settings"} element={<Settings />} />
             <Route path="/settings/modify_password" element={<ChangePassword />} />
             <Route path="/settings/referents" element={<AssociationReferent />} />
-      <Route path="/manage/:id" element={<ManageMission />} />
+            <Route path="/manage/:id" element={<ManageMission />} />
             <Route path="/settings/profile_information" element={<ProfileInformationModal />} />
             <Route path="*" element={<h1> Error 404 Volunteer </h1>} />
         </Routes>
