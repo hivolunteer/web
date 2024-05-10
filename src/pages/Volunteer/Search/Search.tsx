@@ -230,23 +230,26 @@ function Search(props: any) {
         </div>
       </div>
       <div className="centered-container">
-        <div className="filter-container">
-          <Button
-            className={
-              "filter-btn-search"
-            }
-            sx={{
-                background: (localStorage.getItem('color_blind') === 'true') ? '#dedede' : '#ffcf56', ":hover": {background: (localStorage.getItem('color_blind') === 'true') ? '#dedede' : '#ffcf56',
-            }}}
-            variant="contained"
-            onClick={() => {
-              setOpen(true);
-            }}
-          >
-            Afficher les filtres
-          </Button>
-          <FilterModalComponent modalProps={modalProps} />
-        </div>
+        {
+          subType.name !== "Bénévoles" &&
+          <div className="filter-container">
+            <Button
+              className={
+                "filter-btn-search"
+              }
+              sx={{
+                  background: (localStorage.getItem('color_blind') === 'true') ? '#dedede' : '#ffcf56', ":hover": {background: (localStorage.getItem('color_blind') === 'true') ? '#dedede' : '#ffcf56',
+              }}}
+              variant="contained"
+              onClick={() => {
+                setOpen(true);
+              }}
+            >
+              Afficher les filtres
+            </Button>
+            <FilterModalComponent modalProps={modalProps} />
+          </div>
+        }
         <div className="tabs-container">
           <Tabs
             value={subType.name}
