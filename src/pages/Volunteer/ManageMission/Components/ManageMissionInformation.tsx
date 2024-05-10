@@ -52,6 +52,7 @@ type ManageMissionInformationProps = {
   mission_id: string | undefined,
   setMissionStatus: any,
   MissionStatus: number,
+  isAssociation: boolean
 }
 
 function ManageMissionInformation(props: ManageMissionInformationProps) {
@@ -60,6 +61,7 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
 
   const mission_id = props.mission_id;
   const SetMissionStatus = props.setMissionStatus;
+  const isAssociation = props.isAssociation;
 
   function formatDate(date: string) {
     if (date === '')
@@ -73,7 +75,7 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
   }
 
   useEffect(() => {
-    fetch(`${config.apiUrl}/missions/close/${mission_id}`, {
+    fetch(`${config.apiUrl}/missions/${isAssociation ? 'association' : 'close'}/${mission_id}`, {
         method: 'GET',
         headers: {
             'content-type': 'application/json',
@@ -82,9 +84,10 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
     }).then((response) => {
         if (response.status === 200) {
             response.json().then((data) => {
-                setMission(data.close_mission);
-                SetMissionStatus(data.close_mission?.status);
-                fetch(`${config.apiUrl}/locations/${data.close_mission?.location}`, {
+                const mission = (isAssociation ? data.association_mission : data.close_mission)
+                setMission(mission);
+                SetMissionStatus(mission.status);
+                fetch(`${config.apiUrl}/locations/${mission.location}`, {
                     method: 'GET',
                     headers: {
                         'content-type': 'application/json',
@@ -152,8 +155,8 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
               </Grid>
           </AccordionDetails>
           <AccordionActions>
-              <Button size="small" color="warning" onClick={() => window.location.href = `/close/missions/${mission?.id}/edit`}>Modifier</Button>
-              <Button size="small" color="info" onClick={() => window.location.href = `/close/missions/${mission?.id}`}>Visualiser</Button>
+              <Button size="small" color="warning" onClick={() => window.location.href = `/mission/${mission?.id}/edit`}>Modifier</Button>
+              <Button size="small" color="info" onClick={() => window.location.href = `/mission/${mission?.id}`}>Visualiser</Button>
           </AccordionActions>
       </Accordion>
     </div>

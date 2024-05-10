@@ -65,7 +65,7 @@ function ManageMission() {
 
     return (
         <div>
-            <ManageMissionInformation mission_id={mission_id} setMissionStatus={setMissionStatus} MissionStatus={MissionStatus} />
+            <ManageMissionInformation mission_id={mission_id} setMissionStatus={setMissionStatus} MissionStatus={MissionStatus} isAssociation={false} />
             
             { (MissionStatus != 0) &&
                 <ManageMissionVolunteers mission_id={mission_id} />

@@ -1,4 +1,8 @@
-.volunteer-manage-mission-volunteers-list-container {
+.association-manage-mission-volunteers-container {
+    margin-top: 2rem;
+}
+
+.association-manage-mission-volunteers-list-container {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
@@ -7,7 +11,7 @@
     justify-content: center;
 }
 
-.volunteer-manage-mission-volunteer-card {
+.association-manage-mission-volunteer-card {
     border: 1px solid #67A191;
     display: flex;
     flex-direction: row;
@@ -15,31 +19,27 @@
     align-items: center;
     margin: 0.5rem;
     border-radius: 20px;
-    width: 20%;
+    width: 47%;
 }
 
-.volunteer-manage-mission-volunteer-card-picture-container {
+.association-manage-mission-volunteer-card-picture-container {
     width: 40px;
     height: 40px;
 }
 
-.volunteer-manage-mission-volunteer-card-picture {
+.association-manage-mission-volunteer-card-picture {
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: 100%;
 }
 
-.volunteer-manage-mission-volunteer-card-information {
+.association-manage-mission-volunteer-card-information {
     margin-left: 1rem;
 }
 
-.association-manage-mission-volunteer-card-action {
-    margin-left: 2rem;
-}
-
 @media (max-width: 1300px) {
-    .volunteer-manage-mission-volunteer-card {
-        width: 30%;
+    .association-manage-mission-volunteer-card {
+        width: 80%;
     }
 }
