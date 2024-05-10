@@ -40,9 +40,9 @@ function MissionCardHome(props: { mission: Mission }) {
         }
     }, [location]);
 
-    useEffect(() => {
+    const getMissionPicture = (isCloseMission: boolean) => {
         if (mission && mission.picture && mission.picture.startsWith('/uploads')) {
-            fetch(`${config.apiUrl}/uploads/${isVolunteerMission ? 'volunteer' : 'association'}/mission/${mission.id}`, {
+            fetch(`${config.apiUrl}/uploads/${isCloseMission ? 'volunteer' : 'association'}/mission/${mission.id}`, {
                 method: 'GET',
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -61,7 +61,7 @@ function MissionCardHome(props: { mission: Mission }) {
         }
         if (mission && mission.picture)
             setMissionPicture(mission.picture);
-    }, []);    
+    }
 
     useEffect(() => {
         if (isVolunteerMission === null) {
@@ -72,14 +72,16 @@ function MissionCardHome(props: { mission: Mission }) {
                     'Content-Type': 'application/json'
                 }
             }).then((response) => {
-                setIsVolunteerMission(false);
                 if (response.status === 200) {
                     response.json().then((data) => {
                         const close_mission = data.close_mission;
                         if (close_mission && close_mission.title === mission.title && close_mission.description === mission.description)
-                        setIsVolunteerMission(true);
+                            setIsVolunteerMission(true);
+                        getMissionPicture(true);
                     });
-                }
+                } else
+                    setIsVolunteerMission(false);
+                    getMissionPicture(false);
             });
 
         }
