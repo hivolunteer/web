@@ -15,13 +15,13 @@ function ConnectAssociationRouter() {
         <Routes>
             <Route path="/" element={<Home/>} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/profile/:id" element={<ExternalProfile />} />
+            <Route path="/profile/volunteer/:id" element={<ExternalProfile />} />
             <Route path="/missionCreation" element={<MissionCreation />} />
             <Route path="/modifyProfile" element={<ModifyProfilePage />} />
             <Route path="/manage/:id" element={<ManageMission />} />
             <Route path="/accueil" element={<Accueil />} />
             <Route path="/calendrier" element={<EventCalendar />} />
-            <Route path="/settings/referents" element={<ReferentPage />} />
+            <Route path="/referent" element={<ReferentPage />} />
             <Route path="*" element={<h1> Error 404 Asso </h1>} />
         </Routes>
     )
