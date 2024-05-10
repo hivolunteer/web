@@ -15,6 +15,7 @@ function MissionCardHome(props: { mission: Mission }) {
 
     const [location, setlocation] = useState("");
     const [missionPicture, setMissionPicture] = useState("");
+    const [isOwner, setIsOwner] = useState<boolean>(false);
     const [isVolunteerMission, setIsVolunteerMission] = useState<boolean | null>(null);
 
     function getLocation() {
@@ -75,13 +76,21 @@ function MissionCardHome(props: { mission: Mission }) {
                 if (response.status === 200) {
                     response.json().then((data) => {
                         const close_mission = data.close_mission;
-                        if (close_mission && close_mission.title === mission.title && close_mission.description === mission.description)
+                        if (close_mission && close_mission.title === mission.title && close_mission.description === mission.description) {
                             setIsVolunteerMission(true);
-                        getMissionPicture(true);
+                            getMissionPicture(true);
+                            const ownerId = Number(localStorage.getItem('id'));
+                            if (close_mission.owner_id === ownerId && localStorage.getItem('role') === 'volunteer') {
+                                setIsOwner(true);
+                            }
+                        }
                     });
                 } else
                     setIsVolunteerMission(false);
-                    getMissionPicture(false);
+                    const ownerId = Number(localStorage.getItem('id'));
+                    if (mission.owner_id === ownerId && localStorage.getItem('role') === 'association') {
+                        setIsOwner(true);
+                    }
             });
 
         }
@@ -123,7 +132,7 @@ function MissionCardHome(props: { mission: Mission }) {
                 backgroundColor: '#FFFEFF'
             }}
             onClick={() => {
-                window.location.href = isVolunteerMission ? `/manage/${mission.id}` : `/manage/${mission.id}`
+                window.location.href = isOwner ? `/manage/${mission.id}` : isVolunteerMission ? `/mission/close/${mission.id}` : `/mission/${mission.id}`
             }}
         >
             <Card.Body style={{ width: '100%' }}>
