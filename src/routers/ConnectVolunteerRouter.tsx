@@ -10,6 +10,7 @@ import BlockedUsersList from "../components/BlockedUsersList";
 import PublicProfile from "../pages/Volunteer/PublicProfile/PublicProfile";
 
 import MissionCreation from "../pages/Volunteer/Missions/MissionCreation";
+import EditMission from "../pages/Volunteer/Missions/MissionModify";
 
 import AssociationReferent from "../pages/Volunteer/Settings/Referents/AssociationReferent";
 import AssociationProfile from "../pages/Volunteer/Association/Profile/AssociationProfile";
@@ -27,7 +28,8 @@ function ConnectVolunteerRouter() {
       <Route path="/accueil" element={<Search />} />
       <Route path="/association/:associationID" element={<AssociationProfile />} />
       <Route path="/mission/:missionID" element={<MissionDetails />} />
-      <Route path="/missionCreation" element={<MissionCreation/>} />
+      <Route path="/mission/create" element={<MissionCreation/>} />
+      <Route path="/:missionID/edit" element={<EditMission/>} />
       <Route path="/volunteer/:volunteerId" element={<PublicProfile/>} />
       <Route path={"/settings"} element={<Settings />} />
       <Route path="/settings/referents" element={<AssociationReferent />} />
