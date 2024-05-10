@@ -11,53 +11,17 @@ import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
 import NearMeOutlinedIcon from '@mui/icons-material/NearMeOutlined';
 import { Button, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Mission, Location, Volunteer } from "./Interfaces";
 import UserCard from '../../../../components/UserCard';
 import ReturnComments from './ReturnComments';
-
-interface Mission {
-    id: number,
-    max_volunteers: number,
-    description: string,
-    practical_information: string,
-    start_date: Date,
-    end_date: Date,
-    location: number,
-    title: string,
-    status: number,
-    theme_id: number,
-    picture: string,
-}
-
-interface Location {
-    id: number,
-    street_number: string,
-    street_name: string,
-    street_number_suffix: string,
-    street_type: string,
-    departement_id: number,
-    city: number,
-    postal_code: string,
-}
-
-interface Volunteer {
-    id: number,
-    first_name: string,
-    last_name: string,
-    email: string,
-    profile_picture: string,
-    rating: number,
-    status: number,
-    stars_from_volunteer: number,
-    stars_from_association: number,
-    comment_from_volunteer: string,
-    comment_from_association: string,
-}
+import { log } from 'console';
 
 function ManageMission() {
 
-    const [mission, setMission] = useState<Mission>()
-    const [location, setLocation] = useState<Location>()
-    const [ListVolunteers, setListVolunteers] = useState<Volunteer[]>([])
+    const [mission, setMission] = useState<Mission>();
+    const [missionPicture, setMissionPicture] = useState<string | null>(null);
+    const [location, setLocation] = useState<Location>();
+    const [ListVolunteers, setListVolunteers] = useState<Volunteer[]>([]);
 
 
     // get id from url
@@ -75,6 +39,8 @@ function ManageMission() {
             if (response.status === 200) {
                 response.json().then((data) => {
                     setMission(data.association_mission);
+                    console.log(data)
+                    setMissionPicture(data.association_mission?.picture);
                     fetch(`${config.apiUrl}/locations/${data.association_mission?.location}`, {
                         method: 'GET',
                         headers: {
@@ -90,6 +56,25 @@ function ManageMission() {
                             })
                         }
                     })
+                    if (missionPicture && missionPicture.startsWith('/uploads')) {
+                        fetch(`${config.apiUrl}/uploads/association/mission/${mission_id}`, {
+                            method: 'GET',
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem('token')}`
+                            },
+                        }).then((response) => {
+                            console.log(response);
+                            response.blob()
+                                .then((blob) => {
+                                    const objectUrl = URL.createObjectURL(blob);
+                                    setMissionPicture(objectUrl);
+                                    console.log(objectUrl);
+                                })
+                                .catch((error) => {
+                                console.error(error);
+                                });
+                        });
+                    }
                     if (data.association_mission?.status === 1) {
                         fetch(`${config.apiUrl}/missions/volunteer/${mission_id}`, {
                             method: 'GET',
@@ -213,7 +198,7 @@ function ManageMission() {
 
     return (
         <div>
-            <div className="manage-container header-mission-container" style={{backgroundImage: `url(${mission?.picture})`}}>
+            <div className="manage-container header-mission-container" style={{backgroundImage: `url('${missionPicture}')`}}>
                 <div className="association-logo">
                     {/* <img src="https://th.bing.com/th/id/R.a159530285fe4c5b20f40dc89741304e?rik=3L6mcWO3XWPxxA&pid=ImgRaw&r=0.png" alt="logo" className='association-logo-mission'/> */}
                 </div>
@@ -243,7 +228,7 @@ function ManageMission() {
                             style={
                                 {backgroundColor: '#67a191', color: 'white'}                         
                             }> Visualiser </Button>
-                            <Button className="mission-button" onClick={() => window.location.href = `/association/missions/${mission?.id}/edit`}
+                            <Button className="mission-button" onClick={() => window.location.href = `/${mission?.id}/edit`}
                             style={{backgroundColor: '#db8900', color: 'white'}}> Modifier </Button>
                             <Button className="mission-button" onClick={() => deleteMission()}
                             style={{backgroundColor: '#991760', color: 'white'}}> {mission?.status === 0 ? "Supprimer" : "Annuler"} </Button>       

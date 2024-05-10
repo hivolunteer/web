@@ -39,7 +39,7 @@ export interface Mission {
   trueLocation: Location | null,
   location: number,
   title: string,
-  rrating: Rating | null,
+  rating: Rating | null,
   picture: string,
   theme_id: number,
   accept_minors: boolean,
