@@ -103,7 +103,8 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
                         })
                     }
                 })
-                if (missionPicture && missionPicture.startsWith('/uploads')) {
+                console.log("MISSION PICTURE", missionPicture);
+                if (mission.picture && mission.picture.startsWith('/uploads')) {
                   fetch(`${config.apiUrl}/uploads/${isAssociation ? 'association' : 'volunteer'}/mission/${mission_id}`, {
                       method: 'GET',
                       headers: {
@@ -112,16 +113,16 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
                   }).then((response) => {
                       console.log(response);
                       response.blob()
-                          .then((blob) => {
-                              const objectUrl = URL.createObjectURL(blob);
-                              setMissionPicture(objectUrl);
-                              console.log(objectUrl);
-                          })
-                          .catch((error) => {
-                          console.error(error);
-                          });
+                        .then((blob) => {
+                          const objectUrl = URL.createObjectURL(blob);
+                          setMissionPicture(objectUrl);
+                          console.log(objectUrl);
+                        })
+                    .catch((error) => {
+                      console.error(error);
+                    });
                   });
-              }
+                }
             }) 
         } else {
             window.location.href = "/";
@@ -131,7 +132,7 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
 
     return (
       <div>
-        <div className="manage-mission-information-header-container" style={{backgroundImage: `url(${mission?.picture})`}}>
+        <div className="manage-mission-information-header-container" style={{backgroundImage: `url(${missionPicture})`}}>
           {/* <div className="association-logo">
             <img src="https://th.bing.com/th/id/R.a159530285fe4c5b20f40dc89741304e?rik=3L6mcWO3XWPxxA&pid=ImgRaw&r=0.png" alt="logo" className='association-logo-mission'/>
           </div> */}
