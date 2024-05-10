@@ -4,6 +4,7 @@ import Grid from "@mui/system/Unstable_Grid";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import config from "../../../../config";
 import './ManageMissionInformation.scss';
+import { is } from "date-fns/locale";
 
 interface Mission {
   id: number,
@@ -58,6 +59,7 @@ type ManageMissionInformationProps = {
 function ManageMissionInformation(props: ManageMissionInformationProps) {
   const [mission, setMission] = useState<Mission>();
   const [location, setLocation] = useState<Location>();
+  const [missionPicture, setMissionPicture] = useState<string>("");
 
   const mission_id = props.mission_id;
   const SetMissionStatus = props.setMissionStatus;
@@ -87,6 +89,7 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
                 const mission = (isAssociation ? data.association_mission : data.close_mission)
                 setMission(mission);
                 SetMissionStatus(mission.status);
+                setMissionPicture(mission.picture);
                 fetch(`${config.apiUrl}/locations/${mission.location}`, {
                     method: 'GET',
                     headers: {
@@ -100,6 +103,25 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
                         })
                     }
                 })
+                if (missionPicture && missionPicture.startsWith('/uploads')) {
+                  fetch(`${config.apiUrl}/uploads/${isAssociation ? 'association' : 'volunteer'}/mission/${mission_id}`, {
+                      method: 'GET',
+                      headers: {
+                          Authorization: `Bearer ${localStorage.getItem('token')}`
+                      },
+                  }).then((response) => {
+                      console.log(response);
+                      response.blob()
+                          .then((blob) => {
+                              const objectUrl = URL.createObjectURL(blob);
+                              setMissionPicture(objectUrl);
+                              console.log(objectUrl);
+                          })
+                          .catch((error) => {
+                          console.error(error);
+                          });
+                  });
+              }
             }) 
         } else {
             window.location.href = "/";
@@ -155,7 +177,7 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
               </Grid>
           </AccordionDetails>
           <AccordionActions>
-              <Button size="small" color="warning" onClick={() => window.location.href = `/mission/${mission?.id}/edit`}>Modifier</Button>
+              <Button size="small" color="warning" onClick={() => window.location.href = `/${mission?.id}/edit`}>Modifier</Button>
               <Button size="small" color="info" onClick={() => window.location.href = `/mission/${mission?.id}`}>Visualiser</Button>
           </AccordionActions>
       </Accordion>

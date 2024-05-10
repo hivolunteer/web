@@ -44,8 +44,8 @@ function MissionCardHome(props: { mission: Mission }) {
         }).then((response) => {
             if (response.status === 200) {
                 response.json().then((data) => {
-                    const profile_picture = isVol ? (data.volunteer as Volunteer).profile_picture : (data.association as Association).profile_picture;
-                    setMissionPicture(profile_picture);
+                    //const profile_picture = isVol ? (data.volunteer as Volunteer).profile_picture : (data.association as Association).profile_picture;
+                    //setMissionPicture(profile_picture);
                 });
             } else {
                 console.log("FAILURE: " + response.status);
@@ -58,6 +58,30 @@ function MissionCardHome(props: { mission: Mission }) {
             getLocation();
         }
     }, [location]);
+
+    useEffect(() => {
+        // si la string de mission.picture ne commence pas par /uploads, c'est que c'est une URL externe
+        if (mission && mission.picture && mission.picture.startsWith('/uploads')) {
+            fetch(`${config.apiUrl}/uploads/association/mission/${mission.id}`, {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                },
+            }).then((response) => {
+                response.blob()
+                    .then((blob) => {
+                        const objectUrl = URL.createObjectURL(blob);
+                        setMissionPicture(objectUrl);
+                        console.log(objectUrl);
+                    })
+                    .catch((error) => {
+                    console.error(error);
+                    });
+            });
+        }
+        if (mission && mission.picture)
+            setMissionPicture(mission.picture);
+    }, []);    
 
     useEffect(() => {
         if (isVol === null) {
@@ -121,7 +145,7 @@ function MissionCardHome(props: { mission: Mission }) {
                 backgroundColor: '#FFFEFF'
             }}
             onClick={() => {
-                window.location.href = isVol ? `/manage/${mission.id}` : `/mission/${mission.id}`
+                window.location.href = isVol ? `/manage/${mission.id}` : `/manage/${mission.id}`
             }}
         >
             <Card.Body style={{ width: '100%' }}>
@@ -130,7 +154,7 @@ function MissionCardHome(props: { mission: Mission }) {
                         <CardMedia
                             component="img"
                             style={{ borderRadius: '100%', objectFit: 'cover', height: '150px', width: '150px' }}
-                            image={(missionPicture === '') ? 'https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg' : missionPicture}
+                            image={(missionPicture === null || missionPicture === '') ? 'https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg' : missionPicture}
                             alt="mission picture"
                         />
                     </div>
