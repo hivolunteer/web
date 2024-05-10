@@ -1,13 +1,11 @@
-import { Button, Card, CardContent, CardMedia, Typography } from '@mui/material';
+import { Card, CardContent, CardMedia, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
 import StarIcon from '@mui/icons-material/Star';
 import config from '../../../../config';
-import FollowButton from './FollowButton';
 
 export default function AssociationCard(props: {association_id: number}) {
     
         const [association, setAssociation] = useState<Association | undefined>(undefined);
-        const [isFollowing, setIsFollowing] = useState(false);
 
         interface Association {
             id: number,
@@ -34,11 +32,6 @@ export default function AssociationCard(props: {association_id: number}) {
                 }
             })
         }, [])
-
-        const handleFollow = () => {
-            // API call to follow or unfollow the association
-            setIsFollowing(!isFollowing);
-          };
 
         return(
             <div>
@@ -72,9 +65,8 @@ export default function AssociationCard(props: {association_id: number}) {
                             {association?.description}
                         </Typography>
                     </CardContent>
-                    <CardContent sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer'}}>
-                    <FollowButton isFollowing={isFollowing} onFollow={handleFollow} />
-                        <Typography variant="body2" color="text.secondary" sx={{ cursor: 'pointer', textDecoration: 'underline'}}
+                    <CardContent>
+                        <Typography variant="body2" color="text.secondary" sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', cursor: 'pointer', textDecoration: 'underline'}}
                         onClick={() => console.log('association ', association?.id)}>
                             Voir plus
                         </Typography>

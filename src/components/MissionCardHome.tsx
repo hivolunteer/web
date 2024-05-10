@@ -87,6 +87,7 @@ function MissionCardHome(props: { mission: Mission }) {
                     });
                 } else
                     setIsVolunteerMission(false);
+                    getMissionPicture(false);
                     const ownerId = Number(localStorage.getItem('id'));
                     if (mission.owner_id === ownerId && localStorage.getItem('role') === 'association') {
                         setIsOwner(true);
