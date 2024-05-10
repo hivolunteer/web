@@ -250,25 +250,7 @@ function Search(props: any) {
               Afficher les filtres
             </Button>
             <FilterModalComponent modalProps={modalProps} />
-          </div>
-        }
-        <div className="filter-container">
-          <Button
-            className={
-              "filter-btn-search"
-            }
-            sx={{
-                background: (localStorage.getItem('color_blind') === 'true') ? '#dedede' : '#ffcf56', ":hover": {background: (localStorage.getItem('color_blind') === 'true') ? '#dedede' : '#ffcf56',
-            }}}
-            variant="contained"
-            onClick={() => {
-              setOpen(true);
-            }}
-          >
-            Afficher les filtres
-          </Button>
-          <FilterModalComponent modalProps={modalProps} />
-          <Button sx={{
+            <Button sx={{
             marginLeft: "10%",
             background: '#5d9082',
             ":hover": {background: '#5d9082'},
@@ -280,6 +262,9 @@ function Search(props: any) {
                   }} >
             Associations suivies
           </Button>
+          </div>
+        }
+          
         </div>
         <div className="tabs-container">
           <Tabs
@@ -337,7 +322,6 @@ function Search(props: any) {
           />
         </TabPanel>
       </div>
-    </div>
   );
 }
 
