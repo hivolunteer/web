@@ -12,7 +12,6 @@ import PublicProfile from "../pages/Volunteer/PublicProfile/PublicProfile";
 
 import MissionCreation from "../pages/Volunteer/Missions/MissionCreation";
 import EditMission from "../pages/Volunteer/Missions/MissionModify";
-import EditMission from "../pages/Volunteer/Missions/MissionModify";
 
 import AssociationReferent from "../pages/Volunteer/Settings/Referents/AssociationReferent";
 import AssociationProfile from "../pages/Volunteer/Association/Profile/AssociationProfile";
