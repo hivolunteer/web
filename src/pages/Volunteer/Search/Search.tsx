@@ -14,6 +14,7 @@ import TabPanel from "./Panels/TabPanel";
 import MissionPanel from "./Panels/MissionPanel";
 import AssociationPanel from "./Panels/AssociationPanel";
 import VolunteerPanel from "./Panels/VolunteerPanel";
+import useWindowSize from "../../../functions/useWindowSize";
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -36,7 +37,7 @@ function Search(props: any) {
   const [location_search, setLocation] = useState<string>("");
   const [search, setSearch] = useState<string>("");
   const [locations, setLocations] = useState<{[key: number]: string}>({});
-  const [rating, setRating] = useState<number>(0);
+  const width = useWindowSize().width as number;
 
   // Subtype of the search
 
@@ -61,23 +62,12 @@ function Search(props: any) {
   ]
   const [subType, setSubType] = useState<Subtype>(subtypes[0])
 
-
   //Modal functions
   const [open, setOpen] = useState<boolean>(false);
   const [filteredMissions, setFilteredMissions] = useState<Mission[] | []>([]);
   const [filteredAssociations, setFilteredAssociations] = useState<
     Association[] | []
   >([]);
-
-  /***** QUERY PARAMS FROM HOME PAGE *****/
-  window.onload = function () {
-    const urlParams = new URLSearchParams(window.location.search);
-    const query = urlParams.get("query");
-    if (query) {
-      console.log(`Query: ${query}`);
-      setSearch(query);
-    }
-  };
 
   const handleClose = () => {
     setOpen(false);
@@ -92,7 +82,9 @@ function Search(props: any) {
       setOpen: setOpen,
       filteredMissions: filteredMissions,
       setFilteredMissions: setFilteredMissions,
+      setSearch: setSearch,
       handleClose: handleClose,
+      width: width
     };
   } else {
     modalProps = {
@@ -101,6 +93,7 @@ function Search(props: any) {
       filteredAssociations: filteredAssociations,
       setFilteredAssociations: setFilteredAssociations,
       handleClose: handleClose,
+      width: width
     };
   }
 
@@ -110,22 +103,21 @@ function Search(props: any) {
       : (FilterModalAsso as React.FC<{ modalProps: CombinedModalPros }>);
 
   useEffect(() => {
-    fetch(`${config.apiUrl}/missions/association`, {
+    fetch(`${config.apiUrl}/missions/`, {
         method: 'GET',
         headers: {
             authorization: `Bearer ${localStorage.getItem('token')}`,
             'Content-Type': 'application/json'
         }
-    }).then((response) => {
-        if (response.status === 200) {
-          response.json().then((data) => {
-            let mission_list : Mission[] = [];
-            data.map((mission: Mission) => {
-              mission_list.push(mission)
-            })
-            setMissionList(mission_list)
-          })
-        }
+    }).then((data => data.json()))
+    .then((data : any) => {
+      let association_missions = data.associations_missions
+      let mission_list : Mission[] = [];
+      association_missions
+      .map((mission: Mission) => {
+        mission_list.push(mission)
+      })
+      setMissionList(mission_list)
      })
   }, [])
 
@@ -239,7 +231,9 @@ function Search(props: any) {
             className={
               "filter-btn-search"
             }
-            sx={{ background: (localStorage.getItem('color_blind') === 'true') ? '#dedede' : '#ffcf56', ":hover": {background: (localStorage.getItem('color_blind') === 'true') ? '#dedede' : '#ffcf56'}}}
+            sx={{
+                background: (localStorage.getItem('color_blind') === 'true') ? '#dedede' : '#ffcf56', ":hover": {background: (localStorage.getItem('color_blind') === 'true') ? '#dedede' : '#ffcf56',
+            }}}
             variant="contained"
             onClick={() => {
               setOpen(true);
@@ -301,6 +295,7 @@ function Search(props: any) {
           <VolunteerPanel
             volunteerFilteredList={[]}
             search={search}
+            width={width}
           />
         </TabPanel>
       </div>

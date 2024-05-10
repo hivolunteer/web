@@ -21,7 +21,7 @@ function ConnectAssociationRouter() {
             <Route path="/:id/edit" element={<MissionModification />} />
             <Route path="/accueil" element={<Home />} />
             <Route path="/calendrier" element={<EventCalendar />} />
-            <Route path="/referent" element={<ReferentPage />} />
+            <Route path="/settings/referents" element={<ReferentPage />} />
             <Route path="*" element={<h1> Error 404 Asso </h1>} />
         </Routes>
     )

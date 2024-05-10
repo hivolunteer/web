@@ -16,7 +16,9 @@ interface Modal {
     setOpen: any,
     filteredMissions: Mission[] | [],
     setFilteredMissions: any,
-    handleClose : any
+    setSearch: any,
+    handleClose : any,
+    width: number
 }
 
 interface ModalAsso {
@@ -24,7 +26,8 @@ interface ModalAsso {
     setOpen: any,
     filteredAssociations: Association[] | [],
     setFilteredAssociations: any,
-    handleClose : any
+    handleClose : any,
+    width: number
 }
 
 interface Skill {
