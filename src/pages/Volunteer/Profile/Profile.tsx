@@ -254,7 +254,7 @@ function ProfilePage(props: any) {
         alignSelf: "self-start",
       }}
     >
-      <img src={profile_picture} alt="Logo de profil" className={"container-div"} />
+      <img src={profile_picture} alt="Logo de profil" className={"profile-photo"} />
       <div className="profile-info">
         <h1>{first_name} {last_name}</h1>
         <p>{passedMissions} missions réalisées</p>
@@ -272,22 +272,25 @@ function ProfilePage(props: any) {
           <FriendProfileCard id={friend} />
         ))}
       </div>
-      <Row>
-      <Col sm={12} md={4} lg={3}>
+      <Col sm={12} md={4} lg={3} className="profile-info"></Col>
+      <Row sm={12} md={4} lg={3} className="button-row">
         <div className="profile-btn-div">
           <button className={"profile-pic-btn" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")} onClick={() => { navigate("/settings/profile_information"); }}>
             Mettre à jour le profile
           </button>
         </div>
-      </Col><div className="profile-btn-div">
+      <div className="profile-btn-div">
         <button className={"profile-pic-btn" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")} onClick={() => { navigate("/profile/blocked"); } }>
           Gérer les utilisateurs Bloqués
         </button>
-      </div><button className="delete-account-btn" onClick={deleteAccount}>
+      </div>
+      <div className="profile-btn-div">
+        <button className="delete-account-btn" onClick={deleteAccount}>
         Supprimer le compte
       </button>
+      </div>
       </Row>
-      </>
+      </> 
   );
 };
 

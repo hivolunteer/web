@@ -23,7 +23,6 @@ export default function FriendProfileCard(props: {id: Number}) {
         })
         .then(response => response.json())
         .then(data => {
-            console.log("data: ", data);
             setFirstName(data.volunteer.first_name);
             setLastName(data.volunteer.last_name);
             setProfilePicture(data.volunteer.profile_picture);
@@ -41,10 +40,11 @@ export default function FriendProfileCard(props: {id: Number}) {
                     width: '100%',
                     height: '100%',
                     display: 'flex',
-                    flexDirection: 'row',
                 }}
             >
                 <CardMedia
+                    sx={{ width: 80, height: 80, verticalAlign: 'middle', display: 'flex', borderRadius: '50%', margin: '10px', marginTop: '25px'
+                    }}
                     component="img"
                     height="18"
                     image={profilePicture ? profilePicture : ProfileDefaultPicture}
@@ -52,18 +52,12 @@ export default function FriendProfileCard(props: {id: Number}) {
                 />
                 <CardContent
                     sx={{
-                        backgroundColor: "rgba(0, 0, 0, 0.70)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center"
-                    }}
-                >
-                </CardContent>
-                <CardContent
-                    sx={{
                         backgroundColor: 'white',
                         minHeight: '100px',
-                        maxHeight: '100px'
+                        maxHeight: '100px',
+                        display: 'flex',
+                        alignContent: 'center',
+                        justifyContent: 'center',
                     }}
                 >
                     <Typography
@@ -75,7 +69,7 @@ export default function FriendProfileCard(props: {id: Number}) {
                         sx={{
                             display: "flex",
                             alignItems: "center",
-                            justifyContent: "center"
+                            justifyContent: "center",
                         }}
                     >
                         {firstName} {lastName}
@@ -86,7 +80,7 @@ export default function FriendProfileCard(props: {id: Number}) {
                         style={{
                             width: '100%',
                             display: 'flex',
-                            justifyContent: 'center'
+                            justifyContent: "space-between",
                         }}
                     >
                         <Button
@@ -95,7 +89,9 @@ export default function FriendProfileCard(props: {id: Number}) {
                             href={`/volunteer/${id}`}
                             variant="contained"
                             sx={{
-                                color: 'white'
+                                color: 'white',
+                                display: 'flex',
+                                justifyContent: "space-between",
                             }}
                         >
                             Voir le profil
