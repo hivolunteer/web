@@ -9,6 +9,7 @@ import MissionModification from '../pages/Association/Missions/Manage/MissionMod
 import Accueil from '../pages/Association/Accueil/Accueil';
 import EventCalendar from "../components/Calendar/EventCalendar";
 import ReferentPage from '../pages/Association/Referent/ReferentPage';
+import ExternalProfile from '../pages/Association/ExternalProfile/ExternalProfile';
 import Settings from '../pages/Association/Settings/Settings';
 import ProfileInformationModal from '../pages/Association/Settings/ProfileInformation';
 
@@ -17,6 +18,7 @@ function ConnectAssociationRouter() {
         <Routes>
             <Route path="/" element={<Home/>} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/volunteer/:id" element={<ExternalProfile />} />
             <Route path="/missionCreation" element={<MissionCreation />} />
             <Route path="/modifyProfile" element={<ModifyProfilePage />} />
             <Route path="/manage/:id" element={<ManageMission />} />
@@ -25,7 +27,7 @@ function ConnectAssociationRouter() {
             <Route path="/calendrier" element={<EventCalendar />} />
             <Route path='/settings' element={<Settings />} />
             <Route path="/settings/profile_information" element={<ProfileInformationModal />} />
-            <Route path="/settings/referents" element={<ReferentPage />} />
+            <Route path="/referent" element={<ReferentPage />} />
             <Route path="*" element={<h1> Error 404 Asso </h1>} />
         </Routes>
     )
