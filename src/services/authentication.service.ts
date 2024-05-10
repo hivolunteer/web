@@ -11,6 +11,7 @@ export class AuthenticationService {
         response.json().then((data) => {
             localStorage.setItem('token', data.token)
             localStorage.setItem('color_blind', 'false')
+            localStorage.setItem('id', data.id)
         })
         return response.status;
     }
@@ -24,6 +25,7 @@ export class AuthenticationService {
         response.json().then((data) => {
             localStorage.setItem('token', data.token)
             localStorage.setItem('color_blind', 'false')
+            localStorage.setItem('id', data.id)
         })
         console.log("token: " + localStorage.getItem("token"));
         return response.status;
