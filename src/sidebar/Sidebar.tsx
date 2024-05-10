@@ -204,7 +204,7 @@ function ResponsiveAppBar() {
                       handleCloseUserMenu();
                       switch (setting) {
                         case "Créer une mission":
-                          window.location.href = "/missionCreation";
+                          window.location.href = "/mission/create";
                           break;
                         case "Profile":
                           navigate("/profile");

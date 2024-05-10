@@ -7,7 +7,7 @@ import FollowAssociation from "../pages/Volunteer/FollowAssociation/FollowAssoci
 import MissionDetails from "../pages/Volunteer/MissionDetails/MissionDetails";
 import Settings from "../pages/Settings/Settings";
 import MissionCreation from "../pages/Volunteer/Missions/MissionCreation";
-import MissionModification from "../pages/Volunteer/Missions/MissionModifiy";
+import EditMission from "../pages/Volunteer/Missions/MissionModify";
 
 function ConnectVolunteerRouter() {
   return (
@@ -19,7 +19,7 @@ function ConnectVolunteerRouter() {
       <Route path="/accueil" element={<Search />} />
       <Route path="/mission/:missionID" element={<MissionDetails />} />
       <Route path="/mission/create" element={<MissionCreation/>} />
-      <Route path="/mission/edit/:missionID" element={<MissionModification/>} />
+      <Route path="/mission/edit/:missionID" element={<EditMission/>} />
       <Route path={"/settings"} element={<Settings />} />
       <Route path="*" element={<h1> Error 404 Volunteer </h1>} />
     </Routes>

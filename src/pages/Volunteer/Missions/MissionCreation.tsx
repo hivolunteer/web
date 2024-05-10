@@ -12,7 +12,7 @@ import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import Lottie from "lottie-react";
 import moment from "moment";
 import "moment/locale/de";
-import './MissionCreation.scss';
+//import './MissionCreation.scss';
 import config from "../../../config";
 import LocationModal from "../../Association/Missions/Modal/LocationModal";
 import noImage from "../../../images/lottie/noImage.json";
