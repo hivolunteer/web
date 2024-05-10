@@ -7,6 +7,7 @@ import FollowAssociation from "../pages/Volunteer/FollowAssociation/FollowAssoci
 import MissionDetails from "../pages/Volunteer/MissionDetails/MissionDetails";
 import Settings from "../pages/Settings/Settings";
 import BlockedUsersList from "../components/BlockedUsersList";
+import PublicProfile from "../pages/Volunteer/PublicProfile/PublicProfile";
 
 import MissionCreation from "../pages/Volunteer/Missions/MissionCreation";
 import EditMission from "../pages/Volunteer/Missions/MissionModify";
@@ -29,6 +30,7 @@ function ConnectVolunteerRouter() {
       <Route path="/mission/:missionID" element={<MissionDetails />} />
       <Route path="/mission/create" element={<MissionCreation/>} />
       <Route path="/:missionID/edit" element={<EditMission/>} />
+      <Route path="/volunteer/:volunteerId" element={<PublicProfile/>} />
       <Route path={"/settings"} element={<Settings />} />
       <Route path="/settings/referents" element={<AssociationReferent />} />
       <Route path="/manage/:id" element={<ManageMission />} />
