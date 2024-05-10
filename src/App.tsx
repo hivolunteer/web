@@ -9,20 +9,24 @@ import AssociationRouter from "./routers/NoConnectAssociationRouter";
 import AssociationRouterConnected from "./routers/ConnectAssociationRouter";
 import VolunteerRouter from "./routers/NoConnectVolunteerRouter";
 import VolunteerRouterConnected from "./routers/ConnectVolunteerRouter";
-import ResponsiveAppBar from "./sidebar/Sidebar";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { ThemeProvider, useTheme } from "@mui/material";
 import { myTheme } from "./theme/theme";
 import { useEffect } from "react";
+import Home from "./pages/NonConnected/Home/Home";
+import VolunteerSidebar from "./sidebar/VolunteerSidebar";
+import AssociationSidebar from "./sidebar/AssociationSidebar";
 
 function NoConnectRouter() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<UserTypeChoice />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/auth" element={<UserTypeChoice />} />
         <Route path="/volunteers/*" element={<VolunteerRouter />} />
         <Route path="/associations/*" element={<AssociationRouter />} />
+        <Route path="*" element={<Home />} />
       </Routes>
     </Router>
   );
@@ -31,7 +35,7 @@ function NoConnectRouter() {
 function ConnectRouter() {
   return (
     <Router>
-      <ResponsiveAppBar />
+      {localStorage.getItem("role") === "volunteer" ? <VolunteerSidebar /> : <AssociationSidebar />}
       <Routes>
         {localStorage.getItem("role") === "volunteer" ? (
           <Route path="/*" element={<VolunteerRouterConnected />} />
@@ -47,10 +51,10 @@ function App() {
 
   const theme = useTheme();
 
-  useEffect (() => {
+  useEffect(() => {
     localStorage.getItem("token") ? document.body.style.backgroundColor = "#f5f5f5" : document.body.style.backgroundColor = "#DFDFDF"
   }, []);
-  
+
   return (
     <ThemeProvider theme={myTheme}>
       <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="fr">
@@ -60,18 +64,7 @@ function App() {
               <ConnectRouter />
             </div>
           ) : (
-            <div
-                style={{
-                display: 'flex',
-                justifyContent: 'center',
-                height: '90%',
-                backgroundColor: '#DFDFDF',
-                alignItems: 'center',
-                margin: '5%'
-              }}
-            >
-              <NoConnectRouter />
-            </div>
+            <NoConnectRouter />
           )
         }
       </LocalizationProvider>

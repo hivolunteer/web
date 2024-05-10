@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="58.800000000000004 44.4 487.20000000000005 255.6" style="max-height: 500px" width="487.20000000000005" height="255.6">
+<g filter="url(#filter0_d_1647_877)">
+<mask height="600" width="600" y="0" x="0" maskUnits="userSpaceOnUse" style="mask-type:alpha" id="mask0_1647_877">
+<rect fill="#D9D9D9" height="600" width="600"/>
+</mask>
+<g mask="url(#mask0_1647_877)">
+<path fill="#FFCF56" d="M243.747 550.003L201.247 475.003H118.747L62.4971 375.003L104.997 300.003L62.4971 225.003L118.747 125.003H201.247L243.747 50.0029H356.247L398.747 125.003H481.247L537.497 225.003L494.997 300.003L537.497 375.003L481.247 475.003H398.747L356.247 550.003H243.747ZM398.747 275.003H452.497L479.997 225.003L452.497 175.003H398.747L370.622 225.003L398.747 275.003ZM273.747 350.003H326.247L354.372 300.003L326.247 250.003H273.747L245.622 300.003L273.747 350.003ZM273.747 200.003H326.247L354.997 149.378L326.872 100.003H273.122L244.997 149.378L273.747 200.003ZM148.122 275.003H201.247L229.372 225.003L201.247 175.003H148.122L119.997 225.003L148.122 275.003ZM148.122 425.003H201.247L229.372 375.003L201.247 325.003H147.497L119.997 375.003L148.122 425.003ZM273.122 500.003H326.872L354.997 450.628L326.247 400.003H273.747L244.997 450.628L273.122 500.003ZM398.747 425.003H451.872L479.997 375.003L451.872 325.003H398.747L370.622 375.003L398.747 425.003Z"/>
+</g>
+</g>
+<defs>
+<filter color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse" height="508" width="483" y="46.0029" x="62.4971" id="filter0_d_1647_877">
+<feFlood result="BackgroundImageFix" flood-opacity="0"/>
+<feColorMatrix result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" type="matrix" in="SourceAlpha"/>
+<feOffset dx="4"/>
+<feGaussianBlur stdDeviation="2"/>
+<feComposite operator="out" in2="hardAlpha"/>
+<feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" type="matrix"/>
+<feBlend result="effect1_dropShadow_1647_877" in2="BackgroundImageFix" mode="normal"/>
+<feBlend result="shape" in2="effect1_dropShadow_1647_877" in="SourceGraphic" mode="normal"/>
+</filter>
+</defs>
+</svg>

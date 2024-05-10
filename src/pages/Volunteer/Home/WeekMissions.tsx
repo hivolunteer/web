@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import MissionCard from '../../../components/HomeMissionCard';
+import MissionCard from '../../../components/MissionCard';
 import config from "../../../config";
 import './Home.scss';
+import MissionCardHome from '../../../components/MissionCardHome';
 
 interface Mission {
     id: number
@@ -61,7 +62,7 @@ function WeekMissions(props: { missions: Number[] }) {
                     missionListDisplay.map((mission: any) => {
                         return(
                             <div style={{width: '100%', margin: '10px'}}>
-                                <MissionCard mission={mission} />
+                                <MissionCardHome mission={mission} />
                             </div>
                         )
                     })

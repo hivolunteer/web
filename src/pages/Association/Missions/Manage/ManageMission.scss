@@ -1,4 +1,7 @@
-.container {
+@import 'assets/scss/_colors.scss';
+
+
+.manage-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -40,10 +43,6 @@
     padding: 10px;
 }
 
-.body-mission-container {
-
-}
-
 .mission-management {
     margin-top: 3%;
 }
@@ -60,4 +59,12 @@
 .mission-button-green {
     background-color: #67a191;
     color: white;
+}
+
+.comment {
+    margin: auto 15%;
+    margin-top: 3%;
+    margin-bottom: 3%;
+    border-radius: 10px;
+    background-color: $color-background;
 }

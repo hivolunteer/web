@@ -1,0 +1,41 @@
+.association-referent-title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.association-referent-subtitle {
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.association-referent-description {
+    margin-top: 0.25rem;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #6c757d;
+}
+
+.association-referent-form {
+    display: grid;
+    grid-gap: 4px;
+    margin-top: 8px;
+}
+
+.association-referent-container {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    margin-top: 2rem;
+    margin-left: 4rem;
+}
+
+.association-referent-list {
+    margin-top: 0.125rem;
+    margin-left: 1rem;
+    max-width: 40rem;
+}

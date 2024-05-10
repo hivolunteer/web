@@ -1,7 +1,7 @@
 import { Card, CardContent, CardMedia, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
 import StarIcon from '@mui/icons-material/Star';
-import config from '../../../config';
+import config from '../../../../config';
 
 export default function AssociationCard(props: {association_id: number}) {
     

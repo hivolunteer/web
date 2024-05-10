@@ -1,0 +1,45 @@
+.association-referent-card {
+    display: flex;
+    align-items: center;
+}
+
+.association-referent-card__avatar {
+    height: 4rem;
+    width: 4rem;
+}
+
+.association-referent-card__content {
+    margin-left: 1rem;
+    margin-top: 0.25rem;
+
+    .association-referent-card__name {
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 1;
+    }
+
+    .association-referent-card__role {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        color: #6c757d;
+    }
+}
+
+.association-referent-card__settings {
+    margin-left: auto;
+    font-weight: 500;
+    color: #864545;
+}
+
+.association-referent-modal-description {
+    margin-top: 0.25rem;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #6c757d;
+}
+
+.association-referent-modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+}
