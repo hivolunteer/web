@@ -28,7 +28,7 @@ function ConnectVolunteerRouter() {
       <Route path="/association/:associationID" element={<AssociationProfile />} />
       <Route path="/mission/:missionID" element={<MissionDetails />} />
       <Route path="/mission/create" element={<MissionCreation/>} />
-      <Route path="/mission/edit/:missionID" element={<EditMission/>} />
+      <Route path="/:missionID/edit" element={<EditMission/>} />
       <Route path={"/settings"} element={<Settings />} />
       <Route path="/settings/referents" element={<AssociationReferent />} />
       <Route path="/manage/:id" element={<ManageMission />} />
