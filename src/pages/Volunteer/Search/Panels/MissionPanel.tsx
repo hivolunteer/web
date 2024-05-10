@@ -1,5 +1,7 @@
 import MissionCard from "../../../../components/MissionCard";
+import MissionCardHome from "../../../../components/MissionCardHome";
 import { Mission } from "../../../../interfaces";
+import '../Search.scss'
 
 interface MissionPanelProps {
     missionList: Array<Mission>;
@@ -28,7 +30,7 @@ function MissionPanel(props: MissionPanelProps) {
               )
               .map((mission: Mission) => (
                 <div className="mission-card" key={mission.id}>
-                  <MissionCard mission={mission} />
+                  <MissionCardHome mission={mission} />
                 </div>
               ))}
           </div>

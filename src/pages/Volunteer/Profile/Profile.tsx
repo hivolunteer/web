@@ -34,7 +34,6 @@ export default function Profile(props: Props) {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("data: ", data);
         setId(data.volunteer.id);
         setFirstName(data.volunteer.first_name);
         setLastName(data.volunteer.last_name);
@@ -126,7 +125,7 @@ export default function Profile(props: Props) {
       <Card className="friend-card">
             <img src={image} alt={firstName} className="friend-image"/>
             <h3> {firstName} {lastName}</h3>
-          </Card>
+      </Card>
     </>
   );
 }

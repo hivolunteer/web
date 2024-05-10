@@ -75,7 +75,8 @@
 }
 
 .profile-btn-div {
-  margin: 0 40%;
+  margin: 0 45%;
+  align-items: center;
 }
 
 .filled-text {
@@ -153,6 +154,13 @@
   color: red;
   font-size: 1.1rem;
   cursor: pointer;
+
+  align-items: center;
+  margin: 0.5rem;
+  border-radius: 20px;
+  background-color: red;
+  margin: 0 auto;
+
 }
 
 .delete-account-btn:hover {

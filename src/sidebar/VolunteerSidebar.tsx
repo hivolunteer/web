@@ -17,51 +17,73 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Sidebar.scss";
 import logoWhite from "../images/logo/submark_white.png";
 import logoImage from "../images/logo/submark.png";
+import config from "../config";
 
-const pages: string[] = [];
-const settings: string[] = [];
-if (localStorage.getItem("token") !== null) {
-  pages.push("Accueil", "Calendrier", "Profile");
-}
 
-if (localStorage.getItem("token") !== null) {
-  settings.push("Créer une mission", "Profile", "Réglages", "Referent", "Logout");
-} else {
-  settings.push("Connexion", "Inscription");
-}
-
-function ResponsiveAppBar() {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null
-  );
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null
-  );
+export default function VolunteerSidebar() {
+  let color_blind = localStorage.getItem("color_blind") === "true";
+  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
+  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
+  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => { setAnchorElNav(event.currentTarget); };
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => { setAnchorElUser(event.currentTarget); };
+  const handleCloseNavMenu = () => { setAnchorElNav(null); };
+  const handleCloseUserMenu = () => { setAnchorElUser(null); };
+  const [pages, setPages] = React.useState<string[]>([]);
+  const [settings, setsettings] = React.useState<string[]>([]);
+  const [pagesLink, setPagesLink] = React.useState<{ [pageName: string]: string }>({})
+  const [isFetchRef, setIsFetchRef] = React.useState(false);
 
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
+  const isReferent = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      fetch(`${config.apiUrl}/referent/volunteer`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      }).then((response) => {
+        if (response.status === 200) {
+          response.json().then((body: any[]) => {
+            setPages([...pages, "Missions Assignées"]);
+            pagesLink["Missions Assignées"] = "settings/referents";
+          });
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
+  React.useEffect(() => {
+    if (!isFetchRef) {
+      setIsFetchRef(true);
+      isReferent();
+    }
+  }, [isFetchRef]);
 
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+  React.useEffect(() => {
+    if (settings.length === 0) {
+      if (localStorage.getItem("token") !== null) {
+        settings.push("Profile", "Réglages", "Déconnexion");
+        pages.push("Recherche", "Mes Missions");
+        pagesLink["Recherche"] = "accueil";
+        pagesLink["Mes Missions"] = "history";
+      } else {
+        settings.push("Connexion", "Inscription");
+      }
+
+    }
+  }, [settings]);
 
   const handleMenuItemClick = (setting: string) => {
     handleCloseUserMenu();
-
     switch (setting) {
       case "Profile":
         navigate("/profile");
         break;
-      case "Logout":
+      case "Déconnexion":
         handleLogout();
         break;
       default:
@@ -74,30 +96,18 @@ function ResponsiveAppBar() {
     window.location.href = "/";
   };
 
-  let color_blind = localStorage.getItem("color_blind") === "true";
-
   return (
-    <AppBar
-      position="static"
-      background-color="#F5F5F5"
-      style={{
-        background: !color_blind ? "#67A191" : "#3b3d3c",
-      }}
-    >
+    <AppBar position="static" background-color="#F5F5F5" style={{ background: !color_blind ? "#598b7d" : "#3b3d3c" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Avatar alt="User" src={logoWhite} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
+          <Typography variant="h6" noWrap component="a" href="/"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
               fontFamily: "montserrat",
               fontWeight: "bold",
-              // letterSpacing: ".3rem",
+              letterSpacing: ".3rem",
               color: "#F5F5F5",
               textDecoration: "none",
             }}
@@ -106,58 +116,36 @@ function ResponsiveAppBar() {
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
+            <IconButton size="large" aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true" color="inherit"
               onClick={handleOpenNavMenu}
-              color="inherit"
             >
               <MenuIcon />
             </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
+            <Menu id="menu-appbar" anchorEl={anchorElNav} keepMounted open={Boolean(anchorElNav)} onClose={handleCloseNavMenu}
               anchorOrigin={{
                 vertical: "bottom",
                 horizontal: "left",
               }}
-              keepMounted
               transformOrigin={{
                 vertical: "top",
                 horizontal: "left",
               }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
               sx={{
                 display: { xs: "block", md: "none" },
               }}
             >
               {pages.map((page) => (
-                <MenuItem
-                  key={page}
-                  onClick={() => {
-                    console.log("hd");
-                  }}
-                >
-                  {page}
-                </MenuItem>
+                <MenuItem key={page} onClick={() => { console.log("hd"); }}>{page}</MenuItem>
               ))}
             </Menu>
           </Box>
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href=""
+          <Typography variant="h5" noWrap component="a" href=""
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
               flexGrow: 1,
-              fontFamily: "montserrat",
-              fontWeight: "bold",
-              fontSize: "1.5rem",
+              fontFamily: "monospace",
+              fontWeight: 700,
               letterSpacing: ".3rem",
               color: "inherit",
               textDecoration: "none",
@@ -167,13 +155,7 @@ function ResponsiveAppBar() {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
-              <Button
-                key={page}
-                component={Link}
-                to={`/${page.toLowerCase()}`}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
+              <Button key={page} component={Link} to={`/${pagesLink[page]}`} onClick={handleCloseNavMenu} sx={{ my: 2, color: "white", display: "block" }}>
                 {page}
               </Button>
             ))}
@@ -185,48 +167,29 @@ function ResponsiveAppBar() {
                 <Avatar alt="User" src={logoImage} />
               </IconButton>
             </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
+            <Menu id="menu-appbar" anchorEl={anchorElUser} sx={{ mt: "45px" }} keepMounted open={Boolean(anchorElUser)} onClose={handleCloseUserMenu}
               anchorOrigin={{
                 vertical: "top",
                 horizontal: "right",
               }}
-              keepMounted
               transformOrigin={{
                 vertical: "top",
                 horizontal: "right",
               }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem
-                  key={setting}
-                  onClick={() => handleMenuItemClick(setting)}
-                >
-                  <Typography
-                    textAlign="center"
-                    component={Link}
-                    to={setting === "Profile" ? "/profile" : "/"}
+                <MenuItem key={setting} onClick={() => handleMenuItemClick(setting)} >
+                  <Typography textAlign="center" component={Link} to={setting === "Profile" ? "/profile" : "/"}
                     onClick={() => {
                       handleCloseUserMenu();
                       switch (setting) {
-                        case "Créer une mission":
-                          window.location.href = "/missionCreation";
-                          break;
                         case "Profile":
                           navigate("/profile");
                           break;
                         case "Réglages":
                           window.location.href = "/settings";
                           break;
-                        case "Referent":
-                          window.location.href = "/settings/referents";
-                          break;
-                        case "Logout":
-                          console.log("logout");
+                        case "Déconnexion":
                           localStorage.removeItem("token");
                           localStorage.removeItem("role");
                           window.location.reload();
@@ -235,7 +198,6 @@ function ResponsiveAppBar() {
                         case "Connexion" || "Inscription":
                           window.location.href = "/auth";
                           break;
-                        
                         default:
                           break;
                       }
@@ -253,4 +215,3 @@ function ResponsiveAppBar() {
     </AppBar>
   );
 }
-export default ResponsiveAppBar;

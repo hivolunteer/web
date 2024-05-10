@@ -6,6 +6,7 @@ import { AuthenticationService } from "../../../services/authentication.service"
 import "./Login.scss";
 import titleLogo from "../../../images/logo/primary_logo.png";
 import ForgotPasswordModal from "../ForgotPasswordModal/ForgotPasswordModal";
+import config from "../../../config";
 import AutohideSnackbar from "../../../components/SnackBar";
 
 function LoginVolunteer() {
@@ -73,6 +74,8 @@ function LoginVolunteer() {
     /* Check if all inputs are complete */
     checkComplete(data);
     const credential = data.get("credential") as string;
+    setPhone(!credential.includes("@"));
+    setEmail(credential.includes("@"));
     /* Check email format */
     checkEmailFormat(credential);
     /* Check phone format */
@@ -245,9 +248,9 @@ function LoginVolunteer() {
                 <a className="forgot-password"
                     onClick={() => {setOpen(true);
                 }}>
-                  Mot de passe oublié ?
-                </a>
-                <ForgotPasswordModal modalProps={{open: open, handleClose: () => setOpen(false), route: "/volunteers/"}} />
+                Mot de passe oublié ?
+              </a>
+              <ForgotPasswordModal modalProps={{ open: open, handleClose: () => setOpen(false), route: "/volunteers/" }} />
             </div>
             <Button
               type="submit"

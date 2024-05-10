@@ -7,68 +7,52 @@ import "./Accueil.scss";
 import "../../Volunteer/Home/Home.scss";
 import { useEffect, useState } from "react";
 import config from "../../../config";
-import MissionCard from '../../../components/MissionCard';
-
-interface Mission {
-  id: number;
-  max_volunteers: number;
-  description: string;
-  practical_informations: string;
-  start_date: string;
-  end_date: string;
-  location: number;
-  title: string;
-  status: number;
-  theme_id: number;
-  picture: string;
-}
+import { Button } from '@mui/material';
+import MissionCardHome from '../../../components/MissionCardHome';
+import { Mission } from '../../../interfaces';
 
 function Accueil() {
   const [missionList, setMissionList] = useState<Mission[]>([]);
 
-  useEffect(() => {
-    fetch(`${config.apiUrl}/missions/association`, {
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    }).then((response) => {
-      if (response.status === 200) {
-        response.json().then((data) => {
-          setMissionList(data.association_missions);
-        });
-      }
-    });
-  }, []);
+    useEffect(() => {
+        fetch(`${config.apiUrl}/missions/association`, {
+            method: 'GET',
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        }).then((response) => {
+            if (response.status === 200) {
+                response.json().then((data) => {
+                    setMissionList(data.active)
+                })
+            }
+        })
+    }, [])
 
-  return (
-    <div>
-      <h1> Accueil </h1>
-      <div className="body-container">
-        <div className="mission-container">
-          <div>
-            <h2> Prochaines missions : </h2>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-              }}
-            >
-              {missionList?.map((mission: any) => {
-                return (
-                  <div style={{ width: "100%", margin: "10px" }}>
-                    <MissionCard mission={mission} />
-                  </div>
-                );
-              })}
+    return (
+        <div>
+            <h1> Accueil </h1>
+            <div className="body-container">
+                <div className="mission-container">
+                    <div>
+                        <h2> Prochaines missions : </h2>
+                        <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
+                            { missionList &&
+                                missionList.map((mission: Mission) => {
+                                    return(
+                                        <div style={{width: '100%', margin: '10px'}}>
+                                            <MissionCardHome mission={mission} />
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-  );
+    )
 }
 
 export default Accueil;

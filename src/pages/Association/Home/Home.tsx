@@ -10,6 +10,7 @@ import config from "../../../config";
 import { Button } from '@mui/material';
 import MissionCard from '../../../components/MissionCard';
 import { Mission } from '../../../interfaces';
+import MissionCardHome from '../../../components/MissionCardHome';
 interface Association {
     id: number,
     name: string, 
@@ -127,7 +128,7 @@ function Home () {
                                     noDuplicates(NextMissions).map((mission: Mission) => {
                                         return (
                                             <div className="missions-row">
-                                                <MissionCard
+                                                <MissionCardHome
                                                     mission={mission}
                                                 />
                                             </div>
@@ -149,7 +150,7 @@ function Home () {
                                     noDuplicates(SavedMissions).map((mission: Mission) => {
                                         return (
                                             <div className="missions-row">
-                                                <MissionCard
+                                                <MissionCardHome
                                                     mission={mission}
                                                 />
                                             </div>
@@ -171,7 +172,7 @@ function Home () {
                                     noDuplicates(PastMissions).map((mission: Mission) => {
                                         return (
                                             <div className="missions-row">
-                                                <MissionCard
+                                                <MissionCardHome
                                                     mission={mission}
                                                 />
                                             </div>
