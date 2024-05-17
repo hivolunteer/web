@@ -104,8 +104,26 @@ function LoginVolunteer() {
     if ((user["phone"] || user["email"]) && user["password"]) {
       if ((checkEmailFormat(user["email"] as string))) {
         // call LoginVolunteer service
-        const response_status = AuthenticationService.loginVolunteers(user);
-        responseExecute(await response_status);
+        await AuthenticationService.loginVolunteers(user)
+          .then((response_status) => {
+            console.log("RESPONSE STATUS", response_status);
+            if (typeof response_status === 'number') {
+              responseExecute(response_status);
+            } else {
+              setResponse({
+                error: true,
+                message: "Erreur inconnue, veuillez réessayer plus tard",
+              });
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            setResponse({
+              error: true,
+              message: "Erreur inconnue, veuillez réessayer plus tard",
+            });
+          });
+          // Handle the case where response_status is null
       }
     }
   };
@@ -223,7 +241,7 @@ function LoginVolunteer() {
             </Grid>
             {response.message !== "" && (
               <AutohideSnackbar
-                message={"L'adresse mail ou le mot de passe est incorrect"}
+                message={response.message}
                 open={true}
                 response={response.error}
               />

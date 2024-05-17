@@ -154,8 +154,8 @@ function RegisterVolunteer() {
         switch (response_status) {
             case 201:
                 alert("Inscription réussie");
-                localStorage.setItem("role", "association");
-                navigate("/profile");
+                localStorage.setItem("role", "volunteer");
+                navigate("/");
                 window.location.reload();
                 break;
             case 401:

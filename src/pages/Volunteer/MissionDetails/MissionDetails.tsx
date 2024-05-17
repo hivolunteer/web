@@ -95,7 +95,7 @@ const MissionDetails = () => {
                             let locationStr: string = String(data.street_number)
                             if (data.street_number_suffix)
                                 locationStr += " " + data.street_number_suffix
-                            locationStr += " " + data.street_name + ", " + data.city
+                            locationStr += " " + data.street_type + " " + data.street_name + ", " + data.city
                             setLocation(locationStr)
                         })
                     }

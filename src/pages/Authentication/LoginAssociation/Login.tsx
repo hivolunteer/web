@@ -100,8 +100,14 @@ function LoginAssociation() {
             if (checkEmailFormat(user["email"] as string)) {
               // call LoginAssociation service
               const response_status = AuthenticationService.loginAssociations(user);
-              console.log(response_status);
-              responseExecute(await response_status);
+              if (response_status !== null) {
+                responseExecute(response_status as unknown as number);
+              } else {
+                setResponse({
+                  error: true,
+                  message: "Erreur inconnue, veuillez réessayer plus tard",
+                });
+              }
             }
         }
     };

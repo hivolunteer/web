@@ -68,7 +68,7 @@ function PublicProfile() {
             <div className="background-card">
                 <Card className="stats-card">
                     <CardContent>
-                        <h2>Statistics</h2>
+                        <h2>Statistiques</h2>
                         <div className="stat-item">
                             <h3>Missions réalisées:</h3>
                             <p>{profileData.missions_done ? profileData.missions_done : 0}</p>
