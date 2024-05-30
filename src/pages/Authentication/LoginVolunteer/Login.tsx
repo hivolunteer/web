@@ -106,7 +106,6 @@ function LoginVolunteer() {
         // call LoginVolunteer service
         await AuthenticationService.loginVolunteers(user)
           .then((response_status) => {
-            console.log("RESPONSE STATUS", response_status);
             if (typeof response_status === 'number') {
               responseExecute(response_status);
             } else {
@@ -117,7 +116,6 @@ function LoginVolunteer() {
             }
           })
           .catch((error) => {
-            console.error("Error:", error);
             setResponse({
               error: true,
               message: "Erreur inconnue, veuillez réessayer plus tard",
