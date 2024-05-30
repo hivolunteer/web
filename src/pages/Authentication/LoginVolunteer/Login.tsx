@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Alert, Box, Button, Grid, IconButton, InputAdornment, Link, TextField, Typography } from "@mui/material";
+import {Alert, Box, Button, Grid, IconButton, InputAdornment, Link, TextField, Typography } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { AuthenticationService } from "../../../services/authentication.service";
 import "./Login.scss";
 import titleLogo from "../../../images/logo/primary_logo.png";
 import ForgotPasswordModal from "../ForgotPasswordModal/ForgotPasswordModal";
 import config from "../../../config";
+import AutohideSnackbar from "../../../components/SnackBar";
 
 function LoginVolunteer() {
+  const [response, setResponse] = useState<{ error: Boolean; message: string }>(
+    { error: false, message: "" }
+  );
   /***
    * Define all states
    ***/
@@ -19,7 +23,6 @@ function LoginVolunteer() {
   /* Set phone format state */
   const [phoneFormat, setPhoneFormat] = useState(true);
   /* State complete for all inputs*/
-  const [phone, setPhone] = useState(true);
   const [email, setEmail] = useState(true);
   const [password, setPassword] = useState(true);
   const [fodder, setFodder] = useState(true);
@@ -53,46 +56,39 @@ function LoginVolunteer() {
     }
   };
 
-  /* Function to check phone format */
-  const checkPhoneFormat = (phone: string) => {
-    const regex = /^\+(?:[0-9] ?){6,14}[0-9]$/;
-    // regex : "+" or "00", 1 to 3 numbers country code, 1 to 12 numbers
-    if (regex.test(phone)) {
-      setPhoneFormat(true);
-      return true;
-    } else {
-      setPhoneFormat(false);
-      return false;
-    }
-  };
-
   /* Function to check Inputs */
   const checkInput = (data: FormData) => {
     /* Check if all inputs are complete */
     checkComplete(data);
     const credential = data.get("credential") as string;
-    setPhone(!credential.includes("@"));
     setEmail(credential.includes("@"));
     /* Check email format */
     checkEmailFormat(credential);
-    /* Check phone format */
-    checkPhoneFormat(credential);
   };
 
   /* Function to execute response */
   const responseExecute = (response_status: number) => {
     switch (response_status) {
       case 200:
-        alert("Connexion réussie");
+        setResponse({
+          error: false,
+          message: "Connexion réussie",
+        });
         localStorage.setItem("role", "volunteer");
         navigate("/");
         window.location.reload();
         break;
       case 401:
-        alert("Connexion échouée");
+        setResponse({
+          error: true,
+          message: "Connexion échouée, veuillez vérifier vos identifiants",
+        });
         break;
       default:
-        alert("Erreur inconnue");
+        setResponse({
+          error: true,
+          message: "Erreur inconnue, veuillez réessayer plus tard",
+        });
         break;
     }
   };
@@ -106,10 +102,28 @@ function LoginVolunteer() {
 
     /* If all inputs are complete, send data */
     if ((user["phone"] || user["email"]) && user["password"]) {
-      if ((checkEmailFormat(user["email"] as string)) || (checkPhoneFormat(user["phone"] as string))) {
+      if ((checkEmailFormat(user["email"] as string))) {
         // call LoginVolunteer service
-        const response_status = AuthenticationService.loginVolunteers(user);
-        responseExecute(await response_status);
+        await AuthenticationService.loginVolunteers(user)
+          .then((response_status) => {
+            console.log("RESPONSE STATUS", response_status);
+            if (typeof response_status === 'number') {
+              responseExecute(response_status);
+            } else {
+              setResponse({
+                error: true,
+                message: "Erreur inconnue, veuillez réessayer plus tard",
+              });
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            setResponse({
+              error: true,
+              message: "Erreur inconnue, veuillez réessayer plus tard",
+            });
+          });
+          // Handle the case where response_status is null
       }
     }
   };
@@ -179,12 +193,12 @@ function LoginVolunteer() {
                   }}
                   helperText="Format : +336XXXXXXXX ou XX@XX.X"
                   FormHelperTextProps={{
-                    sx: { marginRight: "auto" }
+                    sx: { marginRight: "auto" },
                   }}
                   error={!fodder}
 
                 />
-                {!email && !phone && (
+                {!email && (
                   <Alert severity="error">Un identifiant est requis</Alert>
                 )}
                 {email && !emailFormat && (
@@ -193,13 +207,6 @@ function LoginVolunteer() {
                     xxxxxx.xxxx@xxx.com
                   </Alert>
                 )}
-                {phone && !phoneFormat && (
-                  <Alert severity="warning">
-                    Le format du numéro de téléphone doit être au format
-                    +336XXXXXXXX
-                  </Alert>
-                )}
-
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -232,10 +239,16 @@ function LoginVolunteer() {
                 )}
               </Grid>
             </Grid>
-            <div style={{ marginTop: "10px", justifyContent: "flex-end", display: "flex" }}>
-              <a className="forgot-password"
-                onClick={() => {
-                  setOpen(true);
+            {response.message !== "" && (
+              <AutohideSnackbar
+                message={response.message}
+                open={true}
+                response={response.error}
+              />
+            )}
+            <div style={{ marginTop: "10px", justifyContent: "flex-end", display: "flex" }}> 
+                <a className="forgot-password"
+                    onClick={() => {setOpen(true);
                 }}>
                 Mot de passe oublié ?
               </a>

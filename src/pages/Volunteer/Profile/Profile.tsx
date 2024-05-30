@@ -5,6 +5,8 @@ import "./Profile.scss";
 import profileImage from "../../../images/logo/submark.png";
 import { Volunteer } from "../../../interfaces";
 import { useNavigate } from "react-router-dom";
+import { Card } from "@mui/material";
+import FriendProfileCard from "./Cards/FriendProfileCard";
 
 type newProfile = {
   first_name: string,
@@ -17,12 +19,17 @@ type newProfile = {
 function ProfilePage(props: any) {
   const navigate = useNavigate();
 
+  const [id, setId] = useState(""); // TODO: get the id from the URL params
   const [first_name, setFirstName] = useState<string>("");
   const [last_name, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [profile_picture, setProfilePicture] = useState<string>(profileImage);
-
+  const [passedMissions, setPassedMissions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [isPrivate, setIsPrivate] = useState(false);
+  const [friends, setFriends] = useState<Number[]>([]);
+  
   function refuseVolunteer(id: number) {
     fetch(`${config.apiUrl}/volunteers/blocked`, {
       method: 'GET',
@@ -73,6 +80,68 @@ function ProfilePage(props: any) {
 
     getProfile();
   }, []);
+
+  const fetchProfile = async () => {
+    try {
+      const response = await fetch(`${config.apiUrl}/volunteers/profile`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setId(data.volunteer.id);
+        setFirstName(data.volunteer.first_name);
+        setLastName(data.volunteer.last_name);
+        setEmail(data.volunteer.email);
+        setPhone(data.volunteer.phone);
+        setProfilePicture(data.volunteer.profile_picture);
+        setPassedMissions(data.volunteer.nb_missions);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchFriends = async () => {
+    try {
+      const response = await fetch(`${config.apiUrl}/friends`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      console.log(id);
+
+      if (response.ok) {
+        const data: any = await response.json();
+        let friends_list: Number[] = [];
+        data.friends.forEach((friend: any) => {
+          if (id === friend.user_id1)
+            friends_list.push(friend.user_id2)
+          else if (id === friend.user_id2)
+            friends_list.push(friend.user_id1)
+        }
+      )
+        setFriends(friends_list);
+      } else {
+        console.error("Error fetching friends");
+      }
+    } catch (error) {
+      console.error("Error fetching friends");
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfile();
+    fetchFriends();
+  }, [id]);
 
   function validateEmail(email: string): boolean {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -167,92 +236,61 @@ function ProfilePage(props: any) {
         });
     }
   }
-
+  const handleTogglePrivate = () => {
+    setIsPrivate(!isPrivate);
+  };
+  
   const [color_blind, setColorBlind] = useState(
     localStorage.getItem("color_blind") === "true"
   );
 
   return (
-    <Row className="profile-row">
-      <Col sm={12} md={4} lg={3}>
-        <div className="profile-pic">
-          <img src={profile_picture} alt="" className="profile-img" />
-        </div>
+    <>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "flex-start",
+        alignSelf: "self-start",
+      }}
+    >
+      <img src={profile_picture} alt="Logo de profil" className={"profile-photo"} />
+      <div className="profile-info">
+        <h1>{first_name} {last_name}</h1>
+        <p>{passedMissions} missions réalisées</p>
+      </div>
+      <div className="header">
+        <span>Type de compte : </span>
+        <label className="switch">
+          <input type="checkbox" checked={isPrivate} onChange={handleTogglePrivate} />
+          <span className="slider round"></span>
+        </label>
+        {isPrivate ? "Privé" : "Public"}
+      </div>
+    </div><h2>Mes amis</h2><div className="friends-grid">
+        {friends && friends.slice(0, 4).map((friend) => (
+          <FriendProfileCard id={friend} />
+        ))}
+      </div>
+      <Col sm={12} md={4} lg={3} className="profile-info"></Col>
+      <Row sm={12} md={4} lg={3} className="button-row">
         <div className="profile-btn-div">
-          <label
-            htmlFor="profile-pic-upload"
-            className={"profile-pic-btn" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")}
-          >
-            Changer la Photo
-          </label>
-          <input
-            className="profile-input"
-            id="profile-pic-upload"
-            type="file"
-            onChange={handleFileChange}
-            accept="image/*"
-          />
-        </div>
-      </Col>
-      <Col sm={12} md={8} lg={9}>
-        <div className="profile-info">
-          <div className="profile-row">
-            <label>Prénom:</label>
-            <input
-              className="filled-text"
-              type="text"
-              placeholder="Name"
-              value={first_name}
-              onChange={(event) => setFirstName(event.target.value)}
-            />
-          </div>
-          <div className="profile-row">
-            <label>Nom de famille:</label>
-            <input
-              className="filled-text"
-              type="text"
-              placeholder="Last Name"
-              value={last_name}
-              onChange={(event) => setLastName(event.target.value)}
-            />
-          </div>
-          <div className="profile-row">
-            <label>Email:</label>
-            <input
-              className="filled-text"
-              type="text"
-              placeholder="Email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-            />
-          </div>
-          <div className="profile-row">
-            <label>Numéro de téléphone:</label>
-            <input
-              className="filled-text"
-              type="text"
-              placeholder="Phone number"
-              value={phone}
-              onChange={(event) => setPhone(event.target.value)}
-            />
-          </div>
-        </div>
-        <div className="profile-btn-div">
-          <button className={"profile-pic-btn" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")} onClick={updateProfile}>
+          <button className={"profile-pic-btn" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")} onClick={() => { navigate("/settings/profile_information"); }}>
             Mettre à jour le profile
           </button>
         </div>
-      </Col>
       <div className="profile-btn-div">
-        <button className={"profile-pic-btn" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")} onClick={() => { navigate("/profile/blocked") }}>
+        <button className={"profile-pic-btn" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")} onClick={() => { navigate("/profile/blocked"); } }>
           Gérer les utilisateurs Bloqués
         </button>
       </div>
-      <button className="delete-account-btn" onClick={deleteAccount}>
+      <div className="profile-btn-div">
+        <button className="delete-account-btn" onClick={deleteAccount}>
         Supprimer le compte
       </button>
-
-    </Row>
+      </div>
+      </Row>
+      </> 
   );
 };
 

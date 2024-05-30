@@ -152,6 +152,9 @@ export default function AssociationSidebar() {
                     onClick={() => {
                       handleCloseUserMenu();
                       switch (setting) {
+                        case "Créer une mission":
+                          window.location.href = "/mission/create";
+                          break;
                         case "Profile":
                           navigate("/profile");
                           break;

@@ -3,16 +3,16 @@
  * @description Association Accueil Page
  * @utility This page is used to display the association's accueil page
  */
-import './Accueil.scss';
-import '../../Volunteer/Home/Home.scss';
-import {useEffect, useState } from 'react'
+import "./Accueil.scss";
+import "../../Volunteer/Home/Home.scss";
+import { useEffect, useState } from "react";
 import config from "../../../config";
 import { Button } from '@mui/material';
 import MissionCardHome from '../../../components/MissionCardHome';
 import { Mission } from '../../../interfaces';
 
-function Accueil () {
-    const [missionList, setMissionList] = useState<Mission[]>([])
+function Accueil() {
+  const [missionList, setMissionList] = useState<Mission[]>([]);
 
     useEffect(() => {
         fetch(`${config.apiUrl}/missions/association`, {
