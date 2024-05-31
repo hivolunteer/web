@@ -115,7 +115,7 @@ function RegisterAssociation() {
           case 201:
             alert("Inscription réussie");
             localStorage.setItem("role", "association");
-            navigate("/");
+            navigate("/profile");
             window.location.reload();
             break;
           case 401:
