@@ -99,23 +99,15 @@ function LoginAssociation() {
             /* If user is major, password is strong enough, email format is correct and phone format is correct, send data */
             if (checkEmailFormat(user["email"] as string)) {
               // call LoginAssociation service
-              await AuthenticationService.loginAssociations(user)
-                .then((response_status) => {
-                  if (typeof response_status === "number") {
-                    responseExecute(response_status);
-                  } else {
-                    setResponse({
-                      error: true,
-                      message: "Erreur inconnue, veuillez réessayer plus tard",
-                    });
-                  }
-                })
-                .catch((error) => {
-                  setResponse({
-                    error: true,
-                    message: "Erreur inconnue, veuillez réessayer plus tard",
-                  });
+              const response_status = AuthenticationService.loginAssociations(user);
+              if (response_status !== null) {
+                responseExecute(response_status as unknown as number);
+              } else {
+                setResponse({
+                  error: true,
+                  message: "Erreur inconnue, veuillez réessayer plus tard",
                 });
+              }
             }
         }
     };

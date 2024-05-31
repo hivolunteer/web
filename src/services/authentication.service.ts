@@ -8,13 +8,11 @@ export class AuthenticationService {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(user)
         }).then((response) => {
-            if (response.status === 200) {
-                response.json().then((data) => {
-                    localStorage.setItem('token', data.token)
-                    localStorage.setItem('color_blind', 'false')
-                    localStorage.setItem('id', data.id)
-                })
-            }
+            response.json().then((data) => {
+                localStorage.setItem('token', data.token)
+                localStorage.setItem('color_blind', 'false')
+                localStorage.setItem('id', data.id)
+            })
             return response.status;
         })
         .catch((error) => {
@@ -30,14 +28,12 @@ export class AuthenticationService {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(user)
         }).then((response) => {
-            if (response.status === 200) {
-                response.json().then((data) => {
-                    localStorage.setItem('token', data.token)
-                    localStorage.setItem('color_blind', 'false')
-                    localStorage.setItem('id', data.id)
-                })
-            }
-            return response.status;
+            response.json().then((data) => {
+                localStorage.setItem('token', data.token)
+                localStorage.setItem('color_blind', 'false')
+                localStorage.setItem('id', data.id)
+                return response.status;
+            })
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -46,7 +42,7 @@ export class AuthenticationService {
     }
 
     static async registerVolunteers(user: { [k: string]: FormDataEntryValue; }) {
-        user['profile_picture'] = "NULL";
+        user['profile_picture'] = "HELL";
         const response = await fetch(`${config.apiUrl}/volunteers/create`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -59,7 +55,7 @@ export class AuthenticationService {
     }
 
     static async registerAssociations(user: { [k: string]: FormDataEntryValue; }) {
-        user['profile_picture'] = "NULL";
+        user['profile_picture'] = "HELL";
         const response = await fetch(`${config.apiUrl}/associations/create`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

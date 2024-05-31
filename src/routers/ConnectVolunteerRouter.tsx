@@ -26,6 +26,7 @@ function ConnectVolunteerRouter() {
             <Route path="/follows" element={<FollowAssociation />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/profile/blocked" element={<BlockedUsersList />} />
+            <Route path="/profile/blocked" element={<BlockedUsersList />} />
             <Route path="/accueil" element={<Search />} />
             <Route path="/association/:associationID" element={<AssociationProfile />} />
             <Route path="/mission/:missionID" element={<MissionDetails />} />
