@@ -26,9 +26,11 @@ const ForgotPasswordModal = (props: {modalProps: ForgotModal}) => {
             })
         }).then((response) => {
             if (response.status === 200) {
+                alert("Un mail vous a été envoyé à l'adresse e-mail fourni");
                 modalProps.handleClose();
             }
         }).catch((error) => {
+            alert('Un problème est survenu ! Veuillez réessayer plus tard')
             console.log(error);
         })
     }
