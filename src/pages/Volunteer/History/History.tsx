@@ -1,53 +1,70 @@
-import {useState, useEffect} from "react";
-import config from "../../../config";
-import RateCard from "./RateCard";
-
+import {useState} from "react";
+import { Tab, Tabs } from '@mui/material'
+import './History.scss'
+import TabPanel from "../Search/Panels/TabPanel";
+import PassedMissionPanel from "./Panel/PassedMissionPanel";
+import ActiveMissionPanel from "./Panel/ActiveMissionPanel";
 
 function History() {
 
-    const [missions, setMissions] = useState<number[]>([])
-        
-    useEffect(() => {
-        fetch(`${config.apiUrl}/missions/volunteer/passed`, {
-            method: 'GET',
-            headers: {
-                'content-type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        }).then((response) => {
-            if (response.status === 200) {
-                response.json().then((data) => {
-                    setMissions(data.passed_missions)
-                })
-            }
-        })
-    }, [])
+    interface Subtype {
+        id: number;
+        name: string;
+      }
+    
+      let subtypes : Array<Subtype> = [
+        {
+          id: 1,
+          name: "Actives"
+        },
+        {
+          id: 2,
+          name: "Passées"
+        }
+      ]
+      const [subType, setSubType] = useState<Subtype>(subtypes[0])
     
     return (
-        <div style={{width: '90%', margin: 'auto 5%'}}>
-            <div className="History-Header">
-                <h1> Vos Missions Passées </h1>
+        <div>
+            <div className="history-title">
+                <h1>Historique des Missions </h1>
             </div>
-            <div className="History-Body">
-                {
-                    (missions.length > 0) ? (
-                        <div>
-                            {
-                                missions.map((mission) => {
-                                    return (
-                                        <div>
-                                            <RateCard mission={mission} />
-                                        </div>
-                                    )
-                                })
-                            }
-                        </div>
-                    ) : (
-                        <div>
-                            <p> Vous n'avez pas encore participé à des missions. </p>
-                        </div>
-                    )
-                }
+            <div className="tabs-container history">
+                <Tabs
+                    value={subType.name}
+                    onChange={(e, value) => {
+                        setSubType(subtypes.filter((subtype) => subtype.name === value)[0]);
+                    }}
+                    variant="fullWidth"
+                    sx={{ borderBottom: 0, width: '80%'}}
+                >
+                    <Tab
+                        label="Actives"
+                        value="Actives"
+                        sx={{
+                            background: "#FFFFFF",
+                        }}
+                    />
+                    <Tab
+                        label="Passées"
+                        value="Passées"
+                        sx={{
+                            background: "#FFFFFF",
+                        }}
+                    />
+                </Tabs>
+                <TabPanel
+                    value={subType.id}
+                    index={1}
+                >
+                    <ActiveMissionPanel />
+                </TabPanel>
+                <TabPanel
+                    value={subType.id}
+                    index={2}
+                >
+                    <PassedMissionPanel />
+                </TabPanel>
             </div>
         </div>
     )
