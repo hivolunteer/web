@@ -5,18 +5,19 @@ import { IEventInfo } from "./EventCalendar"
 interface IProps {
     open: boolean
     handleClose: Dispatch<SetStateAction<void>>
+    onModifyEvent: any
     onDeleteEvent: (e: MouseEvent<HTMLButtonElement>) => void
     currentEvent: IEventInfo | null
 }
 
-const EventInfoModal = ({ open, handleClose, onDeleteEvent, currentEvent }: IProps) => {
+const EventInfoModal = ({ open, handleClose, onModifyEvent, onDeleteEvent, currentEvent }: IProps) => {
     const onClose = () => {
         handleClose()
     }
 
     return (
         <Dialog open={open} onClose={onClose}>
-            <DialogTitle>Event Info</DialogTitle>
+            <DialogTitle>Les informations sur l'évènement</DialogTitle>
             <DialogContent>
                 <DialogContentText>
                     <Typography sx={{ fontSize: 16, marginTop: 3 }} color="text.primary" gutterBottom>
@@ -30,14 +31,14 @@ const EventInfoModal = ({ open, handleClose, onDeleteEvent, currentEvent }: IPro
                 <Box component="form"></Box>
             </DialogContent>
             <DialogActions>
-                <Button color="error" onClick={onClose}>
+                <Button color="warning" onClick={onClose}>
                     Annuler
                 </Button>
-                <Button color="warning" onClick={onClose}>
+                <Button color="info" onClick={onModifyEvent}>
                     Modifier
                 </Button>
-                <Button color="info" onClick={onDeleteEvent}>
-                    Delete Event
+                <Button color="error" onClick={onDeleteEvent}>
+                    Supprimer l'évènement
                 </Button>
             </DialogActions>
         </Dialog>

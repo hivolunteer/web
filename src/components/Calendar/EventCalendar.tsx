@@ -1,4 +1,4 @@
-import React, {MouseEvent, useEffect, useState} from "react"
+import React, {MouseEvent, SetStateAction, useEffect, useState} from "react"
 import {Box, Button, ButtonGroup, Card, CardContent, CardHeader, Container, Divider} from "@mui/material"
 
 import {Calendar, dateFnsLocalizer, type Event} from "react-big-calendar"
@@ -16,6 +16,7 @@ import EventInfoModal from "./EventInfoModal"
 import {AddCategoryModal} from "./AddCategoryModal"
 import AddDatePickerEventModal from "./AddDatePickerEventModal"
 import config from "../../config";
+import ModifyDatePickerEventModal from "./ModifyDatePickerEventModal";
 
 const locales = {
     fr,
@@ -47,7 +48,12 @@ export interface ICategory {
 
 export interface IEventInfo extends Event {
     _id: number
+    title?: string
     description: string
+    start?: Date
+    end?: Date
+    allDay?: boolean
+    category?: number
     categoryId?: number
 }
 
@@ -114,11 +120,32 @@ const EventCalendar = () => {
         useState<DatePickerEventFormData>(initialDatePickerEventFormData)
 
     const [existingEvents, setExistingEvents] = useState<IEventInfo[]>([])
-
+    const [response, setResponse] = useState<{ error: Boolean; message: string }>(
+        { error: false, message: "" }
+    );
     const handleSelectSlot = (event: Event) => {
         setOpenSlot(true)
         setCurrentEvent(event)
     }
+
+    const [modifyEventModalOpen, setModifyEventModalOpen] = useState(false);
+
+    const handleModifyEventModalClose = () => {
+        setModifyEventModalOpen(false);
+    };
+
+    const handleModifyEvent = (event: IEventInfo) => {
+        setModifyEventModalOpen(true);
+        setCurrentEvent(event);
+        setDatePickerEventFormData({
+            allDay: event?.allDay || false,
+            category: event.category,
+            description: event.description,
+            end_date: event.end,
+            start_date: event.start,
+            title: event.title ?? "",
+        });
+    };
 
     const categoryId = categories.map((category) => category._id);
     useEffect(() => {
@@ -157,6 +184,7 @@ const EventCalendar = () => {
             // Handle the response for the missions fetch
             if (missionsResponse.status === 200) {
                 return missionsResponse.json().then((missionsData) => {
+                    console.log(missionsData, "misisoon");
                     const formattedEvents = missionsData.map((task: any) => ({
                         title: task.title,
                         description: task.description,
@@ -252,8 +280,16 @@ const EventCalendar = () => {
             .then((response) => {
                 console.log(response);
                 if (response.status === 201) {
-                    alert("Évènement créée");
+                    setResponse({
+                        error: true,
+                        message: "Évènement créée",
+                    });
                     return response.body;
+                } else if (response.status === 400) {
+                    setResponse({
+                        error: true,
+                        message: "Erreur lors de la création de l'évènement",
+                    });
                 }
             })
             .then(
@@ -263,12 +299,19 @@ const EventCalendar = () => {
                         .read()
                         .then(({ done, value }) => {
                             if (done) {
-                                alert("Évènement créée");
+                                setResponse({
+                                    error: true,
+                                    message: "Évènement créée",
+                                });
                                 return;
                             }
                         });
                 },
                 (error) => {
+                    setResponse({
+                        error: true,
+                        message: "Erreur lors de la création de l'évènement",
+                    });
                     alert("Erreur lors de la création de l'évènement");
                 }
             );
@@ -319,9 +362,59 @@ const EventCalendar = () => {
                         <EventInfoModal
                             open={eventInfoModal}
                             handleClose={() => setEventInfoModal(false)}
+                            onModifyEvent={handleModifyEvent}
                             onDeleteEvent={onDeleteEvent}
                             currentEvent={currentEvent as IEventInfo}
                         />
+                        <ModifyDatePickerEventModal
+                            open={modifyEventModalOpen}
+                            handleClose={handleModifyEventModalClose}
+                            datePickerEventFormData={datePickerEventFormData}
+                            setDatePickerEventFormData={setDatePickerEventFormData}
+                            onEditEvent={
+                                (e: MouseEvent<HTMLButtonElement>) => {
+                                    setEvents(() => [...events].map((e) => {
+                                        if (e._id === (currentEvent as IEventInfo)._id) {
+                                            return {
+                                                ...e,
+                                                title: datePickerEventFormData.title,
+                                                description: datePickerEventFormData.description,
+                                                start: datePickerEventFormData.start_date,
+                                                end: datePickerEventFormData.end_date,
+                                                allDay: datePickerEventFormData.allDay,
+                                                category: datePickerEventFormData.category
+                                            }
+                                        }
+                                        return e
+                                    }))
+                                    handleModifyEventModalClose()
+                                }
+                            }
+                            currentEvent={currentEvent as IEventInfo}
+                            categories={categories}
+                        />
+                        {/*<ModifyDatePickerEventModal
+                            open={modifyEventModalOpen}
+                            handleClose={handleModifyEventModalClose}
+                            eventFormData={eventFormData}
+                            setEventFormData={setEventFormData}
+                            onEditEvent={
+                                (e: MouseEvent<HTMLButtonElement>, data: EventFormData) => {
+                                    setEvents(() => [...events].map((e) => {
+                                        if (e._id === (currentEvent as IEventInfo)._id) {
+                                            return {
+                                                ...e,
+                                                title: data.title,
+                                                description: data.description,
+                                            }
+                                        }
+                                        return e
+                                    }))
+                                    handleModifyEventModalClose()
+                                }
+                            }
+                            categories={categories}
+                        />*/}
                         <AddCategoryModal
                             open={openCategoryModal}
                             handleClose={() => setOpenCategoryModal(false)}
@@ -334,6 +427,7 @@ const EventCalendar = () => {
                             events={events}
                             onSelectEvent={handleSelectEvent}
                             onSelectSlot={handleSelectSlot}
+
                             selectable
                             messages={messages}
                             startAccessor="start"
