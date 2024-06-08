@@ -8,13 +8,14 @@ import "./Search.scss";
 import FilterModal from "./Modal/FilterModal";
 import FilterModalAsso from "./Modal/FilterModalAsso";
 import { Mission, Association } from "../../../interfaces"
-import { Modal, ModalAsso } from "./Interfaces";
+import { FilterMissionProps, MissionComplete, Modal, ModalAsso, PageMission } from "./Interfaces";
 import config from "../../../config";
 import TabPanel from "./Panels/TabPanel";
 import MissionPanel from "./Panels/MissionPanel";
 import AssociationPanel from "./Panels/AssociationPanel";
 import VolunteerPanel from "./Panels/VolunteerPanel";
 import useWindowSize from "../../../functions/useWindowSize";
+import filterAndPageMissions from "./functions/filterAndPageMissions";
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -64,6 +65,7 @@ function Search(props: any) {
 
   //Modal functions
   const [searchMission, setSearchMission] = useState<boolean>(false);
+  const [searchAssociation, setSearchAssociation] = useState<boolean>(false)
   const [open, setOpen] = useState<boolean>(false);
   const [filteredMissions, setFilteredMissions] = useState<Mission[] | []>([]);
   const [filteredAssociations, setFilteredAssociations] = useState<
@@ -96,7 +98,7 @@ function Search(props: any) {
       setFilteredAssociations: setFilteredAssociations,
       handleClose: handleClose,
       width: width,
-      searched: false
+      setSearchAssociation: setSearchAssociation
     };
   }
 
@@ -179,6 +181,21 @@ function Search(props: any) {
   const handleLocation = (e: any) => {
     setLocation(e.target.value.toLowerCase());
   }
+
+
+  function returnMissions() : Array<PageMission> {
+    let props : FilterMissionProps = {
+      missionList: missionList as Array<MissionComplete>,
+      filteredMissions: filteredMissions as Array<MissionComplete>,
+      search: search,
+      location_search: location_search,
+      locations: locations,
+      searched: searchMission
+    }
+    let missions: Array<PageMission> = filterAndPageMissions(props)
+    return missions;
+  } 
+
   //className={"header-rating" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")}
   return (
     <div className="page-container">
@@ -286,12 +303,7 @@ function Search(props: any) {
         </div>
         <TabPanel value={subType.id} index={1}>
           <MissionPanel
-            missionList={missionList}
-            filteredMissions={filteredMissions}
-            search={search}
-            location_search={location_search}
-            locations={locations}
-            searched={searchMission}
+            missions={returnMissions()}
           />
         </TabPanel>
         <TabPanel value={subType.id} index={2}>
@@ -299,6 +311,7 @@ function Search(props: any) {
             associationList={associationList}
             filteredAssociations={filteredAssociations}
             search={search}
+            searched={searchAssociation}
           />
         </TabPanel>
         <TabPanel value={subType.id} index={3}>
