@@ -80,7 +80,7 @@ function PublicProfile() {
     }, [associationId]);
 
     if (!profileData) {
-        return <div>Loading...</div>;
+        return <div>Chargement...</div>;
     }
 
     return (
