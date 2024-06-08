@@ -18,7 +18,8 @@ interface Modal {
     setFilteredMissions: any,
     setSearch: any,
     handleClose : any,
-    width: number
+    width: number,
+    setSearchMission: any
 }
 
 interface ModalAsso {
@@ -27,7 +28,8 @@ interface ModalAsso {
     filteredAssociations: Association[] | [],
     setFilteredAssociations: any,
     handleClose : any,
-    width: number
+    width: number,
+    searched: boolean
 }
 
 interface Skill {

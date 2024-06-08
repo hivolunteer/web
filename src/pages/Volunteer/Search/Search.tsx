@@ -63,6 +63,7 @@ function Search(props: any) {
   const [subType, setSubType] = useState<Subtype>(subtypes[0])
 
   //Modal functions
+  const [searchMission, setSearchMission] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const [filteredMissions, setFilteredMissions] = useState<Mission[] | []>([]);
   const [filteredAssociations, setFilteredAssociations] = useState<
@@ -84,7 +85,8 @@ function Search(props: any) {
       setFilteredMissions: setFilteredMissions,
       setSearch: setSearch,
       handleClose: handleClose,
-      width: width
+      width: width,
+      setSearchMission: setSearchMission
     };
   } else {
     modalProps = {
@@ -93,7 +95,8 @@ function Search(props: any) {
       filteredAssociations: filteredAssociations,
       setFilteredAssociations: setFilteredAssociations,
       handleClose: handleClose,
-      width: width
+      width: width,
+      searched: false
     };
   }
 
@@ -164,7 +167,6 @@ function Search(props: any) {
               locs[location.id] = location.city;
             })
             setLocations(locs);
-            console.log(locs);
           })
         }
       })
@@ -289,6 +291,7 @@ function Search(props: any) {
             search={search}
             location_search={location_search}
             locations={locations}
+            searched={searchMission}
           />
         </TabPanel>
         <TabPanel value={subType.id} index={2}>
