@@ -212,7 +212,7 @@ function Search(props: any) {
           <div style={{ width: "2%" }} />
           <TextField
             id="outlined-basic"
-            label="Ville, Pays"
+            label="Ville"
             variant="outlined"
             className="search-country"
             InputProps={{
