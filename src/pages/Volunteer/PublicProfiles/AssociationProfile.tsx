@@ -125,7 +125,7 @@ function PublicProfile() {
                         <h2>5 dernières missions proposées</h2>
                         {profileData?.missions && profileData.missions.length > 0 ? (
                             profileData.missions.slice(-5).reverse().map(mission => (
-                                <Link to={`/missions/${mission.id}`} key={mission.id} className="mission-link">
+                                <Link to={`/mission/${mission.id}`} key={mission.id} className="mission-link">
                                     <Card className="mission-item">
                                         <CardMedia
                                             component="img"
