@@ -1,4 +1,4 @@
-import React, { Dispatch, MouseEvent, SetStateAction, ChangeEvent } from "react"
+import React, { Dispatch, MouseEvent, SetStateAction, ChangeEvent, useEffect } from "react";
 import {
     TextField,
     Dialog,
@@ -11,77 +11,96 @@ import {
     Box,
     Checkbox,
     Typography,
-} from "@mui/material"
-import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers"
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns"
-import {EventCreationData, ICategory, IEventInfo} from "./EventCalendar"
+} from "@mui/material";
+import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { EventCreationData, ICategory, IEventInfo } from "./EventCalendar";
 import config from "../../config";
 
 interface IProps {
-    open: boolean
-    handleClose: Dispatch<SetStateAction<void>>
-    datePickerEventFormData: EventCreationData
-    setDatePickerEventFormData: Dispatch<SetStateAction<EventCreationData>>
-    onEditEvent: (e: MouseEvent<HTMLButtonElement>) => void
-    currentEvent: IEventInfo | null
-    categories: ICategory[]
+    open: boolean;
+    handleClose: Dispatch<SetStateAction<void>>;
+    datePickerEventFormData: EventCreationData;
+    setDatePickerEventFormData: Dispatch<SetStateAction<EventCreationData>>;
+    onEditEvent: (e: MouseEvent<HTMLButtonElement>) => void;
+    currentEvent: IEventInfo | null;
+    categories: ICategory[];
 }
 
 const ModifyDatePickerEventModal = ({
-                                        open,
-                                        handleClose,
-                                        datePickerEventFormData,
-                                        setDatePickerEventFormData,
-                                        onEditEvent,
-                                        currentEvent,
-                                        categories,
-                                    }: IProps) => {
-    const { title, description, start_date, end_date, allDay, category} = datePickerEventFormData
+    open,
+    handleClose,
+    datePickerEventFormData,
+    setDatePickerEventFormData,
+    onEditEvent,
+    currentEvent,
+    categories,
+}: IProps) => {
+    useEffect(() => {
+        if (currentEvent) {
+            setDatePickerEventFormData({
+                title: currentEvent.title,
+                description: currentEvent.description,
+                start_date: currentEvent.start,
+                end_date: currentEvent.end,
+                allDay: currentEvent.allDay || false, // Add default value for allDay property
+                category: currentEvent.category,
+            });
+        }
+    }, [currentEvent, setDatePickerEventFormData]);
+
+    const { title, description, start_date, end_date, allDay, category } = datePickerEventFormData;
 
     const onClose = () => {
-        handleClose()
-    }
+        handleClose();
+    };
 
-    const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        console.log(e.target);
         setDatePickerEventFormData((prevState) => ({
             ...prevState,
-            [event.target.name]: event.target.value,
-        }))
-    }
+            [name]: value,
+        }));
+        console.log(name, value);
+    };
 
     const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
         setDatePickerEventFormData((prevState) => ({
             ...prevState,
             allDay: event.target.checked,
-        }))
-    }
+        }));
+    };
 
     const handleCategoryChange = (e: React.SyntheticEvent, value: ICategory | null) => {
         setDatePickerEventFormData((prevState) => ({
             ...prevState,
             categoryId: value?._id,
-        }))
-    }
+        }));
+    };
 
     const isDisabled = () => {
         const checkend = () => {
             if (!allDay && end_date === null) {
-                return true
+                return true;
             }
-        }
+            if (title === currentEvent?.title && description === currentEvent?.description && start_date === currentEvent?.start && end_date === currentEvent?.end && category === currentEvent?.category) {
+                return true;
+            }
+        };
         return description === "" || start_date === null || checkend();
-
-    }
+    };
 
     return (
         <Dialog open={open} onClose={onClose}>
             <DialogTitle>Modifier un évènement</DialogTitle>
             <DialogContent>
-                <DialogContentText> Pour modifier un évènement, remplissez les cases s'il vous plaît.</DialogContentText>
+                <DialogContentText>Pour modifier un évènement, remplissez les cases s'il vous plaît.</DialogContentText>
                 <Box component="form">
                     <TextField
                         name="title"
-                        value={currentEvent?.title}
+                        value={title}
                         margin="dense"
                         id="title"
                         label="Titre"
@@ -92,7 +111,7 @@ const ModifyDatePickerEventModal = ({
                     />
                     <TextField
                         name="description"
-                        value={currentEvent?.description}
+                        value={description}
                         margin="dense"
                         id="description"
                         label="Description"
@@ -105,7 +124,7 @@ const ModifyDatePickerEventModal = ({
                         <Box mb={2} mt={5}>
                             <DateTimePicker
                                 label="Date de début"
-                                value={currentEvent?.start}
+                                value={start_date}
                                 format={"dd/MM/yyyy HH:mm"}
                                 ampm={true}
                                 minutesStep={30}
@@ -123,7 +142,7 @@ const ModifyDatePickerEventModal = ({
                             <Typography variant="caption" color="text" component={"span"}>
                                 All day?
                             </Typography>
-                            <Checkbox onChange={handleCheckboxChange} value={allDay} />
+                            <Checkbox onChange={handleCheckboxChange} checked={allDay} />
                         </Box>
 
                         <DateTimePicker
@@ -133,7 +152,7 @@ const ModifyDatePickerEventModal = ({
                             minDate={start_date}
                             minutesStep={30}
                             ampm={true}
-                            value={allDay ? null : currentEvent?.end}
+                            value={allDay ? null : end_date}
                             onChange={(newValue) =>
                                 setDatePickerEventFormData((prevState) => ({
                                     ...prevState,
@@ -141,8 +160,6 @@ const ModifyDatePickerEventModal = ({
                                 }))
                             }
                             slotProps={{ textField: { variant: 'outlined' } }}
-
-                            //renderInput={(params) => <TextField {...params} />}
                         />
                     </LocalizationProvider>
                     <Autocomplete
@@ -165,7 +182,7 @@ const ModifyDatePickerEventModal = ({
                 </Button>
             </DialogActions>
         </Dialog>
-    )
-}
+    );
+};
 
-export default ModifyDatePickerEventModal
+export default ModifyDatePickerEventModal;
