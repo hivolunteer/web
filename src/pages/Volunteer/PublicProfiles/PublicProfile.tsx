@@ -60,7 +60,7 @@ function PublicProfile() {
     }, [volunteerId]);
 
     if (!profileData) {
-        return <div>Loading...</div>;
+        return <div>Chargement...</div>;
     }
 
     const formattedVolunteeringTime = formatTime(profileData?.volunteering_time);
