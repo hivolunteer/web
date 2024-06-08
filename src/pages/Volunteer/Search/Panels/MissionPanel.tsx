@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import MissionCardHome from "../../../../components/MissionCardHome";
+ import MissionCardHome from "../../../../components/MissionCardHome";
 import { Mission } from "../../../../interfaces";
 import '../Search.scss'
 
