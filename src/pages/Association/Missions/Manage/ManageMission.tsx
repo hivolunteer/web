@@ -68,22 +68,10 @@ function ManageMission() {
                 }
             })
         } else {
-            fetch(`${config.apiUrl}/missions/association/cancel/${mission_id}`, {
-                method: 'PUT',
-                headers: {
-                    'content-type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            }).then((response) => {
-                if (response.status === 200) {
-                    window.location.href = "/";
-                } else {
                     console.log("ERROR");
                     alert("Une erreur est survenue lors de l'annulation de la mission");
                 }
-            })
         }
-    }
 
     return (
         <div>
