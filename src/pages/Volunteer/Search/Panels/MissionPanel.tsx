@@ -12,7 +12,6 @@ function MissionPanel(props: {missions: Array<PageMission>}) {
     const [noMissionFound, setNoMissionFound] = useState<boolean>(false)
 
     useEffect(() => {
-      console.log(missions.length)
       if (missions.length === 0)
         setNoMissionFound(true)
       else {
@@ -22,30 +21,7 @@ function MissionPanel(props: {missions: Array<PageMission>}) {
     }, [missions])
 
     return (
-        <div className="missions-container">
-          {/* {
-            (noMissionFound === false) ?
-              pages.filter((page: PageMission) => page.page === actual_page)
-              .map((page: PageMission) => {
-                return (
-                  <div style={{display: 'flex', flexWrap: 'wrap'}}>
-                    {
-                      page.missions.map((mission: MissionComplete) => {
-                        return (
-                          <div className="mission_card" key={mission.id} style={{margin: '25px'}}>
-                            <MissionCardHome mission={mission as Mission} />
-                          </div>
-                        )
-                      })
-                    }
-                  </div>
-                )
-              })
-            :
-              <p>
-                Aucune mxission correspond à vos critéres de recherche
-              </p>
-          } */}
+        <div className="missions-container-search">
           <div style={{display: 'flex', flexWrap: 'wrap'}}>
             {
               (noMissionFound) ?

@@ -116,7 +116,6 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
                         .then((blob) => {
                           const objectUrl = URL.createObjectURL(blob);
                           setMissionPicture(objectUrl);
-                          console.log(objectUrl);
                         })
                     .catch((error) => {
                       console.error(error);
