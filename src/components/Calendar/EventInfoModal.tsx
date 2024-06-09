@@ -1,6 +1,7 @@
 import { SetStateAction, MouseEvent, Dispatch } from "react"
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Box, Typography } from "@mui/material"
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Box, Typography, IconButton } from "@mui/material"
 import { IEventInfo } from "./EventCalendar"
+import CloseIcon from '@mui/icons-material/Close';
 
 interface IProps {
     open: boolean
@@ -16,6 +17,11 @@ const EventInfoModal = ({ open, handleClose, onModifyEvent, onDeleteEvent, curre
     }
     return (
         <Dialog open={open} onClose={onClose}>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <IconButton onClick={onClose}>
+                <CloseIcon />
+            </IconButton>
+            </Box>
             <DialogTitle>Les informations sur l'évènement</DialogTitle>
             <DialogContent>
                 <DialogContentText>
@@ -30,9 +36,6 @@ const EventInfoModal = ({ open, handleClose, onModifyEvent, onDeleteEvent, curre
                 <Box component="form"></Box>
             </DialogContent>
             <DialogActions>
-                <Button color="warning" onClick={onClose}>
-                    Annuler
-                </Button>
                 <Button color="info" onClick={() => onModifyEvent(currentEvent)}>
                     Modifier
                 </Button>

@@ -180,7 +180,7 @@ const EventCalendar = () => {
             body: JSON.stringify(body),
         })
         .then((response) => {
-            if (response.status === 201) {
+            if (response.status === 200) {
                 setResponse({ error: false, message: "Évènement créé" });
                 return response.json();
             } else {
@@ -199,7 +199,6 @@ const EventCalendar = () => {
     };
 
     const useUpdateEvent = () => {
-        useEffect(() => {
         const token = localStorage.getItem("token");
         const body = {
             id_event: (currentEvent as IEventInfo)?.id,
@@ -218,7 +217,7 @@ const EventCalendar = () => {
             body: JSON.stringify(body),
         })
         .then((response) => {
-            if (response.status === 200) {
+            if (response.status === 200) { 
                 setResponse({ error: false, message: "Évènement modifié" });
                 return response.json();
             } else {
@@ -233,12 +232,11 @@ const EventCalendar = () => {
         })
         .catch((error) => {
             setResponse({ error: true, message: "Erreur lors de la modification de l'évènement" });
-            alert("Erreur lors de la modification de l'évènement");
         });
         window.location.reload();
-    }, []);
-    }
-    
+
+    };
+
     return (
         <Box mt={2} mb={2} component="main" sx={{ flexGrow: 1, py: 8 }}>
             <Container maxWidth={false}>
