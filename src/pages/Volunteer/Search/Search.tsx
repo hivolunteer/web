@@ -8,7 +8,7 @@ import "./Search.scss";
 import FilterModal from "./Modal/FilterModal";
 import FilterModalAsso from "./Modal/FilterModalAsso";
 import { Mission, Association } from "../../../interfaces"
-import { FilterMissionProps, MissionComplete, Modal, ModalAsso, PageMission } from "./Interfaces";
+import { FilterMissionProps, MissionComplete, Modal, ModalAsso, PageAssoProps, PageMission, filterAssoProps } from "./Interfaces";
 import config from "../../../config";
 import TabPanel from "./Panels/TabPanel";
 import MissionPanel from "./Panels/MissionPanel";
@@ -16,6 +16,7 @@ import AssociationPanel from "./Panels/AssociationPanel";
 import VolunteerPanel from "./Panels/VolunteerPanel";
 import useWindowSize from "../../../functions/useWindowSize";
 import filterAndPageMissions from "./functions/filterAndPageMissions";
+import filterAssoAndPagination from "./functions/filterAssoAndPagination";
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -194,7 +195,17 @@ function Search(props: any) {
     }
     let missions: Array<PageMission> = filterAndPageMissions(props)
     return missions;
-  } 
+  }
+
+  function returnAssociations() : Array<PageAssoProps> {
+    let props : filterAssoProps = {
+      associationList: associationList,
+      filteredAssociations: filteredAssociations,
+      search: search,
+      searched: searchAssociation
+    }
+    return filterAssoAndPagination(props)
+  }
 
   //className={"header-rating" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")}
   return (
@@ -308,10 +319,7 @@ function Search(props: any) {
         </TabPanel>
         <TabPanel value={subType.id} index={2}>
           <AssociationPanel
-            associationList={associationList}
-            filteredAssociations={filteredAssociations}
-            search={search}
-            searched={searchAssociation}
+            assoPages={returnAssociations()}
           />
         </TabPanel>
         <TabPanel value={subType.id} index={3}>

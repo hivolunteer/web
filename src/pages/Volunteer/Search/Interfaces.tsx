@@ -75,4 +75,16 @@ interface FilterMissionProps {
     searched: boolean
 }
 
-export type { Mission, Modal, ModalAsso, Skill, Association, PageMission, MissionComplete, FilterMissionProps }
+interface filterAssoProps {
+    associationList: Array<Association>;
+    filteredAssociations: Array<Association>;
+    search: string;
+    searched: boolean
+}
+
+interface PageAssoProps {
+    associations: Array<Association>;
+    page: number;
+}
+
+export type { Mission, Modal, ModalAsso, Skill, Association, PageMission, MissionComplete, FilterMissionProps, PageAssoProps, filterAssoProps }
