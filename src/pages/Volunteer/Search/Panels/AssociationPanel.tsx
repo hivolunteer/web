@@ -22,7 +22,7 @@ function AssociationPanel(props: {assoPages: Array<PageAssoProps>}) {
     }, [assoPages])
 
     return(
-    <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+    <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
       {
         (noAssociationFound) ?
           <p>
@@ -47,6 +47,33 @@ function AssociationPanel(props: {assoPages: Array<PageAssoProps>}) {
             </div>
           )
         })
+      }
+      {
+        max_page > 1 && (
+          <div style={{display: 'flex', justifyContent: 'center', marginTop: '20px', width: '90%'}}>
+            {
+              Array.from(Array(max_page).keys()).map((index) => (
+                <div
+                  style={{
+                    width: '20px',
+                    height: '20px',
+                    borderRadius: '50%',
+                    backgroundColor: index + 1 === actual_page ? '#FFD700' : '#000000',
+                    margin: '0 5px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    color: index + 1 === actual_page ? '#000000' : '#FFFFFF',
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => setActualPage(index + 1)}
+                >
+                  {index + 1}
+                </div>
+              ))
+            }
+          </div>
+        )
       }
       </div>
     )
