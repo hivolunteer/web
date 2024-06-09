@@ -125,6 +125,12 @@
     justify-content: center;
 }
 
+.missions-container-search {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
 .mission-card {
     margin: 1% 2.5%;
     width: 35%;
