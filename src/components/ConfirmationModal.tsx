@@ -1,0 +1,57 @@
+import { useEffect, useState } from "react";
+import "./ConfirmationModal.scss"
+import { RiCloseLine } from "react-icons/ri";
+
+
+interface ConfirmationModalProps {
+    handleClose: () => void;
+    title: string;
+    description: string;
+    yes_choice : string;
+    yes_function: () => void;
+    no_choice : string;
+    //no_function: () => void;
+}
+
+
+const ConfirmationModal = (prop : ConfirmationModalProps) => {
+  const {handleClose, title, description, yes_choice, yes_function, no_choice} = prop;
+  return (
+    <>
+      <div className="darkBG" onClick={() => handleClose()} />
+      <div className="centered">
+        <div className="modal">
+          <div className="modalHeader">
+            <h5 className="heading">{title}</h5>
+          </div>
+          <button className="closeBtn" onClick={() => handleClose()}>
+            <RiCloseLine style={{ marginBottom: "-3px" }} />
+          </button>
+          <div className="modalContent">
+            {description}
+          </div>
+          <div className="modalActions">
+            <div className="actionsContainer">
+              <button className={"deleteBtn"} onClick={() => {
+                  handleClose()
+                  yes_function();
+                }}>
+                {yes_choice}
+              </button>
+              <button
+                className="cancelBtn"
+                onClick={() => handleClose()}
+              >
+                {no_choice}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+
+
+export default ConfirmationModal;

@@ -7,6 +7,7 @@ import { Volunteer } from "../../../interfaces";
 import { useNavigate } from "react-router-dom";
 import { Card } from "@mui/material";
 import FriendProfileCard from "./Cards/FriendProfileCard";
+import ConfirmationModal from "../../../components/ConfirmationModal";
 
 type newProfile = {
   first_name: string,
@@ -208,10 +209,10 @@ function ProfilePage(props: any) {
     })
   };
 
-  /* Function to add when back is gonna be done */
+  /** delete account feature functions */
+  const [openConfirmationModal, setopenConfirmationModal] = useState(false);
 
   const deleteAccount = () => {
-    if (window.confirm('Are you sure you want to delete your account?')) {
       let url = `${config.apiUrl}/volunteers/delete`;
       fetch(url, {
         method: 'DELETE',
@@ -234,8 +235,13 @@ function ProfilePage(props: any) {
         .catch((error) => {
           console.log(error);
         });
-    }
   }
+
+  const handleCloseConfirmationModal = () => {
+    setopenConfirmationModal(false);
+  }
+  /** END - delete account feature functions */
+
   const handleTogglePrivate = () => {
     setIsPrivate(!isPrivate);
   };
@@ -285,9 +291,20 @@ function ProfilePage(props: any) {
         </button>
       </div>
       <div className="profile-btn-div">
-        <button className="delete-account-btn" onClick={deleteAccount}>
+        <button className="delete-account-btn" onClick={() => setopenConfirmationModal(true)}>
         Supprimer le compte
       </button>
+      {
+        openConfirmationModal && 
+        <ConfirmationModal
+          handleClose={handleCloseConfirmationModal}
+          title="Suppression de compte"
+          description="Voulez-vous supprimer votre compte ? Cette action est irréversible."
+          yes_choice="Oui"
+          no_choice="Non"
+          yes_function={deleteAccount}
+        />
+      }
       </div>
       </Row>
       </> 
