@@ -4,7 +4,7 @@ import config from "../../../config";
 import "./Profile.scss";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import FriendProfileCard from "./Cards/FriendProfileCard";
-import { CardContent, CardMedia, Typography } from "@mui/material";
+import { CardContent, CardMedia, Typography, Button } from "@mui/material";
 
 interface Volunteer {
   id: number;
@@ -48,6 +48,7 @@ function ProfilePage(props: any) {
     })
     .then(response => response.json())
     .then(data => {
+      console.log(data);
       setVolunteerId(data.volunteer.id);
     })
    .catch(error => {
@@ -164,25 +165,36 @@ function ProfilePage(props: any) {
         </Card>
 
         <Card className="friends-card">
-         <CardContent>
-             <h2>Amis</h2>
-             <div className="friend-list">
-                 {profileData.friends.slice(0, 4).map((friend: Friend) => (
-                     <Link to={`/volunteer/${friend.id}`} key={friend.id} className="friend-item">
-                         <CardMedia
-                             component="img"
-                             height="80"
-                             image={friend.profile_picture || 'https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg'}
-                             alt="Friend's Profile Picture"
-                         />
-                         <Typography variant="body2" color="text.secondary" className="friend-name">
-                             {friend.first_name} {friend.last_name}
-                         </Typography>
-                     </Link>
-                 ))}
-             </div>
-         </CardContent>
-     </Card>
+                    <CardContent>
+                        <h2>Amis</h2>
+                        <div className="friend-list">
+                        {profileData?.friends && profileData.friends.length > 0 ? (
+                            profileData?.friends.map((friend: Friend) => (
+                                <Link to={`/volunteer/${friend?.id}`} key={friend.id} className="friend-item">
+                                    <CardMedia
+                                        component="img"
+                                        height="80"
+                                        image={friend?.profile_picture || 'https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg'}
+                                        alt="Friend's Profile Picture"
+                                    />
+                                    <Typography variant="body2" color="text.secondary" className="friend-name">
+                                        {friend?.first_name} {friend?.last_name}
+                                    </Typography>
+                                </Link>
+                            ))
+                        ): (
+                            <div className="follow-button-container">
+                                <p>Vous n'avez aucun ami.</p>
+                                <Link to="/accueil">
+                                    <Button variant="contained" color="primary">
+                                        Découvrir les bénévoles
+                                    </Button>
+                                </Link>
+                            </div>
+                        )}
+                        </div>
+                    </CardContent>
+                </Card>
       </div>
     </div>        
       <Col sm={12} md={4} lg={3} className="profile-info"></Col><Row sm={12} md={4} lg={3} className="button-row">
