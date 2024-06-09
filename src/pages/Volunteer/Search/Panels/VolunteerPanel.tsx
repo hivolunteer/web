@@ -1,47 +1,80 @@
 import { useEffect, useState } from "react";
 import { Volunteer } from "../../../../interfaces";
-import config from "../../../../config";
 import VolunteerCard from "../Cards/VolunteerCard";
+import { VolunteerPage } from "../Interfaces";
 
-interface VolunteerPanelProps {
-    volunteerFilteredList: Array<Volunteer>;
-    search: string;
-    width: number
-}
 
-function VolunteerPanel(props: VolunteerPanelProps) {
+function VolunteerPanel(props: {volunteerPages: Array<VolunteerPage>}) {
 
-    const { volunteerFilteredList, search, width } = props;
+    const { volunteerPages } = props;
 
-    const [volunteersList, setVolunteersList] = useState<Array<Volunteer>>([]);
+    const [max_page, setMaxPage] = useState<number>(1)
+    const [actual_page, setActualPage] = useState<number>(1)
+    const [noVoluntterFound, setNoVoluntterFound] = useState<boolean>(false)
 
     useEffect(() => {
-        fetch(`${config.apiUrl}/volunteers`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                setVolunteersList(data);
-            });
-    }, [volunteerFilteredList]);
+        if (volunteerPages.length === 0)
+            setNoVoluntterFound(true)
+        else {
+            setNoVoluntterFound(false)
+            setMaxPage(volunteerPages.length)
+        }
+    }, []);
 
     return (
-        <div className="missions-container">
+        <div style={{width: '100%', display: 'flex', flexDirection: 'column'}}>
+          <div style={{display: 'flex', justifyContent: 'center', width: '100vw'}}>
             {
-                volunteersList
-                    .filter((volunteer: Volunteer) => {
-                        return volunteer.first_name.toLowerCase().includes(search.toLowerCase()) || volunteer.last_name.toLowerCase().includes(search.toLowerCase()) || volunteer.email.toLowerCase().includes(search.toLowerCase())
-                    })
-                    .map((volunteer: Volunteer) => (
-                        <div className='mission-card-assovol' key={volunteer.id}>
-                            <VolunteerCard volunteer={volunteer} />
-                        </div>
-                    ))
+                (noVoluntterFound) ?
+                    <p>
+                        Aucun bénévole correspond à vos critères de recherche
+                    </p>
+                    :
+                    volunteerPages.filter((page: VolunteerPage) => page.page === actual_page)
+                        .map((page: VolunteerPage) => {
+                            return (
+                              <div style={{display: 'flex', flexWrap: 'wrap', width: '90%', justifyContent: 'center'}}>
+                                    {
+                                        page.volunteers.map((volunteer: Volunteer) => {
+                                            return (
+                                              <div key={volunteer.id} style={{margin: '25px', width: '25%'}}>
+                                                    <VolunteerCard volunteer={volunteer} />
+                                                </div>
+                                            )
+                                        })
+                                    }
+                                </div>
+                            )
+                        })
             }
+          </div>
+          {
+            max_page > 1 && (
+              <div style={{display: 'flex', justifyContent: 'center', marginTop: '20px'}}>
+                {
+                  Array.from(Array(max_page).keys()).map((index) => (
+                    <div
+                      style={{
+                        width: '20px',
+                        height: '20px',
+                        borderRadius: '50%',
+                        backgroundColor: index + 1 === actual_page ? '#FFD700' : '#000000',
+                        margin: '0 5px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        color: index + 1 === actual_page ? '#000000' : '#FFFFFF',
+                        cursor: 'pointer'
+                      }}
+                      onClick={() => setActualPage(index + 1)}
+                    >
+                      {index + 1}
+                    </div>
+                  ))
+                }
+              </div>
+            )
+          }
         </div>
     )
 }

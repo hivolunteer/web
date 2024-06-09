@@ -1,4 +1,3 @@
-import { Mission } from "../../../../interfaces";
 import { Association, PageAssoProps, filterAssoProps } from "../Interfaces";
 
 function filterAssoAndPagination(props: filterAssoProps ) {
@@ -21,7 +20,7 @@ function filterAssoAndPagination(props: filterAssoProps ) {
     let page = 1;
     let displayAssociations : Array<PageAssoProps> = []
     associations.forEach((association: any) => {
-      if (x === 50) {
+      if (x === 20) {
         x = 0;
         page += 1;
       }

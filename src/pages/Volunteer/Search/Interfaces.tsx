@@ -1,4 +1,4 @@
-import { Rating } from "../../../interfaces"
+import { Rating, Volunteer } from "../../../interfaces"
 
 interface Mission {
     id : number,
@@ -87,4 +87,14 @@ interface PageAssoProps {
     page: number;
 }
 
-export type { Mission, Modal, ModalAsso, Skill, Association, PageMission, MissionComplete, FilterMissionProps, PageAssoProps, filterAssoProps }
+interface VolunteerProps {
+    search: string;
+    volunteersList: Array<Volunteer>
+}
+
+interface VolunteerPage {
+    page: number;
+    volunteers: Array<Volunteer>
+}
+
+export type { Mission, Modal, ModalAsso, Skill, Association, PageMission, MissionComplete, FilterMissionProps, PageAssoProps, filterAssoProps, VolunteerProps, VolunteerPage }

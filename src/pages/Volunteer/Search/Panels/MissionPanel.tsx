@@ -21,8 +21,8 @@ function MissionPanel(props: {missions: Array<PageMission>}) {
     }, [missions])
 
     return (
-        <div className="missions-container-search">
-          <div style={{display: 'flex', flexWrap: 'wrap'}}>
+      <div style={{width: '100%', display: 'flex', flexDirection: 'column'}}>
+          <div style={{display: 'flex', justifyContent: 'center', width: '100vw'}}>
             {
               (noMissionFound) ?
                 <p>
@@ -32,7 +32,7 @@ function MissionPanel(props: {missions: Array<PageMission>}) {
                 missions.filter((page: PageMission) => page.page === actual_page)
                 .map((page: PageMission) => {
                   return (
-                    <div style={{display: 'flex', flexWrap: 'wrap'}}>
+                    <div style={{display: 'flex', flexWrap: 'wrap', width: '90%', justifyContent: 'center'}}>
                       {
                         page.missions.map((mission: MissionComplete) => {
                           return (

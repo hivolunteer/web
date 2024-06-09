@@ -22,32 +22,34 @@ function AssociationPanel(props: {assoPages: Array<PageAssoProps>}) {
     }, [assoPages])
 
     return(
-    <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
-      {
-        (noAssociationFound) ?
-          <p>
-            Aucune association correspond à vos critéres de recherche
-          </p>
-        :
-        assoPages.filter((page: PageAssoProps) => page.page === actual_page)
-        .map((page: PageAssoProps) => {
-          return (
-            <div style={{display: 'flex', flexWrap: 'wrap', width: '90%', justifyContent: 'center'}}>
-              {
-                page.associations.map((association: Association) => {
-                  return (
-                    <div className="mission_card" key={association.id} style={{margin: '25px', width: '30%'}}>
-                      <AssociationCard
-                        association_id={association.id}
-                      />
-                    </div>
-                  )
-                })
-              }
-            </div>
-          )
-        })
-      }
+      <div style={{width: '100%', display: 'flex', flexDirection: 'column'}}>
+          <div style={{display: 'flex', justifyContent: 'center', width: '100vw'}}>
+          {
+            (noAssociationFound) ?
+              <p>
+                Aucune association correspond à vos critéres de recherche
+              </p>
+            :
+            assoPages.filter((page: PageAssoProps) => page.page === actual_page)
+            .map((page: PageAssoProps) => {
+              return (
+                <div style={{display: 'flex', flexWrap: 'wrap', width: '90%', justifyContent: 'center'}}>
+                  {
+                    page.associations.map((association: Association) => {
+                      return (
+                        <div key={association.id} style={{margin: '25px', width: '25%'}}>
+                          <AssociationCard
+                            association_id={association.id}
+                          />
+                        </div>
+                      )
+                    })
+                  }
+                </div>
+              )
+            })
+          }
+          </div>
       {
         max_page > 1 && (
           <div style={{display: 'flex', justifyContent: 'center', marginTop: '20px', width: '90%'}}>

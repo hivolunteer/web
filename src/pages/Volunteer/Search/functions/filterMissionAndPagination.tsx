@@ -1,7 +1,7 @@
 import { Mission } from "../../../../interfaces";
 import { FilterMissionProps, MissionComplete, PageMission } from "../Interfaces";
 
-function filterAndPageMissions(props: FilterMissionProps ) {
+function filterMissionAndPagination(props: FilterMissionProps ) {
 
   if (props.filteredMissions.length === 0 && props.searched === true) {
     return [];
@@ -36,4 +36,4 @@ function filterAndPageMissions(props: FilterMissionProps ) {
   }
 }
 
-export default filterAndPageMissions
+export default filterMissionAndPagination

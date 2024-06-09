@@ -7,16 +7,17 @@ import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import "./Search.scss";
 import FilterModal from "./Modal/FilterModal";
 import FilterModalAsso from "./Modal/FilterModalAsso";
-import { Mission, Association } from "../../../interfaces"
-import { FilterMissionProps, MissionComplete, Modal, ModalAsso, PageAssoProps, PageMission, filterAssoProps } from "./Interfaces";
+import { Mission, Association, Volunteer } from "../../../interfaces"
+import { FilterMissionProps, MissionComplete, Modal, ModalAsso, PageAssoProps, PageMission, VolunteerPage, VolunteerProps, filterAssoProps } from "./Interfaces";
 import config from "../../../config";
 import TabPanel from "./Panels/TabPanel";
 import MissionPanel from "./Panels/MissionPanel";
 import AssociationPanel from "./Panels/AssociationPanel";
 import VolunteerPanel from "./Panels/VolunteerPanel";
 import useWindowSize from "../../../functions/useWindowSize";
-import filterAndPageMissions from "./functions/filterAndPageMissions";
+import filterMissionAndPagination from "./functions/filterMissionAndPagination";
 import filterAssoAndPagination from "./functions/filterAssoAndPagination";
+import filterVolunteerAndPagination from "./functions/filterVolunteerAndPagination";
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -36,6 +37,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 function Search(props: any) {
   const [missionList, setMissionList] = useState<Mission[]>([]);
   const [associationList, setAssociations] = useState<Association[]>([]);
+  const [volunteerList, setVolunteerList] = useState<Array<Volunteer>>([]);
   const [location_search, setLocation] = useState<string>("");
   const [search, setSearch] = useState<string>("");
   const [locations, setLocations] = useState<{[key: number]: string}>({});
@@ -174,6 +176,21 @@ function Search(props: any) {
         }
       })
     }, [])
+
+  useEffect(() => {
+      fetch(`${config.apiUrl}/volunteers`, {
+          method: "GET",
+          headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+      })
+          .then((response) => response.json())
+          .then((data) => {
+              setVolunteerList(data);
+          });
+  }, []);
+
   const handleSearch = (e: any) => {
     // setSearch with value of the input from mission lkist if filter is not empty
     setSearch(e.target.value.toLowerCase());
@@ -193,7 +210,7 @@ function Search(props: any) {
       locations: locations,
       searched: searchMission
     }
-    let missions: Array<PageMission> = filterAndPageMissions(props)
+    let missions: Array<PageMission> = filterMissionAndPagination(props)
     return missions;
   }
 
@@ -205,6 +222,14 @@ function Search(props: any) {
       searched: searchAssociation
     }
     return filterAssoAndPagination(props)
+  }
+
+  function returnVolunteers() : Array<VolunteerPage> {
+    let props : VolunteerProps = {
+      volunteersList: volunteerList,
+      search: search
+    }
+    return filterVolunteerAndPagination(props)
   }
 
   //className={"header-rating" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")}
@@ -324,9 +349,7 @@ function Search(props: any) {
         </TabPanel>
         <TabPanel value={subType.id} index={3}>
           <VolunteerPanel
-            volunteerFilteredList={[]}
-            search={search}
-            width={width}
+            volunteerPages={returnVolunteers()}
           />
         </TabPanel>
       </div>
