@@ -1,0 +1,195 @@
+@import '../../../../assets/scss/_colors';
+@import '../../../../assets/scss/_fonts';
+
+.search-bar-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 2% 5%;
+    width: 100%;
+}
+
+.search-bar {
+    flex: 4;
+}
+
+.search-country {
+    flex: 2;
+}
+
+.search-button {
+    width: 2%;
+}
+
+.search-loc {
+    width: '10%';
+    display: table-row;
+    padding: 1rem 1rem;
+}
+
+.search-filter {
+    display: 'flex';
+    align-items: center;
+    flex-shrink: 0;
+    width: 90%;
+    margin-right: auto;
+}
+
+.filter-btn {
+    display: table-row;
+    padding: 1rem 3rem;
+    border: none;
+    border-radius: 10px;
+    background: #ffcf56;
+    color: #2D2A32;
+    margin-left: 5%;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    font-weight: bold;
+    text-transform: none;
+    cursor: pointer;
+}
+
+.filter-btn:hover {
+    background-color: #cca645;
+}
+
+.mask-box {
+    display: flex;
+    border-radius: 20px;
+    position: relative;
+    background: #9dbdb3;
+    box-shadow: 1px 1px 2px rgb(165, 165, 165) inset;
+}
+
+.mask-box .mask {
+  width: 200px;
+  height: 40px;
+  border-radius: 20px;
+  background: #5d9082;
+  position: absolute;
+  box-shadow: 1px 0 2px #5d9082;
+  transition: all 0.5s ease;
+}
+
+.mask-box .MuiButton-root {
+  border-radius: 20px;
+  width: 200px;
+  height: 40px;
+  font-weight: bold;
+  color: white;
+  transition: all 0.2s 0.1s ease;
+}
+
+.mask-box .MuiButton-root:hover {
+    opacity: 0.8;
+}
+
+.card {
+    border: 2px solid #73AD21;
+    border-radius: 10px;
+}
+
+.search-bar-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 2% 5%;
+}
+
+.filter-container {
+    display: flex;
+    justify-content: flex-start;
+    margin: 0% 5%;
+    margin-bottom: 10px;
+}
+
+.search-bar {
+    flex: 4;
+}
+
+.search-country {
+    flex: 2;
+}
+
+.tabs-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin: 0 25%;
+}
+
+
+.missions-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 5%;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.mission-card {
+    margin: 1% 2.5%;
+    width: 35%;
+}
+
+.mission-status {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}  
+
+
+/* For Tablets and Mini-PCs */
+@media screen and (min-width: 0px) and (max-width: 1440px) {
+    .mission-card {
+        width: 100%;
+    }
+}
+
+.mission-card-assovol {
+    margin: 1% 2.5%;
+    width: 20%;
+}
+
+
+/* For Tablets and Mini-PCs */
+@media screen and (min-width: 0px) and (max-width: 780px) {
+    .mission-card-assovol {
+        width: 40%;
+    }
+}
+
+
+.color-blind-bg {
+    background-color: #3b3d3c;
+    color: #faf8fc;
+}
+
+.color-blind-bg:hover {
+    background-color: #3b3d3c;
+    color: #faf8fc;
+}
+
+.modal-bottom {
+    display: flex;
+    justify-content: flex-end;
+    margin: 10px 0;
+}
+
+// TABLETTE
+
+@media screen and (min-width: 0px) and (max-width: 768px) {
+    .tabs-container {
+        width: 100%;
+        margin: 0%
+    }
+}
+
+// MINI-PC
+
+@media screen and (min-width: 768px) and (max-width: 1440px) {
+    .tabs-container {
+        width: auto;
+        margin: 0% 15%;
+    }
+}
