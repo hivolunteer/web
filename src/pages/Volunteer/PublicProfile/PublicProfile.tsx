@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Card, CardContent, CardMedia, Typography } from '@mui/material';
+import { Button, Card, CardContent, CardMedia, Typography } from '@mui/material';
 import config from '../../../config'
 import './PublicProfile.scss';
 import { useParams, Link } from 'react-router-dom';
@@ -26,11 +26,13 @@ interface ProfileData {
     volunteer_competencies: { [key: string]: number };
     bee_score: number;
     friends: Friend[];
+    friendship_status: number;
 }
 
 function PublicProfile() {
     const { volunteerId } = useParams();
     const [profileData, setProfileData] = useState<ProfileData | null>(null);
+    const [friendshipStatus, setFriendshipStatus] = useState<number>(0);
 
     useEffect(() => {
         fetch(`${config.apiUrl}/volunteers/profile/${volunteerId}`, {
@@ -43,12 +45,91 @@ function PublicProfile() {
         .then(response => response.json())
         .then((data: ProfileData) => {
             setProfileData(data);
+            setFriendshipStatus(data.friendship_status);
+            if (data.friendship_status === 23) {
+                window.location.href = '/';
+            }
         })
         .catch(error => console.error('Error fetching profile:', error));
     }, [volunteerId]);
 
     if (!profileData) {
         return <div>Loading...</div>;
+    }
+
+    function handleFriendRequest() {
+        fetch(`${config.apiUrl}/friends/add/${volunteerId}`, {
+            method: 'POST',
+            headers: {
+                authorization: `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            setFriendshipStatus(10);
+        })
+        .catch(error => console.error('Error sending friend request:', error));
+    }
+
+    function handleAcceptRequest() {
+        fetch(`${config.apiUrl}/friends/accept/${volunteerId}`, {
+            method: 'POST',
+            headers: {
+                authorization: `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            setFriendshipStatus(21);
+        })
+        .catch(error => console.error('Error accepting friend request:', error));
+    }
+
+    function handleRejectRequest() {
+        fetch(`${config.apiUrl}/friends/reject/${volunteerId}`, {
+            method: 'POST',
+            headers: {
+                authorization: `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            setFriendshipStatus(-1);
+        })
+        .catch(error => console.error('Error rejecting friend request:', error));
+    }
+
+    function handleBlockUser() {
+        fetch(`${config.apiUrl}/friends/block/${volunteerId}`, {
+            method: 'POST',
+            headers: {
+                authorization: `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            setFriendshipStatus(13);
+        })
+        .catch(error => console.error('Error blocking user:', error));
+    }
+
+    function handleUnblockUser() {
+        fetch(`${config.apiUrl}/friends/unblock/${volunteerId}`, {
+            method: 'POST',
+            headers: {
+                authorization: `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            setFriendshipStatus(-1);
+        })
+        .catch(error => console.error('Error unblocking user:', error));
     }
 
     return (
@@ -63,6 +144,34 @@ function PublicProfile() {
                         {profileData.volunteer.bio}
                     </Typography>
                 </CardContent>
+            </div>
+
+            <div className="volunteer-profile-friendship-actions">
+                {friendshipStatus === -1 && (
+                    <Button variant="text" color="primary" onClick={handleFriendRequest}>
+                        Ajouter
+                    </Button>
+                )}
+                {friendshipStatus === 20 && (
+                    <>
+                    <Button variant="outlined" color="primary" onClick={handleAcceptRequest}>
+                        Accepter
+                    </Button>
+                    <Button variant="outlined" color="warning" onClick={handleRejectRequest}>
+                        Refuser
+                    </Button>
+                    </>
+                )}
+                {friendshipStatus === 13 && (
+                    <Button variant="text" color="error" onClick={handleUnblockUser}>
+                        Débloquer
+                    </Button>
+                )}
+                {friendshipStatus !== 13 && (
+                    <Button variant="contained" color="error" onClick={handleBlockUser}>
+                        Bloquer
+                    </Button>
+                )}
             </div>
 
             <div className="background-card">
