@@ -2,7 +2,6 @@ import {Button, Dialog, DialogContent, DialogTitle, List} from "@mui/material";
 import HoverRating from "../../../components/rating";
 import React from "react";
 import config from "../../../config";
-import {values} from "binary-extensions";
 
 export interface SimpleDialogProps {
     open: boolean;
