@@ -6,9 +6,8 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import "./Search.scss";
 import { Mission } from "../../../interfaces";
 import config from "../../../config";
-import TabPanel from "./Panels/TabPanel";
+import TabPanel from "../../../components/TabPanel"
 import MissionPanel from "./Panels/MissionPanel";
-import useWindowSize from "../../../functions/useWindowSize";
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -115,23 +114,26 @@ function Search(props: any) {
             ))}
           </Tabs>
         </div>
-        <TabPanel value={subType.id} index={1}>
-          <MissionPanel
-            missionList={publishedMissions}
-            search={search}
-          />
-        </TabPanel>
         <TabPanel value={subType.id} index={2}>
-          <MissionPanel
-            missionList={draftMissions}
-            search={search}
-          />
+          {draftMissions.length > 0 ? (
+            <MissionPanel missionList={draftMissions} search={search} />
+          ) : (
+            <div className="no-missions-message">Aucune mission brouillon</div>
+          )}
+        </TabPanel>
+        <TabPanel value={subType.id} index={1}>
+          {publishedMissions.length > 0 ? (
+            <MissionPanel missionList={publishedMissions} search={search} />
+          ) : (
+            <div className="no-missions-message">Aucune mission publiée</div>
+          )}
         </TabPanel>
         <TabPanel value={subType.id} index={3}>
-          <MissionPanel
-            missionList={pastMissions}
-            search={search}
-          />
+          {pastMissions.length > 0 ? (
+            <MissionPanel missionList={pastMissions} search={search} />
+          ) : (
+            <div className="no-missions-message">Aucune mission passée</div>
+          )}
         </TabPanel>
       </div>
     </div>
