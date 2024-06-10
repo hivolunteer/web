@@ -22,6 +22,7 @@ type VolunteerCardProps = {
     onAccept: any,
     onRefuse: any,
     MissionStatus: number,
+    MissionEndDate: Date,
     onInfoChange: (id: number, rating: number, comment: string) => void;
     preFilledRating?: number | null;
     preFilledComment?: string;
@@ -29,11 +30,13 @@ type VolunteerCardProps = {
 
 function VolunteerCard(props: VolunteerCardProps) {
     const mission_id = useParams().id;
-    const { volunteer, is_premium, onAccept, onRefuse, MissionStatus, onInfoChange, preFilledRating, preFilledComment } = props;
+    const { volunteer, is_premium, onAccept, onRefuse, MissionStatus, MissionEndDate, onInfoChange, preFilledRating, preFilledComment } = props;
 
     const [comment, setComment] = useState<string>(preFilledComment || "");
     const [rating, setRating] = useState<number | null>(preFilledRating || null);
     const [response, setResponse] = useState<{ error: boolean, message: string }>({ error: false, message: "" });
+
+    const [expirationDate, setExpirationDate] = useState<Date | null>(null);
 
     useEffect(() => {
         setComment(preFilledComment || "");
@@ -62,13 +65,13 @@ function VolunteerCard(props: VolunteerCardProps) {
         })
         .then((data) => {
             if (data.status === 201) {
-                setResponse({ error: false, message: "Rating submitted successfully" });
+                setResponse({ error: false, message: "Note soumise avec succès" });
             } else {
-                setResponse({ error: true, message: "Failed to submit rating" });
+                setResponse({ error: true, message: "Échec de soumission de la note" });
             }
         })
         .catch((error) => {
-            setResponse({ error: true, message: "An error occurred: " + error.message });
+            setResponse({ error: true, message: "ne erreur s'est produite : " + error.message });
         });
     }
 
@@ -78,6 +81,16 @@ function VolunteerCard(props: VolunteerCardProps) {
         }, 5000);
         return () => clearTimeout(timer);
     }, [response]);
+
+    useEffect(() => {
+        if (MissionStatus === 3) {
+            const expiration = new Date(MissionEndDate);
+            expiration.setMonth(expiration.getMonth() + 1);
+            setExpirationDate(expiration);
+        }
+    }, [MissionStatus, MissionEndDate]);
+
+    const isExpired = expirationDate ? new Date() > expirationDate : false;
 
     return (
         <div className="association-manage-mission-volunteer-card">
@@ -89,20 +102,35 @@ function VolunteerCard(props: VolunteerCardProps) {
             </div>
             {MissionStatus === 3 && (
                 <div className="volunteer-comment-rating">
-                    <TextField
-                        label="Enter your comment"
-                        value={comment}
-                        onChange={handleCommentChange}
-                        fullWidth
-                        multiline
-                        
-                    />
-                    <HoverRating value={preFilledRating || 0} onInfoChange={handleRatingChange} />
-                    <Button variant="contained" color="primary" onClick={() => { handleValidate(); }}>
-                        Valider
-                    </Button>
-                    {response.message && (
-                        <Alert severity={response.error ? "error" : "success"}>{response.message}</Alert>
+                    {!isExpired ? (
+                        <>
+                            <TextField
+                                label="Enter your comment"
+                                value={comment}
+                                onChange={handleCommentChange}
+                                fullWidth
+                                multiline
+                            />
+                            <HoverRating value={preFilledRating || 0} onInfoChange={handleRatingChange} />
+                            <Button variant="contained" color="primary" onClick={handleValidate}>
+                                Valider
+                            </Button>
+                            {response.message && (
+                                <Alert severity={response.error ? "error" : "success"}>{response.message}</Alert>
+                            )}
+                        </>
+                    ) : (
+                        <div className="expired-rating-comment">
+                            <div className="expired-comment">
+                                <h4>Dernier commentaire:</h4>
+                                <p className="last-rating">{preFilledComment}</p>
+                            </div>
+                            <div className="expired-rating">
+                                <h4>Dernière note:</h4>
+                                <p className="last-comment">{preFilledRating}</p>
+                            </div>
+                            <Alert severity="error">La période de commentaire et de notation a expiré. Vous ne pouvez plus soumettre de commentaire ou de note.</Alert>
+                        </div>
                     )}
                 </div>
             )}
@@ -123,6 +151,7 @@ function VolunteerCard(props: VolunteerCardProps) {
 type ManageMissionVolunteersProps = {
     mission_id: string | undefined,
     MissionStatus: number,
+    MissionEndDate: Date
 }
 
 function ManageMissionVolunteers(props: ManageMissionVolunteersProps) {
@@ -130,9 +159,12 @@ function ManageMissionVolunteers(props: ManageMissionVolunteersProps) {
     const [response, setResponse] = useState<{ error: boolean, message: string }>({ error: false, message: "" });
     const mission_id = props.mission_id;
     const MissionStatus = props.MissionStatus;
+    const MissionEndDate = props.MissionEndDate;
 
     const [allComments, setAllComments] = useState<{ [key: number]: string }>({});
     const [allRatings, setAllRatings] = useState<{ [key: number]: number | null }>({});
+
+    const [expirationDate, setExpirationDate] = useState<Date | null>(null);
 
     const handleValidateAll = () => {
         const reviewList = ListVolunteers?.map((volunteer) => {
@@ -249,6 +281,16 @@ function ManageMissionVolunteers(props: ManageMissionVolunteersProps) {
             console.error('Error fetching all ratings and comments:', error);
         });
     }, [mission_id]);
+
+    useEffect(() => {
+        if (MissionStatus === 3) {
+            const expiration = new Date(MissionEndDate);
+            expiration.setMonth(expiration.getMonth() + 1);
+            setExpirationDate(expiration);
+        }
+    }, [MissionStatus, MissionEndDate]);
+
+    const isExpired = expirationDate ? new Date() > expirationDate : false;
     
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -268,17 +310,19 @@ function ManageMissionVolunteers(props: ManageMissionVolunteersProps) {
                     >
                         Gestion des participants
                     </AccordionSummary>
-                    <AccordionActions>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            size="large"
-                            className="validate-all-button"
-                            onClick={() => { handleValidateAll(); }}
-                        >
-                            Valider tous les notes et commentaires
-                        </Button>
-                    </AccordionActions>
+                    {!isExpired ? (
+                        <AccordionActions>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                size="large"
+                                className="validate-all-button"
+                                onClick={() => { handleValidateAll(); }}
+                            >
+                                Valider tous les notes et commentaires
+                            </Button>
+                        </AccordionActions>
+                    ) : null }
                     {response.message && (
                         <Alert severity={response.error ? "error" : "success"}>{response.message}</Alert>
                     )}
@@ -297,6 +341,7 @@ function ManageMissionVolunteers(props: ManageMissionVolunteersProps) {
                                             onAccept={acceptVolunteer}
                                             onRefuse={refuseVolunteer}
                                             MissionStatus={MissionStatus}
+                                            MissionEndDate={MissionEndDate}
                                             onInfoChange={handleInfoChange}
                                             preFilledRating={allRatings[volunteer.id]}
                                             preFilledComment={allComments[volunteer.id]}
@@ -321,6 +366,7 @@ function ManageMissionVolunteers(props: ManageMissionVolunteersProps) {
                                                                 onAccept={acceptVolunteer}
                                                                 onRefuse={refuseVolunteer}
                                                                 MissionStatus={MissionStatus}
+                                                                MissionEndDate={MissionEndDate}
                                                                 onInfoChange={handleInfoChange}
                                                                 preFilledRating={allRatings[volunteer.id]}
                                                                 preFilledComment={allComments[volunteer.id]}
@@ -348,6 +394,7 @@ function ManageMissionVolunteers(props: ManageMissionVolunteersProps) {
                                                                 onAccept={acceptVolunteer}
                                                                 onRefuse={refuseVolunteer}
                                                                 MissionStatus={MissionStatus}
+                                                                MissionEndDate={MissionEndDate}
                                                                 onInfoChange={handleInfoChange}
                                                                 preFilledRating={allRatings[volunteer.id]}
                                                                 preFilledComment={allComments[volunteer.id]}
