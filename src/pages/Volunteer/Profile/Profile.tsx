@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { Card } from "@mui/material";
 import FriendProfileCard from "./Cards/FriendProfileCard";
 import ConfirmationModal from "../../../components/ConfirmationModal";
+import {Alert} from "@mui/material";
 
 type newProfile = {
   first_name: string,
@@ -30,6 +31,8 @@ function ProfilePage(props: any) {
   const [loading, setLoading] = useState(true);
   const [isPrivate, setIsPrivate] = useState(false);
   const [friends, setFriends] = useState<Number[]>([]);
+  const [alertContent, setAlertContent] = useState<{ error: boolean, message: string, id: number }>({ error: false, message: "", id: 0 });
+  
   
   function refuseVolunteer(id: number) {
     fetch(`${config.apiUrl}/volunteers/blocked`, {
@@ -222,7 +225,8 @@ function ProfilePage(props: any) {
       })
         .then((response) => {
           if (response.status === 200) {
-            alert('Account deleted successfully');
+            //alert('Account deleted successfully');
+            setAlertContent({ error: false, message: 'Compte supprimé avec succès', id: 0 })
             // Redirect to the login page
             localStorage.removeItem('token');
             localStorage.removeItem('role');
@@ -230,10 +234,12 @@ function ProfilePage(props: any) {
             window.location.href = '/';
           } else {
             console.log('Error deleting account');
+            setAlertContent({ error: true, message: 'Erreur lors de la suppression du compte', id: 0 })
           }
         })
         .catch((error) => {
           console.log(error);
+          setAlertContent({ error: true, message: 'Erreur serveur, veuillez réessayer plus tard', id: 0 })
         });
   }
 
@@ -250,8 +256,23 @@ function ProfilePage(props: any) {
     localStorage.getItem("color_blind") === "true"
   );
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAlertContent({ error: false, message: '', id: 0 });
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [alertContent]);
+
   return (
     <>
+    {alertContent.message &&
+        <div className="blocked-user-alert">
+          <Alert severity={alertContent.error ? "error" : "success"}
+          >
+            {alertContent.message}
+          </Alert>
+        </div>
+      }
     <div
       style={{
         display: "flex",
