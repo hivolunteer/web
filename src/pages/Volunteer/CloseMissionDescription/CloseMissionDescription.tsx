@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Mission, Association, Skill } from '../../../interfaces';
 import config from "../../../config";
-import './MissionDetails.scss';
-import MissionDetailsHeader from './MissionDetailsHeader';
-import SkillDisplay from './SkillDisplay';
+import './CloseMissionDescription.scss';
+import MissionDetailsHeader from './CloseMissionDescriptionHeader';
+import SkillDisplay from '../MissionDetails/SkillDisplay';
 import { Button } from '@mui/material';
+import { Volunteer } from '../../Association/Missions/Manage/Interfaces';
 
-const MissionDetails = () => {
+const CloseMissionDescription = () => {
 
     const [mission, setMission] = useState<Mission | null>(null);
     const id: string = window.location.pathname.split("/")[2]
     const [isRegistered, setIsRegistered] = useState<boolean | null>(null);
 
     const [location_id, setLocationId] = useState<string | null>("");
-    const [association, setAssociation] = useState<Association | null>(null);
+    const [volunteer, setVolunteer] = useState<Volunteer | null>(null);
     const [mission_skills, setMissionSkills] = useState<Skill[]>([]);
     const [location, setLocation] = useState<string>("");
 
@@ -47,12 +48,20 @@ const MissionDetails = () => {
     }
 
     useEffect(() => {
-        fetch(`${config.apiUrl}/missions/association/${id}`)
+        fetch(`${config.apiUrl}/missions/volunteer/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        })
             .then(response => response.json())
             .then(data => {
-                setLocationId(data.association_mission.location)
+                console.log("volunteer 0", data)
+
+                setLocationId("1")
                 setMission(data.association_mission)
-                fetch(`${config.apiUrl}/associations/profile/${data.association_mission.owner_id}`, {
+                fetch(`${config.apiUrl}/volunteers/profile/4`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -61,8 +70,8 @@ const MissionDetails = () => {
                 })
                     .then(response => response.json())
                     .then(data => {
-                        console.log("asso", data)
-                        setAssociation(data.association)
+                        console.log("volunteer", data)
+                        setVolunteer(data.association)
                     })
             })
         fetch(`${config.apiUrl}/missions/skills/${id}`, {
@@ -82,7 +91,6 @@ const MissionDetails = () => {
                 }
             })
 
-            console.log(mission)
         if (mission?.location) {
             fetch(`${config.apiUrl}/locations/${mission?.location}`, {
                 method: 'GET',
@@ -127,7 +135,7 @@ const MissionDetails = () => {
 
     return (
         <div className='mission-details-container'>
-            <MissionDetailsHeader mission={mission as Mission} association={association as Association} location={location} />
+            <MissionDetailsHeader mission={mission as Mission} volunteer={volunteer as Volunteer} location={location} />
             <div className='mission-details-content'>
                 <div className='mission-details-content-box'>
                     <p className='mission-details-content-title'> Description de la mission </p>
@@ -164,4 +172,4 @@ const MissionDetails = () => {
     )
 };
 
-export default MissionDetails;
+export default CloseMissionDescription;

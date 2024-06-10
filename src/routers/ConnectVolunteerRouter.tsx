@@ -17,6 +17,7 @@ import AssociationReferent from "../pages/Volunteer/Settings/Referents/Associati
 import AssociationProfile from "../pages/Volunteer/Association/Profile/AssociationProfile";
 import ManageMission from "../pages/Volunteer/ManageMission/ManageMission";
 import ProfileInformationModal from "../pages/Volunteer/Settings/ProfileInformation";
+import CloseMissionDescription from "../pages/Volunteer/CloseMissionDescription/CloseMissionDescription";
 
 function ConnectVolunteerRouter() {
     return (
@@ -29,6 +30,7 @@ function ConnectVolunteerRouter() {
             <Route path="/accueil" element={<Search />} />
             <Route path="/association/:associationID" element={<AssociationProfile />} />
             <Route path="/mission/:missionID" element={<MissionDetails />} />
+            <Route path="/mission/close/:missionID" element={<CloseMissionDescription />} />
             <Route path="/mission/create" element={<MissionCreation/>} />
             <Route path="/:missionID/edit" element={<EditMission/>} />
             <Route path="/volunteer/:volunteerId" element={<PublicProfile/>} />
