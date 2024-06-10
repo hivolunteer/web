@@ -72,6 +72,21 @@ function PublicProfile() {
         .catch(error => console.error('Error sending friend request:', error));
     }
 
+    function handleUnfriend() {
+        fetch(`${config.apiUrl}/friends/remove/${volunteerId}`, {
+            method: 'DELETE',
+            headers: {
+                authorization: `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            setFriendshipStatus(-1);
+        })
+        .catch(error => console.error('Error unfriending user:', error));
+    }
+
     function handleAcceptRequest() {
         fetch(`${config.apiUrl}/friends/accept/${volunteerId}`, {
             method: 'POST',
@@ -152,6 +167,11 @@ function PublicProfile() {
                         Ajouter
                     </Button>
                 )}
+                {friendshipStatus === 10 && (
+                    <Button variant="outlined" color="primary" disabled>
+                        En attente
+                    </Button>
+                )}
                 {friendshipStatus === 20 && (
                     <>
                     <Button variant="outlined" color="primary" onClick={handleAcceptRequest}>
@@ -165,6 +185,11 @@ function PublicProfile() {
                 {friendshipStatus === 13 && (
                     <Button variant="text" color="error" onClick={handleUnblockUser}>
                         Débloquer
+                    </Button>
+                )}
+                {(friendshipStatus !== -1 && friendshipStatus !== 13) && (
+                    <Button variant="text" color="error" onClick={handleUnfriend}>
+                        Retirer
                     </Button>
                 )}
                 {friendshipStatus !== 13 && (
