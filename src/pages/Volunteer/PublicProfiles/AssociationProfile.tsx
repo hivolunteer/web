@@ -87,11 +87,11 @@ function PublicProfile() {
         <div className="public-profile-container">
             <div className="profile-card">
                 <div className="profile-image" style={{ backgroundImage: `url(${profileData?.association?.profile_picture || 'https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg'})` }} />
-                <CardContent>
+                <CardContent className="profile-details">
                     <Typography variant="h5" component="div" className="profile-name">
                         {profileData?.association?.name}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" color="text.secondary" className="profile-description">
                         {profileData?.association?.description}
                     </Typography>
                 </CardContent>
