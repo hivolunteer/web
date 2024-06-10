@@ -127,23 +127,18 @@ export default function MissionCreation() {
           window.location.href = "/";
           return response.body;
         }
-      })
-      .then(
-        (data) => {
-          data
-            ?.getReader()
-            .read()
-            .then(({ done, value }) => {
-              if (done) {
-                alert("Mission créée");
-                return;
-              }
-            });
-        },
-        (error) => {
-          alert("Erreur lors de la création de la mission");
+        if (response.status === 404 || response.status === 500) {
+          if (response.body) {
+            //based on line 74 close_mission_routes.ts in the back
+            let msg : string = response.body.error;
+            alert(msg);
+            console.log("Veuillez réessayer", msg)
+          }
         }
-      );
+      }).catch((error : any) => {
+        console.log("Erreur Critque : " , error);
+        alert("Erreur Critique")
+      })
   };
 
   return (
