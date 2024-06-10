@@ -25,7 +25,7 @@ export interface EventFormData { title: string, description: string, categoryId?
 export interface DatePickerEventFormData { title: string, description: string, category?: number, allDay: boolean, start_date?: Date, end_date?: Date, location?: string, id_mission?: number }
 export const generateId = () => (Math.floor(Math.random() * 10000) + 1);
 
-const initialEventFormState: EventFormData = { title: "", description: "", categoryId: undefined };
+const initialEventFormState: EventFormData = { title: "", description: "", categoryId: 1 }; // categoryId: 1 is default category
 const initialDatePickerEventFormData: EventCreationData = { title: "", description: "", category: 1, allDay: false, start_date: undefined, end_date: undefined, location: undefined, id_mission: undefined };
 export interface EventCreationData { title: string, description: string, category?: number, start_date?: Date, end_date?: Date, location?: string, id_mission?: number, allDay: boolean }
 
