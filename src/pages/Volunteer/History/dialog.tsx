@@ -2,7 +2,6 @@ import {Button, Dialog, DialogContent, DialogTitle, List} from "@mui/material";
 import HoverRating from "../../../components/rating";
 import React from "react";
 import config from "../../../config";
-import {values} from "binary-extensions";
 
 export interface SimpleDialogProps {
     open: boolean;
@@ -77,6 +76,7 @@ export default function SimpleDialog(props: SimpleDialogProps) {
                 </p>
                 <div style={{display: 'flex', justifyContent: "center"}}>
                     <HoverRating
+                        value={rating}
                         onInfoChange={handleInfoChange} />
                 </div>
                 <p>
