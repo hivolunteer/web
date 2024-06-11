@@ -10,13 +10,13 @@ function VolunteerPanel(props: {volunteerPages: Array<VolunteerPage>}) {
 
     const [max_page, setMaxPage] = useState<number>(1)
     const [actual_page, setActualPage] = useState<number>(1)
-    const [noVoluntterFound, setNoVoluntterFound] = useState<boolean>(false)
+    const [novolunteerFound, setNovolunteerFound] = useState<boolean>(false)
 
     useEffect(() => {
         if (volunteerPages.length === 0)
-            setNoVoluntterFound(true)
+            setNovolunteerFound(true)
         else {
-            setNoVoluntterFound(false)
+            setNovolunteerFound(false)
             setMaxPage(volunteerPages.length)
         }
     }, []);
@@ -25,7 +25,7 @@ function VolunteerPanel(props: {volunteerPages: Array<VolunteerPage>}) {
         <div style={{width: '100%', display: 'flex', flexDirection: 'column'}}>
           <div style={{display: 'flex', justifyContent: 'center', width: '100vw'}}>
             {
-                (noVoluntterFound) ?
+                (novolunteerFound) ?
                     <p>
                         Aucun bénévole correspond à vos critères de recherche
                     </p>
@@ -50,7 +50,7 @@ function VolunteerPanel(props: {volunteerPages: Array<VolunteerPage>}) {
           </div>
           {
             max_page > 1 && (
-              <div style={{display: 'flex', justifyContent: 'center', marginTop: '20px'}}>
+              <div className="pagination-style">
                 {
                   Array.from(Array(max_page).keys()).map((index) => (
                     <div

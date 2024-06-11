@@ -27,7 +27,7 @@ function AssociationPanel(props: {assoPages: Array<PageAssoProps>}) {
           {
             (noAssociationFound) ?
               <p>
-                Aucune association correspond à vos critéres de recherche
+                Aucune association correspond à vos critères de recherche
               </p>
             :
             assoPages.filter((page: PageAssoProps) => page.page === actual_page)
@@ -52,7 +52,7 @@ function AssociationPanel(props: {assoPages: Array<PageAssoProps>}) {
           </div>
       {
         max_page > 1 && (
-          <div style={{display: 'flex', justifyContent: 'center', marginTop: '20px', width: '90%'}}>
+          <div className='pagination-style'>
             {
               Array.from(Array(max_page).keys()).map((index) => (
                 <div

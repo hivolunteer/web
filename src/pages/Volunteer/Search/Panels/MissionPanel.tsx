@@ -49,7 +49,7 @@ function MissionPanel(props: {missions: Array<PageMission>}) {
           </div>
           {
             max_page > 1 && (
-              <div style={{display: 'flex', justifyContent: 'center', marginTop: '20px'}}>
+              <div className="pagination-style">
                 {
                   Array.from(Array(max_page).keys()).map((index) => (
                     <div
