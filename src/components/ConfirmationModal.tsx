@@ -18,28 +18,28 @@ const ConfirmationModal = (prop : ConfirmationModalProps) => {
   const {handleClose, title, description, yes_choice, yes_function, no_choice} = prop;
   return (
     <>
-      <div className="darkBG" onClick={() => handleClose()} />
+      <div className="dark-bg" onClick={() => handleClose()} />
       <div className="centered">
         <div className="modal">
-          <div className="modalHeader">
+          <div className="modal-header">
             <h5 className="heading">{title}</h5>
           </div>
-          <button className="closeBtn" onClick={() => handleClose()}>
+          <button className="close-btn" onClick={() => handleClose()}>
             <RiCloseLine style={{ marginBottom: "-3px" }} />
           </button>
-          <div className="modalContent">
+          <div className="modal-content">
             {description}
           </div>
-          <div className="modalActions">
-            <div className="actionsContainer">
-              <button className={"deleteBtn"} onClick={() => {
+          <div className="modal-actions">
+            <div className="actions-container">
+              <button className={"delete-btn"} onClick={() => {
                   handleClose()
                   yes_function();
                 }}>
                 {yes_choice}
               </button>
               <button
-                className="cancelBtn"
+                className="cancel-btn"
                 onClick={() => handleClose()}
               >
                 {no_choice}

@@ -1,4 +1,4 @@
-.darkBG {
+.dark-bg {
     background-color: rgba(0, 0, 0, 0.2);
     width: 100vw;
     height: 100vh;
@@ -26,7 +26,7 @@
     box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.04);
   }
   
-  .modalHeader {
+  .modal-header {
     height: 50px;
     background: white;
     overflow: hidden;
@@ -43,27 +43,27 @@
     text-align: center;
   }
   
-  .modalContent {
+  .modal-content {
     padding: 10px;
     font-size: 14px;
     color: #2c3e50;
     text-align: center;
   }
   
-  .modalActions {
+  .modal-actions {
     position: absolute;
     bottom: 2px;
     margin-bottom: 10px;
     width: 100%;
   }
   
-  .actionsContainer {
+  .actions-container {
     display: flex;
     justify-content: space-around;
     align-items: center;
   }
   
-  .closeBtn {
+  .close-btn {
     cursor: pointer;
     font-weight: 500;
     padding: 4px 8px;
@@ -82,12 +82,12 @@
     margin-right: -7px;
   }
   
-  .closeBtn:hover {
+  .close-btn:hover {
     box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.04);
     transform: translate(-4px, 4px);
   }
   
-  .deleteBtn {
+  .delete-btn {
     margin-top: 10px;
     cursor: pointer;
     font-weight: 500;
@@ -100,13 +100,13 @@
     transition: all 0.25s ease;
   }
   
-  .deleteBtn:hover {
+  .delete-btn:hover {
     box-shadow: 0 10px 20px -10px rgba(255, 62, 78, 0.6);
     transform: translateY(-5px);
     background: #ff3e4e;
   }
   
-  .cancelBtn {
+  .cancel-btn {
     margin-top: 10px;
     cursor: pointer;
     font-weight: 500;
@@ -119,7 +119,7 @@
     transition: all 0.25s ease;
   }
   
-  .cancelBtn:hover {
+  .cancel-btn:hover {
     box-shadow: none;
     transform: none;
     background: whitesmoke;
