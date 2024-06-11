@@ -5,6 +5,8 @@ import './MissionDetails.scss';
 import MissionDetailsHeader from './MissionDetailsHeader';
 import SkillDisplay from './SkillDisplay';
 import { Button } from '@mui/material';
+import { Volunteer } from '../../Association/Missions/Manage/Interfaces';
+import FriendsModal from './FriendsModal';
 
 const MissionDetails = () => {
 
@@ -16,6 +18,16 @@ const MissionDetails = () => {
     const [association, setAssociation] = useState<Association | null>(null);
     const [mission_skills, setMissionSkills] = useState<Skill[]>([]);
     const [location, setLocation] = useState<string>("");
+    const [mission_status, setStatus] = useState<number>(0)
+
+    const [currentVolunteer, setCurrentVolunteer] = useState<number>(0);
+    const [friends, setFriends] = useState<Array<Volunteer>>([])
+
+    // modal Functions
+    const [open, setOpen] = useState<boolean>(false);
+    const handleClose = () => {
+        setOpen(false);
+    };
 
 
     function Register() {
@@ -123,6 +135,71 @@ const MissionDetails = () => {
             })
         }, [id, location_id]);
 
+        function getButtonText() {
+            switch (mission_status) {
+                case 0:
+                    return "En attente de validation"
+                case 1:
+                    return "Se désinscrire"
+                case 2:
+                    return "Mission refusée"
+                default:
+                    return "S'inscrire"
+            }
+        }
+
+
+        useEffect(() => {
+            fetch(`${config.apiUrl}/missions/association/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+                .then((data) => (data.json()))
+                .then((data) => {
+                    setCurrentVolunteer(data.number_volunteers)
+                })
+            
+            fetch(`${config.apiUrl}/missions/volunteer/status/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+                .then((response) => {
+                    if (response.status === 200) {
+                        response.json()
+                            .then((data) => {
+                                setStatus(data.status)
+                                if ((data.status === 0) || (data.status === 1))
+                                    setIsRegistered(true)
+                                else
+                                    setIsRegistered(false)
+                            })
+                    } else {
+                        setIsRegistered(false)
+                        setStatus(4)
+                    }
+
+                })
+            
+        }, [isRegistered])
+
+        useEffect(() => {
+            fetch(`${config.apiUrl}/missions/volunteer/friends/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+                .then(response => response.json())
+                .then((data) => setFriends(data))
+        })
+
     return (
         <div className='mission-details-container'>
             <MissionDetailsHeader mission={mission as Mission} association={association as Association} location={location} />
@@ -140,6 +217,33 @@ const MissionDetails = () => {
                 (mission_skills.length !== 0) ? <SkillDisplay skills={mission_skills} /> : null
             }
             <div className='mission-details-content-center'>
+                <h2> Amis Inscrits à la mission </h2>
+                <p style={{marginTop: '-10px', marginBottom: '20px'}}>
+                    Vous avez {friends.length} {(friends.length <= 1) ? 'ami inscrit' : 'amis inscrits'} à cette mission.
+
+                    {
+                        (friends.length === 0) ? 
+                        null 
+                        :
+                        <span
+                            onClick={() => {setOpen(true)}}
+                            style={{
+                                textDecoration: 'underline',
+                                cursor: 'pointer',
+                                marginLeft: '10px'
+                            }}
+                        > 
+                            Voir plus 
+                        </span>
+                    }
+                </p>
+                <FriendsModal
+                    friends={friends}
+                    open={open}
+                    onClose={handleClose}
+                />
+            </div>
+            <div className='mission-details-content-center'>
                 <Button 
                     variant='contained'
                     className='mission-details-button'
@@ -147,6 +251,7 @@ const MissionDetails = () => {
                         color: 'white',
                         borderRadius: '10px'
                     }}
+                    disabled={((mission?.max_volunteers === currentVolunteer) || (mission_status === 2))}
                     onClick={() => {
                         if (isRegistered) {
                             Unregister()
@@ -154,8 +259,10 @@ const MissionDetails = () => {
                             Register()
                         }
                     }}
-                > 
-                    {isRegistered ? "Se désinscrire" : "S'inscrire"}
+                >
+                    {
+                        getButtonText()
+                    }
                 </Button>
             </div>
         </div>

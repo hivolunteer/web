@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 import config from "../../../config";
 
 function SkillDisplay(props: { skills: Skill[] }) {
-
-    console.log(props.skills.length)
     const mission_skills = props.skills;
 
     const [skillsDisplay, setSkillsDisplay] = useState<Skill[]>([]);
@@ -29,7 +27,6 @@ function SkillDisplay(props: { skills: Skill[] }) {
                             }
                         })
                     })
-                    console.log(skills)
                     setSkillsDisplay(skills)
                 })
         }
