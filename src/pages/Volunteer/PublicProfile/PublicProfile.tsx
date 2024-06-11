@@ -29,6 +29,18 @@ interface ProfileData {
     friendship_status: number;
 }
 
+function formatTime(hours: number) {
+    const formattedHours = Math.floor(hours);
+    const formattedMinutes = Math.round((hours - formattedHours) * 60);
+    if (formattedHours === 0) {
+        return `${formattedMinutes} m`;
+    } else if (formattedMinutes === 0) {
+        return `${formattedHours} h`;
+    } else {
+        return `${formattedHours} h ${formattedMinutes} m`;
+    }
+}
+
 function PublicProfile() {
     const { volunteerId } = useParams();
     const [profileData, setProfileData] = useState<ProfileData | null>(null);
@@ -146,17 +158,18 @@ function PublicProfile() {
         })
         .catch(error => console.error('Error unblocking user:', error));
     }
+    const formattedVolunteeringTime = formatTime(profileData?.volunteering_time);
 
     return (
         <div className="public-profile-container">
             <div className="profile-card">
-                <div className="profile-image" style={{ backgroundImage: `url(${profileData.volunteer.profile_picture || 'https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg'})` }} />
+                <div className="profile-image" style={{ backgroundImage: `url(${profileData?.volunteer?.profile_picture || 'https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg'})` }} />
                 <CardContent>
                     <Typography variant="h5" component="div" className="profile-name">
-                        {profileData.volunteer.first_name} {profileData.volunteer.last_name}
+                        {profileData?.volunteer?.first_name} {profileData?.volunteer?.last_name}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        {profileData.volunteer.bio}
+                        {profileData?.volunteer?.bio}
                     </Typography>
                 </CardContent>
             </div>
@@ -205,23 +218,25 @@ function PublicProfile() {
                         <h2>Statistiques</h2>
                         <div className="stat-item">
                             <h3>Missions réalisées:</h3>
-                            <p>{profileData.missions_done ? profileData.missions_done : 0}</p>
+                            <p>{profileData?.missions_done ? profileData?.missions_done : 0}</p>
                         </div>
                         <div className="stat-item">
-                            <h3>Temps de bénévolat</h3>
-                            <p>{profileData.volunteering_time} hours</p>
+                            <h3>Temps de bénévolat:</h3>
+                            <p>{formattedVolunteeringTime}</p>
                         </div>
                         <div className="stat-item">
                             <h3>Top 5 compétences:</h3>
-                            <ul>
-                                {Object.entries(profileData.volunteer_competencies).map(([skill, count]) => (
+                                {(Object.entries(profileData?.volunteer_competencies).length !== 0) ?
+                                <ul>
+                                    {Object.entries(profileData?.volunteer_competencies).map(([skill, count]) => (
                                     <li key={skill}>{skill}: {count}</li>
-                                ))}
-                            </ul>
+                                    ))}
+                                </ul>
+                                : 0 }
                         </div>
                         <div className="stat-item">
-                            <h3>Bee Score:</h3>
-                            <p>{profileData.bee_score}</p>
+                            <h3>Note Bee:</h3>
+                            <p>{profileData?.bee_score}</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -230,19 +245,30 @@ function PublicProfile() {
                     <CardContent>
                         <h2>Amis</h2>
                         <div className="friend-list">
-                            {profileData.friends.map((friend: Friend) => (
-                                <Link to={`/volunteer/${friend.id}`} key={friend.id} className="friend-item">
+                        {profileData?.friends && profileData.friends.length > 0 ? (
+                            profileData?.friends.map((friend: Friend) => (
+                                <Link to={`/volunteer/${friend?.id}`} key={friend.id} className="friend-item">
                                     <CardMedia
                                         component="img"
                                         height="80"
-                                        image={friend.profile_picture || 'https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg'}
+                                        image={friend?.profile_picture || 'https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg'}
                                         alt="Friend's Profile Picture"
                                     />
                                     <Typography variant="body2" color="text.secondary" className="friend-name">
-                                        {friend.first_name} {friend.last_name}
+                                        {friend?.first_name} {friend?.last_name}
                                     </Typography>
                                 </Link>
-                            ))}
+                            ))
+                        ): (
+                            <div className="follow-button-container">
+                                <p>Vous n'avez aucun amis.</p>
+                                <Link to="/accueil">
+                                    <Button variant="contained" color="primary">
+                                        Découvrir les bénévoles
+                                    </Button>
+                                </Link>
+                            </div>
+                        )}
                         </div>
                     </CardContent>
                 </Card>
