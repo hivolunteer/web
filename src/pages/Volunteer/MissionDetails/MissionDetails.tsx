@@ -198,7 +198,7 @@ const MissionDetails = () => {
             })
                 .then(response => response.json())
                 .then((data) => setFriends(data))
-        })
+        }, [])
 
     return (
         <div className='mission-details-container'>
