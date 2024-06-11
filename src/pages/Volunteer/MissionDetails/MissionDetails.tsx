@@ -144,8 +144,8 @@ const MissionDetails = () => {
                 case 2:
                     return "Mission refusée"
                 default:
-                    return "S'inscrire"
-            }
+                    return `S'inscrire (${currentVolunteer} / ${mission?.max_volunteers})`
+            } 
         }
 
 
