@@ -10,7 +10,7 @@ import { Volunteer } from '../../Association/Missions/Manage/Interfaces';
 const CloseMissionDescription = () => {
 
     const [mission, setMission] = useState<Mission | null>(null);
-    const id: string = window.location.pathname.split("/")[2]
+    const id: string = window.location.pathname.split("/")[3]
     const [isRegistered, setIsRegistered] = useState<boolean | null>(null);
 
     const [location_id, setLocationId] = useState<string | null>("");
@@ -20,7 +20,7 @@ const CloseMissionDescription = () => {
 
 
     function Register() {
-        fetch(`${config.apiUrl}/missions/volunteer/add/${id}`, {
+        fetch(`${config.apiUrl}/missions/volunteer/add/close/${id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ const CloseMissionDescription = () => {
     }
 
     function Unregister() {
-        fetch(`${config.apiUrl}/missions/volunteer/remove/${id}`, {
+        fetch(`${config.apiUrl}/missions/volunteer/remove/close/${id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -48,20 +48,12 @@ const CloseMissionDescription = () => {
     }
 
     useEffect(() => {
-        fetch(`${config.apiUrl}/missions/volunteer/${id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        })
+        fetch(`${config.apiUrl}/missions/close/${id}`)
             .then(response => response.json())
             .then(data => {
-                console.log("volunteer 0", data)
-
-                setLocationId("1")
-                setMission(data.association_mission)
-                fetch(`${config.apiUrl}/volunteers/profile/4`, {
+                setLocationId(data.close_mission.location)
+                setMission(data.close_mission)
+                fetch(`${config.apiUrl}/volunteers/profile/${data.close_mission.owner_id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -70,7 +62,6 @@ const CloseMissionDescription = () => {
                 })
                     .then(response => response.json())
                     .then(data => {
-                        console.log("volunteer", data)
                         setVolunteer(data.association)
                     })
             })
@@ -121,6 +112,7 @@ const CloseMissionDescription = () => {
         })
             .then(response => response.json())
             .then((data: any) => {
+                console.log(data, "DATATATATATA")
                 if (data.active && data.active.length === 0)
                     setIsRegistered(false)
                 else if (data.active) {
