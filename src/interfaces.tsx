@@ -54,7 +54,8 @@ export interface Association {
   description: string,
   rating: number,
   profile_picture: string,
-  rna: string
+  rna: string,
+  is_premium: boolean
 }
 
 export interface VolunteerMission {
