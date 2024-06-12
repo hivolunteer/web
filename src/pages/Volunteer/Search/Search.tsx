@@ -10,7 +10,7 @@ import FilterModalAsso from "./Modal/FilterModalAsso";
 import { Mission, Association } from "../../../interfaces"
 import { Modal, ModalAsso } from "./Interfaces";
 import config from "../../../config";
-import TabPanel from "./Panels/TabPanel";
+import TabPanel from "../../../components/TabPanel";
 import MissionPanel from "./Panels/MissionPanel";
 import AssociationPanel from "./Panels/AssociationPanel";
 import VolunteerPanel from "./Panels/VolunteerPanel";
