@@ -1,3 +1,5 @@
+@import '../../../../assets/scss/_colors';
+
 .mission-details-header {
     position: relative;
     display: flex;
@@ -78,7 +80,21 @@
 .mission-details-content-center {
     margin-top: 2rem;
     display: flex;
-    flex-direction: line;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.row {
+    flex-direction: row;
+}
+
+.mission-rating {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 1rem;
+    width: 30%;
+    box-shadow: $box-shadow;
 }
