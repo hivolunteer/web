@@ -26,7 +26,8 @@ function MissionsPanel() {
                 if (response.status === 200) {
                     const data = await response.json();
                     new_mission = data.association_mission;
-                    new_missions.push(new_mission);
+                    if (new_mission.status === 1)
+                        new_missions.push(new_mission);
                 }
             } else {
                 const response = await fetch(`${config.apiUrl}/missions/close/${mission.id}`, {
@@ -39,7 +40,8 @@ function MissionsPanel() {
                 if (response.status === 200) {
                     const data = await response.json();
                     new_mission = data.close_mission;
-                    new_missions.push(new_mission);
+                    if (new_mission.status === 1)
+                        new_missions.push(new_mission);
                 }
             }
         }));
