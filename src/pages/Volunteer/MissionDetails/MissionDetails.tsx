@@ -128,7 +128,7 @@ const MissionDetails = () => {
         if (mission) {
             const cal = ical({
                 name: mission.title,
-                prodId: { company: 'Volontarius', product: 'Volontarius' },
+                prodId: { company: 'HiVolunteer', product: 'HiVolunteer' },
                 timezone: 'Europe/Paris'
             });
             cal.createEvent({
