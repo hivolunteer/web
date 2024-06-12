@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ical from 'ical-generator';
 import { Mission, Association, Skill } from '../../../interfaces';
 import config from "../../../config";
 import './MissionDetails.scss';
@@ -134,6 +135,40 @@ const MissionDetails = () => {
                 }
             })
         }, [id, location_id]);
+    
+    function createIcal() : string | null {
+        if (mission) {
+            const cal = ical({
+                name: mission.title,
+                prodId: { company: 'HiVolunteer', product: 'HiVolunteer' },
+                timezone: 'Europe/Paris'
+            });
+            cal.createEvent({
+                start: mission.start_date,
+                end: mission.end_date,
+                summary: mission.title,
+                description: "Description:\n" + mission.description + "\n\nInformations pratiques:\n" + mission.practical_information + "\n\n🔗 Lien: " + window.location.href,
+                location: location,
+                url: window.location.href
+            });
+            return cal.toString();
+        }
+        return null;
+    }
+
+    function handleDownloadIcal() {
+        const ical = createIcal();
+        if (ical) {
+            const blob = new Blob([ical], { type: 'text/calendar' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'mission.ics';
+            a.click();
+        }
+    }
+
+
 
         function getButtonText() {
             switch (mission_status) {
@@ -244,6 +279,18 @@ const MissionDetails = () => {
                 />
             </div>
             <div className='mission-details-content-center'>
+                <Button
+                    variant='contained'
+                    className='mission-details-button'
+                    sx={{
+                        color: 'white',
+                        borderRadius: '10px',
+                        margin: '10px'
+                    }}
+                    onClick={handleDownloadIcal}
+                >
+                    Télécharger la mission
+                </Button>
                 <Button 
                     variant='contained'
                     className='mission-details-button'

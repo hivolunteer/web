@@ -1,7 +1,12 @@
 @import '../../../../assets/scss/_colors';
 @import '../../../../assets/scss/_fonts';
 
-
+.public-profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  padding: 20px;
+}
 .container-div {
   display: flex;
   flex-direction: column;
@@ -16,12 +21,10 @@
 }
 
 .profile-photo {
-  width: 130px;
-  height: 130px;
+  width: 190px;
+  height: 190px;
   border-radius: 50%;
-  display: 'flex';
   border-radius: '50%';
-  margin: 30px;
 }
 
 .card-component {
@@ -46,7 +49,39 @@
   border: 1px dashed #E8E7E7;
   background: #FFF;
 }
+.background-card {
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+  margin-top: 10px;
 
+  .stats-card,
+  .friends-card {
+      width: calc(50% - 70px);
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+
+      h2 {
+          margin-bottom: 15px;
+      }
+
+      .stat-item {
+          margin-bottom: 10px;
+          h3 {
+              font-weight: bold;
+          }
+          ul {
+              margin-top: 5px;
+              li {
+                  list-style-type: none;
+              }
+          }
+          text-align: center;
+      }
+  }
+}
 .friend-image {
   display: inline-block;
   width: 6.25rem;

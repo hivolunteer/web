@@ -74,7 +74,7 @@ function LoginAssociation() {
         navigate("/");
         window.location.reload();
         break;
-      case 401:
+      case 400:
         setResponse({
           error: true,
           message: "Connexion échouée, veuillez vérifier vos identifiants",

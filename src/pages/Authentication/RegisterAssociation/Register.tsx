@@ -6,8 +6,12 @@ import { AuthenticationService } from '../../../services/authentication.service'
 import './Register.scss';
 import titleLogo from "../../../images/logo/primary_logo.png";
 import checkStrengthPassword from '../../../functions/checkStrengthPassword';
+import AutohideSnackbar from "../../../components/SnackBar";
 
 function RegisterAssociation() {
+    const [response, setResponse] = useState<{ error: Boolean; message: string }>(
+        { error: false, message: "" }
+    );
     /***
      * Define all states
     ***/
@@ -113,17 +117,26 @@ function RegisterAssociation() {
     const responseExecute = (response_status: number) => {
         switch (response_status) {
           case 201:
-            alert("Inscription réussie");
-            localStorage.setItem("role", "association");
-            navigate("/");
-            window.location.reload();
-            break;
-          case 401:
-            alert("Connexion échouée");
-            break;
+              setResponse({
+                  error: false,
+                  message: "Inscription réussie",
+              });
+              localStorage.setItem("role", "association");
+              navigate("/");
+              window.location.reload();
+              break;
+          case 400:
+              setResponse({
+                  error: true,
+                  message: "Inscription échouée, veuillez vérifier que tous les champs sont rempli",
+              });
+              break;
           default:
-            alert("Erreur inconnue");
-            break;
+              setResponse({
+                  error: true,
+                  message: "Erreur inconnue, veuillez réessayer plus tard",
+              });
+              break;
         }
       };
   
@@ -351,6 +364,13 @@ function RegisterAssociation() {
                                 )}
                             </Grid>
                         </Grid>
+                        {response.message !== "" && (
+                            <AutohideSnackbar
+                                message={response.message}
+                                open={true}
+                                response={response.error}
+                            />
+                        )}
                         <Button
                             type="submit"
                             fullWidth

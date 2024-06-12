@@ -1,0 +1,123 @@
+@import '../../../../assets/scss/_colors';
+@import '../../../../assets/scss/_fonts';
+
+.mission-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+
+    &:hover {
+        transform: scale(1.02);
+    }
+
+    .mission-image {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 10px;
+    }
+
+    .mission-details {
+        flex: 1;
+    }
+
+    .mission-title {
+        font-size: 1rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+        text-align: left;
+    }
+
+    .mission-date {
+        font-size: 0.9rem;
+        color: #666;
+        text-align: left;
+        margin-left: 10px;
+    }
+}
+
+.public-profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+
+    .profile-card {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        border-radius: 10px;
+        padding: 20px;
+
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin-right: 20px;
+            object-fit: cover;
+        }
+
+        .profile-details {
+            flex: 1;
+            text-align: left;
+        }
+
+        .profile-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+        }
+    
+        .profile-description {
+            font-size: 1rem;
+            color: #666;
+        }
+    }
+
+    .background-card {
+        display: flex;
+        justify-content: space-between;
+        width: 80%;
+        margin-top: 10px;
+
+        .stats-card,
+        .missions-card {
+            width: calc(50% - 70px);
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+
+            h2 {
+                margin-bottom: 15px;
+            }
+
+            .stat-item {
+                margin-bottom: 10px;
+                display: flex;
+                justify-content: space-between;
+
+                h3 {
+                    font-weight: bold;
+                }
+
+                ul {
+                    margin-top: 5px;
+
+                    li {
+                        list-style-type: none;
+                    }
+                }
+            }
+        }
+
+        .missions-card {
+            overflow-y: auto;
+        }
+    }
+}

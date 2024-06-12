@@ -4,7 +4,6 @@ import Grid from "@mui/system/Unstable_Grid";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import config from "../../../../config";
 import './ManageMissionInformation.scss';
-import { is } from "date-fns/locale";
 
 interface Mission {
   id: number,
@@ -53,6 +52,8 @@ type ManageMissionInformationProps = {
   mission_id: string | undefined,
   setMissionStatus: any,
   MissionStatus: number,
+  setMissionEndDate: any,
+  MissionEndDate: Date,
   isAssociation: boolean
 }
 
@@ -63,6 +64,7 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
 
   const mission_id = props.mission_id;
   const SetMissionStatus = props.setMissionStatus;
+  const SetMissionEndDate = props.setMissionEndDate;
   const isAssociation = props.isAssociation;
 
   function formatDate(date: string) {
@@ -89,6 +91,7 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
                 const mission = (isAssociation ? data.association_mission : data.close_mission)
                 setMission(mission);
                 SetMissionStatus(mission.status);
+								SetMissionEndDate(mission.end_date);
                 setMissionPicture(mission.picture);
                 fetch(`${config.apiUrl}/locations/${mission.location}`, {
                     method: 'GET',
@@ -116,7 +119,6 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
                         .then((blob) => {
                           const objectUrl = URL.createObjectURL(blob);
                           setMissionPicture(objectUrl);
-                          console.log(objectUrl);
                         })
                     .catch((error) => {
                       console.error(error);

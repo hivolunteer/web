@@ -11,9 +11,17 @@ const FilterModal = (props: {modalProps: ModalAsso}) => {
 
     const [preferences, setPreferences] = useState<boolean[]>([false, false]);
 
-    const [value, setValue] = React.useState<number | null>(1);
+    const [value, setValue] = React.useState<number | null>(null);
 
     // valider Modal
+
+    function isDefaultValue() : boolean {
+        if (preferences[0] || preferences[1])
+            return false
+        if (value !== null)
+            return false
+        return true;
+    }
 
     const ValidateSearch = async () => {
         const token = localStorage.getItem("token");
@@ -34,6 +42,7 @@ const FilterModal = (props: {modalProps: ModalAsso}) => {
             if (response.status === 200) {
                 response.json().then((data) => {
                     modalProps.setFilteredAssociations(data)
+                    modalProps.setSearchAssociation(!isDefaultValue())
                     modalProps.handleClose()
                 })
             }
@@ -42,8 +51,8 @@ const FilterModal = (props: {modalProps: ModalAsso}) => {
 
     const setValuesToDefault = () => {
         setPreferences([false, false]);
+        modalProps.setSearchAssociation(false)
         setValue(1);
-        window.location.reload();
     }
 
   return (

@@ -16,6 +16,7 @@ import "moment/locale/de";
 import config from "../../../config";
 import LocationModal from "../../Association/Missions/Modal/LocationModal";
 import noImage from "../../../images/lottie/noImage.json";
+import {Alert} from "@mui/material";
 
 interface MissionCreationData {
   missionName?: string;
@@ -58,6 +59,7 @@ export default function MissionCreation() {
   const [form, setForm] = React.useState<MissionCreationData>();
   const [newSkill, setNewSkill] = useState<Array<number>>([]);
   const [skillDb, setSkillDb] = useState<Array<SkillDatabase>>([]);
+  const [alertContent, setAlertContent] = useState<{ error: boolean, message: string, id: number }>({ error: false, message: "", id: 0 });
 
   // preparation for adress modal
   const [open, setOpen] = React.useState<boolean>(false);
@@ -96,54 +98,93 @@ export default function MissionCreation() {
     })
   }, []);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAlertContent({ error: false, message: '', id: 0 });
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [alertContent]);
+
   // handle creation of new mission
   const createNewMission = () => {
-    const token = localStorage.getItem("token");
-    const body = {
-      owner_id: Math.floor(Math.random() * 600) + 1,
-      max_volunteers: form?.missionVolunteersNumber,
-      description: form?.missionDescription,
-      practical_information: form?.missionPracticalInformation,
-      location: locationId,
-      start_date: form?.missionDate,
-      end_date: form?.missionEndDate,
-      title: form?.missionName,
-      skills: newSkill,
-      theme_id: undefined,
-      picture: image,
-    };
-    console.log(body);
-    fetch(`${config.apiUrl}/missions/close/create`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token, // localStorage.getItem("token")
-      },
-      body: JSON.stringify(body),
-    })
-      .then((response) => {
-        if (response.status === 201) {
-          alert("Mission créée");
-          window.location.href = "/";
-          return response.body;
-        }
-      })
-      .then(
-        (data) => {
-          data
-            ?.getReader()
-            .read()
-            .then(({ done, value }) => {
-              if (done) {
-                alert("Mission créée");
-                return;
-              }
-            });
+    if (form?.missionName === undefined || form?.missionName?.length === 0) {
+      let msg = "Le champ du titre de la mission est obligatoire"
+    
+      setAlertContent({ error: true, message: msg, id: 0 });
+      return;
+    }
+    if (form?.missionDescription === undefined || form?.missionDescription?.length === 0) {
+      let msg = "Le champ de description est obligatoire"
+    
+      setAlertContent({ error: true, message: msg, id: 0 });
+      return;
+    }
+    if (form?.missionVolunteersNumber === undefined || form?.missionVolunteersNumber === 0) {
+      let msg = "Le nombre de volontaires ne peut pas être 0"
+    
+      setAlertContent({ error: true, message: msg, id: 0 });
+      return;
+    }
+    if (form?.missionDate === undefined) {
+      let msg = "La mission doit avoir une date de début"
+    
+      setAlertContent({ error: true, message: msg, id: 0 });
+      return;
+    }
+    if (form?.missionEndDate === undefined) {
+      let msg = "La mission doit avoir une date de fin"
+    
+      setAlertContent({ error: true, message: msg, id: 0 });
+      return;
+    }
+    if (form.missionAddress === undefined && locationId === null) {
+      let msg = "La mission doit avoir une adresse"
+    
+      setAlertContent({ error: true, message: msg, id: 0 });
+      return;
+    }
+    try {
+      const token = localStorage.getItem("token");
+      const body = {
+        owner_id: Math.floor(Math.random() * 600) + 1,
+        max_volunteers: form?.missionVolunteersNumber,
+        description: form?.missionDescription,
+        practical_information: form?.missionPracticalInformation,
+        location: locationId,
+        start_date: form?.missionDate,
+        end_date: form?.missionEndDate,
+        title: form?.missionName,
+        skills: newSkill,
+        theme_id: undefined,
+        picture: image,
+      };
+      console.log(body);
+      fetch(`${config.apiUrl}/missions/close/create`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token, 
         },
-        (error) => {
-          alert("Erreur lors de la création de la mission");
-        }
-      );
+        body: JSON.stringify(body),
+      })
+        .then((response) => {
+          if (response.status === 201) {
+            setAlertContent({ error: false, message: "Mission créée", id: 0 }); 
+            window.location.href = "/";
+            return response.body;
+          }
+          if (response.status === 404 || response.status === 500) {
+            if (response.body) {
+              console.log(response.body);
+              setAlertContent({ error: true, message: "Veuillez réessayer (vérifier la localisation de votre mission)", id: 0 });
+              return;
+            }
+          }
+        })
+    } catch (e) {
+      console.log("Erreur Critque : ", e);
+      setAlertContent({ error: true, message: "Erreur Serveur", id: 0 });
+    }
   };
 
   return (
@@ -225,7 +266,14 @@ export default function MissionCreation() {
             </div>
           </label>
         </Box>
-
+        {alertContent.message &&
+              <div className="blocked-user-alert">
+                <Alert severity={alertContent.error ? "error" : "success"}
+                >
+                  {alertContent.message}
+                </Alert>
+              </div>
+            }
         <Box component="form">
           <Grid container spacing={3}  >
             <Grid item xs={6} lg={6}>
