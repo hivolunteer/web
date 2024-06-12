@@ -48,6 +48,9 @@ function Settings() {
     return (
         <div className={handleClickColorBlind()}>
             <h1> Réglages </h1>
+            <button className={"color-blind-button"} onClick = {() => history("/settings/referents")}>
+                Référents
+            </button>
             <button className={"color-blind-button"} onClick={openPopup}>
                 Mode daltonien
             </button>
