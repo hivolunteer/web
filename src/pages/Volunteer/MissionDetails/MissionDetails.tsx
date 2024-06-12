@@ -7,7 +7,8 @@ import MissionDetailsHeader from './MissionDetailsHeader';
 import SkillDisplay from './SkillDisplay';
 import { Button } from '@mui/material';
 import { Volunteer } from '../../Association/Missions/Manage/Interfaces';
-import FriendsModal from './FriendsModal';
+import FriendsModal from './Modal/FriendsModal';
+import AssociationCommentary from './AssociationCommentary';
 
 const MissionDetails = () => {
 
@@ -278,40 +279,45 @@ const MissionDetails = () => {
                     onClose={handleClose}
                 />
             </div>
-            <div className='mission-details-content-center'>
-                <Button
-                    variant='contained'
-                    className='mission-details-button'
-                    sx={{
-                        color: 'white',
-                        borderRadius: '10px',
-                        margin: '10px'
-                    }}
-                    onClick={handleDownloadIcal}
-                >
-                    Télécharger la mission
-                </Button>
-                <Button 
-                    variant='contained'
-                    className='mission-details-button'
-                    sx={{
-                        color: 'white',
-                        borderRadius: '10px'
-                    }}
-                    disabled={((mission?.max_volunteers === currentVolunteer) || (mission_status === 2))}
-                    onClick={() => {
-                        if (isRegistered) {
-                            Unregister()
-                        } else {
-                            Register()
+            {
+                (mission_status === 3) ?
+                <AssociationCommentary id={id} />
+                :
+                <div className='mission-details-content-center row'>
+                    <Button
+                        variant='contained'
+                        className='mission-details-button'
+                        sx={{
+                            color: 'white',
+                            borderRadius: '10px',
+                            margin: '10px'
+                        }}
+                        onClick={handleDownloadIcal}
+                    >
+                        Télécharger la mission
+                    </Button>
+                    <Button 
+                        variant='contained'
+                        className='mission-details-button'
+                        sx={{
+                            color: 'white',
+                            borderRadius: '10px'
+                        }}
+                        disabled={((mission?.max_volunteers === currentVolunteer) || (mission_status === 2))}
+                        onClick={() => {
+                            if (isRegistered) {
+                                Unregister()
+                            } else {
+                                Register()
+                            }
+                        }}
+                    >
+                        {
+                            getButtonText()
                         }
-                    }}
-                >
-                    {
-                        getButtonText()
-                    }
-                </Button>
-            </div>
+                    </Button>
+                </div>
+            }
         </div>
     )
 };
