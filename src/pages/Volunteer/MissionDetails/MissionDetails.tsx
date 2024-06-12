@@ -74,6 +74,7 @@ const MissionDetails = () => {
                 })
                     .then(response => response.json())
                     .then(data => {
+                        console.log("asso", data)
                         setAssociation(data.association)
                     })
             })
@@ -94,6 +95,7 @@ const MissionDetails = () => {
                 }
             })
 
+            console.log(mission)
         if (mission?.location) {
             fetch(`${config.apiUrl}/locations/${mission?.location}`, {
                 method: 'GET',
