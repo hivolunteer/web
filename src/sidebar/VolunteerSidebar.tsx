@@ -47,7 +47,7 @@ export default function VolunteerSidebar() {
         if (response.status === 200) {
           response.json().then((body: any[]) => {
             setPages([...pages, "Missions Assignées"]);
-            pagesLink["Missions Assignées"] = "settings/referents";
+            pagesLink["Missions Assignées"] = "referent/missions";
           });
         }
       });
