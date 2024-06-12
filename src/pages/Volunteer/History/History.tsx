@@ -1,7 +1,7 @@
 import {useState} from "react";
 import { Tab, Tabs } from '@mui/material'
 import './History.scss'
-import TabPanel from "../Search/Panels/TabPanel";
+import TabPanel from "../../../components/TabPanel";
 import PassedMissionPanel from "./Panel/PassedMissionPanel";
 import ActiveMissionPanel from "./Panel/ActiveMissionPanel";
 

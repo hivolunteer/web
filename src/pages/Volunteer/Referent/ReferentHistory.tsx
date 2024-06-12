@@ -1,6 +1,6 @@
 import React from 'react';
 import ReferentHistoryList from './ReferentHistoryList';
-import TabPanel from "../Search/Panels/TabPanel";
+import TabPanel from "../../../components/TabPanel";
 import { Tab, Tabs } from '@mui/material';
 import './ReferentHistory.scss'
 
