@@ -112,7 +112,6 @@ const CloseMissionDescription = () => {
         })
             .then(response => response.json())
             .then((data: any) => {
-                console.log(data, "DATATATATATA")
                 if (data.active && data.active.length === 0)
                     setIsRegistered(false)
                 else if (data.active) {
@@ -145,6 +144,7 @@ const CloseMissionDescription = () => {
                 <Button 
                     variant='contained'
                     className='mission-details-button'
+                    style={{ backgroundColor: isRegistered ? 'red' : 'green', fontSize: '16px', fontWeight: 'bold', marginTop: '5%'}}
                     sx={{
                         color: 'white',
                         borderRadius: '10px'

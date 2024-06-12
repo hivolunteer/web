@@ -14,10 +14,11 @@ const MissionDetailsHeader = (props: { mission: Mission, volunteer: Volunteer, l
             style={{
                 backgroundImage: `url(${(mission?.picture)? mission?.picture : volunteer?.profile_picture})`,
                 backgroundSize: 'cover',
+                marginTop: '2%',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
                 position: 'relative',
-                color: 'white'
+                color: 'white',
             }}>
             <div style={{
                 position: 'absolute',
