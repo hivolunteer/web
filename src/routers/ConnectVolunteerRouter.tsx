@@ -8,16 +8,17 @@ import MissionDetails from "../pages/Volunteer/MissionDetails/MissionDetails";
 import Settings from "../pages/Volunteer/Settings/Settings";
 import BlockedUsersList from "../components/BlockedUsersList";
 import ChangePassword from "../pages/Volunteer/Settings/ModifyPassword";
-import PublicProfile from "../pages/Volunteer/PublicProfile/PublicProfile";
+import PublicProfile from "../pages/Volunteer/PublicProfiles/PublicProfile";
 
 import MissionCreation from "../pages/Volunteer/Missions/MissionCreation";
 import EditMission from "../pages/Volunteer/Missions/MissionModify";
 
 import AssociationReferent from "../pages/Volunteer/Settings/Referents/AssociationReferent";
-import AssociationProfile from "../pages/Volunteer/Association/Profile/AssociationProfile";
+import AssociationProfile from "../pages/Volunteer/PublicProfiles/AssociationProfile";
 import ManageMission from "../pages/Volunteer/ManageMission/ManageMission";
 import ProfileInformationModal from "../pages/Volunteer/Settings/ProfileInformation";
 import CloseMissionDescription from "../pages/Volunteer/CloseMissionDescription/CloseMissionDescription";
+import ReferentHistory from "../pages/Volunteer/Referent/ReferentHistory";
 
 function ConnectVolunteerRouter() {
     return (
@@ -28,12 +29,13 @@ function ConnectVolunteerRouter() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/profile/blocked" element={<BlockedUsersList />} />
             <Route path="/accueil" element={<Search />} />
-            <Route path="/association/:associationID" element={<AssociationProfile />} />
+            <Route path="/association/:associationId" element={<AssociationProfile />} />
             <Route path="/mission/:missionID" element={<MissionDetails />} />
             <Route path="/mission/close/:missionID" element={<CloseMissionDescription />} />
             <Route path="/mission/create" element={<MissionCreation/>} />
             <Route path="/:missionID/edit" element={<EditMission/>} />
             <Route path="/volunteer/:volunteerId" element={<PublicProfile/>} />
+            <Route path="/referent/missions" element={<ReferentHistory />} />
             <Route path={"/settings"} element={<Settings />} />
             <Route path="/settings/modify_password" element={<ChangePassword />} />
             <Route path="/settings/referents" element={<AssociationReferent />} />

@@ -125,19 +125,18 @@
     justify-content: center;
 }
 
-.missions-container-search {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    flex-direction: column;
-    justify-content: 'center';
-    width: '95%'
-}
-
 .mission-card {
     margin: 1% 2.5%;
     width: 35%;
 }
+
+.mission-status {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}  
 
 
 /* For Tablets and Mini-PCs */
@@ -195,9 +194,9 @@
     }
 }
 
-.pagination-style {
-    display: flex;
-    justify-content: center;
-    margin-top: '20px'; 
-    width: '90%'
-}
+.no-missions-message {
+    margin-top: 20px;
+    text-align: center;
+    color: #666;
+  }
+  

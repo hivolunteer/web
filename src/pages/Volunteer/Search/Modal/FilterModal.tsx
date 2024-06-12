@@ -58,7 +58,23 @@ const FilterModal = (props: {modalProps: Modal}) => {
         return totalMinutes;
     }
 
-    const ValidateSearch = async () => {
+    function checkDefaultValue() {
+        if (preferences[0] !== false || preferences[1] !== false)
+            return false;
+        if (searchSkills.length !== 0)
+            return false;
+        if (dates[0] !== null || dates[1] !== null)
+            return false;
+        if (noskills)
+            return false;
+        if (allowMinors)
+            return false
+        if (duration !== null)
+            return false;
+        return true
+    }
+
+    const ValidateSearch = async (search: boolean) => {
         const token = localStorage.getItem("token");
         let minutes = (duration === null) ? null : transformDurationMinutes(duration as Date); 
         let body = {
@@ -71,6 +87,8 @@ const FilterModal = (props: {modalProps: Modal}) => {
             allow_minors: allowMinors,
             duration: minutes
         }
+        if (checkDefaultValue())
+            search = false
         fetch(`${config.apiUrl}/search/missions`, {
             method: 'POST',
             headers: {
@@ -79,10 +97,10 @@ const FilterModal = (props: {modalProps: Modal}) => {
             },
             body: JSON.stringify(body)
         }).then((response) => {
-            console.log(response)
             if (response.status === 200) {
                 response.json().then((data) => {
                     modalProps.setFilteredMissions(data)
+                    modalProps.setSearchMission(search)
                     modalProps.handleClose()
                 })
             }
@@ -92,7 +110,6 @@ const FilterModal = (props: {modalProps: Modal}) => {
     /***** QUERY PARAMS FROM HOME PAGE *****/
     window.onload = function () {
         const urlParams = new URLSearchParams(window.location.search);
-        console.log(urlParams)
         const friendsmission = urlParams.get("friendsmission");
         const missionsassociationfollowed = urlParams.get("missionsassociationfollowed");
         const query = urlParams.get("query");
@@ -101,7 +118,7 @@ const FilterModal = (props: {modalProps: Modal}) => {
         }
         setValuesToDefault();
         setPreferences([missionsassociationfollowed ? true : false, friendsmission ? true : false]);
-        ValidateSearch();
+        ValidateSearch(true);
     };
 
   return (
@@ -235,7 +252,7 @@ const FilterModal = (props: {modalProps: Modal}) => {
                 {/* Footer */}
                 <div className='modal-bottom'>
                     <Button 
-                        onClick={() => { setValuesToDefault(); ValidateSearch(); }}
+                        onClick={() => { setValuesToDefault(); ValidateSearch(false); }}
                         variant='contained'
                         sx={{
                             background: 'rgba(45, 42, 50, 0.50)',
@@ -254,7 +271,7 @@ const FilterModal = (props: {modalProps: Modal}) => {
                     </Button>
                     <Button
                         onClick={() => {
-                            ValidateSearch()
+                            ValidateSearch(true)
                         }}
                         sx={{
                             margin: '0 5%',
