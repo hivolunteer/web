@@ -67,7 +67,7 @@ export default function AssociationCard(props: {association_id: number}) {
                     </CardContent>
                     <CardContent>
                         <Typography variant="body2" color="text.secondary" sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', cursor: 'pointer', textDecoration: 'underline'}}
-                        onClick={() => console.log('association ', association?.id)}>
+                        onClick={() => (window.location.href = 'association/' + association?.id)}>
                             Voir plus
                         </Typography>
                     </CardContent>
