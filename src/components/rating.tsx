@@ -19,19 +19,19 @@ function getLabelText(value: number) {
     return `${value} Star${value !== 1 ? 's' : ''}, ${labels[value]}`;
 }
 
-
 interface HoverRatingProps {
+    value: number;
     onInfoChange: (newValue: number) => any;
 }
 
-export default function HoverRating({onInfoChange}: HoverRatingProps) {
-    const [value, setValue] = React.useState<number | null>(5);
+export default function HoverRating({ value, onInfoChange }: HoverRatingProps) {
     const [hover, setHover] = React.useState(-1);
 
-    const handleChange = (event: any) => {
-        setValue(Number(event.target.value));
-        onInfoChange(Number(event.target.value))
-    }
+    const handleChange = (event: React.ChangeEvent<{}>, newValue: number | null) => {
+        if (newValue !== null) {
+            onInfoChange(newValue);
+        }
+    };
 
     return (
         <div
@@ -50,10 +50,10 @@ export default function HoverRating({onInfoChange}: HoverRatingProps) {
                 onChangeActive={(event, newHover) => {
                     setHover(newHover);
                 }}
-                emptyIcon={<StarIcon style={{opacity: 0.55}} fontSize="inherit"/>}
+                emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
             />
             {value !== null && (
-                <p style={{ margin: 'auto 2.5%'}} >{labels[hover !== -1 ? hover : value]}</p>
+                <p style={{ margin: 'auto 2.5%' }}>{labels[hover !== -1 ? hover : value]}</p>
             )}
         </div>
     );

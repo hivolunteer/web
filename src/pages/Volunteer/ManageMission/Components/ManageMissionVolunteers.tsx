@@ -32,12 +32,14 @@ function VolunteerCard(props: VolunteerCardProps) {
 
 type ManageMissionVolunteersProps = {
     mission_id: string | undefined,
+    MissionEndDate: Date,
 }
 
 function ManageMissionVolunteers(props: ManageMissionVolunteersProps) {
     const [ListVolunteers, setListVolunteers] = useState<Volunteer[]>([]);
 
     const mission_id = props.mission_id;
+    const MissionEndDate = props.MissionEndDate;
 
   useEffect(() => {
         fetch(`${config.apiUrl}/missions/close/volunteers/${mission_id}`, {

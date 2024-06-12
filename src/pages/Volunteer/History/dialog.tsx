@@ -76,6 +76,7 @@ export default function SimpleDialog(props: SimpleDialogProps) {
                 </p>
                 <div style={{display: 'flex', justifyContent: "center"}}>
                     <HoverRating
+                        value={rating}
                         onInfoChange={handleInfoChange} />
                 </div>
                 <p>
