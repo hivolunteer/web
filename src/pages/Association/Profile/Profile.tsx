@@ -5,6 +5,7 @@ import {useEffect, useState} from "react";
 import config from "../../../config";
 import "./Profile.scss";
 import { useNavigate } from "react-router-dom";
+import { Mission } from "../../../interfaces";
 
 import EditPasswordModal from "./EditPasswordModal";
 
@@ -16,6 +17,12 @@ type newProfile = {
   profile_picture: string;
 };
 
+interface getMission  {
+  draft: Mission[],
+  active: Mission[],
+  passed: Mission[],
+}
+
 export default function ProfilePage(props: any) {
 
     const [name, setName] = useState<string>("");
@@ -23,6 +30,11 @@ export default function ProfilePage(props: any) {
     const [email, setEmail] = useState<string>("");
     const [phone, setPhone] = useState<string>("");
     const [profilePicture, setProfilePicture] = useState<string>("");
+    const [bee, setBee] = useState<Float32Array>();
+    const [rating, setRating] = useState<number>(0);
+    const [hours, setHours] = useState<number>(0);
+    const [totalMission, setTotalMission] = useState<number>(0);
+    const [followers, setFollowers] = useState<number>(0);
     const image =
         "https://urgo.fr/wp-content/uploads/2022/03/Logo-Reforestaction.png";
         
@@ -33,6 +45,33 @@ export default function ProfilePage(props: any) {
   const closeDialog = () => {
     setOpenDialog(false);
   };
+
+  const getTotalVolunteers = () => {
+
+  }
+
+  const getTotalMissions = async () => {
+    await fetch(`${config.apiUrl}/missions/association/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+
+      },
+    }).then((response) => {
+      if (response.status === 200) {
+        response.json().then((data: getMission) => {
+          setTotalMission(data.active.length + data.passed.length);
+        })
+      } else {
+        console.log("Error fetching Total Missions");
+        console.log(response)
+      }
+    }).catch((error) => {
+      console.log(error);
+    })
+
+  }
 
     useEffect(() => {
         const getProfile = async () => {
@@ -52,6 +91,10 @@ export default function ProfilePage(props: any) {
                             setEmail(data.association.email);
                             setPhone(data.association.phone);
                             setProfilePicture(data.association.profile_picture);
+                            setBee(data.association.bee);
+                            setRating(data.association.rating);
+                            setHours(data.association.nb_hours);
+                            setFollowers(data.nb_followers);
                         });
                     } else {
                         console.log("Error fetching profile");
@@ -64,6 +107,7 @@ export default function ProfilePage(props: any) {
         };
 
         getProfile();
+        getTotalMissions();
     }, []);
 
 
@@ -109,6 +153,8 @@ export default function ProfilePage(props: any) {
     }
   };
 
+  
+
   const updateProfile = () => {
     if (!validateEmail(email)) {
       console.error("Invalid email");
@@ -143,19 +189,22 @@ export default function ProfilePage(props: any) {
       });
   };
     return (
-        <>
-            <div style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-start",
-                alignSelf: "self-start",
-                textAlign: "center",
-                padding: "20px",
-            }}>
-                <img src={image} alt="Logo de profil"/>
-                <h1>Association: {name}</h1>
-            </div>
-            <div className="profile-asso-container-div">
+      <>
+        <div style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          //justifyContent: "flex-start",
+          //alignSelf: "self-start",
+          textAlign: "center",
+          padding: "10px",
+        }}>
+          <img src={image} alt="Logo de profil" />
+          <h1>Association: {name} </h1>
+          <h2 className="header-rating"> {rating} / 5 </h2>
+        </div>
+
+        <div className="profile-asso-container-div">
 
           <h2>
             Bénévoles
@@ -171,7 +220,7 @@ export default function ProfilePage(props: any) {
             }}>
               <Card className={"card-component"}>
                 <h4>
-                  0 bénévoles actuels
+                  {followers} bénévoles actuels
                 </h4>
                 <h4>
                   Vous n'avez actuellement aucun bénévole
@@ -184,6 +233,36 @@ export default function ProfilePage(props: any) {
                 <h4>
                   Vous n'avez actuellement aucun bénévole en attente de confirmation
                 </h4>
+              </Card>
+            </Grid>
+          </Grid>
+          <h2>
+            Historique
+          </h2>
+          <Grid container alignItems="stretch" style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: "space-between",
+          }}>
+            <Grid item style={{
+              display: 'flex',
+              marginBottom: "30px",
+            }}>
+              <Card className={"card-component"}>
+                <h4>
+                  {totalMission} Missions publiées
+                </h4>
+                {/*<h4>
+                  Vous n'avez actuellement aucun bénévole
+                </h4>*/}
+              </Card>
+              <Card className={"card-component"}>
+                <h4>
+                  {hours} {hours < 2 ? "heure confirmée" : "heures confirmées"}
+                </h4>
+                {/*<h4>
+                  Vous n'avez actuellement aucun bénévole en attente de confirmation
+                </h4>*/}
               </Card>
             </Grid>
           </Grid>
@@ -207,7 +286,7 @@ export default function ProfilePage(props: any) {
             textAlign: "center",
             padding: "20px",
           }}>
-           <label>E-mail:</label>
+            <label>E-mail:</label>
             <h4>
               {email}
             </h4>
@@ -229,6 +308,6 @@ export default function ProfilePage(props: any) {
           </button>
           <EditPasswordModal modalProps={{ open: openDialog, onClose: closeDialog }} />
         </div>
-        </>
+      </>
   );
 }
