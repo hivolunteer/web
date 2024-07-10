@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Alert, Snackbar, Box, Button, Grid, IconButton, InputAdornment, Link, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Grid, IconButton, InputAdornment, Link, TextField, Typography } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { AuthenticationService } from "../../../services/authentication.service";
 import "./Login.scss";
@@ -65,7 +65,7 @@ function LoginCompany() {
   /* Function to execute response */
   const responseExecute = (response_status: number) => {
     switch (response_status) {
-      case 200:
+      case 201:
         setResponse({
           error: false,
           message: "Connexion réussie",
