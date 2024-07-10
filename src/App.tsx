@@ -17,6 +17,8 @@ import { useEffect } from "react";
 import Home from "./pages/NonConnected/Home/Home";
 import VolunteerSidebar from "./sidebar/VolunteerSidebar";
 import AssociationSidebar from "./sidebar/AssociationSidebar";
+import CompanyRouter from "./routers/NoConnectCompanyRouter";
+import CompanyRouterConnected from "./routers/ConnectCompanyRouter";
 
 function NoConnectRouter() {
   return (
@@ -26,6 +28,7 @@ function NoConnectRouter() {
         <Route path="/auth" element={<UserTypeChoice />} />
         <Route path="/volunteers/*" element={<VolunteerRouter />} />
         <Route path="/associations/*" element={<AssociationRouter />} />
+        <Route path="/companies/*" element={<CompanyRouter />} />
         <Route path="*" element={<Home />} />
       </Routes>
     </Router>
@@ -37,11 +40,13 @@ function ConnectRouter() {
     <Router>
       {localStorage.getItem("role") === "volunteer" ? <VolunteerSidebar /> : <AssociationSidebar />}
       <Routes>
-        {localStorage.getItem("role") === "volunteer" ? (
-          <Route path="/*" element={<VolunteerRouterConnected />} />
-        ) : (
-          <Route path="/*" element={<AssociationRouterConnected />} />
-        )}
+      {localStorage.getItem("role") === "volunteer" ? (
+  <Route path="/*" element={<VolunteerRouterConnected />} />
+) : localStorage.getItem("role") === "company" ? (
+  <Route path="/*" element={<CompanyRouterConnected />} />
+) : (
+  <Route path="/*" element={<AssociationRouterConnected />} />
+)}
       </Routes>
     </Router>
   );
