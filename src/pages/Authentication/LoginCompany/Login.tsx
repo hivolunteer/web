@@ -25,21 +25,18 @@ function LoginCompany() {
   const [password, setPassword] = useState(true);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const [fodder, setFodder] = useState(true);
 
-    /* Function to check if all inputs are complete */
-    const checkComplete = (data: FormData) => {
-        if (data.get('email') === '') {
-            setEmail(false);
-        } else {
-            setEmail(true);
-        }
-        if (data.get('password') === '') {
-            setPassword(false);
-        } else {
-            setPassword(true);
-        }
-    };
-
+      /* Function to check if all inputs are complete */
+  const checkComplete = (data: FormData) => {
+    const credential = data.get("credential") as string;
+    setEmail(credential.includes("@"));
+    if (data.get("password") === "") {
+      setPassword(false);
+    } else {
+      setPassword(true);
+    }
+  };
 
   /* Function to check email format */
   const checkEmailFormat = (email: string) => {
@@ -54,18 +51,20 @@ function LoginCompany() {
     }
   };
 
-  /* Function to check Inputs */
-  const checkInput = (data: FormData) => {
-    /* Check if all inputs are complete */
-    checkComplete(data);
-    /* Check email format */
-    checkEmailFormat(data.get("email") as string);
-  };
+ /* Function to check Inputs */
+ const checkInput = (data: FormData) => {
+  /* Check if all inputs are complete */
+  checkComplete(data);
+  const credential = data.get("credential") as string;
+  setEmail(credential.includes("@"));
+  /* Check email format */
+  checkEmailFormat(credential);
+};
 
   /* Function to execute response */
   const responseExecute = (response_status: number) => {
     switch (response_status) {
-      case 201:
+      case 200:
         setResponse({
           error: false,
           message: "Connexion réussie",
@@ -93,6 +92,8 @@ function LoginCompany() {
   const sendData = async (data: FormData) => {
     // convert FormData to table
     const user = Object.fromEntries(data.entries());
+    user["email"] = user["credential"].toString().includes("@") ? user["credential"] : "";
+    user["phone"] = user["credential"].toString().includes("@") ? "" : user["credential"];
 
         /* If all inputs are complete, send data */
         if (user['email'] && user['password']) {
@@ -166,22 +167,30 @@ function LoginCompany() {
                     >
                         <Grid container spacing={2} justifyContent="center" flexDirection="column">
                             <Grid item xs={12}>
-                                <TextField
-                                    autoComplete='email'
-                                    name='email'
-                                    required
-                                    fullWidth
-                                    id='email'
-                                    label='Adresse email'
-                                    sx={{ alignItems: "center" }}
-                                    InputProps={{
-                                        style: {
-                                            color: "#2D2A32",
-                                            boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                                            borderRadius: "10px",
-                                        }
-                                    }}
-                                />
+                            <TextField
+                            autoComplete="credential"
+                            name="credential"
+                            required
+                            fullWidth
+                            id="credential"
+                            label="Numéro de téléphone, e-mail"
+                            autoFocus
+                            sx={{ alignItems: "center" }}
+                            type="text"
+                            inputProps={{
+                              style: {
+                                color: "#2D2A32",
+                                boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                borderRadius: "10px"
+                              }
+                            }}
+                            helperText="Format : +336XXXXXXXX ou XX@XX.X"
+                            FormHelperTextProps={{
+                              sx: { marginRight: "auto" },
+                            }}
+                            error={!fodder}
+
+                          />
                                 {/* If email is empty, display an error message */}
                                 {!email && (
                                     <Alert severity="error">
