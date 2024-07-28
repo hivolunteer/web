@@ -23,6 +23,11 @@ interface getMission  {
   passed: Mission[],
 }
 
+interface follow {
+  volunteer_id: number,
+  association_id:number,
+}
+
 export default function ProfilePage(props: any) {
 
     const [name, setName] = useState<string>("");
@@ -33,8 +38,10 @@ export default function ProfilePage(props: any) {
     const [bee, setBee] = useState<Float32Array>();
     const [rating, setRating] = useState<number>(0);
     const [hours, setHours] = useState<number>(0);
-    const [totalMission, setTotalMission] = useState<number>(0);
+    const [totalMissionPassed, setTotalMissionPassed] = useState<number>(0);
+    const [totalMissionActive, setTotalMissionActive] = useState<number>(0);
     const [followers, setFollowers] = useState<number>(0);
+    const [followersProfiles, setFollowersProfiles] = useState<newProfile[]>([]);
     const image =
         "https://urgo.fr/wp-content/uploads/2022/03/Logo-Reforestaction.png";
         
@@ -46,7 +53,51 @@ export default function ProfilePage(props: any) {
     setOpenDialog(false);
   };
 
-  const getTotalVolunteers = () => {
+  const getAllFollowers = async () => {
+    await fetch(`${config.apiUrl}/follows/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+
+      },
+    }).then((response) => {
+      if (response.status === 200) {
+        response.json().then((data) => {
+          setFollowers(data.length);
+          Promise.all(data.map(async (element: follow) => {
+            await fetch(`${config.apiUrl}/volunteers/profile/${element.volunteer_id}`, {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }).then((res) => {
+              if (res.status === 200) {
+                res.json().then((data: newProfile) => {
+                  setFollowersProfiles(followersProfiles => [...followersProfiles, data])
+                })
+              }
+              else {
+                console.log("Error fetching Total Follower");
+                alert("failed to fecth volunteer profile")
+              }
+            }).catch((error) => {
+              console.log(error);
+              alert("[Critical] failed to fecth volunteer profile")
+            })
+          }))
+        })
+      } else {
+        console.log("Error fetching Total Follower");
+        console.log(response)
+      }
+    }).catch((error) => {
+      console.log(error);
+    })
+  }
+
+  const getTotalParticipation = async () => {
 
   }
 
@@ -61,7 +112,15 @@ export default function ProfilePage(props: any) {
     }).then((response) => {
       if (response.status === 200) {
         response.json().then((data: getMission) => {
-          setTotalMission(data.active.length + data.passed.length);
+          setTotalMissionPassed(data.passed.length);
+          setTotalMissionActive(data.active.length);
+          
+          let totalPassedHours = 0;
+          data.passed.map((mission : Mission) => {
+            const duration = Math.abs(mission.end_date.getTime() - mission.start_date.getTime()) / (1000 * 3600);
+            totalPassedHours += duration;
+          })
+          setHours(totalPassedHours)
         })
       } else {
         console.log("Error fetching Total Missions");
@@ -108,6 +167,7 @@ export default function ProfilePage(props: any) {
 
         getProfile();
         getTotalMissions();
+        getAllFollowers();
     }, []);
 
 
