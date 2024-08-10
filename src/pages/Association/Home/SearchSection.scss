@@ -5,19 +5,15 @@
 }
 
 .component-search-section-hello {
-    margin-left: 4rem;
     display: flex;
-    justify-content: left;
-    align-items: flex-start;
-    flex-direction: column;
+    align-items: center;
 }
 
 .component-search-section-title {
+    display: flex;
+    align-items: center;
     font-size: 1.5rem;
-    margin-top: 4rem;
     font-weight: 400;
-    color: white;
-    margin-bottom: 0;
 }
 
 .component-search-section-subtitle {
@@ -56,4 +52,8 @@
 
 .component-search-section-search-icon {
     margin: 0.2rem;
+}
+
+.bee {
+    margin-left: 5px;
 }

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { Button } from "@mui/material"
 import "./MissionsPanel.scss";
 import config from "../../../config";
 import MissionsList from "../../../components/MissionListComponent"
 import { Mission } from "../../../interfaces";
-import { get } from "http";
 
 function MissionsPanel() {
     const [nextMissions, setNextMissions] = useState<Mission[]>([]);
@@ -34,6 +34,25 @@ function MissionsPanel() {
     return (
         <div className="component-missions-panel-container">
             <div className="component-missions-panel-missions">
+                <div className="component-missions-panel-button">
+                    <Button 
+                        variant="contained"
+                        className="new-mission"
+                        style={{
+                            backgroundColor: '#67A191',
+                            color: '#FFFEFF',
+                            textTransform: 'none',
+                            borderRadius: '10px',
+                            fontSize: '15px',
+                            width: '20%',
+                            height: '20%',
+                            boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                        }}
+                        onClick={() => {window.location.href = 'missionCreation'}}
+                    > 
+                        Créer une nouvelle mission
+                    </Button>
+                </div>
                 <div className="component-missions-panel-title-container">
                     <p className="component-missions-panel-title">Prochaines missions</p>
                     <a href="/accueil?subType=1" className="component-missions-panel-see-all">Voir toutes les missions</a>

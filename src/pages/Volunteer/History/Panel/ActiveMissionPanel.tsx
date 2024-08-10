@@ -1,6 +1,7 @@
 import {useState, useEffect} from 'react'
 import config from '../../../../config'
 import MissionCardHome from '../../../../components/MissionCardHome'
+import isToday from '../../../../functions/isToday'
 
 function ActiveMissionPanel() {
 
@@ -58,6 +59,7 @@ function ActiveMissionPanel() {
                             <MissionCardHome
                                 key={mission.id}
                                 mission={mission}
+                                isToday={isToday(mission.start_date)}
                             />
                         </div>
                     ))}

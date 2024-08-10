@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./SearchSection.scss";
 import config from "../../../config";
-import { Box, Grid, IconButton, InputBase, TextField } from "@mui/material";
+import { Box, IconButton, InputBase } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { maxWidth, width } from "@mui/system";
+import bee from '../../../images/logo/submark_white.png'
 
 function SearchSection() {
     const [profile, setProfile] = useState<any>({})
@@ -34,10 +34,10 @@ function SearchSection() {
         <Box className="component-search-section-container">
             <div className="component-search-section-hello">
                 <p className="component-search-section-title">
-                    Bonjour {profile.name} 👋
+                    Bonjour {profile.name} 👋 découvrez vos missions
                 </p>
                 <p className="component-search-section-subtitle">
-                    découvrez vos missions
+                    Vous avez un score de {profile.bee} <img src={ bee } alt='Bee' className='bee'/>                    
                 </p>
             </div>
             <div className="component-search-section-search">
