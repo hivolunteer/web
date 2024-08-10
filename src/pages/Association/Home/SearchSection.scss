@@ -27,16 +27,14 @@
     align-items: center;
     flex-direction: row;
     margin-top: 4rem;
-    // margin-left: 4rem;
 }
 
 .component-search-section-search-bar {
     width: 75%;
     border: 1px solid white;
     background-color: #fefefe;
-    border-radius: 30px; /* Ajustez le rayon pour correspondre à la hauteur de votre barre de recherche */
-    padding-right: 10px; /* Ajoutez un padding à droite pour l'espace autour de la loupe */
-    // flex-grow: 1;
+    border-radius: 30px;
+    padding-right: 10px;
     padding: 0.3rem;
     padding-left: 1.5rem;
 }
