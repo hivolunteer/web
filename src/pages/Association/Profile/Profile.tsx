@@ -310,11 +310,11 @@ export default function ProfilePage(props: any) {
             }}>
               <Card className={"card-component"}>
                 <h4>
-                  {totalMission} Missions publiées
+                  {totalMissionPassed} Missions passées
                 </h4>
-                {/*<h4>
-                  Vous n'avez actuellement aucun bénévole
-                </h4>*/}
+                <h4>
+                  {totalMissionActive} Missions actives
+                </h4>
               </Card>
               <Card className={"card-component"}>
                 <h4>
