@@ -72,11 +72,9 @@ function ResetPassword() {
                         <img className="titleLogo" src={titleLogo} alt=""/>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-12">
+                    <div className="col-10" >
                         <p className="title">Choisir un nouveau mot de passe</p>
                     </div>
-                </div>
                 <div className="reset_row alert">
                     <TextField
                         fullWidth
