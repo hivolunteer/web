@@ -1,5 +1,6 @@
 import MissionCardHome from "../../../../components/MissionCardHome";
 import { Mission } from "../../../../interfaces";
+import isToday from "../../../../functions/isToday";
 import "../Search.scss";
 
 interface MissionPanelProps {
@@ -36,7 +37,7 @@ function MissionPanel(props: MissionPanelProps) {
           <div className="mission-status" style={{ backgroundColor: getStatusColor(mission.status) }}>
             {mission.status === 0 ? "Brouillon" : mission.status === 1 ? "Publiée" : mission.status === 2 ? "Annulée" : "Passée"}
           </div>
-          <MissionCardHome mission={mission} />
+          <MissionCardHome mission={mission} isToday={isToday(mission.start_date)} />
         </div>
       ))}
     </div>

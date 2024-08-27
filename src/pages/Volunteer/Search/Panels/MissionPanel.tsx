@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
- import MissionCardHome from "../../../../components/MissionCardHome";
-import '../Search.scss'
+import MissionCardHome from "../../../../components/MissionCardHome";
 import { MissionComplete, PageMission } from "../Interfaces";
 import { Mission } from "../../../../interfaces";
+import isToday from "../../../../functions/isToday";
+import '../Search.scss'
 
 function MissionPanel(props: {missions: Array<PageMission>}) {
 
@@ -37,7 +38,7 @@ function MissionPanel(props: {missions: Array<PageMission>}) {
                         page.missions.map((mission: MissionComplete) => {
                           return (
                             <div className="mission_card" key={mission.id} style={{margin: '25px'}}>
-                              <MissionCardHome mission={mission as Mission} />
+                              <MissionCardHome mission={mission as Mission} isToday={isToday(mission.start_date)} />
                             </div>
                           )
                         })
