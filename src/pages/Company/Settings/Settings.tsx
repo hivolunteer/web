@@ -49,11 +49,13 @@ function Settings() {
 
   const deleteAccount = () => {
     if (window.confirm('Are you sure you want to delete your account?')) {
-      let url = `${config.apiUrl}/volunteers/delete`;
+      console.log(config.apiUrl)
+      let url = `${config.apiUrl}/`;
       fetch(url, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Content-Type': `application/json`,
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
       })
         .then((response) => {
