@@ -49,8 +49,7 @@ function Settings() {
 
   const deleteAccount = () => {
     if (window.confirm('Are you sure you want to delete your account?')) {
-      console.log(config.apiUrl)
-      let url = `${config.apiUrl}/`;
+      let url = `${config.apiUrl}/companies/`;
       fetch(url, {
         method: 'DELETE',
         headers: {
@@ -62,8 +61,7 @@ function Settings() {
           if (response.status === 200) {
             alert('Account deleted successfully');
             // Redirect to the login page
-            localStorage.removeItem('token');
-            localStorage.removeItem('role');
+            localStorage.clear();
             window.location.reload();
             window.location.href = '/';
           } else {

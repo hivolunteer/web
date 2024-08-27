@@ -60,8 +60,7 @@ function Settings() {
           if (response.status === 200) {
             alert('Account deleted successfully');
             // Redirect to the login page
-            localStorage.removeItem('token');
-            localStorage.removeItem('role');
+            localStorage.clear();
             window.location.reload();
             window.location.href = '/';
           } else {
