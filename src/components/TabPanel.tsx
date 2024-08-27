@@ -20,7 +20,7 @@ function TabPanel(props: TabPanelProps) {
       >
         {value === index && (
           <div style={{ padding: '1rem', paddingBottom: '0.5rem' }}>
-            <Typography>{children}</Typography>
+            <Typography component="div">{children}</Typography>
           </div>
         )}
       </div>

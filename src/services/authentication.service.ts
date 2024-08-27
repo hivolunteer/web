@@ -1,7 +1,6 @@
 import config from "../config";
 
 export class AuthenticationService {
-
     static async loginVolunteers(user: { [k: string]: FormDataEntryValue; }) {
         return await fetch(`${config.apiUrl}/volunteers/login`, {
             method: 'POST',

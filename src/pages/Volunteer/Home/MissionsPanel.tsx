@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./MissionsPanel.scss";
 import config from "../../../config";
-import MissionsList from "./MissionListComponent";
+import MissionsList from "../../../components/MissionListComponent";
 import { Mission } from "../../../interfaces";
 import { get } from "http";
 
