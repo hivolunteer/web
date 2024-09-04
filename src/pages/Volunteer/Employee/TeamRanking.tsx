@@ -9,6 +9,8 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
+import config from "../../../config";
+
 interface Team {
     id: number;
     name: string;
@@ -16,10 +18,23 @@ interface Team {
     description: string;
   }
 
+interface m_Teams {
+  team: Team;
+  total_bee: number;
+}
+
   interface Team_Member {
     id: number;
     team_id: number;
     volunteer_id: number;
+    bee: number;
+  }
+
+  interface m_Teams_Member {
+    last_name: string;
+    first_name: string;
+    email: string;
+    id: number;
     bee: number;
   }
 
@@ -38,13 +53,56 @@ interface Team {
 export default function TeamRanking(props: any) {
 
   const [getCartouches, setCartouches] = useState<Cartouche[]>([]);
+  const [getMTeams, setMTeams] = useState<m_Teams[]>([]);
+  
 
-    const getTeams = () : Team[] | any => {
+    const getTeams = async () => {
+      fetch(`${config.apiUrl}/teams/teamRanking`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      }).then(response => response.json()).then(data => {
+        console.log(data);
+        setMTeams(data);
+      }).catch(error => {
+        console.log(error);
+      });
 
     }
 
-    const getTeamMembers = () : Team_Member[] | any => {
+    const getTeamMembers = async (m_teams : m_Teams[]) => {
+      let rank = 0
+      for (const curr_m_team of m_teams) {
+        rank += 1;
+        let cartouche = {
+          name: curr_m_team.team.name,
+          description: curr_m_team.team.description,
+          bee: curr_m_team.total_bee,
+          id: curr_m_team.team.id,
+          members: [],
+          name_list: [],
+          name_list_str: "",
+          ranking: rank
+        };
 
+        let team_id = curr_m_team.team.id
+
+        const member_list = await fetch(`${config.apiUrl}/teams/getTeamMembers/${team_id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }).then(response => response.json()).then(data => {
+          console.log(data);
+
+        }).catch(error => {
+          console.log(error);
+        });
+
+      }
     }
 
     const genCapsule = () : Cartouche => {
@@ -61,6 +119,11 @@ export default function TeamRanking(props: any) {
 
         return result;
     }
+
+    useEffect(() => {
+      getTeams();
+      getTeamMembers(getMTeams);
+    }, [])
 
   return (
     <>
