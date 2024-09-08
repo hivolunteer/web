@@ -130,7 +130,7 @@ const ModifyDatePickerEventModal = ({ open, handleClose, datePickerEventFormData
 
               <Box>
                 <Typography variant="caption" color="text" component={"span"}>
-                  All day?
+                  Toute la journée
                 </Typography>
                 <Checkbox onChange={handleCheckboxChange} checked={allDay} />
               </Box>
