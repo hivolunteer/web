@@ -26,11 +26,12 @@ const pagesLink: { [pageName: string]: string } = {};
 
 if (localStorage.getItem("token") !== null) {
   settings.push("Profile", "Réglages", "Déconnexion");
-  pages.push("Accueil", "Missions", "Calendrier", "Référents");
+  pages.push("Accueil", "Missions", "Calendrier", "Référents", "Affiliations");
   pagesLink["Accueil"] = "accueil";
   pagesLink["Missions"] = "";
   pagesLink["Calendrier"] = "calendrier";
   pagesLink["Référents"] = "referent";
+  pagesLink["Affiliations"] = localStorage.getItem("role") === "company" ? "affiliatedAssociations" : "affiliatedCompanies";
 } else {
   settings.push("Connexion", "Inscription");
 }

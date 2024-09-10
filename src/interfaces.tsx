@@ -50,6 +50,7 @@ export interface Association {
   id: number,
   email: string,
   name: string,
+  bee: Float32Array,
   phone: string,
   description: string,
   rating: number,
