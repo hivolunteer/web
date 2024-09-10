@@ -21,7 +21,6 @@ function AffiliatedCompanies(props: any) {
             const companies = json.companies.map((company: Company) => ({
                 id: company.id,
                 name: company.name,
-                siren: company.siren,
                 profile_picture: company.profile_picture
             }));
             setCompanyList(companies);
@@ -56,45 +55,35 @@ function AffiliatedCompanies(props: any) {
     return (
         <div className="affiliated-companies">
             <h1 className="affiliated-companies-title">Entreprises affiliées</h1>
-            <div className="affiliated-companies-list-header" style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                }}>
+            <div className="affiliated-companies-list-header">
                 {
                     (companyList.length === 0) ?
                         <p> Aucune entreprise afffiliée pour le moment </p>
                     :
-                        companyList.map((company: Company) => {
-                            return (
-                                <div className="company-row" style={{ width: "50%" }}>
-                                    <div className="company-picture">
-                                        <img 
-                                            src={(company.profile_picture !== null) ? company.profile_picture : profileImage}
-                                            alt="profile_picture"
-                                            className="picture"
-                                        />
-                                    </div>
-                                    <p className="company-name" style={{ fontWeight: "bold" }}>
-                                            {company.name}
-                                    </p>
-                                    <p className="company-siren" style={{ fontStyle: "italic", textDecoration: "underline" }}>
-                                        {company.siren}
-                                    </p>
-                                    <div className="company-action">
-                                    <MdOutlineDelete
-                                        className="icon-card"
-                                        title="Supprimer le référent"
-                                        onClick={() => {
-                                            if (window.confirm('Êtes-vous sûr de vouloir supprimer cette entreprise affiliée ? Cette action est irréversible.')) {
-                                                unLinkCompany(company.id);
-                                            }
-                                        }}
-                                        size={20}
-                                    />
-                                    </div>
-                                </div>
-                            )
-                    })
+                        companyList.map((company: Company) => (
+                            <div className="company-row" key={company.id}>
+                              <div className="company-picture">
+                                <img
+                                  src={company.profile_picture !== null ? company.profile_picture : profileImage}
+                                  alt="profile_picture"
+                                  className="picture"
+                                />
+                              </div>
+                              <p className="company-name">{company.name}</p>
+                              <div className="company-action">
+                                <MdOutlineDelete
+                                  className="icon-card"
+                                  title="Supprimer le référent"
+                                  onClick={() => {
+                                    if (window.confirm('Êtes-vous sûr de vouloir supprimer cette entreprise affiliée ? Cette action est irréversible.')) {
+                                      unLinkCompany(company.id);
+                                    }
+                                  }}
+                                  size={20}
+                                />
+                            </div>
+                        </div>
+                    ))
                 }
             </div>
         </div>
