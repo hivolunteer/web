@@ -93,7 +93,6 @@ function ChangePassword() {
                 throw new Error("Le mot de passe actuel est incorrect");
             }
             // Password changed successfully
-            
             setOldPassword("");
             setNewPassword("");
             setConfirmPassword("");
