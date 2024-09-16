@@ -7,6 +7,18 @@ import "./Profile.scss";
 import { useNavigate } from "react-router-dom";
 import { Mission } from "../../../interfaces";
 
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+
 import EditPasswordModal from "./EditPasswordModal";
 
 type newProfile = {
@@ -15,6 +27,17 @@ type newProfile = {
   email: string;
   phone: string;
   profile_picture: string;
+};
+
+type VProfile = {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  rating: number;
+  profile_picture: string;
+  nb_hours: number;
+  bee: number;
 };
 
 interface getMission  {
@@ -28,6 +51,18 @@ interface follow {
   association_id:number,
 }
 
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
+
 export default function ProfilePage(props: any) {
 
     const [name, setName] = useState<string>("");
@@ -38,10 +73,21 @@ export default function ProfilePage(props: any) {
     const [bee, setBee] = useState<Float32Array>();
     const [rating, setRating] = useState<number>(0);
     const [hours, setHours] = useState<number>(0);
+
     const [totalMissionPassed, setTotalMissionPassed] = useState<number>(0);
     const [totalMissionActive, setTotalMissionActive] = useState<number>(0);
+
+    const [totalParticipation, setTotalParticipation] = useState<number>(0);
+    const [listParticipant, setListParticipant] = useState<number[]>([]);
+    const [participantsProfiles, setParticipantsProfiles] = useState<VProfile[]>([]);
+
     const [followers, setFollowers] = useState<number>(0);
-    const [followersProfiles, setFollowersProfiles] = useState<newProfile[]>([]);
+    const [followersProfiles, setFollowersProfiles] = useState<VProfile[]>([]);
+
+    const [openParticipant, setOpenParticipant] = useState(false);
+    const handleOpenParticipant = () => setOpenParticipant(true);
+    const handleCloseParticipant = () => setOpenParticipant(false);
+
     const image =
         "https://urgo.fr/wp-content/uploads/2022/03/Logo-Reforestaction.png";
         
@@ -61,11 +107,11 @@ export default function ProfilePage(props: any) {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
 
       },
-    }).then((response) => {
+    }).then(async (response) => {
       if (response.status === 200) {
-        response.json().then((data) => {
+        await response.json().then(async (data) => {
           setFollowers(data.length);
-          Promise.all(data.map(async (element: follow) => {
+          await Promise.all(data.map(async (element: follow) => {
             await fetch(`${config.apiUrl}/volunteers/profile/${element.volunteer_id}`, {
               method: "GET",
               headers: {
@@ -74,7 +120,7 @@ export default function ProfilePage(props: any) {
               },
             }).then((res) => {
               if (res.status === 200) {
-                res.json().then((data: newProfile) => {
+                res.json().then((data: VProfile) => {
                   setFollowersProfiles(followersProfiles => [...followersProfiles, data])
                 })
               }
@@ -98,7 +144,56 @@ export default function ProfilePage(props: any) {
   }
 
   const getTotalParticipation = async () => {
+    await fetch(`${config.apiUrl}/missions/volunteer/participations`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }).then((response) => {
+      if (response.status === 200) {
+        response.json().then((data) => {
+          console.log(data)
+          setTotalParticipation(data.participation_number);
+          setListParticipant(data.participants)
+          console.log("Got participants")
+        })
+      } else if (response.status === 400) {
+        alert("this association has no missions")
+      } else {
+        console.log("Error fetching Total Missions");
+        console.log(response)
+      }
+    })
+  }
 
+  const getProfileParticipants = async() => {
+    console.log(listParticipant)
+    let result = await Promise.all(listParticipant.map(async (element: number) => {
+      await fetch(`${config.apiUrl}/volunteers/profile/${element}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }).then((res) => {
+        if (res.status === 200) {
+          res.json().then((data) => {
+            console.log(data)
+            setParticipantsProfiles(participantsProfiles => [...participantsProfiles, data.volunteer])
+            return data.volunteer
+          })
+        }
+        else {
+          console.log("Error fetching Total Follower");
+          alert("failed to fecth volunteer profile")
+        }
+      }).catch((error) => {
+        console.log(error);
+        alert("[Critical] failed to fecth volunteer profile")
+      })
+    }))
+    //console.log(result)
   }
 
   const getTotalMissions = async () => {
@@ -168,7 +263,14 @@ export default function ProfilePage(props: any) {
         getProfile();
         getTotalMissions();
         getAllFollowers();
+        getTotalParticipation();
     }, []);
+
+    useEffect(() => {
+      getProfileParticipants()
+      //console.log (listParticipant)
+      //console.log (participantsProfiles)
+    }, [listParticipant])
 
 
   function validateEmail(email: string): boolean {
@@ -283,16 +385,52 @@ export default function ProfilePage(props: any) {
                   {followers} bénévoles actuels
                 </h4>
                 <h4>
-                  Vous n'avez actuellement aucun bénévole
+                  {followers ? "Des volontaires suivent vos activités et sont plus susceptibles de vous rejoindre en missions" : "Vous n'avez actuellement aucun bénévole"}
                 </h4>
               </Card>
               <Card className={"card-component"}>
                 <h4>
-                  0 bénévoles en attente de confirmation
+                  Vous avez reçu {totalParticipation} participations
                 </h4>
-                <h4>
-                  Vous n'avez actuellement aucun bénévole en attente de confirmation
-                </h4>
+                <Button onClick={handleOpenParticipant}>Détails</Button>
+                <Modal
+                  open={openParticipant}
+                  onClose={handleCloseParticipant}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
+                  <Box sx={style}>
+                  <TableContainer component={Paper}>
+                      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>ID</TableCell>
+                            <TableCell align="right">Nom</TableCell>
+                            <TableCell align="right">Email</TableCell>
+                            <TableCell align="right">Heure Confirmés</TableCell>
+                            <TableCell align="right">Score</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {participantsProfiles.map((row : VProfile) => (
+                            <TableRow
+                              key={row.id}
+                              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            >
+                              <TableCell component="th" scope="row">
+                                {row.id}
+                              </TableCell>
+                              <TableCell align="right">{row.last_name}</TableCell>
+                              <TableCell align="right">{row.email}</TableCell>
+                              <TableCell align="right">{row.nb_hours}</TableCell>
+                              <TableCell align="right">{row.bee}</TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </Box>
+                </Modal>
               </Card>
             </Grid>
           </Grid>
@@ -320,9 +458,9 @@ export default function ProfilePage(props: any) {
                 <h4>
                   {hours} {hours < 2 ? "heure confirmée" : "heures confirmées"}
                 </h4>
-                {/*<h4>
-                  Vous n'avez actuellement aucun bénévole en attente de confirmation
-                </h4>*/}
+                <h4>
+                  Heures de bénévolat proposées par les missions terminées depuis l'origine de ce compte
+                </h4>
               </Card>
             </Grid>
           </Grid>
