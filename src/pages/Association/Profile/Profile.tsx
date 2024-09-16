@@ -62,7 +62,6 @@ const style = {
   p: 4,
 };
 
-
 export default function ProfilePage(props: any) {
 
     const [name, setName] = useState<string>("");
@@ -212,9 +211,15 @@ export default function ProfilePage(props: any) {
           
           let totalPassedHours = 0;
           data.passed.map((mission : Mission) => {
-            const duration = Math.abs(mission.end_date.getTime() - mission.start_date.getTime()) / (1000 * 3600);
+            console.log(mission.end_date)
+            console.log(mission.start_date)
+            const startTime = new Date(mission.start_date) 
+            const endTime = new Date(mission.end_date) 
+
+            const duration = Math.abs(endTime.valueOf() - startTime.valueOf()) / (1000 * 3600);
             totalPassedHours += duration;
           })
+          console.log(totalPassedHours)
           setHours(totalPassedHours)
         })
       } else {
@@ -247,7 +252,7 @@ export default function ProfilePage(props: any) {
                             setProfilePicture(data.association.profile_picture);
                             setBee(data.association.bee);
                             setRating(data.association.rating);
-                            setHours(data.association.nb_hours);
+                            //setHours(data.association.nb_hours);
                             setFollowers(data.nb_followers);
                         });
                     } else {
@@ -267,10 +272,9 @@ export default function ProfilePage(props: any) {
     }, []);
 
     useEffect(() => {
+      setParticipantsProfiles([])
       getProfileParticipants()
-      //console.log (listParticipant)
-      //console.log (participantsProfiles)
-    }, [listParticipant])
+    }, [openParticipant])
 
 
   function validateEmail(email: string): boolean {
