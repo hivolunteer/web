@@ -9,8 +9,7 @@ import config from "../../../config";
 
 function ProfileInformationModal() {
     const history = useNavigate();
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
+    const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
     const [profilePicture, setProfilePicture] = useState("");
@@ -20,12 +19,8 @@ function ProfileInformationModal() {
 
     const handleClose = () => history("/settings");
 
-    const handleFirstNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setFirstName(event.target.value);
-    }
-
-    const handleLastNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setLastName(event.target.value);
+    const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setName(event.target.value);
     }
 
     const handlePhoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +37,7 @@ function ProfileInformationModal() {
 
     useEffect(() => {
         const getProfile = async () => {
-            await fetch(`${config.apiUrl}/companies/edit`, {
+            await fetch(`${config.apiUrl}/companies/profile`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -52,9 +47,9 @@ function ProfileInformationModal() {
                 .then((response) => {
                     if (response.status === 200) {
                         response.json().then((data) => {
+                            localStorage.setItem("id", data?.company?.id);
                             console.log("data", data);
-                            setFirstName(data?.company?.first_name);
-                            setLastName(data?.company?.last_name);
+                            setName(data?.company?.name);
                             setEmail(data?.company?.email);
                             setPhone(data?.company?.phone);
                             setProfilePicture(data?.company?.profile_picture);
@@ -77,7 +72,7 @@ function ProfileInformationModal() {
 
         try {
             const response = await fetch(
-                `${config.apiUrl}/companies/update`,
+                `${config.apiUrl}/companies/edit`,
                 {
                     method: "POST",
                     headers: {
@@ -86,8 +81,7 @@ function ProfileInformationModal() {
                     },
                     body: JSON.stringify({
                         id: localStorage.getItem("id"),
-                        first_name: firstName,
-                        last_name: lastName,
+                        name: name,
                         email: email,
                         phone: phone,
                         profile_picture: profilePicture,
@@ -98,8 +92,7 @@ function ProfileInformationModal() {
                 setAlert(true)
                 setError("Une information est manquante")
             }
-            setFirstName("");
-            setLastName("");
+            setName("");
             setEmail("");
             setPhone("");
             setProfilePicture("");
@@ -158,23 +151,6 @@ function ProfileInformationModal() {
                             <Typography style={{
                                 fontWeight: "bold"
                             }}>
-                                Prénom
-                            </Typography>
-                            <TextField
-                                fullWidth
-                                variant="outlined"
-                                id="initialFirstName"
-                                name="initialFirstName"
-                                type="text"
-                                value={firstName}
-                                onChange={handleFirstNameChange}
-                                margin="normal"
-                            />
-                        </div>
-                        <div style={{marginTop: "20px"}}>
-                            <Typography style={{
-                                fontWeight: "bold"
-                            }}>
                                 Nom
                             </Typography>
                             <TextField
@@ -183,8 +159,8 @@ function ProfileInformationModal() {
                                 id="initialLastName"
                                 name="initialLastName"
                                 type="text"
-                                value={lastName}
-                                onChange={handleLastNameChange}
+                                value={name}
+                                onChange={handleNameChange}
                                 margin="normal"
                             />
                         </div>
