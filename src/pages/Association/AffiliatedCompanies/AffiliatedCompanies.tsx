@@ -1,14 +1,44 @@
 import { useState, useEffect } from 'react';
 import config from '../../../config';
-import { Company } from '../../../interfaces';
+import {  Company } from '../../../interfaces';
 import profileImage from "../../../images/logo/submark.png";
-import { MdOutlineDelete } from "react-icons/md";
+import { Button } from '@mui/material';
+import { MdOutlineCopyAll } from "react-icons/md";
+import { MdOutlineDelete, MdOutlineRestartAlt } from "react-icons/md";
 import './AffiliatedCompanies.scss';
+
+interface Association {
+    id: number,
+    name: string,
+    rating: number,
+    company_token: string | null
+}
 
 function AffiliatedCompanies(props: any) {
     const [companyList, setCompanyList] = useState<Company[]>([]);
+    const [association, setAssociation] = useState<Association | null>(null)
+
 
     useEffect(() => {
+        fetch(`${config.apiUrl}/associations/profile`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+        })
+            .then(res => {
+                if (res.status === 200) {
+                    res.json().then(data => {
+                        setAssociation(data.association as Association)
+                    })
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            })
+
+
         fetch(`${config.apiUrl}/affiliated_companies/list`, {
             method: 'GET',
             headers: {
@@ -29,6 +59,28 @@ function AffiliatedCompanies(props: any) {
             console.error('Erreur lors de la récupération des données :', error);
         });
     }, []);
+
+    function generateToken() {
+        fetch(`${config.apiUrl}/affiliated_companies/genCode`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        })
+            .then((res: any) => {
+                if (res.status === 201) {
+                    res.json().then((data: Association) => {
+                        setAssociation(data as Association)
+                    })
+                } else {
+                    alert("Erreur dans la base de données. Veuillez contactez un administrateur si le probléme persiste.")
+                    window.location.href = "/";
+                    window.location.reload();
+                }
+            })
+    }
+
 
     function unLinkCompany(id: number) {
         fetch(`${config.apiUrl}/affiliated_companies/company/` + String(id), {
@@ -55,6 +107,38 @@ function AffiliatedCompanies(props: any) {
     return (
         <div className="affiliated-companies">
             <h1 className="affiliated-companies-title">Entreprises affiliées</h1>
+            <div className="referent-code">
+                {association?.company_token === null ? (
+                    <Button
+                    variant="contained"
+                    onClick={generateToken}
+                    className="generate-token-button"
+                    >
+                    Générer un code référent
+                    </Button>
+                ) : (
+                    <div className="token-container">
+                    <div className="token-label-container">
+                        <p className="token-label">
+                        <span className="bold">Code entreprise: </span>
+                        {association?.company_token}
+                        </p>
+                        <div className="icon-container">
+                        <MdOutlineCopyAll
+                            className="icon"
+                            title="Copier le code"
+                            onClick={() => navigator.clipboard.writeText(association?.company_token as string)}
+                        />
+                        <MdOutlineRestartAlt
+                            className="icon"
+                            title="Changer le code"
+                            onClick={generateToken}
+                        />
+                        </div>
+                    </div>
+                    </div>
+                )}
+            </div>
             <div className="affiliated-companies-list-header">
                 {
                     (companyList.length === 0) ?
