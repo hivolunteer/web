@@ -4,7 +4,6 @@ import { Checkbox } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Divider from "@mui/material/Divider";
 import config from "../../../config";
-//import { SideBar } from "../../../components/Sidebar";
 
 function Settings() {
     const [popupVisible, setPopupVisible] = useState(false);
