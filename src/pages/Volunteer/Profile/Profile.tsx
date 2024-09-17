@@ -4,8 +4,6 @@ import config from "../../../config";
 import "./Profile.scss";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import FriendProfileCard from "./Cards/FriendProfileCard";
-import ConfirmationModal from "../../../components/ConfirmationModal";
-import {Alert} from "@mui/material";
 import { CardContent, CardMedia, Typography, Button } from "@mui/material";
 
 interface Volunteer {
@@ -40,45 +38,6 @@ function ProfilePage(props: any) {
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
  
   const [friends, setFriends] = useState<Number[]>([]);
-  const [alertContent, setAlertContent] = useState<{ error: boolean, message: string, id: number }>({ error: false, message: "", id: 0 });
-  
-
-   /** delete account feature functions */
-   const [openConfirmationModal, setopenConfirmationModal] = useState(false);
-
-   const deleteAccount = () => {
-       let url = `${config.apiUrl}/volunteers/delete`;
-       fetch(url, {
-         method: 'DELETE',
-         headers: {
-           'Authorization': `Bearer ${localStorage.getItem('token')}`
-         },
-       })
-         .then((response) => {
-           if (response.status === 200) {
-             //alert('Account deleted successfully');
-             setAlertContent({ error: false, message: 'Compte supprimé avec succès', id: 0 })
-             // Redirect to the login page
-             localStorage.removeItem('token');
-             localStorage.removeItem('role');
-             window.location.reload();
-             window.location.href = '/';
-           } else {
-             console.log('Error deleting account');
-             setAlertContent({ error: true, message: 'Erreur lors de la suppression du compte', id: 0 })
-           }
-         })
-         .catch((error) => {
-           console.log(error);
-           setAlertContent({ error: true, message: 'Erreur serveur, veuillez réessayer plus tard', id: 0 })
-         });
-   }
- 
-   const handleCloseConfirmationModal = () => {
-     setopenConfirmationModal(false);
-   }
-   /** END - delete account feature functions */
-
   useEffect(() => {
     fetch(`${config.apiUrl}/volunteers/profile`, {
       method: 'GET',
@@ -96,7 +55,6 @@ function ProfilePage(props: any) {
       console.error(error);
     });
   }, []);
-
   useEffect(() => {
 
     if (volunteerId) {
@@ -245,27 +203,6 @@ function ProfilePage(props: any) {
             Gérer les utilisateurs Bloqués
           </button>
         </div>
-      <div className="profile-btn-div">
-        <button className={"profile-pic-btn" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")} onClick={() => { navigate("/profile/blocked"); } }>
-          Gérer les utilisateurs Bloqués
-        </button>
-      </div>
-      <div className="profile-btn-div">
-        <button className="delete-account-btn" onClick={() => setopenConfirmationModal(true)}>
-        Supprimer le compte
-      </button>
-      {
-        openConfirmationModal && 
-        <ConfirmationModal
-          handleClose={handleCloseConfirmationModal}
-          title="Suppression de compte"
-          description="Voulez-vous supprimer votre compte ? Cette action est irréversible."
-          yes_choice="Oui"
-          no_choice="Non"
-          yes_function={deleteAccount}
-        />
-      }
-      </div>
       </Row>
       </>
   );
