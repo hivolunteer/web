@@ -72,6 +72,7 @@ export default function ProfilePage(props: any) {
     const [bee, setBee] = useState<Float32Array>();
     const [rating, setRating] = useState<number>(0);
     const [hours, setHours] = useState<number>(0);
+    const [minutes, setMinutes] = useState<number>(0);
 
     const [totalMissionPassed, setTotalMissionPassed] = useState<number>(0);
     const [totalMissionActive, setTotalMissionActive] = useState<number>(0);
@@ -209,18 +210,27 @@ export default function ProfilePage(props: any) {
           setTotalMissionPassed(data.passed.length);
           setTotalMissionActive(data.active.length);
           
-          let totalPassedHours = 0;
+          //let totalPassedHours = 0;
+          let justHours = 0;
+          let justMinutes = 0;
           data.passed.map((mission : Mission) => {
             console.log(mission.end_date)
             console.log(mission.start_date)
             const startTime = new Date(mission.start_date) 
             const endTime = new Date(mission.end_date) 
 
-            const duration = Math.abs(endTime.valueOf() - startTime.valueOf()) / (1000 * 3600);
-            totalPassedHours += duration;
+            //const duration = Math.abs(endTime.valueOf() - startTime.valueOf()) / (1000 * 3600);
+            const hours = endTime.getHours() - startTime.getHours();
+            const minutes = endTime.getMinutes() - startTime.getMinutes();
+            //totalPassedHours += duration;
+            justHours += hours;
+            justMinutes += minutes
           })
-          console.log(totalPassedHours)
-          setHours(totalPassedHours)
+          //console.log(totalPassedHours)
+          console.log(justHours)
+          console.log(justMinutes)
+          setHours(justHours)
+          setMinutes(justMinutes)
         })
       } else {
         console.log("Error fetching Total Missions");
@@ -384,7 +394,7 @@ export default function ProfilePage(props: any) {
               display: 'flex',
               marginBottom: "30px",
             }}>
-              <Card className={"card-component"}>
+              <Card className={"card-component"} style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
                 <h4>
                   {followers} bénévoles actuels
                 </h4>
@@ -392,7 +402,7 @@ export default function ProfilePage(props: any) {
                   {followers ? "Des volontaires suivent vos activités et sont plus susceptibles de vous rejoindre en missions" : "Vous n'avez actuellement aucun bénévole"}
                 </h4>
               </Card>
-              <Card className={"card-component"}>
+              <Card className={"card-component"} style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
                 <h4>
                   Vous avez reçu {totalParticipation} participations
                 </h4>
@@ -460,10 +470,10 @@ export default function ProfilePage(props: any) {
               </Card>
               <Card className={"card-component"} style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
                 <h4>
-                  {hours} {hours < 2 ? "heure confirmée" : "heures confirmées"}
+                  Votre association a confirmé {hours}h{minutes}
                 </h4>
                 <h4>
-                  Heures de bénévolat proposées par les missions terminées depuis l'origine de ce compte
+                  à travers les missions terminées depuis l'origine de ce compte
                 </h4>
               </Card>
             </Grid>
