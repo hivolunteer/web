@@ -85,3 +85,10 @@ export interface Skill {
   skill_id: number;
   color_hex: string;
 }
+
+export interface Company {
+  id: number,
+  name: string,
+  siren: string,
+  profile_picture: string
+}
