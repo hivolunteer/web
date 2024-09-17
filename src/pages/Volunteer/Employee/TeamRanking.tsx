@@ -97,11 +97,10 @@ export default function TeamRanking(props: any) {
           },
         }).then(response => response.json()).then(data => {
           console.log(data);
-
         }).catch(error => {
           console.log(error);
         });
-
+        console.log(member_list)
       }
     }
 
@@ -132,10 +131,10 @@ export default function TeamRanking(props: any) {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="right">Rang d'équipe</TableCell>
+                <TableCell align="center">Rang d'équipe</TableCell>
                 <TableCell>Nom d'équipe</TableCell>
-                <TableCell align="right">Bee</TableCell>
-                <TableCell align="right">Membre d'équipe</TableCell>
+                <TableCell align="center">Bee</TableCell>
+                <TableCell align="center">Membre d'équipe</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -144,12 +143,12 @@ export default function TeamRanking(props: any) {
                   key={row.name}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  <TableCell align="right">{row.ranking}</TableCell>
+                  <TableCell align="center">{row.ranking}</TableCell>
                   <TableCell component="th" scope="row">
                     {row.name}
                   </TableCell>
-                  <TableCell align="right">{row.bee}</TableCell>
-                  <TableCell align="right">{row.name_list_str}</TableCell>
+                  <TableCell align="center">{row.bee}</TableCell>
+                  <TableCell align="center">{row.name_list_str}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
