@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import ical from 'ical-generator';
 import { Mission, Association, Skill } from '../../../interfaces';
 import config from "../../../config";
 import './MissionDetails.scss';
 import MissionDetailsHeader from './MissionDetailsHeader';
 import SkillDisplay from './SkillDisplay';
 import { Button } from '@mui/material';
+import { Volunteer } from '../../Association/Missions/Manage/Interfaces';
+import FriendsModal from './Modal/FriendsModal';
+import AssociationCommentary from './AssociationCommentary';
 
 const MissionDetails = () => {
 
@@ -16,6 +20,16 @@ const MissionDetails = () => {
     const [association, setAssociation] = useState<Association | null>(null);
     const [mission_skills, setMissionSkills] = useState<Skill[]>([]);
     const [location, setLocation] = useState<string>("");
+    const [mission_status, setStatus] = useState<number>(0)
+
+    const [currentVolunteer, setCurrentVolunteer] = useState<number>(0);
+    const [friends, setFriends] = useState<Array<Volunteer>>([])
+
+    // modal Functions
+    const [open, setOpen] = useState<boolean>(false);
+    const handleClose = () => {
+        setOpen(false);
+    };
 
 
     function Register() {
@@ -61,6 +75,7 @@ const MissionDetails = () => {
                 })
                     .then(response => response.json())
                     .then(data => {
+                        console.log("asso", data)
                         setAssociation(data.association)
                     })
             })
@@ -81,6 +96,7 @@ const MissionDetails = () => {
                 }
             })
 
+            console.log(mission)
         if (mission?.location) {
             fetch(`${config.apiUrl}/locations/${mission?.location}`, {
                 method: 'GET',
@@ -122,6 +138,105 @@ const MissionDetails = () => {
                 }
             })
         }, [id, location_id]);
+    
+    function createIcal() : string | null {
+        if (mission) {
+            const cal = ical({
+                name: mission.title,
+                prodId: { company: 'HiVolunteer', product: 'HiVolunteer' },
+                timezone: 'Europe/Paris'
+            });
+            cal.createEvent({
+                start: mission.start_date,
+                end: mission.end_date,
+                summary: mission.title,
+                description: "Description:\n" + mission.description + "\n\nInformations pratiques:\n" + mission.practical_information + "\n\n🔗 Lien: " + window.location.href,
+                location: location,
+                url: window.location.href
+            });
+            return cal.toString();
+        }
+        return null;
+    }
+
+    function handleDownloadIcal() {
+        const ical = createIcal();
+        if (ical) {
+            const blob = new Blob([ical], { type: 'text/calendar' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'mission.ics';
+            a.click();
+        }
+    }
+
+
+
+        function getButtonText() {
+            switch (mission_status) {
+                case 0:
+                    return "En attente de validation"
+                case 1:
+                    return "Se désinscrire"
+                case 2:
+                    return "Mission refusée"
+                default:
+                    return `S'inscrire (${currentVolunteer} / ${mission?.max_volunteers})`
+            } 
+        }
+
+
+        useEffect(() => {
+            fetch(`${config.apiUrl}/missions/association/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+                .then((data) => (data.json()))
+                .then((data) => {
+                    setCurrentVolunteer(data.number_volunteers)
+                })
+            
+            fetch(`${config.apiUrl}/missions/volunteer/status/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+                .then((response) => {
+                    if (response.status === 200) {
+                        response.json()
+                            .then((data) => {
+                                setStatus(data.status)
+                                if ((data.status === 0) || (data.status === 1))
+                                    setIsRegistered(true)
+                                else
+                                    setIsRegistered(false)
+                            })
+                    } else {
+                        setIsRegistered(false)
+                        setStatus(4)
+                    }
+
+                })
+            
+        }, [isRegistered])
+
+        useEffect(() => {
+            fetch(`${config.apiUrl}/missions/volunteer/friends/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+                .then(response => response.json())
+                .then((data) => setFriends(data))
+        }, [])
 
     return (
         <div className='mission-details-container'>
@@ -140,24 +255,71 @@ const MissionDetails = () => {
                 (mission_skills.length !== 0) ? <SkillDisplay skills={mission_skills} /> : null
             }
             <div className='mission-details-content-center'>
-                <Button 
-                    variant='contained'
-                    className='mission-details-button'
-                    sx={{
-                        color: 'white',
-                        borderRadius: '10px'
-                    }}
-                    onClick={() => {
-                        if (isRegistered) {
-                            Unregister()
-                        } else {
-                            Register()
-                        }
-                    }}
-                > 
-                    {isRegistered ? "Se désinscrire" : "S'inscrire"}
-                </Button>
+                <h2> Amis Inscrits à la mission </h2>
+                <p style={{marginTop: '-10px', marginBottom: '20px'}}>
+                    Vous avez {friends.length} {(friends.length <= 1) ? 'ami inscrit' : 'amis inscrits'} à cette mission.
+
+                    {
+                        (friends.length === 0) ? 
+                        null 
+                        :
+                        <span
+                            onClick={() => {setOpen(true)}}
+                            style={{
+                                textDecoration: 'underline',
+                                cursor: 'pointer',
+                                marginLeft: '10px'
+                            }}
+                        > 
+                            Voir plus 
+                        </span>
+                    }
+                </p>
+                <FriendsModal
+                    friends={friends}
+                    open={open}
+                    onClose={handleClose}
+                />
             </div>
+            {
+                (mission_status === 3) ?
+                <AssociationCommentary id={id} />
+                :
+                <div className='mission-details-content-center row'>
+                    <Button
+                        variant='contained'
+                        className='mission-details-button'
+                        sx={{
+                            color: 'white',
+                            borderRadius: '10px',
+                            margin: '10px'
+                        }}
+                        onClick={handleDownloadIcal}
+                    >
+                        Télécharger la mission
+                    </Button>
+                    <Button 
+                        variant='contained'
+                        className='mission-details-button'
+                        sx={{
+                            color: 'white',
+                            borderRadius: '10px'
+                        }}
+                        disabled={((mission?.max_volunteers === currentVolunteer) || (mission_status === 2))}
+                        onClick={() => {
+                            if (isRegistered) {
+                                Unregister()
+                            } else {
+                                Register()
+                            }
+                        }}
+                    >
+                        {
+                            getButtonText()
+                        }
+                    </Button>
+                </div>
+            }
         </div>
     )
 };

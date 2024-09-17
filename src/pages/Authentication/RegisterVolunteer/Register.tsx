@@ -5,8 +5,12 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { AuthenticationService } from '../../../services/authentication.service';
 import './Register.scss';
 import titleLogo from "../../../images/logo/primary_logo.png";
+import AutohideSnackbar from "../../../components/SnackBar";
 
 function RegisterVolunteer() {
+    const [response, setResponse] = useState<{ error: Boolean; message: string }>(
+        { error: false, message: "" }
+    );
     /***
      * Define all states
     ***/
@@ -153,16 +157,25 @@ function RegisterVolunteer() {
     const responseExecute = (response_status: number) => {
         switch (response_status) {
             case 201:
-                alert("Inscription réussie");
+                setResponse({
+                    error: false,
+                    message: "Inscription réussie",
+                });
                 localStorage.setItem("role", "volunteer");
                 navigate("/");
                 window.location.reload();
                 break;
-            case 401:
-                alert("Connexion échouée");
+            case 400:
+                setResponse({
+                    error: true,
+                    message: "Inscription échouée, veuillez vérifier que tous les champs sont rempli",
+                });
                 break;
             default:
-                alert("Erreur inconnue");
+                setResponse({
+                    error: true,
+                    message: "Erreur inconnue, veuillez réessayer plus tard",
+                });
                 break;
         }
     };
@@ -428,6 +441,13 @@ function RegisterVolunteer() {
                                 )}
                             </Grid>
                         </Grid>
+                        {response.message !== "" && (
+                            <AutohideSnackbar
+                                message={response.message}
+                                open={true}
+                                response={response.error}
+                            />
+                        )}
                         <Button
                             type="submit"
                             fullWidth

@@ -7,6 +7,7 @@ import ManageMissionVolunteers from './Components/ManageMissionVolunteers';
 
 function ManageMission() {
     const [MissionStatus, setMissionStatus] = useState<number>(0);
+    const [MissionEndDate, setMissionEndDate] = useState<Date>(new Date());
 
     // get id from url
     const url = window.location.href;
@@ -65,10 +66,10 @@ function ManageMission() {
 
     return (
         <div>
-            <ManageMissionInformation mission_id={mission_id} setMissionStatus={setMissionStatus} MissionStatus={MissionStatus} isAssociation={false} />
+            <ManageMissionInformation mission_id={mission_id} setMissionStatus={setMissionStatus} MissionStatus={MissionStatus} isAssociation={false} setMissionEndDate={setMissionEndDate} MissionEndDate={MissionEndDate}/>
             
-            { (MissionStatus != 0) &&
-                <ManageMissionVolunteers mission_id={mission_id} />
+            { (MissionStatus !== 0) &&
+                <ManageMissionVolunteers mission_id={mission_id} MissionEndDate={MissionEndDate} />
             }
             
             <div className='manage-mission-button-container'>

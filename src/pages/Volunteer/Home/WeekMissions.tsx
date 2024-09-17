@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import MissionCard from '../../../components/MissionCard';
 import config from "../../../config";
-import './Home.scss';
 import MissionCardHome from '../../../components/MissionCardHome';
+import isToday from '../../../functions/isToday';
+import './Home.scss';
 
 interface Mission {
-    id: number
+    id: number;
 }
 
 function WeekMissions(props: { missions: Number[] }) {
@@ -53,7 +53,6 @@ function WeekMissions(props: { missions: Number[] }) {
     });
 }, [missionListDisplay, props.missions]);
 
-
   return (
     <div className="week-missions">
         <h2> Missions de la Semaine : </h2>
@@ -62,7 +61,10 @@ function WeekMissions(props: { missions: Number[] }) {
                     missionListDisplay.map((mission: any) => {
                         return(
                             <div style={{width: '100%', margin: '10px'}}>
-                                <MissionCardHome mission={mission} />
+                                <MissionCardHome 
+                                    mission={mission} 
+                                    isToday={isToday(mission.start_date)} 
+                                />
                             </div>
                         )
                     })

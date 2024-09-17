@@ -3,6 +3,7 @@
     flex-wrap: wrap;
     margin: 0 5%;
     flex-direction: row;
+    justify-content: center;
 }
 
 .component-missions-list-mission {
@@ -12,7 +13,6 @@
 
 @media (max-width: 768px) {
     .component-missions-list-missions {
-        justify-content: center;
         align-items: center;
         flex-direction: column;
     }

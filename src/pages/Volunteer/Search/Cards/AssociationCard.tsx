@@ -16,7 +16,6 @@ export default function AssociationCard(props: {association_id: number}) {
         }
     
         useEffect(() => {
-            console.log('association id ', props.association_id)
             fetch(`${config.apiUrl}/associations/profile/${props.association_id}`, {
                 method: 'GET',
                 headers: {
@@ -26,7 +25,6 @@ export default function AssociationCard(props: {association_id: number}) {
             }).then((response) => {
                 if (response.status === 200) {
                     response.json().then((data) => {
-                        console.log(data)
                         setAssociation(data.association)
                     })
                 }
@@ -67,7 +65,7 @@ export default function AssociationCard(props: {association_id: number}) {
                     </CardContent>
                     <CardContent>
                         <Typography variant="body2" color="text.secondary" sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', cursor: 'pointer', textDecoration: 'underline'}}
-                        onClick={() => console.log('association ', association?.id)}>
+                        onClick={() => (window.location.href = 'association/' + association?.id)}>
                             Voir plus
                         </Typography>
                     </CardContent>
