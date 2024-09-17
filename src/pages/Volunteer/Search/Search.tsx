@@ -1,18 +1,23 @@
 import { useState, useEffect } from "react";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
-import { Button, InputAdornment, TextField } from "@mui/material";
+import { Button, InputAdornment, Tab, Tabs, TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
-import Box from "@mui/material/Box";
 import "./Search.scss";
-import CustomSwitch from "../../../components/Switch";
-import FilterModal from "./FilterModal";
-import FilterModalAsso from "./FilterModalAsso";
-import MissionCard from "./MissionCard";
-import AssociationCard from "./AssociationCard";
-import { Mission, Modal, Association, ModalAsso } from "./Interfaces";
+import FilterModal from "./Modal/FilterModal";
+import FilterModalAsso from "./Modal/FilterModalAsso";
+import { Mission, Association, Volunteer } from "../../../interfaces"
+import { FilterMissionProps, MissionComplete, Modal, ModalAsso, PageAssoProps, PageMission, VolunteerPage, VolunteerProps, filterAssoProps } from "./Interfaces";
 import config from "../../../config";
+import TabPanel from "../../../components/TabPanel";
+import MissionPanel from "./Panels/MissionPanel";
+import AssociationPanel from "./Panels/AssociationPanel";
+import VolunteerPanel from "./Panels/VolunteerPanel";
+import useWindowSize from "../../../functions/useWindowSize";
+import filterMissionAndPagination from "./functions/filterMissionAndPagination";
+import filterAssoAndPagination from "./functions/filterAssoAndPagination";
+import filterVolunteerAndPagination from "./functions/filterVolunteerAndPagination";
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -32,13 +37,38 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 function Search(props: any) {
   const [missionList, setMissionList] = useState<Mission[]>([]);
   const [associationList, setAssociations] = useState<Association[]>([]);
+  const [volunteerList, setVolunteerList] = useState<Array<Volunteer>>([]);
   const [location_search, setLocation] = useState<string>("");
   const [search, setSearch] = useState<string>("");
-  const [subType, setSubType] = useState<string>("Missions");
   const [locations, setLocations] = useState<{[key: number]: string}>({});
-  const [rating, setRating] = useState<number>(0);
+  const width = useWindowSize().width as number;
+
+  // Subtype of the search
+
+  interface Subtype {
+    id: number;
+    name: string;
+  }
+
+  let subtypes : Array<Subtype> = [
+    {
+      id: 1,
+      name: "Missions"
+    },
+    {
+      id: 2,
+      name: "Associations"
+    },
+    {
+      id: 3,
+      name: "Bénévoles"
+    }
+  ]
+  const [subType, setSubType] = useState<Subtype>(subtypes[0])
 
   //Modal functions
+  const [searchMission, setSearchMission] = useState<boolean>(false);
+  const [searchAssociation, setSearchAssociation] = useState<boolean>(false)
   const [open, setOpen] = useState<boolean>(false);
   const [filteredMissions, setFilteredMissions] = useState<Mission[] | []>([]);
   const [filteredAssociations, setFilteredAssociations] = useState<
@@ -52,13 +82,16 @@ function Search(props: any) {
   type CombinedModalPros = Modal | ModalAsso;
   let modalProps: CombinedModalPros;
 
-  if (subType === "Missions") {
+  if (subType.name === "Missions") {
     modalProps = {
       open: open,
       setOpen: setOpen,
       filteredMissions: filteredMissions,
       setFilteredMissions: setFilteredMissions,
+      setSearch: setSearch,
       handleClose: handleClose,
+      width: width,
+      setSearchMission: setSearchMission
     };
   } else {
     modalProps = {
@@ -67,34 +100,36 @@ function Search(props: any) {
       filteredAssociations: filteredAssociations,
       setFilteredAssociations: setFilteredAssociations,
       handleClose: handleClose,
+      width: width,
+      setSearchAssociation: setSearchAssociation
     };
   }
 
   const FilterModalComponent: React.FC<{ modalProps: CombinedModalPros }> =
-    subType === "Missions"
+    subType.name === "Missions"
       ? (FilterModal as React.FC<{ modalProps: CombinedModalPros }>)
       : (FilterModalAsso as React.FC<{ modalProps: CombinedModalPros }>);
 
   useEffect(() => {
-    fetch(`${config.apiUrl}/missions/association`, {
+    fetch(`${config.apiUrl}/missions/`, {
         method: 'GET',
         headers: {
             authorization: `Bearer ${localStorage.getItem('token')}`,
             'Content-Type': 'application/json'
         }
-    }).then((response) => {
-        if (response.status === 200) {
-          response.json().then((data) => {
-            let mission_list : Mission[] = [];
-            data
-            .map((mission: any) => {
-              console.log(mission)
-              mission_list.push({id: mission.id, title: mission.title, status: mission.status, location: mission.location})
-            })
-            console.log(mission_list)
-            setMissionList(mission_list)
-          })
-        }
+    }).then((data => data.json()))
+    .then((data : any) => {
+      let association_missions = data.associations_missions
+      let mission_list : Mission[] = [];
+      association_missions
+      .map((mission: Mission) => {
+        mission_list.push(mission)
+      })
+      let volunteer_missions = data.close_missions
+      volunteer_missions.map((mission: Mission) => {
+        mission_list.push(mission)
+      });
+      setMissionList(mission_list)
      })
   }, [])
 
@@ -110,8 +145,8 @@ function Search(props: any) {
           response.json().then((data) => {
               let association_list : Association[] = [];
               data
-              .map((association: any) => {
-                  association_list.push({id: association.id, name: association.name, rating: association.rating})
+              .map((association: Association) => {
+                  association_list.push(association)
               })
               setAssociations(association_list)
           })
@@ -137,11 +172,25 @@ function Search(props: any) {
               locs[location.id] = location.city;
             })
             setLocations(locs);
-            console.log(locs);
           })
         }
       })
     }, [])
+
+  useEffect(() => {
+      fetch(`${config.apiUrl}/volunteers`, {
+          method: "GET",
+          headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+      })
+          .then((response) => response.json())
+          .then((data) => {
+              setVolunteerList(data);
+          });
+  }, []);
+
   const handleSearch = (e: any) => {
     // setSearch with value of the input from mission lkist if filter is not empty
     setSearch(e.target.value.toLowerCase());
@@ -149,8 +198,40 @@ function Search(props: any) {
 
   const handleLocation = (e: any) => {
     setLocation(e.target.value.toLowerCase());
-    
   }
+
+
+  function returnMissions() : Array<PageMission> {
+    let props : FilterMissionProps = {
+      missionList: missionList as Array<MissionComplete>,
+      filteredMissions: filteredMissions as Array<MissionComplete>,
+      search: search,
+      location_search: location_search,
+      locations: locations,
+      searched: searchMission
+    }
+    let missions: Array<PageMission> = filterMissionAndPagination(props)
+    return missions;
+  }
+
+  function returnAssociations() : Array<PageAssoProps> {
+    let props : filterAssoProps = {
+      associationList: associationList,
+      filteredAssociations: filteredAssociations,
+      search: search,
+      searched: searchAssociation
+    }
+    return filterAssoAndPagination(props)
+  }
+
+  function returnVolunteers() : Array<VolunteerPage> {
+    let props : VolunteerProps = {
+      volunteersList: volunteerList,
+      search: search
+    }
+    return filterVolunteerAndPagination(props)
+  }
+
   //className={"header-rating" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")}
   return (
     <div className="page-container">
@@ -159,7 +240,13 @@ function Search(props: any) {
           <TextField
             id="search-bar"
             style={{ flex: 4 }}
-            label="Recherche par titre de l'association ou de la mission"
+            label={
+              subType.name === "Missions"
+                ? "Rechercher une mission"
+                : subType.name === "Associations"
+                ? "Rechercher une association"
+                : "Rechercher un bénévole"
+            }
             InputProps={{
               endAdornment: (
                 <InputAdornment position="start">
@@ -178,7 +265,7 @@ function Search(props: any) {
           <div style={{ width: "2%" }} />
           <TextField
             id="outlined-basic"
-            label="Ville, Pays"
+            label="Ville"
             variant="outlined"
             className="search-country"
             InputProps={{
@@ -198,73 +285,73 @@ function Search(props: any) {
         </div>
       </div>
       <div className="centered-container">
-        <div className="filter-container">
-          <Button
-            className={
-              "filter-btn " +
-              (localStorage.getItem("color_blind") === "true"
-                ? " color-blind-bg"
-                : "")
-            }
-            sx={{ background: "#3b3d3c" }}
-            variant="contained"
-            onClick={() => {
-              setOpen(true);
+        {
+          subType.name !== "Bénévoles" &&
+          <div className="filter-container">
+            <Button
+              className={
+                "filter-btn-search"
+              }
+              sx={{
+                  background: (localStorage.getItem('color_blind') === 'true') ? '#dedede' : '#ffcf56', ":hover": {background: (localStorage.getItem('color_blind') === 'true') ? '#dedede' : '#ffcf56',
+              }}}
+              variant="contained"
+              onClick={() => {
+                setOpen(true);
+              }}
+            >
+              Afficher les filtres
+            </Button>
+            <FilterModalComponent modalProps={modalProps} />
+          </div>
+        }
+        <div className="tabs-container">
+          <Tabs
+            value={subType.name}
+            onChange={(e, value) => {
+              setSubType(subtypes.filter((subtype) => subtype.name === value)[0]);
             }}
+            variant="fullWidth"
+            sx={{ borderBottom: 0 }}
           >
-            Afficher les filtres
-          </Button>
-          <FilterModalComponent modalProps={modalProps} />
+            <Tab
+              label="Missions"
+              value="Missions"
+              sx={{
+                background: "#FFFFFF",
+              }}
+            />
+            <Tab
+              label="Associations"
+              value="Associations"
+              sx={{
+                background: "#FFFFFF",
+              }}
+            />
+            <Tab
+              label="Bénévoles"
+              value="Bénévoles"
+              sx={{
+                background: "#FFFFFF",
+              }}
+            />
+          </Tabs>
         </div>
-        <Box
-          className="switch-container"
-          sx={{ display: "center", margin: "2%" }}
-        >
-          <CustomSwitch
-            option1="Missions"
-            option2="Associations"
-            subType={subType}
-            setSubType={setSubType}
+        <TabPanel value={subType.id} index={1}>
+          <MissionPanel
+            missions={returnMissions()}
           />
-        </Box>
-        {subType === "Missions" ? (
-          <div className="missions-container">
-            {missionList
-              .filter(
-                (mission: Mission) =>
-                  (filteredMissions.length === 0 ||
-                    filteredMissions.some(
-                      (filteredMission: Mission) =>
-                        mission.id === filteredMission.id
-                    )) &&
-                  mission.title.toLowerCase().includes(search.toLowerCase())
-                  && (locations[mission.location] ? locations[mission.location].toLowerCase().includes(location_search.toLowerCase()) : false)
-              )
-              .map((mission: Mission) => (
-                <div className="mission-card" key={mission.id}>
-                  <MissionCard mission_id={mission.id} />
-                </div>
-              ))}
-          </div>
-        ) : (
-          <div className="missions-container">
-            {associationList
-              .filter(
-                (association: Association) =>
-                  (filteredAssociations.length === 0 ||
-                    filteredAssociations.some(
-                      (filteredAssociation: Association) =>
-                        association.id === filteredAssociation.id
-                    )) &&
-                  association.name.toLowerCase().includes(search.toLowerCase())
-              )
-              .map((association: Association) => (
-                <div className="mission-card" key={association.id}>
-                  <AssociationCard association_id={association.id} />
-                </div>
-              ))}
-          </div>
-        )}
+        </TabPanel>
+        <TabPanel value={subType.id} index={2}>
+          <AssociationPanel
+            assoPages={returnAssociations()}
+          />
+        </TabPanel>
+        <TabPanel value={subType.id} index={3}>
+          <VolunteerPanel
+            volunteerPages={returnVolunteers()}
+          />
+        </TabPanel>
       </div>
     </div>
   );

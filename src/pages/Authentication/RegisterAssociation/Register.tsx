@@ -5,8 +5,13 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { AuthenticationService } from '../../../services/authentication.service';
 import './Register.scss';
 import titleLogo from "../../../images/logo/primary_logo.png";
+import checkStrengthPassword from '../../../functions/checkStrengthPassword';
+import AutohideSnackbar from "../../../components/SnackBar";
 
 function RegisterAssociation() {
+    const [response, setResponse] = useState<{ error: Boolean; message: string }>(
+        { error: false, message: "" }
+    );
     /***
      * Define all states
     ***/
@@ -70,19 +75,6 @@ function RegisterAssociation() {
         }
     };
 
-    /* Function to check strength password */
-    const checkStrength = (password: string) => {
-        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@:_#$%.^&*])(?=.{8,})/;
-        // regex : 1 uppercase, 1 lowercase, 1 number, 1 special character (!@:_#$%.^&*), 8 characters minimum
-        if (regex.test(password)) {
-            setStrength(true);
-            return true;
-        } else {
-            setStrength(false);
-            return false;
-        }
-    };
-
     /* Function to check email format */
     const checkEmailFormat = (email: string) => {
         const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -114,7 +106,7 @@ function RegisterAssociation() {
         /* Check if all inputs are complete */
         checkComplete(data);
         /* Check strength password */
-        checkStrength(data.get('password') as string);
+        checkStrengthPassword(data.get('password') as string);
         /* Check email format */
         checkEmailFormat(data.get('email') as string);
         /* Check phone format */
@@ -125,17 +117,26 @@ function RegisterAssociation() {
     const responseExecute = (response_status: number) => {
         switch (response_status) {
           case 201:
-            alert("Inscription réussie");
-            localStorage.setItem("role", "association");
-            navigate("/profile");
-            window.location.reload();
-            break;
-          case 401:
-            alert("Connexion échouée");
-            break;
+              setResponse({
+                  error: false,
+                  message: "Inscription réussie",
+              });
+              localStorage.setItem("role", "association");
+              navigate("/");
+              window.location.reload();
+              break;
+          case 400:
+              setResponse({
+                  error: true,
+                  message: "Inscription échouée, veuillez vérifier que tous les champs sont rempli",
+              });
+              break;
           default:
-            alert("Erreur inconnue");
-            break;
+              setResponse({
+                  error: true,
+                  message: "Erreur inconnue, veuillez réessayer plus tard",
+              });
+              break;
         }
       };
   
@@ -146,8 +147,9 @@ function RegisterAssociation() {
 
         /* If all inputs are complete, send data */
         if (user['name'] && user['rna'] && user['phone'] && user['email'] && user['password']) {
+            setStrength(checkStrengthPassword(user['password'] as string));
             /* If user is major, password is strong enough, email format is correct and phone format is correct, send data */
-            if (checkStrength(user['password'] as string) && checkEmailFormat(user['email'] as string) && checkPhoneFormat(user['phone'] as string)) {
+            if (strength && checkEmailFormat(user['email'] as string) && checkPhoneFormat(user['phone'] as string)) {
                 // call RegisterAssociation service
                 const response_status = AuthenticationService.registerAssociations(user);
                 responseExecute(await response_status)
@@ -362,6 +364,13 @@ function RegisterAssociation() {
                                 )}
                             </Grid>
                         </Grid>
+                        {response.message !== "" && (
+                            <AutohideSnackbar
+                                message={response.message}
+                                open={true}
+                                response={response.error}
+                            />
+                        )}
                         <Button
                             type="submit"
                             fullWidth

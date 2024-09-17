@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Alert, Box, Button, Grid, IconButton, InputAdornment, Link, TextField, Typography } from "@mui/material";
+import {Alert, Box, Button, Grid, IconButton, InputAdornment, Link, TextField, Typography } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { AuthenticationService } from "../../../services/authentication.service";
 import "./Login.scss";
 import titleLogo from "../../../images/logo/primary_logo.png";
+import ForgotPasswordModal from "../ForgotPasswordModal/ForgotPasswordModal";
+import config from "../../../config";
+import AutohideSnackbar from "../../../components/SnackBar";
 
 function LoginVolunteer() {
+  const [response, setResponse] = useState<{ error: Boolean; message: string }>(
+    { error: false, message: "" }
+  );
   /***
    * Define all states
    ***/
@@ -17,26 +23,19 @@ function LoginVolunteer() {
   /* Set phone format state */
   const [phoneFormat, setPhoneFormat] = useState(true);
   /* State complete for all inputs*/
-  const [phone, setPhone] = useState(true);
   const [email, setEmail] = useState(true);
   const [password, setPassword] = useState(true);
+  const [fodder, setFodder] = useState(true);
 
   const navigate = useNavigate();
 
+
+  const [open, setOpen] = React.useState(false);
+
   /* Function to check if all inputs are complete */
   const checkComplete = (data: FormData) => {
-    /*data.forEach((value, key) => {
-            if (value === '') {
-                setComplete({...complete, [key]: false});
-            } else {
-                setComplete({...complete, [key]: true});
-            }
-        });*/
-    if (data.get("email") === "") {
-      setEmail(false);
-    } else {
-      setEmail(true);
-    }
+    const credential = data.get("credential") as string;
+    setEmail(credential.includes("@"));
     if (data.get("password") === "") {
       setPassword(false);
     } else {
@@ -57,43 +56,39 @@ function LoginVolunteer() {
     }
   };
 
-  /* Function to check phone format */
-  const checkPhoneFormat = (phone: string) => {
-    const regex = /^\+(?:[0-9] ?){6,14}[0-9]$/;
-    // regex : "+" or "00", 1 to 3 numbers country code, 1 to 12 numbers
-    if (regex.test(phone)) {
-      setPhoneFormat(true);
-      return true;
-    } else {
-      setPhoneFormat(false);
-      return false;
-    }
-  };
-
   /* Function to check Inputs */
   const checkInput = (data: FormData) => {
     /* Check if all inputs are complete */
     checkComplete(data);
+    const credential = data.get("credential") as string;
+    setEmail(credential.includes("@"));
     /* Check email format */
-    checkEmailFormat(data.get("email") as string);
-    /* Check phone format */
-    checkPhoneFormat(data.get("phone") as string);
+    checkEmailFormat(credential);
   };
 
   /* Function to execute response */
   const responseExecute = (response_status: number) => {
     switch (response_status) {
       case 200:
-        alert("Connexion réussie");
+        setResponse({
+          error: false,
+          message: "Connexion réussie",
+        });
         localStorage.setItem("role", "volunteer");
         navigate("/");
         window.location.reload();
         break;
-      case 401:
-        alert("Connexion échouée");
+      case 400:
+        setResponse({
+          error: true,
+          message: "Connexion échouée, veuillez vérifier vos identifiants",
+        });
         break;
       default:
-        alert("Erreur inconnue");
+        setResponse({
+          error: true,
+          message: "Erreur inconnue, veuillez réessayer plus tard",
+        });
         break;
     }
   };
@@ -102,14 +97,31 @@ function LoginVolunteer() {
   const sendData = async (data: FormData) => {
     // convert FormData to table
     const user = Object.fromEntries(data.entries());
+    user["email"] = user["credential"].toString().includes("@") ? user["credential"] : "";
+    user["phone"] = user["credential"].toString().includes("@") ? "" : user["credential"];
 
     /* If all inputs are complete, send data */
-    if (user["phone"] && user["email"] && user["password"]) {
-      /* If user is major, password is strong enough, email format is correct and phone format is correct, send data */
-      if (checkEmailFormat(user["email"] as string)) {
+    if ((user["phone"] || user["email"]) && user["password"]) {
+      if ((checkEmailFormat(user["email"] as string))) {
         // call LoginVolunteer service
-        const response_status = AuthenticationService.loginVolunteers(user);
-        responseExecute(await response_status);
+        await AuthenticationService.loginVolunteers(user)
+          .then((response_status) => {
+            if (typeof response_status === 'number') {
+              responseExecute(response_status);
+            } else {
+              setResponse({
+                error: true,
+                message: "Erreur inconnue, veuillez réessayer plus tard",
+              });
+            }
+          })
+          .catch((error) => {
+            setResponse({
+              error: true,
+              message: "Erreur inconnue, veuillez réessayer plus tard",
+            });
+          });
+          // Handle the case where response_status is null
       }
     }
   };
@@ -137,9 +149,9 @@ function LoginVolunteer() {
     <div className="center-form">
       <div className="choice-form">
         <div className="row">
-            <div className="col-12">
-                <img className="titleLogo" src={titleLogo} alt=""/>
-            </div>
+          <div className="col-12">
+            <img className="titleLogo" src={titleLogo} alt="" />
+          </div>
         </div>
         <Box
           sx={{
@@ -158,54 +170,35 @@ function LoginVolunteer() {
             onSubmit={handleSubmit}
             sx={{ mt: 3 }}
           >
-            <Grid container spacing={2}  justifyContent="center" flexDirection="column">
-              {/* Input phone number */}
+            <Grid container spacing={2} justifyContent="center" flexDirection="column">
               <Grid item xs={12}>
                 <TextField
-                  autoComplete="tel"
-                  name="phone"
+                  autoComplete="credential"
+                  name="credential"
                   required
                   fullWidth
-                  id="phone"
-                  label="Numéro de téléphone"
+                  id="credential"
+                  label="Numéro de téléphone, e-mail"
                   autoFocus
                   sx={{ alignItems: "center" }}
-                  type="tel"
-                  /* accept only numbers and symbols + */
-                  inputProps={{ pattern: "[0-9+]*",
-                                style: { color: "#2D2A32",
-                                boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                                borderRadius: "10px"
-                              }
+                  type="text"
+                  inputProps={{
+                    style: {
+                      color: "#2D2A32",
+                      boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                      borderRadius: "10px"
+                    }
                   }}
-                  helperText="Format : +336XXXXXXXX"
+                  helperText="Format : +336XXXXXXXX ou XX@XX.X"
                   FormHelperTextProps={{
-                    sx: { marginRight: "auto" }
+                    sx: { marginRight: "auto" },
                   }}
-                  error={!phone || !phoneFormat}
+                  error={!fodder}
+
                 />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  autoComplete="email"
-                  name="email"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Adresse email"
-                  sx={{ alignItems: "center" }}
-                                    InputProps={{
-                                        style: { color: "#2D2A32",
-                                                 boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                                                 borderRadius: "10px",
-                                               }
-                                    }}
-                />
-                {/* If email is empty, display an error message */}
                 {!email && (
-                  <Alert severity="error">L'adresse email est requise</Alert>
+                  <Alert severity="error">Un identifiant est requis</Alert>
                 )}
-                {/* If email is not empty but format is not correct, display a warning message */}
                 {email && !emailFormat && (
                   <Alert severity="warning">
                     Le format de l'adresse email doit être au format
@@ -223,19 +216,20 @@ function LoginVolunteer() {
                   label="Mot de passe"
                   type={showPassword ? "text" : "password"}
                   sx={{ alignItems: "center" }}
-                        InputProps={{
-                            style: { color: "#2D2A32",
-                                     boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                                     borderRadius: "10px",
-                                   },
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton onClick={handleClick} edge="end">
-                              {showPassword ? <Visibility /> : <VisibilityOff />}
-                            </IconButton>
-                          </InputAdornment>
-                        )
-                      }}
+                  InputProps={{
+                    style: {
+                      color: "#2D2A32",
+                      boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                      borderRadius: "10px",
+                    },
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton onClick={handleClick} edge="end">
+                          {showPassword ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
                 />
                 {/* If password is empty, display an error message */}
                 {!password && (
@@ -243,22 +237,38 @@ function LoginVolunteer() {
                 )}
               </Grid>
             </Grid>
+            {response.message !== "" && (
+              <AutohideSnackbar
+                message={response.message}
+                open={true}
+                response={response.error}
+              />
+            )}
+            <div style={{ marginTop: "10px", justifyContent: "flex-end", display: "flex" }}> 
+                <a className="forgot-password"
+                    onClick={() => {setOpen(true);
+                }}>
+                Mot de passe oublié ?
+              </a>
+              <ForgotPasswordModal modalProps={{ open: open, handleClose: () => setOpen(false), route: "/volunteers/" }} />
+            </div>
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 6,
-                    mb: 3,
-                    color: "#FFFEFF",
-                    backgroundColor: "#67A191",
-                    borderRadius: "10px",
-                    boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                    width: "200px",
-                  }}
+              sx={{
+                mt: 6,
+                mb: 3,
+                color: "#FFFEFF",
+                backgroundColor: "#67A191",
+                borderRadius: "10px",
+                boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                width: "200px",
+              }}
             >
               Connexion
             </Button>
-            <Grid container justifyContent="flex-end" sx={{ mb: 4 }}>
+            <Grid container justifyContent="center" sx={{ mb: 1 }}>
               <Grid item>
                 <Link href="/volunteers/register" variant="body2">
                   Vous n'avez pas de compte ? Inscrivez-vous

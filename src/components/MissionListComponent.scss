@@ -1,0 +1,23 @@
+.component-missions-list-missions {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 5%;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.component-missions-list-mission {
+    margin: 1% 2.5%;
+    width: 40%;
+}
+
+@media (max-width: 768px) {
+    .component-missions-list-missions {
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .component-missions-list-mission {
+        width: 80%;
+    }
+}

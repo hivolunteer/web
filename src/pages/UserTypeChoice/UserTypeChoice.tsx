@@ -30,6 +30,8 @@ const UserTypeChoice = () => {
         to_go = "/associations";
       } else if (selectedOption === 'option2') {
         to_go = "/volunteers";
+      } else if (selectedOption === 'option3') {
+        to_go = "/companies";
       } else {
         return;
       }

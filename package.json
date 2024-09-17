@@ -7,6 +7,7 @@
     "@emotion/styled": "^11.11.0",
     "@fontsource/montserrat": "^4.5.14",
     "@mui/icons-material": "^5.11.16",
+    "@mui/lab": "5.0.0-alpha.170",
     "@mui/material": "^5.12.3",
     "@mui/system": "^5.15.14",
     "@mui/x-date-pickers": "^6.18.6",
@@ -23,6 +24,7 @@
     "binary-extensions": "^2.2.0",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.10",
+    "ical-generator": "^7.1.0",
     "lottie-react": "^2.4.0",
     "moment": "^2.29.4",
     "mui-address-autocomplete": "^3.0.4",
@@ -38,6 +40,7 @@
     "react-phone-input-material-ui": "^2.18.1",
     "react-scripts": "5.0.1",
     "sass": "^1.62.0",
+    "tailwind-merge": "^2.3.0",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
@@ -70,10 +73,15 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.16.7",
     "@types/jest": "^27.5.2",
     "@types/mocha": "^10.0.6",
     "@types/mui-image": "^1.0.1",
+    "autoprefixer": "^10.4.19",
     "jest-dom": "^4.0.0",
-    "react-router-dom": "^6.11.2"
+    "postcss": "^8.4.38",
+    "react-icons": "^5.1.0",
+    "react-router-dom": "^6.11.2",
+    "tailwindcss": "^3.4.3"
   }
 }

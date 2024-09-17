@@ -5,8 +5,12 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { AuthenticationService } from '../../../services/authentication.service';
 import './Register.scss';
 import titleLogo from "../../../images/logo/primary_logo.png";
+import AutohideSnackbar from "../../../components/SnackBar";
 
 function RegisterVolunteer() {
+    const [response, setResponse] = useState<{ error: Boolean; message: string }>(
+        { error: false, message: "" }
+    );
     /***
      * Define all states
     ***/
@@ -22,15 +26,15 @@ function RegisterVolunteer() {
 
     const navigate = useNavigate();
     /* Check specific parameters */
-        /* State for age major */
-        const [major, setMajor] = useState(true);
-        /* State strength password */
-        const [strength, setStrength] = useState(true);
-        /* State for email format */
-        const [emailFormat, setEmailFormat] = useState(true);
-        /* State for phone format */
-        const [phoneFormat, setPhoneFormat] = useState(true);
-        const [phoneInput, setPhoneInput] = useState('' as string);
+    /* State for age major */
+    const [major, setMajor] = useState(true);
+    /* State strength password */
+    const [strength, setStrength] = useState(true);
+    /* State for email format */
+    const [emailFormat, setEmailFormat] = useState(true);
+    /* State for phone format */
+    const [phoneFormat, setPhoneFormat] = useState(true);
+    const [phoneInput, setPhoneInput] = useState('' as string);
 
 
     /***
@@ -38,7 +42,7 @@ function RegisterVolunteer() {
     ***/
     /* Function to check if user is major */
     const checkMajor = (birthdate: Date) => {
-       // const birthdate = new Date(data.get('birthdate') as string);
+        // const birthdate = new Date(data.get('birthdate') as string);
         const today = new Date();
         let age = today.getFullYear() - birthdate.getFullYear();
         const m = today.getMonth() - birthdate.getMonth();
@@ -146,25 +150,34 @@ function RegisterVolunteer() {
         /* Check email format */
         checkEmailFormat(data.get('email') as string);
         /* Check phone format */
-        checkPhoneFormat(data.get('phone') as string);        
+        checkPhoneFormat(data.get('phone') as string);
     };
 
     /* Function to execute response */
     const responseExecute = (response_status: number) => {
-      switch (response_status) {
-        case 201:
-          alert("Inscription réussie");
-          localStorage.setItem("role", "association");
-          navigate("/profile");
-          window.location.reload();
-          break;
-        case 401:
-          alert("Connexion échouée");
-          break;
-        default:
-          alert("Erreur inconnue");
-          break;
-      }
+        switch (response_status) {
+            case 201:
+                setResponse({
+                    error: false,
+                    message: "Inscription réussie",
+                });
+                localStorage.setItem("role", "volunteer");
+                navigate("/");
+                window.location.reload();
+                break;
+            case 400:
+                setResponse({
+                    error: true,
+                    message: "Inscription échouée, veuillez vérifier que tous les champs sont rempli",
+                });
+                break;
+            default:
+                setResponse({
+                    error: true,
+                    message: "Erreur inconnue, veuillez réessayer plus tard",
+                });
+                break;
+        }
     };
 
     /* Function to send data and print user token receive */
@@ -211,7 +224,7 @@ function RegisterVolunteer() {
             <div className="choice-form">
                 <div className="row">
                     <div className="col-12">
-                        <img className="titleLogo" src={titleLogo} alt=""/>
+                        <img className="titleLogo" src={titleLogo} alt="" />
                     </div>
                 </div>
                 <Box
@@ -229,7 +242,7 @@ function RegisterVolunteer() {
                         noValidate
                         onSubmit={handleSubmit}
                         sx={{ mt: 3 }}
-                        >
+                    >
                         <Grid container spacing={2} justifyContent="center" flexDirection="column">
                             <Grid container spacing={1} justifyContent="center">
                                 <Grid item xs={12} sm={5}>
@@ -243,10 +256,10 @@ function RegisterVolunteer() {
                                         autoFocus
                                         InputProps={{
                                             style: {
-                                                     color: "#2D2A32",
-                                                     boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                                                     borderRadius: "10px"
-                                                   }
+                                                color: "#2D2A32",
+                                                boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                                borderRadius: "10px"
+                                            }
                                         }}
                                     />
                                     {/* If first_name is empty, display an error message */}
@@ -265,10 +278,11 @@ function RegisterVolunteer() {
                                         id='last_name'
                                         label='Nom'
                                         InputProps={{
-                                            style: { color: "#2D2A32",
-                                                     boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                                                     borderRadius: "10px",
-                                                   }
+                                            style: {
+                                                color: "#2D2A32",
+                                                boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                                borderRadius: "10px",
+                                            }
                                         }}
                                     />
                                     {/* If last_name is empty, display an error message */}
@@ -293,10 +307,11 @@ function RegisterVolunteer() {
                                     }}
                                     sx={{ alignItems: "center" }}
                                     InputProps={{
-                                        style: { color: "#2D2A32",
-                                                 boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                                                 borderRadius: "10px",
-                                               }
+                                        style: {
+                                            color: "#2D2A32",
+                                            boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                            borderRadius: "10px",
+                                        }
                                     }}
                                 />
                                 {/* If birthdate is empty, display an error message */}
@@ -340,7 +355,7 @@ function RegisterVolunteer() {
                                     sx={{ alignItems: "center" }}
                                 />
 
-                            
+
                                 {/* If phone is empty, display an error message */}
                                 {!phone && (
                                     <Alert severity="error">
@@ -364,10 +379,11 @@ function RegisterVolunteer() {
                                     label='Adresse email'
                                     sx={{ alignItems: "center" }}
                                     InputProps={{
-                                        style: { color: "#2D2A32",
-                                                 boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                                                 borderRadius: "10px",
-                                               }
+                                        style: {
+                                            color: "#2D2A32",
+                                            boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                            borderRadius: "10px",
+                                        }
                                     }}
                                 />
                                 {/* If email is empty, display an error message */}
@@ -394,19 +410,20 @@ function RegisterVolunteer() {
                                     type={showPassword ? 'text' : 'password'}
                                     sx={{ alignItems: "center" }}
                                     InputProps={{
-                                        style: { color: "#2D2A32",
-                                                 boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                                                 borderRadius: "10px",
-                                               },
+                                        style: {
+                                            color: "#2D2A32",
+                                            boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                            borderRadius: "10px",
+                                        },
                                         endAdornment: (
-                                          <InputAdornment position="end">
-                                             <IconButton
-                                               onClick={handleClick}
-                                               edge="end"
-                                             >
-                                               {showPassword ? <Visibility /> : <VisibilityOff />}
-                                             </IconButton>
-                                           </InputAdornment>
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    onClick={handleClick}
+                                                    edge="end"
+                                                >
+                                                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                                                </IconButton>
+                                            </InputAdornment>
                                         )
                                     }}
                                 />
@@ -424,23 +441,31 @@ function RegisterVolunteer() {
                                 )}
                             </Grid>
                         </Grid>
+                        {response.message !== "" && (
+                            <AutohideSnackbar
+                                message={response.message}
+                                open={true}
+                                response={response.error}
+                            />
+                        )}
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{ mt: 6,
+                            sx={{
+                                mt: 6,
                                 mb: 3,
                                 color: "#FFFEFF",
                                 backgroundColor: "#67A191",
                                 borderRadius: "10px",
                                 boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
                                 width: "200px",
-                              }}
+                            }}
                         >
                             Inscription
                         </Button>
                         <Grid container justifyContent='flex-end' sx={{ mb: 4 }}>
-                            <Grid item sx={{ textAlign: 'center', width: '100%'}}>
+                            <Grid item sx={{ textAlign: 'center', width: '100%' }}>
                                 <Link href='/volunteers/login' variant='body2'>
                                     Vous avez déjà un compte ? Connectez-vous
                                 </Link>

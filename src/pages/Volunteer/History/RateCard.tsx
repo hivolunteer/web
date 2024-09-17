@@ -43,7 +43,27 @@ function RateCard(props: { mission: number }) {
   let [rated, setRated] = useState<boolean>(false);
   let [stars, setStars] = useState<number>(0);
 
+  let [location, setlocation] = useState<string>("");
+
   useEffect(() => {
+
+    function getLocation(location: string) {
+      fetch(`${config.apiUrl}/locations/${location}`, {
+          method: 'GET',
+          headers: {
+              authorization: `Bearer ${localStorage.getItem('token')}`,
+              'Content-Type': 'application/json'
+          }
+      }).then((response) => {
+          if (response.status === 200) {
+              response.json().then((data) => {
+                  let _location =  `${data.street_number} ${(data.street_number_suffix === null) ? '' : data.street_number_suffix } ${data.street_type} ${data.street_name}, ${data.postal_code} ${data.city}`
+                  setlocation(_location);
+              });
+          }
+      });
+  }
+
     fetch(`${config.apiUrl}/missions/volunteer/rate/${props.mission}`, {
       method: "GET",
       headers: {
@@ -71,6 +91,7 @@ function RateCard(props: { mission: number }) {
     }).then((response) => {
       if (response.status === 200) {
         response.json().then((data) => {
+          getLocation(data.association_mission.location)
           setMission(data.association_mission);
           fetch(
             `${config.apiUrl}/associations/profile/` +
@@ -86,6 +107,7 @@ function RateCard(props: { mission: number }) {
             if (response.status === 200) {
               response.json().then((data) => {
                 setAssociationPicture(data.association.profile_picture);
+
               });
             }
           });
@@ -191,7 +213,7 @@ function RateCard(props: { mission: number }) {
                 style={{ marginBottom: "2px" }}
               >
                 <NearMeOutlinedIcon />
-                <p style={{ marginLeft: "10px" }}> Lieu </p>
+                <p style={{ marginLeft: "20px", width: "80%" }}> {location} </p>
               </div>
             </div>
           </div>

@@ -39,18 +39,24 @@ export interface Mission {
   trueLocation: Location | null,
   location: number,
   title: string,
-  rrating: Rating | null
+  rating: Rating | null,
+  picture: string,
+  theme_id: number,
+  accept_minors: boolean,
+  status: number
 }
 
 export interface Association {
   id: number,
   email: string,
   name: string,
+  bee: Float32Array,
   phone: string,
   description: string,
   rating: number,
   profile_picture: string,
-  rna: string
+  rna: string,
+  is_premium: boolean
 }
 
 export interface VolunteerMission {
@@ -72,4 +78,17 @@ export interface Rating {
   comment_from_volunteer: string,
   stars_from_association: number,
   comment_from_association: string
+}
+
+export interface Skill {
+  skill_name: string;
+  skill_id: number;
+  color_hex: string;
+}
+
+export interface Company {
+  id: number,
+  name: string,
+  siren: string,
+  profile_picture: string
 }

@@ -1,0 +1,120 @@
+.association-manage-mission-volunteers-container {
+    margin-top: 2rem;
+
+    .validate-all-button {
+        margin-left: auto;
+        margin-right: 2rem;
+    }
+}
+
+.association-manage-mission-volunteers-list-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: flex-start;
+    margin-top: 2rem;
+    padding: 1rem;
+    overflow-x: auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.association-manage-mission-volunteer-card {
+    border: 1px solid #67A191;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0.5rem;
+    border-radius: 20px;
+    width: 30%;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.association-manage-mission-volunteer-card-picture-container {
+    width: 80px;
+    height: 80px;
+}
+
+.association-manage-mission-volunteer-card-picture {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 100%;
+}
+
+.association-manage-mission-volunteer-card-information {
+    margin: 1rem 0;
+    text-align: center;
+    width: 100%;
+}
+
+.volunteer-comment-rating {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .MuiTextField-root {
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    }
+
+    .MuiButton-root {
+        align-self: center;
+        margin-top: 2rem;
+    }
+}
+
+.volunteer-comment-rating .MuiTextField-root {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.expired-rating-comment {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.expired-rating-comment > div {
+    margin-bottom: 10px;
+}
+
+.expired-comment {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.expired-rating {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.last-rating {
+    margin-left: 1rem;
+}
+
+.last-comment {
+    margin-left: 1rem;
+}
+
+@media (max-width: 1300px) {
+    .association-manage-mission-volunteer-card {
+        width: 40%;
+    }
+}
+
+@media (max-width: 768px) {
+    .association-manage-mission-volunteers-list-container {
+        justify-content: center;
+    }
+}
