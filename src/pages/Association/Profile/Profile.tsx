@@ -210,7 +210,6 @@ export default function ProfilePage(props: any) {
           setTotalMissionPassed(data.passed.length);
           setTotalMissionActive(data.active.length);
           
-          //let totalPassedHours = 0;
           let justHours = 0;
           let justMinutes = 0;
           data.passed.map((mission : Mission) => {
@@ -219,14 +218,11 @@ export default function ProfilePage(props: any) {
             const startTime = new Date(mission.start_date) 
             const endTime = new Date(mission.end_date) 
 
-            //const duration = Math.abs(endTime.valueOf() - startTime.valueOf()) / (1000 * 3600);
             const hours = endTime.getHours() - startTime.getHours();
             const minutes = endTime.getMinutes() - startTime.getMinutes();
-            //totalPassedHours += duration;
             justHours += hours;
             justMinutes += minutes
           })
-          //console.log(totalPassedHours)
           console.log(justHours)
           console.log(justMinutes)
           setHours(justHours)
