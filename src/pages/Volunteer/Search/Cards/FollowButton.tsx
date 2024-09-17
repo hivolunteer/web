@@ -44,7 +44,7 @@ const FollowButton: React.FC<Props> = ({ isFollowing, onFollow }) => {
     onClick={isFollowing ? handleUnfollow : handleFollow}
     sx={{ marginLeft: 2, alignContent: 'center', justifyItems: 'center', display: 'flex'}}
     >
-    {isFollowing ? 'Unfollow' : 'Follow'}
+    {isFollowing ? 'Ne plus suivre' : 'Suivre'}
 </Button>
   );
 };
