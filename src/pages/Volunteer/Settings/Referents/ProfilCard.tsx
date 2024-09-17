@@ -6,19 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { Association } from '../../../../interfaces';
 import { borderRadius, Box } from '@mui/system';
 
-const style = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    //border: '2px solid #000',
-    boxShadow: 24,
-    p: 2,
-    borderRadius: '10px',
-};
-
 interface AssociationProfilCardProps extends React.HTMLAttributes<HTMLDivElement> {
     association: Association;
     onDeleteReferent: (id: number) => void;
@@ -70,7 +57,18 @@ function AssociationProfilCard({ className, association, onDeleteReferent, ...pr
             <div className="association-referent-card__settings" onClick={handleOpenModal}>Dissocier</div>
             <div className="association-referent-card__modal">
                 <Modal open={openModal} onClose={handleCloseModal}>
-                    <Box sx={ style }>
+                    <Box sx={{
+                            position: 'absolute' as 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: 400,
+                            bgcolor: 'background.paper',
+                            //border: '2px solid #000',
+                            boxShadow: 24,
+                            p: 2,
+                            borderRadius: '10px',
+                        }}>
                         <Typography id="modal-modal-title" variant="h6" component="h2">
                             Se dissocier de l'association
                         </Typography>
