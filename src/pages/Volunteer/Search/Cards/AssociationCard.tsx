@@ -1,11 +1,14 @@
-import { Card, CardContent, CardMedia, Typography } from '@mui/material';
+import { Button, Card, CardContent, CardMedia, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
 import StarIcon from '@mui/icons-material/Star';
 import config from '../../../../config';
+import FollowButton from './FollowButton';
+import { set } from 'date-fns';
 
 export default function AssociationCard(props: {association_id: number}) {
     
         const [association, setAssociation] = useState<Association | undefined>(undefined);
+        const [isFollowing, setIsFollowing] = useState(false);
 
         interface Association {
             id: number,
@@ -30,6 +33,22 @@ export default function AssociationCard(props: {association_id: number}) {
                 }
             })
         }, [])
+
+        const handleFollow = async () => {
+            try {
+                await fetch(`${config.apiUrl}/follows`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ association_id: association?.id }),
+                });
+                setIsFollowing(!isFollowing);
+            } catch (error) {
+                console.error('Error following association', error);
+            }
+            setIsFollowing(!isFollowing);
+          };
 
         return(
             <div>
@@ -63,9 +82,10 @@ export default function AssociationCard(props: {association_id: number}) {
                             {association?.description}
                         </Typography>
                     </CardContent>
-                    <CardContent>
-                        <Typography variant="body2" color="text.secondary" sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', cursor: 'pointer', textDecoration: 'underline'}}
-                        onClick={() => (window.location.href = 'association/' + association?.id)}>
+                    <CardContent sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer'}}>
+                        <FollowButton isFollowing={isFollowing} onFollow={handleFollow} />
+                        <Typography variant="body2" color="text.secondary" sx={{ cursor: 'pointer', textDecoration: 'underline'}}
+                        onClick={() => console.log('association ', association?.id)}>
                             Voir plus
                         </Typography>
                     </CardContent>
