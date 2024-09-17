@@ -179,6 +179,7 @@ export default function TeamRanking(props: any) {
             }
           }
           setCartouches(getCartouches => [...getCartouches, cartouche])
+          
         }).catch(error => {
           console.log(error);
         });
@@ -186,18 +187,17 @@ export default function TeamRanking(props: any) {
     }
 
     
-
+    
     useEffect(() => {
       setMTeams([])
+      setCartouches([])
       getTeams();
+      
     }, [])
     
     useEffect(() => {
-      setCartouches([])
-      let isCalled = false
-      if (!isCalled) {
+      if (getMTeams.length > 0) {        
         getTeamMembers()
-        isCalled = true
       }
     }, [getMTeams])
 
