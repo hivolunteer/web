@@ -3,18 +3,23 @@ import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import config from "../../../../config";
 import './LocationModal.scss'
+import { parse } from "path";
+import ModifyLocationModal from "./ModifyLocationModal";
+import React from "react";
 
 interface Address {
+    name: string;
     street_number: number | null;
     street_number_suffix: string | null;
     street_name: string;
     street_type: string | null;
     city: string;
-    postal_code: number | null
+    postal_code: number | null;
     departement_id : number | null;
 }
 
 interface AddressDB {
+    name: string;
     street_number: number;
     street_number_suffix: string;
     street_name: string;
@@ -34,6 +39,9 @@ interface LocationModalProps {
     setId: (id: number) => void;
 }
   
+  
+
+
 
 const LocationModal = ({
   open,
@@ -41,11 +49,12 @@ const LocationModal = ({
   location,
   setLocation,
   setLocationString,
-  setId
+  setId,
 }: LocationModalProps) => {
 
     const [basicAddress, setBasicAddress] = useState<Address>(location);
-
+    const [openModal, setOpenModal] = React.useState<boolean>(false);
+    const [selectedLocation, setSelectedLocation] = useState<AddressDB | null>(null);
     const street_suffix = [
         'BIS', 'TER', 'QUATER'
     ]
@@ -56,7 +65,28 @@ const LocationModal = ({
 
     const [localisations, setLocationList] = useState<AddressDB[]>([]);
 
-    const [shownLocation, setShownLocation] = useState<AddressDB[]>([]);
+
+    const resetFields = () => {
+        setBasicAddress({
+            name: '',
+            street_number: null,
+            street_number_suffix: null,
+            street_name: '',
+            street_type: null,
+            city: '',
+            postal_code: null,
+            departement_id: null
+        })
+    }
+
+    const handleModifyClick = (location: AddressDB) => {
+        setOpenModal(true);
+        setSelectedLocation(location);
+    }
+
+    const handleInnerClose = () => {
+        setOpenModal(false);
+    }
 
     useEffect(() => {
         fetch(`${config.apiUrl}/locations`, {
@@ -82,7 +112,7 @@ const LocationModal = ({
 
 
     const sendData = () => {
-        if (basicAddress.street_number && basicAddress.street_name && basicAddress.street_type && basicAddress.city && basicAddress.postal_code) {
+        if (basicAddress.street_number && basicAddress.street_name && basicAddress.street_type && basicAddress.city && basicAddress.postal_code && basicAddress.name) {
             basicAddress.departement_id = Number(basicAddress.postal_code.toString().slice(0, 2));
             fetch(`${config.apiUrl}/locations/create`, {
                 method: 'POST',
@@ -106,7 +136,7 @@ const LocationModal = ({
                 if (response.status === 201) {
                     response.json().then((data: any) => {
                         setLocation(basicAddress);
-                        let address = String(basicAddress.postal_code) + ' ' + basicAddress.city + ', ' + String(basicAddress.street_number) + ' ';
+                        let address = basicAddress.name + ' ' + String(basicAddress.postal_code) + ' ' + basicAddress.city + ', ' + String(basicAddress.street_number) + ' ';
                         if (basicAddress.street_number_suffix)
                             address += basicAddress.street_number_suffix + ' ';
                         address += basicAddress.street_type + ' ' + basicAddress.street_name;
@@ -155,7 +185,7 @@ const LocationModal = ({
 
         infos.forEach((location: Address) => {
             localisations.forEach((localisation: AddressDB) => {
-                if (location.street_number === localisation.street_number && location.street_number_suffix === localisation.street_number_suffix && location.street_type === localisation.street_type && location.street_name === localisation.street_name && location.city === localisation.city && location.postal_code === localisation.postal_code) {
+                if (location.street_number === localisation.street_number && location.street_number_suffix === localisation.street_number_suffix && location.street_type === localisation.street_type && location.street_name === localisation.street_name && location.city === localisation.city && location.postal_code === localisation.postal_code && location.name === localisation.name) {
                     localisation_infos.push(localisation);
                 }
             })
@@ -182,6 +212,22 @@ const LocationModal = ({
             <DialogContent>
                 <Box style={{ padding: 6 }}>
                     <Grid container spacing={4} style={{ marginBottom: 12 }}>
+                    <Grid item xs={2} lg={2}>
+                            <TextField
+                                id="location_name"
+                                label="Nom de l'adresse"
+                                fullWidth
+                                variant="outlined"
+                                type="string"
+                                onChange={(e) => 
+                                    {
+                                        setBasicAddress({...basicAddress, name: e.target.value})
+                                    }
+                                }
+                                inputProps={{ min: 0, step: 1 }}
+                                value={basicAddress.name}
+                            />
+                        </Grid>
                         <Grid item xs={2} lg={2}>
                             <TextField
                                 id="street_number"
@@ -195,7 +241,6 @@ const LocationModal = ({
                                     else
                                         setBasicAddress({...basicAddress, street_number: null})
                                 }}
-                                inputProps={{ min: 0, step: 1 }}
                                 value={basicAddress.street_number}
                             />
                         </Grid>
@@ -228,7 +273,7 @@ const LocationModal = ({
                                 value={basicAddress.street_type}
                             />
                         </Grid>
-                        <Grid item xs={6} lg={6}>
+                        <Grid item xs={4} lg={4}>
                             <TextField
                                 id="street_name"
                                 label="Nom de la rue"
@@ -275,6 +320,9 @@ const LocationModal = ({
                             />
                         </Grid>
                     </Grid>
+                    <Button variant="contained" color="primary" onClick={resetFields} >
+                        Réinitialiser
+                    </Button>
                 </Box>
             </DialogContent>
             <DialogTitle style={{ textAlign: "center" }}>
@@ -283,19 +331,45 @@ const LocationModal = ({
             <DialogContent>
                  {
                     (parseInfo().length > 0) ? (
-                        parseInfo().slice(0, 3).map((location: AddressDB) => (
-                            <div className='location-shown' onClick={() => {
+                        parseInfo().slice(0, 3).map((location: AddressDB, index) => (
+                            <div key={index} className='location-shown' style={{justifyContent: "space-around"}} onClick={(e) => {
+                                e.stopPropagation();
                                 setBasicAddress(location);
                                 setId(location.id);
-                                let address = String(location.postal_code) + ' ' + location.city + ', ' + String(location.street_number) + ' ';
+                                let address = location.name + ' ' + String(location.postal_code) + ' ' + location.city + ', ' + String(location.street_number) + ' ';
                                 if (location.street_number_suffix)
                                     address += location.street_number_suffix + ' ';
-                                address += location.street_type + ' ' + location.street_name;                               handleClose();
+                                address += location.street_type + ' ' + location.street_name;
                                 setLocationString(address);
                                 setLocation(location);
                                 handleClose();
                             }}>
-                                <p>{location.street_number} {location.street_number_suffix} {location.street_type} {location.street_name}, {location.postal_code} {location.city}</p>
+                                <p>{location.name}</p>
+                                <Grid item xs={8} lg={8} style={{ display: "flex", justifyContent: "center" }}>
+                                    <Button
+                                        variant="outlined"
+                                        style={{ width: "100%" }}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleModifyClick(location)}
+                                        }
+                                    >
+                                        { "Modifier"}
+                                    </Button>
+                                </Grid>
+                                {/* Inner dialog for modifying selected location */}
+                                {selectedLocation && (
+                                    <ModifyLocationModal
+                                        open={openModal}
+                                        handleClose={(e) => {
+                                            e.stopPropagation(); // Prevent the close from affecting outer dialogs
+                                            handleInnerClose(); // Close inner dialog
+                                        }}                                        location={selectedLocation}
+                                        setLocation={setLocation}
+                                        setLocationString={setLocationString}
+                                        setId={setId}
+                                    />
+                                )}
                             </div>
                         ))
                     ) : (
