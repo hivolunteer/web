@@ -29,13 +29,6 @@ interface m_Teams {
   total_bee: number;
 }
 
-  interface Team_Member {
-    id: number;
-    team_id: number;
-    volunteer_id: number;
-    bee: number;
-  }
-
   interface m_Teams_Member {
     last_name: string;
     first_name: string;
@@ -55,22 +48,6 @@ interface m_Teams {
     ranking: number;
   }
 
-
-  function Rankdifference (props: { rank: number}) {
-    const {rank} = props;
-
-    if (rank == 1) {
-      return (
-        <TableCell align="center">{rank}</TableCell>
-      )
-    }
-
-    return (
-      <TableCell align="center">{rank}</TableCell>
-    )
-  }
-  //<TableCell align="center">{row.ranking}</TableCell>
-          
 
   function Row(props: { row: Cartouche}) {
     const { row } = props;
