@@ -409,10 +409,10 @@ export default function ProfilePage(props: any) {
                         <TableHead>
                           <TableRow>
                             <TableCell>ID</TableCell>
-                            <TableCell align="right">Nom</TableCell>
-                            <TableCell align="right">Email</TableCell>
-                            <TableCell align="right">Heure Confirmés</TableCell>
-                            <TableCell align="right">Score</TableCell>
+                            <TableCell align="center">Nom de Famille</TableCell>
+                            <TableCell align="center">Email</TableCell>
+                            <TableCell align="center">Heure Confirmés</TableCell>
+                            <TableCell align="center">Score</TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
@@ -424,10 +424,10 @@ export default function ProfilePage(props: any) {
                               <TableCell component="th" scope="row">
                                 {row.id}
                               </TableCell>
-                              <TableCell align="right">{row.last_name}</TableCell>
-                              <TableCell align="right">{row.email}</TableCell>
-                              <TableCell align="right">{row.nb_hours}</TableCell>
-                              <TableCell align="right">{row.bee}</TableCell>
+                              <TableCell align="center">{row.last_name}</TableCell>
+                              <TableCell align="center">{row.email}</TableCell>
+                              <TableCell align="center">{row.nb_hours}</TableCell>
+                              <TableCell align="center">{row.bee}</TableCell>
                             </TableRow>
                           ))}
                         </TableBody>
@@ -450,7 +450,7 @@ export default function ProfilePage(props: any) {
               display: 'flex',
               marginBottom: "30px",
             }}>
-              <Card className={"card-component"}>
+              <Card className={"card-component"} style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
                 <h4>
                   {totalMissionPassed} Missions passées
                 </h4>
@@ -458,7 +458,7 @@ export default function ProfilePage(props: any) {
                   {totalMissionActive} Missions actives
                 </h4>
               </Card>
-              <Card className={"card-component"}>
+              <Card className={"card-component"} style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
                 <h4>
                   {hours} {hours < 2 ? "heure confirmée" : "heures confirmées"}
                 </h4>
