@@ -6,6 +6,7 @@ import './LocationModal.scss'
 import { parse } from "path";
 import ModifyLocationModal from "./ModifyLocationModal";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 interface Address {
     name: string;
@@ -18,7 +19,7 @@ interface Address {
     departement_id : number | null;
 }
 
-interface AddressDB {
+export interface AddressDB {
     name: string;
     street_number: number;
     street_number_suffix: string;
@@ -38,10 +39,6 @@ interface LocationModalProps {
     setLocationString: (address: string) => void;
     setId: (id: number) => void;
 }
-  
-  
-
-
 
 const LocationModal = ({
   open,
@@ -53,8 +50,8 @@ const LocationModal = ({
 }: LocationModalProps) => {
 
     const [basicAddress, setBasicAddress] = useState<Address>(location);
-    const [openModal, setOpenModal] = React.useState<boolean>(false);
     const [selectedLocation, setSelectedLocation] = useState<AddressDB | null>(null);
+    const [localisations, setLocationList] = useState<AddressDB[]>([]);
     const street_suffix = [
         'BIS', 'TER', 'QUATER'
     ]
@@ -62,9 +59,6 @@ const LocationModal = ({
     const street_type = [
         'Rue', 'Av.', 'Bd.', 'Pl.', 'Imp.', 'Allée', 'Ch.', 'Quai', 'Cours'
     ]
-
-    const [localisations, setLocationList] = useState<AddressDB[]>([]);
-
 
     const resetFields = () => {
         setBasicAddress({
@@ -79,14 +73,20 @@ const LocationModal = ({
         })
     }
 
+    const navigate = useNavigate();
     const handleModifyClick = (location: AddressDB) => {
-        setOpenModal(true);
-        setSelectedLocation(location);
-    }
+        navigate("/modifyAddress", { state: { selectedLocation: location } });
+      };
 
-    const handleInnerClose = () => {
-        setOpenModal(false);
-    }
+    const updateLocation = (newLocation: any) => {
+        setBasicAddress(newLocation);
+        setLocation(newLocation);
+        let address = newLocation.name + ' ' + String(newLocation.postal_code) + ' ' + newLocation.city + ', ' + String(newLocation.street_number) + ' ';
+        if (newLocation.street_number_suffix) address += newLocation.street_number_suffix + ' ';
+        address += newLocation.street_type + ' ' + newLocation.street_name;
+        setLocationString(address);
+        setId(newLocation.id);
+      };
 
     useEffect(() => {
         fetch(`${config.apiUrl}/locations`, {
@@ -333,7 +333,6 @@ const LocationModal = ({
                     (parseInfo().length > 0) ? (
                         parseInfo().slice(0, 3).map((location: AddressDB, index) => (
                             <div key={index} className='location-shown' style={{justifyContent: "space-around"}} onClick={(e) => {
-                                e.stopPropagation();
                                 setBasicAddress(location);
                                 setId(location.id);
                                 let address = location.name + ' ' + String(location.postal_code) + ' ' + location.city + ', ' + String(location.street_number) + ' ';
@@ -345,12 +344,11 @@ const LocationModal = ({
                                 handleClose();
                             }}>
                                 <p>{location.name}</p>
-                                <Grid item xs={8} lg={8} style={{ display: "flex", justifyContent: "center" }}>
+                                <Grid item xs={8} lg={8} style={{ display: "flex", justifyContent: "end" }}>
                                     <Button
                                         variant="outlined"
-                                        style={{ width: "100%" }}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
+                                        style={{ width: "auto"}}
+                                        onClick={() => {
                                             handleModifyClick(location)}
                                         }
                                     >
@@ -359,16 +357,7 @@ const LocationModal = ({
                                 </Grid>
                                 {/* Inner dialog for modifying selected location */}
                                 {selectedLocation && (
-                                    <ModifyLocationModal
-                                        open={openModal}
-                                        handleClose={(e) => {
-                                            e.stopPropagation(); // Prevent the close from affecting outer dialogs
-                                            handleInnerClose(); // Close inner dialog
-                                        }}                                        location={selectedLocation}
-                                        setLocation={setLocation}
-                                        setLocationString={setLocationString}
-                                        setId={setId}
-                                    />
+                                    <ModifyLocationModal/>
                                 )}
                             </div>
                         ))
