@@ -39,6 +39,7 @@ interface SkillDatabase {
 }
 
 interface Address {
+  name: string,
   street_number: number | null
   street_number_suffix: string | null,
   street_name: string,
@@ -67,6 +68,7 @@ export default function MissionCreation() {
   // preparation for adress modal
   const [open, setOpen] = React.useState<boolean>(false);
   const [address, setAddress] = useState<Address>({
+    name: "",
     street_number: null,
     street_number_suffix: null,
     street_name: "",
