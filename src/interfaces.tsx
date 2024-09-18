@@ -50,6 +50,7 @@ export interface Association {
   id: number,
   email: string,
   name: string,
+  bee: Float32Array,
   phone: string,
   description: string,
   rating: number,
@@ -83,4 +84,11 @@ export interface Skill {
   skill_name: string;
   skill_id: number;
   color_hex: string;
+}
+
+export interface Company {
+  id: number,
+  name: string,
+  siren: string,
+  profile_picture: string
 }

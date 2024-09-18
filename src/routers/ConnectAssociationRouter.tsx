@@ -12,6 +12,8 @@ import ReferentPage from '../pages/Association/Referent/ReferentPage';
 import ExternalProfile from '../pages/Association/ExternalProfile/ExternalProfile';
 import Settings from '../pages/Association/Settings/Settings';
 import ProfileInformationModal from '../pages/Association/Settings/ProfileInformation';
+import AffiliatedCompanies from '../pages/Association/AffiliatedCompanies/AffiliatedCompanies';
+import ModifyLocationModal from '../pages/Association/Missions/Modal/ModifyLocationModal';
 
 function ConnectAssociationRouter() {
     return(
@@ -20,6 +22,7 @@ function ConnectAssociationRouter() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/profile/volunteer/:id" element={<ExternalProfile />} />
             <Route path="/missionCreation" element={<MissionCreation />} />
+            <Route path="/modifyAddress" element={<ModifyLocationModal/>} />
             <Route path="/modifyProfile" element={<ModifyProfilePage />} />
             <Route path="/manage/:id" element={<ManageMission />} />
             <Route path="/profile/volunteer/:id" element={<ExternalProfile />} />
@@ -29,6 +32,7 @@ function ConnectAssociationRouter() {
             <Route path='/settings' element={<Settings />} />
             <Route path="/settings/profile_information" element={<ProfileInformationModal />} />
             <Route path="/referent" element={<ReferentPage />} />
+            <Route path="/affiliatedCompanies" element={<AffiliatedCompanies />} />
             <Route path="*" element={<h1> Error 404 Asso </h1>} />
         </Routes>
     )
