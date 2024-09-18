@@ -79,7 +79,11 @@ interface m_Teams {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-          <TableCell align="center">{row.ranking}</TableCell>
+          <TableCell align="center">
+            <Typography variant="h4">
+              {row.ranking}
+            </Typography>
+            </TableCell>
           <TableCell component="th" scope="row" align="center">
             {row.name}
           </TableCell>
