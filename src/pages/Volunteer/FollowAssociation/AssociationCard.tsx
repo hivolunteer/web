@@ -2,11 +2,13 @@ import Card from 'react-bootstrap/Card';
 import { CardContent, CardMedia } from '@mui/material';
 import { useEffect, useState } from 'react';
 import config from '../../../config';
+import FollowButton from '../Search/Cards/FollowButton';
 
 function AssociationCard(props: {id: number}) {
 
     let [associationPicture, setAssociationPicture] = useState<string>('')
     let [association, setAssociation] = useState<any>({})
+    const [isFollowing, setIsFollowing] = useState(true);
 
     useEffect(() => {
         fetch(`${config.apiUrl}/associations/profile/` + props.id, {
@@ -25,6 +27,23 @@ function AssociationCard(props: {id: number}) {
             }
         })
     }, [])
+
+    const handleFollow = async () => {
+        try {
+            await fetch(`${config.apiUrl}/follows`, {
+                method: 'GET',
+                headers: {
+                    'content-type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({ association_id: association?.id }),
+            });
+            setIsFollowing(!isFollowing);
+        } catch (error) {
+            console.error('Error following association', error);
+        }
+        setIsFollowing(!isFollowing);
+      };
 
     return (
         <Card
@@ -56,6 +75,8 @@ function AssociationCard(props: {id: number}) {
                             {association?.name}
                         </h1>
                     </div>
+                    <FollowButton associationId={association.id} isFollowing={isFollowing} onFollow={handleFollow} />
+
                 </div>
             </Card.Body>
         </Card>
