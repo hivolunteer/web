@@ -343,7 +343,7 @@ const LocationModal = ({
                                 setLocation(location);
                                 handleClose();
                             }}>
-                                <p>{location.name}</p>
+                                <p>{location.name}, {location.street_number} {location.street_number_suffix} {location.street_type} {location.street_name}, {location.postal_code} {location.city}</p>
                                 <Grid item xs={8} lg={8} style={{ display: "flex", justifyContent: "end" }}>
                                     <Button
                                         variant="outlined"

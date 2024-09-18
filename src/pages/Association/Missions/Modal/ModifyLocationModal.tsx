@@ -12,8 +12,9 @@ const ModifyAddressPage = () => {
   const [modifiedLocation, setModifiedLocation] = useState<AddressDB>(selectedLocation);
 
   const handleSave = () => {
-    fetch(`${config.apiUrl}/locations/${modifiedLocation.id}/update`, {
-      method: "PUT",
+    console.log(modifiedLocation);
+    fetch(`${config.apiUrl}/locations/update`, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
