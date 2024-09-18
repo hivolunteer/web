@@ -2,6 +2,7 @@ import { Box, Grid, TextField, Button, Alert } from "@mui/material";
 import './ResetPassword.scss';
 import { useEffect, useState } from "react";
 import config from "../../../config";
+import { useNavigate } from "react-router-dom";
 
 const titleLogo = require("../../../images/logo/primary_logo.png");
 
@@ -16,9 +17,9 @@ function ResetPassword() {
 
     const [type, setType] = useState<string>("");
     const [token, setToken] = useState<string>("");
+    const navigate = useNavigate();
 
     useEffect(() => {
-        console.log("TEST")
         const queryParameters = new URLSearchParams(window.location.search)
         setToken(queryParameters.get('token') as string);
         let type = window.location.pathname.split('/')[1];
@@ -54,10 +55,9 @@ function ResetPassword() {
             })
         }).then((response) => {
             console.log(response);
-            if (response.status === 201) {
+            if (response.status === 200) {
                 alert("Mot de passe réinitialisé avec succès ! Vous pouvez maintenant vous connecter")
-                window.location.href = `/${type}/login`;
-            }
+                setTimeout(() => navigate('companies/login'), 3000);            }
         }).catch((error) => {
             console.log(error);
         })
@@ -72,7 +72,8 @@ function ResetPassword() {
                         <img className="titleLogo" src={titleLogo} alt=""/>
                     </div>
                 </div>
-                    <div className="col-10" >
+                <div className="row" style={{justifyContent: "center"}}>
+                    <div className="col-12" >
                         <p className="title">Choisir un nouveau mot de passe</p>
                     </div>
                 <div className="reset_row alert">
@@ -115,13 +116,15 @@ function ResetPassword() {
                         </Alert>
                     )}
                 </div>
-                <div className="reset_row button">
+                <div className="reset_row button" style={{justifyContent: "center"}}>
                     <Button
                         type="submit"
                         fullWidth
                         variant="contained"
                         sx={{ mt: 6,
                                 mb: 3,
+                                width: "70%",
+                                alignContent: "center",
                                 color: "#FFFEFF",
                                 backgroundColor: "#67A191",
                                 borderRadius: "10px",

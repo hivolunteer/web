@@ -16,7 +16,7 @@ const ForgotPasswordModal = (props: {modalProps: ForgotModal}) => {
     const [email, setEmail] = useState<string>("");
 
     const sendEmail = () => {
-        fetch(`${config.apiUrl}${modalProps.route}forgotten_password`, {
+        fetch(`${config.apiUrl}/companies/reset_password`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
