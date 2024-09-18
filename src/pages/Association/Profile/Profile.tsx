@@ -20,6 +20,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
 import EditPasswordModal from "./EditPasswordModal";
+import { CardActions, CardContent } from "@mui/material";
+import { CardHeader } from "react-bootstrap";
 
 type newProfile = {
   name: string;
@@ -213,8 +215,6 @@ export default function ProfilePage(props: any) {
           let justHours = 0;
           let justMinutes = 0;
           data.passed.map((mission : Mission) => {
-            console.log(mission.end_date)
-            console.log(mission.start_date)
             const startTime = new Date(mission.start_date) 
             const endTime = new Date(mission.end_date) 
 
@@ -223,8 +223,6 @@ export default function ProfilePage(props: any) {
             justHours += hours;
             justMinutes += minutes
           })
-          console.log(justHours)
-          console.log(justMinutes)
           setHours(justHours)
           setMinutes(justMinutes)
         })
@@ -391,17 +389,23 @@ export default function ProfilePage(props: any) {
               marginBottom: "30px",
             }}>
               <Card className={"card-component"} style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
+                <h1>
+                  {followers}
+                </h1>
                 <h4>
-                  {followers} bénévoles actuels
-                </h4>
-                <h4>
-                  {followers ? "Des volontaires suivent vos activités et sont plus susceptibles de vous rejoindre en missions" : "Vous n'avez actuellement aucun bénévole"}
+                  {followers ? "Volontaires vous suivent" : "Vous n'avez actuellement aucun follower"}
                 </h4>
               </Card>
               <Card className={"card-component"} style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
-                <h4>
-                  Vous avez reçu {totalParticipation} participations
+                <CardContent style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center', margin: "-15px"}}>
+                <h1>
+                  {totalParticipation}
+                </h1>
+                <h4 style={{margin: "-0px"}}>
+                  Participations
                 </h4>
+                </CardContent>
+                <CardActions>
                 <Button onClick={handleOpenParticipant}>Détails</Button>
                 <Modal
                   open={openParticipant}
@@ -441,6 +445,7 @@ export default function ProfilePage(props: any) {
                     </TableContainer>
                   </Box>
                 </Modal>
+                </CardActions>
               </Card>
             </Grid>
           </Grid>
@@ -456,20 +461,32 @@ export default function ProfilePage(props: any) {
               display: 'flex',
               marginBottom: "30px",
             }}>
-              <Card className={"card-component"} style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
+              <Card className={"card-component"} style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'left'}}>
+                <div style={{display: 'flex', justifyContent: 'center', flexDirection: 'row', alignItems: 'center', margin: "-10px"}}>
+                  <h1 style={{margin: "20px"}}>
+                    {totalMissionPassed} 
+                  </h1>
                 <h4>
-                  {totalMissionPassed} Missions passées
+                  Missions passées
                 </h4>
+                </div>
+                <div style={{display: 'flex', justifyContent: 'center', flexDirection: 'row', alignItems: 'center', margin: "-10px"}}>
+                
+                <h1 style={{margin: "20px"}}>
+                  {totalMissionActive}
+                  </h1>
                 <h4>
-                  {totalMissionActive} Missions actives
+                   Missions actives
                 </h4>
+                </div>
+                
               </Card>
               <Card className={"card-component"} style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
+                <h1>
+                  {hours}h{minutes}
+                </h1>
                 <h4>
-                  Votre association a confirmé {hours}h{minutes}
-                </h4>
-                <h4>
-                  à travers les missions terminées depuis l'origine de ce compte
+                  Missions réalisées depuis le début du compte
                 </h4>
               </Card>
             </Grid>
