@@ -476,7 +476,7 @@ export default function ProfilePage(props: any) {
                   {totalMissionActive}
                   </h1>
                 <h4>
-                   Missions actives
+                   Missions en cours
                 </h4>
                 </div>
                 
