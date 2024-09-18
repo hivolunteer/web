@@ -486,7 +486,7 @@ export default function ProfilePage(props: any) {
                   {hours}h{minutes}
                 </h1>
                 <h4>
-                  Missions réalisées depuis le début du compte
+                  Temps réalisé en missions
                 </h4>
               </Card>
             </Grid>
