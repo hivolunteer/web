@@ -45,7 +45,7 @@ interface m_Teams {
     members: m_Teams_Member[];
     name_list: string[];
     name_list_str: string;
-    ranking: number;
+    ranking: number | string;
   }
 
 
@@ -55,13 +55,16 @@ interface m_Teams {
 
     let bgColor = "#FFFFFF"
     if (row.ranking == 1) {
-      bgColor = "#e7c300"
+      //bgColor = "#e7c300"
+      row.ranking = "🥇"
     }
     if (row.ranking == 2) {
-      bgColor = "silver"
+      //bgColor = "silver"
+      row.ranking = "🥈"
     }
     if (row.ranking == 3) {
-      bgColor = "#cd7f32"
+      //bgColor = "#cd7f32"
+      row.ranking = "🥉"
     }
 
     return (
@@ -127,6 +130,7 @@ export default function TeamRanking(props: any) {
 
   const [getCartouches, setCartouches] = useState<Cartouche[]>([]);
   const [getMTeams, setMTeams] = useState<m_Teams[]>([]);
+  const [called, setCalled] = useState<boolean>(true);
   
 
     const getTeams = async () => {
@@ -138,6 +142,7 @@ export default function TeamRanking(props: any) {
         },
       }).then(response => response.json()).then(data => {
         console.log(data);
+        
         setMTeams(data);
       }).catch(error => {
         console.log(error);
@@ -146,7 +151,13 @@ export default function TeamRanking(props: any) {
     }
 
     const getTeamMembers = async () => {
+      if (called == true) {
+        return;
+      }
+      setCalled(true)
+      setCartouches([])
       let rank = 0
+
       for (const curr_m_team of getMTeams) {
         rank += 1;
         let cartouche = {
@@ -184,21 +195,18 @@ export default function TeamRanking(props: any) {
           console.log(error);
         });
       }
+      
     }
 
     
     
     useEffect(() => {
-      setMTeams([])
-      setCartouches([])
       getTeams();
-      
+      setCalled(false);
     }, [])
     
-    useEffect(() => {
-      if (getMTeams.length > 0) {        
+    useEffect(() => {    
         getTeamMembers()
-      }
     }, [getMTeams])
 
   return (
