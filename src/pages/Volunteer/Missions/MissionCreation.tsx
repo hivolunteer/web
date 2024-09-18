@@ -148,7 +148,6 @@ export default function MissionCreation() {
     try {
       const token = localStorage.getItem("token");
       const body = {
-        owner_id: Math.floor(Math.random() * 600) + 1,
         max_volunteers: form?.missionVolunteersNumber,
         description: form?.missionDescription,
         practical_information: form?.missionPracticalInformation,
@@ -158,7 +157,7 @@ export default function MissionCreation() {
         title: form?.missionName,
         skills: newSkill,
         theme_id: undefined,
-        picture: image,
+        picture: "https://feelloo.com/wp-content/uploads/2019/10/jeune-chat-pexels-104827-900x598.jpeg",
       };
       console.log(body);
       fetch(`${config.apiUrl}/missions/close/create`, {
