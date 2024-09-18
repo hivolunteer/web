@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Modal from "@mui/material/Modal";
 import { useNavigate } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
@@ -13,18 +13,11 @@ function ProfileInformationModal() {
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
     const [profilePicture, setProfilePicture] = useState("");
-    const [description, setDescription] = useState("");
-    const [rna, setRna] = useState("");
     const [showModal, setShowModal] = useState(true);
     const [error, setError] = useState("");
     const [alert, setAlert] = useState(false);
 
     const handleClose = () => history("/settings");
-
-    function validateEmail(email: string): boolean {
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        return emailRegex.test(email);
-      }
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
@@ -38,21 +31,13 @@ function ProfileInformationModal() {
         setEmail(event.target.value);
     };
 
-    const handleDescription = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setDescription(event.target.value);
-    };
-
-    const handleRna = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setRna(event.target.value);
-    };
-
     const handleProfilePictureChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setProfilePicture(event.target.value);
     };
 
     useEffect(() => {
         const getProfile = async () => {
-            await fetch(`${config.apiUrl}/associations/profile`, {
+            await fetch(`${config.apiUrl}/companies/profile`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -62,15 +47,13 @@ function ProfileInformationModal() {
                 .then((response) => {
                     if (response.status === 200) {
                         response.json().then((data) => {
-                            setName(data.association.name);
-                            setEmail(data.association.email);
-                            setPhone(data.association.phone);
-                            setProfilePicture(data.association.profile_picture);
-                            setDescription(data.association.description);
-                            setRna(data.association.rna);
+                            localStorage.setItem("id", data?.company?.id);
+                            setName(data?.company?.name);
+                            setEmail(data?.company?.email);
+                            setPhone(data?.company?.phone);
+                            setProfilePicture(data?.company?.profile_picture);
                         });
                     } else {
-                        console.log("Error fetching profile");
                         console.log(response);
                     }
                 })
@@ -82,13 +65,12 @@ function ProfileInformationModal() {
         getProfile();
     }, []);
 
-
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
         try {
             const response = await fetch(
-                `${config.apiUrl}/associations/update`,
+                `${config.apiUrl}/companies/edit`,
                 {
                     method: "POST",
                     headers: {
@@ -98,8 +80,6 @@ function ProfileInformationModal() {
                     body: JSON.stringify({
                         id: localStorage.getItem("id"),
                         name: name,
-                        description: description,
-                        rna: rna,
                         email: email,
                         phone: phone,
                         profile_picture: profilePicture,
@@ -110,10 +90,7 @@ function ProfileInformationModal() {
                 setAlert(true)
                 setError("Une information est manquante")
             }
-            console.log("response: ", response);
             setName("");
-            setDescription("");
-            setRna("");
             setEmail("");
             setPhone("");
             setProfilePicture("");
@@ -124,7 +101,7 @@ function ProfileInformationModal() {
     };
 
     return (
-        <div >
+        <div>
             <Modal
                 open={showModal}
                 onClose={handleClose}
@@ -142,7 +119,7 @@ function ProfileInformationModal() {
                         boxShadow: 24,
                         p: 4,
                     }}>
-                    <h2 id="modal-modal-title">Informations du Profil</h2>
+                    <h2 id="modal-modal-title">Profile Information</h2>
                     <p id="modal-modal-description">Changer les informations du profil</p>
                     <IconButton
                         style={{
@@ -161,11 +138,11 @@ function ProfileInformationModal() {
                             gap: "10px",
                         }}
                     >
-                        <div style={{marginTop: "20px"}}>
+                        <div>
                             <Typography style={{
                                 fontWeight: "bold"
                             }}>
-                                Image de profil
+                                Photo de profil
                             </Typography>
                             <TextField
                                 fullWidth
@@ -182,51 +159,16 @@ function ProfileInformationModal() {
                             <Typography style={{
                                 fontWeight: "bold"
                             }}>
-                                Nom d'association
+                                Nom
                             </Typography>
                             <TextField
                                 fullWidth
                                 variant="outlined"
-                                id="associationName"
-                                name="associationName"
+                                id="initialLastName"
+                                name="initialLastName"
                                 type="text"
                                 value={name}
                                 onChange={handleNameChange}
-                                margin="normal"
-                            />
-                        </div>
-                        <div style={{marginTop: "20px"}}>
-                            <Typography style={{
-                                fontWeight: "bold"
-                            }}>
-                                Description
-                            </Typography>
-                            <TextField
-                                fullWidth
-                                variant="outlined"
-                                id="Description"
-                                name="Description"
-                                multiline={true}
-                                type="text"
-                                value={description}
-                                onChange={handleDescription}
-                                margin="normal"
-                            />
-                        </div>
-                        <div style={{marginTop: "20px"}}>
-                            <Typography style={{
-                                fontWeight: "bold"
-                            }}>
-                                RNA
-                            </Typography>
-                            <TextField
-                                fullWidth
-                                variant="outlined"
-                                id="rna"
-                                name="rna"
-                                type="text"
-                                value={rna}
-                                onChange={handleRna}
                                 margin="normal"
                             />
                         </div>
@@ -290,6 +232,6 @@ function ProfileInformationModal() {
                 </Box>
             </Modal>
         </div>
-        );
+);
 }
 export default ProfileInformationModal;

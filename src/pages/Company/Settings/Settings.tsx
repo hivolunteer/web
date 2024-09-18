@@ -4,7 +4,6 @@ import { Checkbox } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Divider from "@mui/material/Divider";
 import config from "../../../config";
-//import { SideBar } from "../../../components/Sidebar";
 
 function Settings() {
     const [popupVisible, setPopupVisible] = useState(false);
@@ -49,11 +48,12 @@ function Settings() {
 
   const deleteAccount = () => {
     if (window.confirm('Are you sure you want to delete your account?')) {
-      let url = `${config.apiUrl}/volunteers/delete`;
+      let url = `${config.apiUrl}/companies/`;
       fetch(url, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Content-Type': `application/json`,
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
       })
         .then((response) => {
@@ -76,9 +76,6 @@ function Settings() {
     return (
         <div className={handleClickColorBlind()}>
             <h1> Réglages </h1>
-            <button className={"color-blind-button"} onClick = {() => history("/settings/referents")}>
-                Référents
-            </button>
             <button className={"color-blind-button"} onClick={openPopup}>
                 Mode daltonien
             </button>
