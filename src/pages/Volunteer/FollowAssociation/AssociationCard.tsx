@@ -31,13 +31,13 @@ function AssociationCard(props: {id: number}) {
     const handleFollow = async () => {
         try {
             await fetch(`${config.apiUrl}/follows`, {
-                method: 'POST',
+                method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'content-type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
                 body: JSON.stringify({ association_id: association?.id }),
             });
-            console.log('followed', association?.id)
             setIsFollowing(!isFollowing);
         } catch (error) {
             console.error('Error following association', error);
