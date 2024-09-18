@@ -75,7 +75,7 @@ function AssociationCard(props: {id: number}) {
                             {association?.name}
                         </h1>
                     </div>
-                    <FollowButton isFollowing={isFollowing} onFollow={handleFollow} />
+                    <FollowButton associationId={association.id} isFollowing={isFollowing} onFollow={handleFollow} />
 
                 </div>
             </Card.Body>

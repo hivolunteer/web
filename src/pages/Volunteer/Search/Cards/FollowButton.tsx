@@ -1,21 +1,23 @@
-import { Button } from '@mui/material';
+import { IconButton, Icon } from '@mui/material';
 import config from '../../../../config';
-
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 interface Props {
-  isFollowing: boolean;
-  onFollow: () => void;
+    associationId: number;
+    isFollowing: boolean;
+    onFollow: () => void;
 }
 
-const FollowButton: React.FC<Props> = ({ isFollowing, onFollow }) => {
-    const association = {}; // Declare the 'association' variable
+const FollowButton: React.FC<Props> = ({ associationId, isFollowing, onFollow }) => {
     const handleFollow = async () => {
         try {
-            await fetch(`${config.apiUrl}/follows`, {
+            await fetch(`${config.apiUrl}/follows/`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'content-type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
-                body: JSON.stringify({ association_id: association }),
+                body: JSON.stringify({ association_id: associationId }),
             });
             onFollow();
         } catch (error) {
@@ -25,11 +27,13 @@ const FollowButton: React.FC<Props> = ({ isFollowing, onFollow }) => {
 
     const handleUnfollow = async () => {
         try {
-            await fetch(`${config.apiUrl}/follows/${association}`, { // Include association ID in the DELETE request URL
+            await fetch(`${config.apiUrl}/follows/`, { // Include association ID in the DELETE request URL
                 method: 'DELETE',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'content-type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
+                body: JSON.stringify({ association_id: associationId }),
             });
             onFollow();
         } catch (error) {
@@ -38,15 +42,13 @@ const FollowButton: React.FC<Props> = ({ isFollowing, onFollow }) => {
     }
 
   return (
-    <Button
-    variant="contained"
+    <IconButton
     color={isFollowing ? 'error' : 'primary'}
     onClick={isFollowing ? handleUnfollow : handleFollow}
     sx={{ marginLeft: 2, alignContent: 'center', justifyItems: 'center', display: 'flex'}}
     >
-    {isFollowing ? 'Ne plus suivre' : 'Suivre'}
-</Button>
-  );
+    {isFollowing ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+    </IconButton>);
 };
 
 export default FollowButton;
