@@ -9,6 +9,7 @@ import config from "../../../../config";
 import { Button } from '@mui/material';
 import ManageMissionInformation from '../../../Volunteer/ManageMission/Components/ManageMissionInformation';
 import ManageMissionVolunteers from './ManageMissionVolunteers';
+import DisplayReviews from './DisplayReviews';
 
 function ManageMission() {
     const [MissionStatus, setMissionStatus] = useState<number>(0);
@@ -80,6 +81,10 @@ function ManageMission() {
 
             { (MissionStatus !== 0) &&
                 <ManageMissionVolunteers mission_id={mission_id} MissionStatus={MissionStatus} MissionEndDate={MissionEndDate} />
+            }
+            { (MissionStatus !== 0) && 
+                <DisplayReviews />
+
             }
             
             <div className='manage-mission-button-container'>

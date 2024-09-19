@@ -5,10 +5,13 @@ import config from "../../../config";
 import './MissionDetails.scss';
 import MissionDetailsHeader from './MissionDetailsHeader';
 import SkillDisplay from './SkillDisplay';
-import { Button } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Button } from '@mui/material';
 import { Volunteer } from '../../Association/Missions/Manage/Interfaces';
 import FriendsModal from './Modal/FriendsModal';
 import AssociationCommentary from './AssociationCommentary';
+import { Rating } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 
 const MissionDetails = () => {
 
@@ -24,6 +27,9 @@ const MissionDetails = () => {
 
     const [currentVolunteer, setCurrentVolunteer] = useState<number>(0);
     const [friends, setFriends] = useState<Array<Volunteer>>([])
+
+    const [associationRating, setAssociationRating] = useState<number | null>(null);
+    const [associationComment, setAssociationComment] = useState<string | null>(null);
 
     // modal Functions
     const [open, setOpen] = useState<boolean>(false);
@@ -137,6 +143,21 @@ const MissionDetails = () => {
                     })
                 }
             })
+            fetch(`${config.apiUrl}/missions/association/comment/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+            .then(response => response.json())
+            .then((data) => {
+                setAssociationRating(data.rating);
+                setAssociationComment(data.comment);
+            })
+            .catch(error => {
+                console.error("Error fetching association rating and comment:", error);
+            });
         }, [id, location_id]);
     
     function createIcal() : string | null {
@@ -281,6 +302,34 @@ const MissionDetails = () => {
                     onClose={handleClose}
                 />
             </div>
+            <Accordion className="volunteer-manage-mission-accordion" defaultExpanded={true}>
+        <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+            className='mission-details-content-rating'
+        >
+            Commentaire de l'association
+        </AccordionSummary>
+        <AccordionDetails>
+        {
+                    associationRating !== null ? (
+                        <>
+                            <p className='mission-details-content-rating'>Note : </p>
+                            <Rating value={associationRating} readOnly />
+                        </>
+                    ) : <p>Aucune note disponible.</p>
+                }
+                {
+                    associationComment ? (
+                        <p className='mission-details-content-description'>{associationComment}</p>
+                    ) : <p>Aucun commentaire disponible.</p>
+                }
+                <div className="volunteer-manage-mission-volunteers-list-container">
+                </div>
+        </AccordionDetails>
+    </Accordion>
+
             {
                 (mission_status === 3) ?
                 <AssociationCommentary id={id} />
