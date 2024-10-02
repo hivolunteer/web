@@ -9,6 +9,7 @@ import Team from '../pages/Company/Team/Team';
 function ConnectCompanyRouter() {
     return(
         <Routes>
+            <Route path="/git" element={<Home/>} />
             <Route path="/accueil" element={<Home/>} />
             <Route path="/affiliatedAssociations" element={<AffiliatedAssociations />} />
             <Route path="/settings" element={<Settings />} />
