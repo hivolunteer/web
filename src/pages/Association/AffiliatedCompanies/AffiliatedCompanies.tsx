@@ -39,7 +39,7 @@ function AffiliatedCompanies(props: any) {
             })
 
 
-        fetch(`${config.apiUrl}/affiliated_companies/list`, {
+        fetch(`${config.apiUrl}/affiliated_companies/list/company`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
