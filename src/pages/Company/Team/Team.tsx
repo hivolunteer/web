@@ -14,8 +14,6 @@ interface TeamRanking {
 
 function Team() {
   const [teamRankings, setTeamRankings] = useState<TeamRanking[]>([]);
-  
-  const companyId = localStorage.getItem('id');
 
   useEffect(() => {
     fetch(`${config.apiUrl}/teams/teamRanking`, {
@@ -36,7 +34,7 @@ function Team() {
     }).catch((error) => {
       console.error('Error fetching team rankings:', error);
     });
-  }, [companyId]);
+  }, []);
 
   return (
     <Box
