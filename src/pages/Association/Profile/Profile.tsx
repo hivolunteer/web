@@ -21,7 +21,6 @@ import Paper from '@mui/material/Paper';
 
 import EditPasswordModal from "./EditPasswordModal";
 import { CardActions, CardContent } from "@mui/material";
-import { CardHeader } from "react-bootstrap";
 
 type newProfile = {
   name: string;
