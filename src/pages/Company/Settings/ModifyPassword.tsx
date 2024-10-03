@@ -5,7 +5,6 @@ import { Alert, AlertTitle, Box, Button, IconButton, InputAdornment, TextField, 
 import { useNavigate } from "react-router-dom";
 import config from "../../../config";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { time } from "console";
 
 function ModifyPassword() {
     const history = useNavigate();
@@ -73,7 +72,6 @@ function ModifyPassword() {
     }, []);
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        // Check if new password matches confirm password
         if (newPassword !== confirmPassword) {
             setAlert(true);
             setError("Les mots de passe ne correspondent pas");
@@ -114,7 +112,6 @@ function ModifyPassword() {
                 setError("Le mot de passe actuel est incorrect");
                 throw new Error("Le mot de passe actuel est incorrect");
             } else if (response.status === 201) {
-                // Password changed successfully
                 setOldPassword("");
                 setNewPassword("");
                 setConfirmPassword("");
