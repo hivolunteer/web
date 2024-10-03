@@ -53,8 +53,7 @@ function ModifyPassword() {
             });
             if (response.ok) {
                 const data = await response.json();
-                console.log(data)
-                return data.company.id; // Assuming 'id' is part of the response
+                return data.company.id;
             } else {
                 console.error("Failed to fetch company data");
             }
@@ -64,12 +63,10 @@ function ModifyPassword() {
     };
 
     const [companyId, setCompanyId] = useState<string | null>(null);
-    console.log(companyId)
 
     useEffect(() => {
         fetchCompanyData().then((id) => {
             if (id) {
-                console.log("id", id)
                 setCompanyId(id);
             }
         });
