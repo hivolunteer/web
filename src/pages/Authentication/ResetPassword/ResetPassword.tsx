@@ -73,9 +73,10 @@ function ResetPassword() {
                     </div>
                 </div>
                 <div className="row" style={{justifyContent: "center"}}>
-                    <div className="col-12" >
+                    <div className="col-12">
                         <p className="title">Choisir un nouveau mot de passe</p>
                     </div>
+                </div>
                 <div className="reset_row alert">
                     <TextField
                         fullWidth
@@ -116,16 +117,16 @@ function ResetPassword() {
                         </Alert>
                     )}
                 </div>
-                <div className="reset_row button" style={{justifyContent: "center"}}>
+                <div className="reset_row button"  style={{justifyContent: "center"}}>
                     <Button
                         type="submit"
                         fullWidth
                         variant="contained"
                         sx={{ mt: 6,
                                 mb: 3,
+                                color: "#FFFEFF",
                                 width: "70%",
                                 alignContent: "center",
-                                color: "#FFFEFF",
                                 backgroundColor: "#67A191",
                                 borderRadius: "10px",
                                 boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)"

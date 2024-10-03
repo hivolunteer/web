@@ -47,7 +47,6 @@ function ChangePassword() {
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        // Check if new password matches confirm password
         if (newPassword !== confirmPassword) {
             setAlert(true);
             setError("Les mots de passe ne correspondent pas");
@@ -69,7 +68,6 @@ function ChangePassword() {
         }
         try {
             const id = 1; // await fetchUserId();
-            console.log(`ID: ${id}`);
 
             const response = await fetch(
                 `${config.apiUrl}/companies/update_password`,
@@ -86,7 +84,6 @@ function ChangePassword() {
                     }),
                 }
             );
-            console.log(response.body);
             if (!response.ok) {
                 setAlert(true);
                 setError("Le mot de passe actuel est incorrect");
