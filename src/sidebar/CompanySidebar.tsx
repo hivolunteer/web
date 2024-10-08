@@ -25,18 +25,16 @@ const pagesLink: { [pageName: string]: string } = {};
 
 if (localStorage.getItem("token") !== null) {
   settings.push("Profile", "Réglages", "Déconnexion");
-  pages.push("Accueil", "Missions", "Calendrier", "Référents", "Affiliations");
+  pages.push("Accueil", "Équipes", "Affiliations");
   pagesLink["Accueil"] = "accueil";
-  pagesLink["Missions"] = "";
-  pagesLink["Calendrier"] = "calendrier";
-  pagesLink["Référents"] = "referent";
-  pagesLink["Affiliations"] ="affiliatedCompanies";
+  pagesLink["Équipes"] = "teams";
+  pagesLink["Affiliations"] = "affiliatedAssociations";
 } else {
   settings.push("Connexion", "Inscription");
 }
 
 
-export default function AssociationSidebar() {
+export default function CompanySidebar() {
   let color_blind = localStorage.getItem("color_blind") === "true";
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -152,9 +150,6 @@ export default function AssociationSidebar() {
                     onClick={() => {
                       handleCloseUserMenu();
                       switch (setting) {
-                        case "Créer une mission":
-                          window.location.href = "/mission/create";
-                          break;
                         case "Profile":
                           navigate("/profile");
                           break;
