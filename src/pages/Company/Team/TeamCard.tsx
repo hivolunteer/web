@@ -83,10 +83,7 @@ function TeamCard({ team, totalBee }: TeamCardProps) {
           right: '10px',
           display: 'flex',
           alignItems: 'center',
-          backgroundColor: 'white',
           padding: '4px 8px',
-          borderRadius: '4px',
-          boxShadow: 1,
         }}
       >
         <Typography variant="body2" color="primary" sx={{ marginRight: '4px', fontWeight: 'bold' }}>
