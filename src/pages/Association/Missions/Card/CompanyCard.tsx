@@ -31,6 +31,7 @@ function CompanyCard(props: {
                     borderRadius: '50%',
                     objectFit: 'cover',
                     mb: 2,
+                    margin: '10px'
                 }}
                 image={props.company.profile_picture}
                 alt="Company"

@@ -65,7 +65,7 @@ const CompanyModal = (props: {
                         onChange={(e) => setSearch(e.target.value)}
                     />
                 </Box>
-                <Box style={{ padding: 6 }}>
+                <Box style={{ padding: 6, marginTop: '10px' }}>
                     {
                         (affiliatedCompanies.length !== 0) && affiliatedCompanies
                             .filter((company) => company.name.toLowerCase().includes(search.toLowerCase()))
