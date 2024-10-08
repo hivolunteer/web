@@ -22,7 +22,14 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ notifications }) =>
   return (
     <div ref={anchorRef}>
       <IconButton onClick={handleBellClick}>
-        <Badge badgeContent={notifications.length} color="primary">
+        <Badge badgeContent={notifications.length} color="primary" sx={{
+          "& .MuiBadge-badge": {
+            color: "rgba(78,121,110,0.94)",
+            backgroundColor: "#fefefe",
+            fontSize: 13,
+            fontWeight: 700,
+          }
+        }}>
           <NotificationsNone />
         </Badge>
       </IconButton>
