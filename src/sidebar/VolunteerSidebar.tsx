@@ -18,6 +18,7 @@ import "./Sidebar.scss";
 import logoWhite from "../images/logo/submark_white.png";
 import logoImage from "../images/logo/submark.png";
 import config from "../config";
+import NotificationBell from '../components/Notifications/NotificationBell';
 
 
 export default function VolunteerSidebar() {
@@ -33,6 +34,7 @@ export default function VolunteerSidebar() {
   const [settings, setsettings] = React.useState<string[]>([]);
   const [pagesLink, setPagesLink] = React.useState<{ [pageName: string]: string }>({})
   const [isFetchRef, setIsFetchRef] = React.useState(false);
+  const [notifications, setNotifications] = React.useState([]);
 
   const isReferent = async () => {
     try {
@@ -91,6 +93,32 @@ export default function VolunteerSidebar() {
         break;
     }
   };
+
+  React.useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        await fetch(`${config.apiUrl}/notifications/list/Volunteer/personal`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        }).then((response) => {
+          if (response.status === 200) {
+            response.json().then((data) => {
+              const sortedNotifications = data.notifications.sort((a: any, b: any) => {
+                return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+              });
+              setNotifications(sortedNotifications);
+            })
+          }
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchNotifications();
+  }, []);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -161,7 +189,9 @@ export default function VolunteerSidebar() {
               </Button>
             ))}
           </Box>
-
+          <Box sx={{ marginRight: "1%" }}>
+            <NotificationBell notifications={notifications} />
+          </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
