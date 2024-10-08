@@ -106,7 +106,6 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
                         })
                     }
                 })
-                console.log("MISSION PICTURE", missionPicture);
                 if (mission.picture && mission.picture.startsWith('/uploads')) {
                   fetch(`${config.apiUrl}/uploads/${isAssociation ? 'association' : 'volunteer'}/mission/${mission_id}`, {
                       method: 'GET',

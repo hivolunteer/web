@@ -2,12 +2,12 @@ import { TextField, Button, Grid, Box } from "@mui/material";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import config from "../../../../config";
-import { AddressDB } from "./LocationModal"; // Ensure AddressDB type is available here
+import { AddressDB } from "./LocationModal";
 
 const ModifyAddressPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { selectedLocation } = location.state; // get the selectedLocation from state
+  const { selectedLocation } = location.state;
 
   const [modifiedLocation, setModifiedLocation] = useState<AddressDB>(selectedLocation);
 
@@ -24,7 +24,7 @@ const ModifyAddressPage = () => {
       .then((response) => {
         if (response.status === 200) {
           alert("Adresse mise à jour avec succès");
-          navigate(-1); // Go back to the previous page
+          navigate(-1);
         } else {
           alert("Erreur lors de la mise à jour de l'adresse");
         }

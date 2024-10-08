@@ -22,6 +22,7 @@ import ReferentHistory from "../pages/Volunteer/Referent/ReferentHistory";
 import MyMission from "../pages/Volunteer/MyMissions/MyMissions";
 
 import TeamRanking from "../pages/Volunteer/Employee/TeamRanking";
+import ModifyLocationModal from "../pages/Association/Missions/Modal/ModifyLocationModal";
 
 function ConnectVolunteerRouter() {
     return (
@@ -38,6 +39,7 @@ function ConnectVolunteerRouter() {
             <Route path="/mission/create" element={<MissionCreation/>} />
             <Route path="/:missionID/edit" element={<EditMission/>} />
             <Route path="/volunteer/:volunteerId" element={<PublicProfile/>} />
+            <Route path="/modifyAddress" element={<ModifyLocationModal/>} />
             <Route path="/referent/missions" element={<ReferentHistory />} />
             <Route path={"/settings"} element={<Settings />} />
             <Route path="/settings/modify_password" element={<ChangePassword />} />
