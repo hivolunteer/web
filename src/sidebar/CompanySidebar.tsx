@@ -39,10 +39,10 @@ export default function CompanySidebar() {
         if (settings.length === 0) {
             if (localStorage.getItem("token") !== null) {
                 settings.push("Profile", "Réglages", "Déconnexion");
-                pages.push("Recherche", "Mes Missions", "Historique des Missions");
+                pages.push("Recherche", "Missions", "Affiliations");
                 pagesLink["Recherche"] = "accueil";
-                pagesLink["Mes Missions"] = "myMissions";
-                pagesLink["Historique des Missions"] = "history";
+                pagesLink["Missions"] = "missions";
+                pagesLink["Affiliations"] = localStorage.getItem("role") === "company" ? "affiliatedAssociations" : "affiliatedCompanies";
             } else {
                 settings.push("Connexion", "Inscription");
             }
