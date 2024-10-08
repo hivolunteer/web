@@ -168,7 +168,8 @@ export default function AssociationSidebar() {
                           window.location.reload();
                           window.location.href = "/";
                           break;
-                        case "Connexion" || "Inscription":
+                        case "Connexion":
+                        case "Inscription":
                           window.location.href = "/auth";
                           break;
                         default:
