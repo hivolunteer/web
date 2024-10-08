@@ -1,14 +1,30 @@
 import { useState, useEffect } from "react";
-import { InputAdornment, TextField } from "@mui/material";
+import { InputAdornment, Tab, Tabs, TextField } from "@mui/material";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import "../../Association/Search/Search.scss";
 import { Mission } from "../../../interfaces";
 import config from "../../../config";
+import TabPanel from "../../../components/TabPanel"
 import MissionPanel from "../../Association/Search/Panels/MissionPanel";
 
-function Missions() {
+function Missions(props: any) {
+    const [waitingMissions, setWaitingMissions] = useState<Mission[]>([]);
     const [publishedMissions, setPublishedMissions] = useState<Mission[]>([]);
+    const [pastMissions, setPastMissions] = useState<Mission[]>([]);
     const [search, setSearch] = useState<string>("");
+
+    interface Subtype {
+        id: number;
+        name: string;
+    }
+
+    const subtypes: Array<Subtype> = [
+        { id: 1, name: "En attente de validation" },
+        { id: 2, name: "Publiées" },
+        { id: 3, name: "Passées" },
+    ];
+
+    const [subType, setSubType] = useState<Subtype>(subtypes[0]);
 
     useEffect(() => {
         fetch(`${config.apiUrl}/missions/`, {
@@ -21,9 +37,13 @@ function Missions() {
             .then((data) => data.json())
             .then((data: any) => {
                 console.log(data);
+                const waiting: Mission[] = Array.isArray(data.waiting) ? data.waiting : [];
                 const active: Mission[] = Array.isArray(data.associations_missions) ? data.associations_missions : [];
+                const passed: Mission[] = Array.isArray(data.passed) ? data.passed : [];
 
+                setWaitingMissions(waiting);
                 setPublishedMissions(active);
+                setPastMissions(passed);
             });
     }, []);
 
@@ -58,13 +78,47 @@ function Missions() {
             </div>
             <div className="centered-container">
                 <div className="tabs-container">
+                    <Tabs
+                        value={subType.id}
+                        onChange={(e, value) => {
+                            setSubType(subtypes.find((subtype) => subtype.id === value) || subtypes[0]);
+                        }}
+                        variant="fullWidth"
+                        sx={{ borderBottom: 0 }}
+                    >
+                        {subtypes.map(subtype => (
+                            <Tab
+                                key={subtype.id}
+                                label={subtype.name}
+                                value={subtype.id}
+                                sx={{
+                                    background: "#FFFFFF",
+                                }}
+                            />
+                        ))}
+                    </Tabs>
                 </div>
+                <TabPanel value={subType.id} index={1}>
+                    {waitingMissions.length > 0 ? (
+                        <MissionPanel missionList={waitingMissions} search={search} />
+                    ) : (
+                        <div className="no-missions-message">Aucune mission passée</div>
+                    )}
+                </TabPanel>
+                <TabPanel value={subType.id} index={2}>
                     {publishedMissions.length > 0 ? (
                         <MissionPanel missionList={publishedMissions} search={search} />
                     ) : (
                         <div className="no-missions-message">Aucune mission publiée</div>
                     )}
-
+                </TabPanel>
+                <TabPanel value={subType.id} index={3}>
+                    {pastMissions.length > 0 ? (
+                        <MissionPanel missionList={pastMissions} search={search} />
+                    ) : (
+                        <div className="no-missions-message">Aucune mission publiée</div>
+                    )}
+                </TabPanel>
             </div>
         </div>
     );
