@@ -5,9 +5,10 @@ import NotificationModal from './NotificationModal';
 
 interface NotificationBellProps {
   notifications: any[];
+  onDeleteNotification: (notificationId: any) => void;
 }
 
-const NotificationBell: React.FC<NotificationBellProps> = ({ notifications }) => {
+const NotificationBell: React.FC<NotificationBellProps> = ({ notifications, onDeleteNotification }) => {
   const [isOpen, setIsOpen] = useState(false);
   const anchorRef = React.useRef<HTMLDivElement>(null);
 
@@ -33,7 +34,7 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ notifications }) =>
           <NotificationsNone />
         </Badge>
       </IconButton>
-      {isOpen && <NotificationModal notifications={notifications} onClose={handleClose} anchorEl={anchorRef.current} />}
+      {isOpen && <NotificationModal notifications={notifications} onClose={handleClose} anchorEl={anchorRef.current} onDeleteNotification={onDeleteNotification} />}
     </div>
   );
 };

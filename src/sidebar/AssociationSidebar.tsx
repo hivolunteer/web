@@ -19,7 +19,7 @@ import logoWhite from "../images/logo/submark_white.png";
 import logoImage from "../images/logo/submark.png";
 import NotificationBell from '../components/Notifications/NotificationBell';
 import config from "../config";
-
+import handleDeleteNotification from './DeleteNotificationApi';
 
 const pages: string[] = [];
 const settings: string[] = [];
@@ -160,7 +160,7 @@ export default function AssociationSidebar() {
           </Box>
           {localStorage.getItem("token") ?
           <Box sx={{ marginRight: "1%" }}>
-            <NotificationBell notifications={notifications} />
+            <NotificationBell notifications={notifications} onDeleteNotification={handleDeleteNotification} />
           </Box>
           : null }
           <Box sx={{ flexGrow: 0, alignContent: 'center' }}>

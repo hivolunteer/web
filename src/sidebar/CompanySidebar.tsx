@@ -19,7 +19,7 @@ import logoWhite from "../images/logo/submark_white.png";
 import logoImage from "../images/logo/submark.png";
 import config from "../config";
 import NotificationBell from '../components/Notifications/NotificationBell';
-
+import handleDeleteNotification from './DeleteNotificationApi';
 
 export default function CompanySidebar() {
     let color_blind = localStorage.getItem("color_blind") === "true";
@@ -160,7 +160,7 @@ export default function CompanySidebar() {
                         ))}
                     </Box>
                     <Box sx={{ marginRight: "1%" }}>
-                        <NotificationBell notifications={notifications} />
+                        <NotificationBell notifications={notifications} onDeleteNotification={handleDeleteNotification} />
                     </Box>
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open settings">

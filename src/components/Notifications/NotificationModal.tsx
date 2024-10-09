@@ -1,13 +1,16 @@
 import React from 'react';
-import { Popover, Box, Typography, Button, Divider } from '@mui/material';
+import { Popover, Box, Typography, Divider } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from "@mui/material/IconButton";
 
 interface NotificationModalProps {
   notifications: any[];
   onClose: () => void;
   anchorEl: HTMLElement | null;
+  onDeleteNotification: (notificationId: any) => void;
 }
 
-const NotificationModal: React.FC<NotificationModalProps> = ({ notifications, onClose, anchorEl }) => {
+const NotificationModal: React.FC<NotificationModalProps> = ({ notifications, onClose, anchorEl, onDeleteNotification }) => {
   return (
       <Popover open={true} onClose={onClose} anchorEl={anchorEl} anchorOrigin={{
         vertical: 'bottom',
@@ -38,10 +41,15 @@ const NotificationModal: React.FC<NotificationModalProps> = ({ notifications, on
           </Box>
           {notifications.map((notification, index) => (
               <div key={index}>
-                <Typography variant="body1" component="p">
-                  {notification.message}
-                </Typography>
-                {index < notifications.length - 1 && <Divider sx={{mt: 2, mb: 2}}/>}
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Typography variant="body1" component="p">
+                          {notification.message}
+                      </Typography>
+                      <IconButton onClick={() => onDeleteNotification(notification.id)}>
+                          <CloseIcon />
+                      </IconButton>
+                  </Box>
+                  {index < notifications.length - 1 && <Divider sx={{mt: 2, mb: 2}}/>}
               </div>
           ))}
         </Box>
