@@ -546,12 +546,17 @@ export default function MissionCreation() {
               {
                 (selectedCompany !== null) && (
                   <Box>
-                    <CompanyCard
-                      company={selectedCompany}
-                      selectCompany={() => {}}
-                      deleteOption={true}
-                      delete={deleteCompany}
-                    />
+                  <Button
+                      variant="outlined"
+                        style={{
+                          width: "100%"
+                        }}
+                        onClick={() => {
+                          setCompanyModal(true);
+                        }}
+                  >
+                    {selectedCompany.name}
+                  </Button>
                   </Box>
                 )
               }
