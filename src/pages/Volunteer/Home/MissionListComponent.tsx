@@ -13,7 +13,7 @@ function MissionsList(props: {missions: Mission[]}) {
             {missions.map((mission: Mission) => {
                 return (
                     <div className="component-missions-list-mission" key={mission.id}>
-                        <MissionCardHome mission={mission} />
+                        <MissionCardHome mission={mission} isToday={false} />
                     </div>
                 )
             })}

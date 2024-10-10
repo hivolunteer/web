@@ -17,8 +17,9 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Sidebar.scss";
 import logoWhite from "../images/logo/submark_white.png";
 import logoImage from "../images/logo/submark.png";
+import NotificationBell from '../components/Notifications/NotificationBell';
 import config from "../config";
-
+import handleDeleteNotification from './DeleteNotificationApi';
 
 const pages: string[] = [];
 const settings: string[] = [];
@@ -26,11 +27,12 @@ const pagesLink: { [pageName: string]: string } = {};
 
 if (localStorage.getItem("token") !== null) {
   settings.push("Profile", "Réglages", "Déconnexion");
-  pages.push("Accueil", "Missions", "Calendrier", "Référents");
+  pages.push("Accueil", "Missions", "Calendrier", "Référents", "Affiliations");
   pagesLink["Accueil"] = "accueil";
   pagesLink["Missions"] = "";
   pagesLink["Calendrier"] = "calendrier";
   pagesLink["Référents"] = "referent";
+  pagesLink["Affiliations"] ="affiliatedCompanies";
 } else {
   settings.push("Connexion", "Inscription");
 }
@@ -41,6 +43,7 @@ export default function AssociationSidebar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
+  const [notifications, setNotifications] = React.useState([]);
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => { setAnchorElNav(event.currentTarget); };
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => { setAnchorElUser(event.currentTarget); };
   const handleCloseNavMenu = () => { setAnchorElNav(null); };
@@ -59,6 +62,32 @@ export default function AssociationSidebar() {
         break;
     }
   };
+
+  React.useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        await fetch(`${config.apiUrl}/notifications/list/Association/personal`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        }).then((response) => {
+          if (response.status === 200) {
+            response.json().then((data) => {
+              const sortedNotifications = data.notifications.sort((a: any, b: any) => {
+                return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+              });
+              setNotifications(sortedNotifications);
+            })
+          }
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchNotifications();
+  }, []);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -129,8 +158,12 @@ export default function AssociationSidebar() {
               </Button>
             ))}
           </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
+          {localStorage.getItem("token") ?
+          <Box sx={{ marginRight: "1%" }}>
+            <NotificationBell notifications={notifications} onDeleteNotification={handleDeleteNotification} />
+          </Box>
+          : null }
+          <Box sx={{ flexGrow: 0, alignContent: 'center' }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="User" src={logoImage} />
@@ -167,7 +200,8 @@ export default function AssociationSidebar() {
                           window.location.reload();
                           window.location.href = "/";
                           break;
-                        case "Connexion" || "Inscription":
+                        case "Connexion":
+                        case "Inscription":
                           window.location.href = "/auth";
                           break;
                         default:

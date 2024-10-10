@@ -18,8 +18,8 @@
 .card-component {
   display: flex;
   flex-direction: column;
-  width: 80%;
-  height: 100%;
+  width: 400px;
+  height: 200px;
   padding: 20px;
   margin: 20px;
 }
@@ -208,4 +208,9 @@
 
 .color-blind-bg {
   background-color: #3b3d3c;
+}
+
+.header-rating {
+  color: #FFC500;
+  text-shadow: 0px 0px 2px #2d2a32
 }

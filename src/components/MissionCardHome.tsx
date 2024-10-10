@@ -10,8 +10,8 @@ import NearMeOutlinedIcon from '@mui/icons-material/NearMeOutlined';
 import config from "../config";
 import { Mission, Association, Volunteer } from '../interfaces';
 
-function MissionCardHome(props: { mission: Mission }) {
-    const mission: Mission = props.mission;
+function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
+    const { mission, isToday } = props;
 
     const [location, setlocation] = useState("");
     const [missionPicture, setMissionPicture] = useState("");
@@ -130,7 +130,7 @@ function MissionCardHome(props: { mission: Mission }) {
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor: '#FFFEFF'
+                backgroundColor: isToday ? '#ffecbd' : '#FFFEFF'
             }}
             onClick={() => {
                 window.location.href = isOwner ? `/manage/${mission.id}` : isVolunteerMission ? `/mission/close/${mission.id}` : `/mission/${mission.id}`

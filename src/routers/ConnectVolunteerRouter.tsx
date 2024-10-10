@@ -19,6 +19,10 @@ import ManageMission from "../pages/Volunteer/ManageMission/ManageMission";
 import ProfileInformationModal from "../pages/Volunteer/Settings/ProfileInformation";
 import CloseMissionDescription from "../pages/Volunteer/CloseMissionDescription/CloseMissionDescription";
 import ReferentHistory from "../pages/Volunteer/Referent/ReferentHistory";
+import MyMission from "../pages/Volunteer/MyMissions/MyMissions";
+
+import TeamRanking from "../pages/Volunteer/Employee/TeamRanking";
+import EmployeeRanking from "../pages/Volunteer/Employee/EmployeeRanking";
 
 function ConnectVolunteerRouter() {
     return (
@@ -41,6 +45,9 @@ function ConnectVolunteerRouter() {
             <Route path="/settings/referents" element={<AssociationReferent />} />
             <Route path="/manage/:id" element={<ManageMission />} />
             <Route path="/settings/profile_information" element={<ProfileInformationModal />} />
+            <Route path="/employee/teamrank" element={<TeamRanking/>} />
+            <Route path="/employee/rank" element={<EmployeeRanking/>} />
+            <Route path="/myMissions" element={<MyMission />} />
             <Route path="*" element={<h1> Error 404 Volunteer </h1>} />
         </Routes>
     );
