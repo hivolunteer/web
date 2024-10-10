@@ -5,6 +5,7 @@ import AffiliatedAssociations from '../pages/Company/AffiliatedAssociations/Affi
 import Settings from '../pages/Company/Settings/Settings';
 import ProfileInformationModal from '../pages/Company/Settings/ProfileInformation';
 import Team from '../pages/Company/Team/Team';
+import ModifyPassword from '../pages/Company/Settings/ModifyPassword';
 
 function ConnectCompanyRouter() {
     return(
@@ -15,6 +16,7 @@ function ConnectCompanyRouter() {
             <Route path="/settings" element={<Settings />} />
             <Route path="/settings/profile_information" element={<ProfileInformationModal />} />
             <Route path="/teams" element={<Team />} />
+            <Route path="/settings/modify_password" element={<ModifyPassword />} />
             <Route path="*" element={<h1> Error 404 Asso </h1>} />
         </Routes>
     )
