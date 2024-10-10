@@ -1,4 +1,4 @@
-import {Button, Dialog, DialogTitle, TextField} from '@mui/material';
+import {Button, Dialog, TextField} from '@mui/material';
 import './ForgotPasswordModal.scss';
 import { useState } from 'react';
 import config from '../../../config';
@@ -16,7 +16,7 @@ const ForgotPasswordModal = (props: {modalProps: ForgotModal}) => {
     const [email, setEmail] = useState<string>("");
 
     const sendEmail = () => {
-        fetch(`${config.apiUrl}${modalProps.route}forgotten_password`, {
+        fetch(`${config.apiUrl}/companies/reset_password`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -25,13 +25,25 @@ const ForgotPasswordModal = (props: {modalProps: ForgotModal}) => {
                 email: email
             })
         }).then((response) => {
-            if (response.status === 200) {
-                modalProps.handleClose();
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Failed to fetch data');
             }
+        }).then((data) => {
+            const resetLink = data.resetLink;
+            const subject = 'Réinitialiser votre mot de passe';
+            const body = `Bonjour,<br><br>Veuillez cliquer sur le lien suivant pour réinitialiser votre mot de passe : <a href="${resetLink}">${resetLink}</a><br><br>Cordialement, HiVolunteer`;
+            sendEmailToUser(email, subject, body);
+            modalProps.handleClose();
         }).catch((error) => {
             console.log(error);
         })
     }
+
+    const sendEmailToUser = (to: string, subject: string, body: string) => {
+    
+        }
 
     return (
         <Dialog open={modalProps.open} onClose={modalProps.handleClose}
