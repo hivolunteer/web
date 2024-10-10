@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import Modal from "@mui/material/Modal";
 import { Alert, AlertTitle, Box, Button, IconButton, InputAdornment, TextField, Typography } from "@mui/material";
@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import config from "../../../config";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
-function ModifyPassword() {
+function ChangePassword() {
     const history = useNavigate();
 
     const [oldPassword, setOldPassword] = useState("");
@@ -28,48 +28,23 @@ function ModifyPassword() {
             setConfirmPassword(value);
         }
     };
-
-    function Mymsg(msg: string,duration: number | undefined)
-    {
-     var alt = document.createElement("div");
-         alt.setAttribute("style","position:absolute;top:50%;left:50%;background-color:blue;");
-         alt.innerHTML = msg;
-         setTimeout(function(){
-         if (alt.parentNode) {
-             alt.parentNode.removeChild(alt);
-         }
-         },duration);
-         document.body.appendChild(alt);
-    }
-
-    const fetchCompanyData = async () => {
+    const fetchUserId = async () => {
         try {
-            const response = await fetch(`${config.apiUrl}/companies/profile`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                    "Content-Type": "application/json",
-                },
-            });
-            if (response.ok) {
-                const data = await response.json();
-                return data.company.id;
-            } else {
-                console.error("Failed to fetch company data");
-            }
+          const response = await fetch(`${config.apiUrl}/companies`, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              "Content-Type": "application/json",
+            },
+          });
+          const data = await response.json();
+          return data.id;
         } catch (error) {
-            console.error("Error fetching company data", error);
+          console.error(error);
+          return null;
         }
-    };
+      };
 
-    const [companyId, setCompanyId] = useState<string | null>(null);
-
-    useEffect(() => {
-        fetchCompanyData().then((id) => {
-            if (id) {
-                setCompanyId(id);
-            }
-        });
-    }, []);
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         if (newPassword !== confirmPassword) {
@@ -92,8 +67,10 @@ function ModifyPassword() {
             return;
         }
         try {
+            const id = 1; // await fetchUserId();
+
             const response = await fetch(
-                `${config.apiUrl}/companies/edit_password`,
+                `${config.apiUrl}/companies/update_password`,
                 {
                     method: "POST",
                     headers: {
@@ -101,8 +78,8 @@ function ModifyPassword() {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        id: companyId,
-                        password: oldPassword,
+                        id,
+                        old_password: oldPassword,
                         new_password: newPassword,
                     }),
                 }
@@ -111,13 +88,13 @@ function ModifyPassword() {
                 setAlert(true);
                 setError("Le mot de passe actuel est incorrect");
                 throw new Error("Le mot de passe actuel est incorrect");
-            } else if (response.status === 201) {
-                setOldPassword("");
-                setNewPassword("");
-                setConfirmPassword("");
-                Mymsg("Mot de passe modifié avec succès", 4000);
-                handleClose();
             }
+            // Password changed successfully
+            
+            setOldPassword("");
+            setNewPassword("");
+            setConfirmPassword("");
+            handleClose();
         } catch (error) {
             setError((error as Error).message);
         }
@@ -131,17 +108,7 @@ function ModifyPassword() {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={{
-                    position: "absolute" as "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    width: "50%",
-                    bgcolor: "background.paper",
-                    border: "2px solid #000",
-                    boxShadow: 24,
-                    p: 4,
-                }}>
+                <Box sx={style}>
                     <IconButton
                         style={{
                             position: "absolute",
@@ -270,4 +237,15 @@ function ModifyPassword() {
         </div>
     );
 }
-export default ModifyPassword;
+const style = {
+    position: "absolute" as "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "50%",
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+};
+export default ChangePassword;
