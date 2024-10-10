@@ -4,7 +4,7 @@ import { Avatar, Box, Card, CardContent, CardHeader, Divider, Icon, Typography }
 import Grid from '@mui/material/Grid'; // remplacer par Grid2
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import { Link } from "react-router-dom";
-import { Person } from "@mui/icons-material";
+import { EmojiEventsOutlined, EmojiNatureOutlined, Groups2Outlined, HiveOutlined, Person } from "@mui/icons-material";
 
 // Icon
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -31,6 +31,8 @@ interface IEmployeeRankingInfo {
   nb_employees: number;
   employee_rank: number;
   nb_page: number;
+  nb_top_bee: number;
+  nb_top_missions: number;
 }
 
 const getInitials = (string: string) =>
@@ -54,9 +56,9 @@ const colums: GridColDef[] = [
             component={Link}
             to={`/volunteer/${params.row.id}`}
             sx={{
-              fontWeight: 500,
+              fontWeight: 400,
               textDecoration: 'none',
-              color: 'black',
+              color: '#514f4f',
               '&:hover': { color: '#67A191' }
             }}
           >
@@ -78,10 +80,10 @@ const colums: GridColDef[] = [
         component={Link}
         to={`/team/${params.row.team.id}`}
         sx={{
-          fontWeight: 500,
+          fontWeight: 400,
           textDecoration: 'none',
           textAlign: 'center',
-          color: 'black',
+          color: '#514f4f',
           '&:hover': { color: '#67A191' }
         }}
       >
@@ -99,9 +101,12 @@ const colums: GridColDef[] = [
       <Typography
         noWrap
         sx={{
-          fontWeight: 500,
+          fontWeight: 400,
           textAlign: 'center',
-          color: 'black'
+          color: '#514f4f',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
         }}
       >
         {params.row.nb_missions}
@@ -118,9 +123,12 @@ const colums: GridColDef[] = [
       <Typography
         noWrap
         sx={{
-          fontWeight: 500,
+          fontWeight: 400,
           textAlign: 'center',
-          color: 'black',
+          color: '#514f4f',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
         }}
       >
         {params.row.bee}
@@ -141,14 +149,16 @@ const colums: GridColDef[] = [
 
 function RowAction({ volunteerId, teamId }: { volunteerId: number, teamId: number }) {
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'baseline' }}>
       <Link to={`/volunteer/${volunteerId}`} style={{ textDecoration: 'none' }}>
         <VisibilityIcon sx={{ color: '#67A191', cursor: 'pointer', fontSize: 20, mr: 2 }} />
       </Link>
       <Link to={`/team/${teamId}`} style={{ textDecoration: 'none' }}>
         <GroupsIcon sx={{ color: '#67A191', cursor: 'pointer', fontSize: 20, mr: 2 }} />
       </Link>
-      <DeleteIcon sx={{ color: '#67A191', cursor: 'pointer', fontSize: 20 }} />
+      <Link to={`/volunteer/${volunteerId}`} style={{ textDecoration: 'none' }}>
+        <DeleteIcon sx={{ color: '#67A191', cursor: 'pointer', fontSize: 20 }} />
+      </Link>
     </Box>
   )
 }
@@ -156,7 +166,7 @@ function RowAction({ volunteerId, teamId }: { volunteerId: number, teamId: numbe
 function HorizontalInfoGrid({ value }: { value: IEmployeeRankingInfo }) {
   return (
     <Fragment>
-      <Grid item xs={3} md={6} sm={6}>
+      <Grid item xs={6} md={3} sm={6}>
         <Card sx={{ borderRadius: 2, boxShadow: 2 }}>
           <CardContent sx={{ gap: 3, display: 'flex', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
@@ -171,19 +181,19 @@ function HorizontalInfoGrid({ value }: { value: IEmployeeRankingInfo }) {
                   employés
                 </Typography>
               </Box>
-              <Typography variant='h6' sx={{ color: 'grey.500' }}>
+              {/* <Typography variant='h6' sx={{ color: 'grey.500' }}>
                 blablbala
-              </Typography>
+              </Typography> */}
             </Box>
-            <Icon sx={{ fontSize: 80, color: 'blue' }}>
-              <Avatar sx={{ width: 80, height: 80, bgcolor: 'primary.main' }}>
-                <EmojiEventsIcon sx={{ fontSize: 50 }} />
+            <Box sx={{ width: 60, height: 60, bgcolor: '#6c439821', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 1.5 }}>
+              <Avatar sx={{ width: 60, height: 60, bgcolor: '#6c439800' }}>
+                <Groups2Outlined sx={{ fontSize: 50, color: '#6c4398' }} /> 
               </Avatar>
-            </Icon>
+            </Box>
           </CardContent>
         </Card>
       </Grid>
-      <Grid item xs={3} md={6} sm={6}>
+      <Grid item xs={6} md={3} sm={6}>
         <Card sx={{ borderRadius: 2, boxShadow: 2 }}>
           <CardContent sx={{ gap: 3, display: 'flex', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
@@ -195,18 +205,57 @@ function HorizontalInfoGrid({ value }: { value: IEmployeeRankingInfo }) {
                   {value.employee_rank}
                 </Typography>
                 <Typography sx={{ color: 'grey.500' }}>
-                  employés
+                  ème
                 </Typography>
               </Box>
-              <Typography variant='h6' sx={{ color: 'grey.500' }}>
-                blablbala
-              </Typography>
             </Box>
-            <Icon sx={{ fontSize: 80, color: 'blue' }}>
-              <Avatar sx={{ width: 80, height: 80, bgcolor: 'primary.main' }}>
-                <StarOutlinedIcon sx={{ fontSize: 50 }} />
+            <Box sx={{ width: 60, height: 60, bgcolor: '#f7f45021', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 1.5 }}>
+              <Avatar sx={{ width: 60, height: 60, bgcolor: '#f7f45000' }}>
+                <EmojiEventsOutlined sx={{ fontSize: 50, color: '#f7f450' }} /> 
               </Avatar>
-            </Icon>
+            </Box>
+          </CardContent>
+        </Card>
+      </Grid>
+      <Grid item xs={6} md={3} sm={6}>
+        <Card sx={{ borderRadius: 2, boxShadow: 2 }}>
+          <CardContent sx={{ gap: 3, display: 'flex', justifyContent: 'space-between' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+              <Typography sx={{ mb: 1, color: 'bleu' }}>
+                Top missions
+              </Typography>
+              <Box sx={{ mb: 1, columnGap: 1.5, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+                <Typography variant="h4">
+                  {value.nb_top_missions}
+                </Typography>
+              </Box>
+            </Box>
+            <Box sx={{ width: 60, height: 60, bgcolor: '#b8942121', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 1.5 }}>
+              <Avatar sx={{ width: 60, height: 60, bgcolor: '#b8942100' }}>
+                <HiveOutlined sx={{ fontSize: 50, color: '#b89421' }} /> 
+              </Avatar>
+            </Box>
+          </CardContent>
+        </Card>
+      </Grid>
+      <Grid item xs={6} md={3} sm={6}>
+        <Card sx={{ borderRadius: 2, boxShadow: 2 }}>
+          <CardContent sx={{ gap: 3, display: 'flex', justifyContent: 'space-between' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+              <Typography sx={{ mb: 1, color: 'bleu' }}>
+                Top bee
+              </Typography>
+              <Box sx={{ mb: 1, columnGap: 1.5, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+                <Typography variant="h4">
+                  {value.nb_top_bee}
+                </Typography>
+              </Box>
+            </Box>
+            <Box sx={{ width: 60, height: 60, bgcolor: '#99cae921', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 1.5 }}>
+              <Avatar sx={{ width: 60, height: 60, bgcolor: '#99cae900' }}>
+                <EmojiNatureOutlined sx={{ fontSize: 50, color: '#99cae9' }} />
+              </Avatar>
+            </Box>
           </CardContent>
         </Card>
       </Grid>
@@ -217,7 +266,7 @@ function HorizontalInfoGrid({ value }: { value: IEmployeeRankingInfo }) {
 function EmployeeRanking() {
 
   const [employeesList, setEmployeesList] = useState<IEmployeesList[]>([]);
-  const [info, setInfo] = useState<IEmployeeRankingInfo>({ nb_employees: 0, employee_rank: 0, nb_page: 0 });
+  const [info, setInfo] = useState<IEmployeeRankingInfo>({ nb_employees: 0, employee_rank: 0, nb_page: 0, nb_top_bee: 0, nb_top_missions: 0 });
 
   const [paginationModel, setPaginationModel] = useState({ page: 1, pageSize: 20 })
 
@@ -245,7 +294,7 @@ function EmployeeRanking() {
       <Grid container spacing={6.5}>
         <Grid item xs={12}>
           {info && (
-            <Grid container spacing={6}>
+            <Grid container spacing={3}>
               <HorizontalInfoGrid value={info} />
             </Grid>
           )}
