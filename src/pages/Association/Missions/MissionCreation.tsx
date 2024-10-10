@@ -18,7 +18,6 @@ import noImage from "../../../images/lottie/noImage.json";
 import { Referent } from "./Interface/Referent";
 import ReferentModal from "./Modal/ReferentModal";
 import CompanyModal from "./Modal/CompanyModal";
-import CompanyCard from "./Card/CompanyCard";
 
 interface MissionCreationData {
   missionName?: string;
@@ -86,10 +85,6 @@ export default function MissionCreation() {
 
   const handleCloseCompanyModal = () => {
     setCompanyModal(false);
-  }
-
-  const deleteCompany = () => {
-    setSelectedCompany(null);
   }
 
   const [missionDateRanges, setMissionDateRanges] = useState<
