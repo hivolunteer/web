@@ -54,7 +54,9 @@ type ManageMissionInformationProps = {
   MissionStatus: number,
   setMissionEndDate: any,
   MissionEndDate: Date,
-  isAssociation: boolean
+  isAssociation: boolean,
+  setIsCompanyApproved: (isCompanyApproved: boolean) => void,
+  setIsCompanyMission: (isCompanyMission: boolean) => void,
 }
 
 function ManageMissionInformation(props: ManageMissionInformationProps) {
@@ -88,8 +90,12 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
     }).then((response) => {
         if (response.status === 200) {
             response.json().then((data) => {
-                const mission = (isAssociation ? data.association_mission : data.close_mission)
+                const mission : any = (isAssociation ? data.association_mission : data.close_mission)
+                console.log(mission)
                 setMission(mission);
+                console.log("MISSION", mission);
+                props.setIsCompanyApproved(isAssociation ? data.association_mission.approved_company : data.close_mission.is_approved_company);
+                props.setIsCompanyMission(isAssociation ? ((data.association_mission.company_id !== null) ? true : false) : data.close_mission.is_company);
                 SetMissionStatus(mission.status);
 								SetMissionEndDate(mission.end_date);
                 setMissionPicture(mission.picture);
