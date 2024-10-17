@@ -25,9 +25,8 @@ const pagesLink: { [pageName: string]: string } = {};
 
 if (localStorage.getItem("token") !== null) {
   settings.push("Profile", "Réglages", "Déconnexion");
-  pages.push("Accueil", "Missions", "Calendrier", "Référents", "Affiliations");
+  pages.push("Accueil", "Calendrier", "Référents", "Affiliations");
   pagesLink["Accueil"] = "accueil";
-  pagesLink["Missions"] = "";
   pagesLink["Calendrier"] = "calendrier";
   pagesLink["Référents"] = "referent";
   pagesLink["Affiliations"] ="affiliatedCompanies";
