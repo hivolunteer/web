@@ -153,7 +153,7 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
                         <div className='mission-body'>
                             <div className='mission-body-with-icon' style={{display: 'flex', flexDirection: 'row'}}>
                                 <CalendarMonthOutlinedIcon />
-                                <p style={{ marginLeft: '10px' }}> {convertDay(mission.start_date.toString())} {convertHour(mission.start_date.toString())}h - {convertHour(mission.end_date.toString())}h </p>
+                                <p style={{ marginLeft: '10px' }}> {convertDay(mission.start_date.toString())} {convertHour(mission.start_date.toString())}h - {convertDay(mission.end_date.toString())} {convertHour(mission.end_date.toString())}h </p>
                             </div>
                             <div className='mission-body-with-icon' style={{ marginBottom: '2px', display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
                                 <NearMeOutlinedIcon />
