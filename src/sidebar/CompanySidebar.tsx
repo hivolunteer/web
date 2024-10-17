@@ -19,7 +19,6 @@ import logoWhite from "../images/logo/submark_white.png";
 import logoImage from "../images/logo/submark.png";
 import config from "../config";
 import NotificationBell from '../components/Notifications/NotificationBell';
-import handleDeleteNotification from './DeleteNotificationApi';
 
 export default function CompanySidebar() {
     let color_blind = localStorage.getItem("color_blind") === "true";
@@ -33,7 +32,7 @@ export default function CompanySidebar() {
     const [pages, setPages] = React.useState<string[]>([]);
     const [settings, setsettings] = React.useState<string[]>([]);
     const [pagesLink, setPagesLink] = React.useState<{ [pageName: string]: string }>({})
-    const [notifications, setNotifications] = React.useState([]);
+    const [notifications, setNotifications] = React.useState<any[]>([]);
 
     React.useEffect(() => {
         if (settings.length === 0) {
@@ -87,8 +86,14 @@ export default function CompanySidebar() {
                 console.error(error);
             }
         };
+
+        const waitTime = async () => {
+            await new Promise(r => setTimeout(r, 1000));
+        }
+
         fetchNotifications();
-    }, []);
+        waitTime();
+    });
 
     const handleLogout = () => {
         localStorage.clear();
@@ -160,7 +165,7 @@ export default function CompanySidebar() {
                         ))}
                     </Box>
                     <Box sx={{ marginRight: "1%" }}>
-                        <NotificationBell notifications={notifications} onDeleteNotification={handleDeleteNotification} />
+                        <NotificationBell notifications={notifications} setNotifications={setNotifications}/>
                     </Box>
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open settings">

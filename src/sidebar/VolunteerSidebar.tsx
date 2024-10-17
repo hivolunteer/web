@@ -34,7 +34,7 @@ export default function VolunteerSidebar() {
   const [settings, setsettings] = React.useState<string[]>([]);
   const [pagesLink, setPagesLink] = React.useState<{ [pageName: string]: string }>({})
   const [isFetchRef, setIsFetchRef] = React.useState(false);
-  const [notifications, setNotifications] = React.useState([]);
+  const [notifications, setNotifications] = React.useState<any[]>([]);
 
   const isReferent = async () => {
     try {
@@ -190,7 +190,7 @@ export default function VolunteerSidebar() {
             ))}
           </Box>
           <Box sx={{ marginRight: "1%" }}>
-            <NotificationBell notifications={notifications} onDeleteNotification={handleDeleteNotification} />
+            <NotificationBell notifications={notifications} setNotifications={setNotifications} />
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">

@@ -2,15 +2,16 @@ import React from 'react';
 import { Popover, Box, Typography, Divider } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from "@mui/material/IconButton";
+import handleDeleteNotification from '../../sidebar/DeleteNotificationApi';
 
 interface NotificationModalProps {
   notifications: any[];
   onClose: () => void;
   anchorEl: HTMLElement | null;
-  onDeleteNotification: (notificationId: any) => void;
+  setNotifications: React.Dispatch<React.SetStateAction<any[]>>
 }
 
-const NotificationModal: React.FC<NotificationModalProps> = ({ notifications, onClose, anchorEl, onDeleteNotification }) => {
+const NotificationModal: React.FC<NotificationModalProps> = ({ notifications, onClose, anchorEl, setNotifications }) => {
   return (
       <Popover open={true} onClose={onClose} anchorEl={anchorEl} anchorOrigin={{
         vertical: 'bottom',
@@ -45,7 +46,7 @@ const NotificationModal: React.FC<NotificationModalProps> = ({ notifications, on
                       <Typography variant="body1" component="p">
                           {notification.message}
                       </Typography>
-                      <IconButton onClick={() => onDeleteNotification(notification.id)}>
+                      <IconButton onClick={() => handleDeleteNotification(notification.id, notifications, setNotifications)}>
                           <CloseIcon />
                       </IconButton>
                   </Box>
