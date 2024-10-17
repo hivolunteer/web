@@ -76,7 +76,6 @@ const EventCalendar = () => {
             },
         }).then((calendarResponse) => {
             if (calendarResponse.status === 200) {
-                console.log(calendarResponse);
                 return calendarResponse.json().then((calendarData) => {
                     const formattedEvents = calendarData.map((task: any) => ({
                         id: task.id,
@@ -200,9 +199,7 @@ const EventCalendar = () => {
             location: datePickerEventFormData?.location,
             id_mission: datePickerEventFormData?.id_mission
         };
-        console.log(currentEvent?.allDay || datePickerEventFormData?.allDay);
-        console.log();
-
+        
         fetch(`${config.apiUrl}/calendar/create`, {
             method: "POST",
             headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
