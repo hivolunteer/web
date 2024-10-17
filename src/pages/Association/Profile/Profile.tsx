@@ -21,6 +21,8 @@ import Paper from '@mui/material/Paper';
 
 import EditPasswordModal from "./EditPasswordModal";
 import { CardActions, CardContent } from "@mui/material";
+import CardWidgetsRevenueReport from "./statsComponent";
+import EmployeeRanking from "./cardStats";
 
 type newProfile = {
   name: string;
@@ -370,7 +372,7 @@ export default function ProfilePage(props: any) {
           padding: "10px",
         }}>
           <img src={image} alt="Logo de profil" />
-          <h1>Association: {name} </h1>
+          <h1>{name} </h1>
           <h2 className="header-rating"> {rating} / 5 </h2>
         </div>
 
@@ -379,6 +381,7 @@ export default function ProfilePage(props: any) {
           <h2>
             Bénévoles
           </h2>
+          <EmployeeRanking nb_followers={followers} nb_participation={totalParticipation} />
           <Grid container alignItems="stretch" style={{
             display: 'flex',
             justifyContent: 'center',
@@ -388,15 +391,15 @@ export default function ProfilePage(props: any) {
               display: 'flex',
               marginBottom: "30px",
             }}>
-              <Card className={"card-component"} style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
+              {/* <Card className={"card-component"} style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center', borderRadius : '1rem'}}>
                 <h1>
                   {followers}
                 </h1>
                 <h4>
-                  {followers ? "Volontaires vous suivent" : "Vous n'avez actuellement aucun follower"}
+                  {followers ? "Bénévoles vous suivent" : "Vous n'avez actuellement aucun follower"}
                 </h4>
               </Card>
-              <Card className={"card-component"} style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
+              <Card className={"card-component"} style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center', borderRadius : '1rem'}}>
                 <CardContent style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center', margin: "-15px"}}>
                 <h1>
                   {totalParticipation}
@@ -446,13 +449,13 @@ export default function ProfilePage(props: any) {
                   </Box>
                 </Modal>
                 </CardActions>
-              </Card>
+              </Card> */}
             </Grid>
           </Grid>
           <h2>
             Historique
           </h2>
-          <Grid container alignItems="stretch" style={{
+          {/*<Grid container alignItems="stretch" style={{
             display: 'flex',
             justifyContent: 'center',
             alignItems: "space-between",
@@ -490,7 +493,10 @@ export default function ProfilePage(props: any) {
                 </h4>
               </Card>
             </Grid>
-          </Grid>
+          </Grid>*/}
+          <div style={{display: "flex", justifyContent: "center"}}>
+            <CardWidgetsRevenueReport />
+          </div>
           <h2>
             Description de l'association
           </h2>
@@ -532,7 +538,7 @@ export default function ProfilePage(props: any) {
             Modifier le mot de passe
           </button>
           <EditPasswordModal modalProps={{ open: openDialog, onClose: closeDialog }} />
-        </div>
+        </div>        
       </>
   );
 }
