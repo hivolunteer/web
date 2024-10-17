@@ -18,6 +18,9 @@ function ReferentHistoryList( {is_active} : {is_active: boolean}) {
             if (response.status === 200) {
                 response.json().then((data) => {
                     setMissions(data)
+                    missions.sort(
+                        (a: { start_date: Date }, b: { start_date: Date }) => new Date(b.start_date).getTime() - new Date(a.start_date).getTime()
+                    )
                 })
             }
         }

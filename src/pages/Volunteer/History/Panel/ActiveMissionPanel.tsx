@@ -31,7 +31,10 @@ function ActiveMissionPanel() {
                     setMaxPage(page_number + 1)
                     let x = 0;
                     let page = 1;
-                    data.active.forEach((mission: any) => {
+                    const sortedActive = data.active.sort(    
+                        (a: { start_date: Date }, b: { start_date: Date }) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime()
+                    )
+                    sortedActive.forEach((mission: any) => {
                         if (x === 4) {
                             x = 0
                             page++

@@ -37,6 +37,12 @@ function MyMission(props: any) {
         const active: Mission[] = Array.isArray(data.incoming) ? data.incoming : [];
         const passed: Mission[] = Array.isArray(data.passed) ? data.passed : [];
 
+        active.sort(
+          (a: { start_date: Date }, b: { start_date: Date }) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime()
+        );
+        passed.sort(
+          (a: { start_date: Date }, b: { start_date: Date }) => new Date(b.start_date).getTime() - new Date(a.start_date).getTime()
+        );
         setPublishedMissions(active);
         setPastMissions(passed);
       });
