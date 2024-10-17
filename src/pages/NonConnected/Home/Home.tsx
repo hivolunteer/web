@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './Home.scss';
 import HomeConcept from './HomeConcept';
 import HomeUsers from './HomeUsers';
@@ -8,6 +8,7 @@ import HomeContact from './HomeContact';
 import VolunteerSidebar from '../../../sidebar/VolunteerSidebar';
 import AssociationSidebar from '../../../sidebar/AssociationSidebar';
 import CompanySidebar from '../../../sidebar/CompanySidebar';
+
 function Home() {
     return (
         <div>
@@ -18,7 +19,6 @@ function Home() {
               ) : (
                 <CompanySidebar />
             )}
-
             <HomeConcept />
             <HomeUsers />
             <HomeTeam />
