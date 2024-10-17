@@ -217,10 +217,10 @@ export default function ProfilePage(props: any) {
             const startTime = new Date(mission.start_date)
             const endTime = new Date(mission.end_date)
             //const meantime = new Date(endTime.valueOf() - startTime.valueOf())
-            
+
             let days = endTime.getDay() - startTime.getDay();
             let hours = (endTime.getHours() + 24 * days) - startTime.getHours();
-            let minutes = endTime.getMinutes() - startTime.getMinutes();
+            let minutes = Math.abs(endTime.getMinutes() - startTime.getMinutes());
             justHours += hours;
             justMinutes += minutes
           })
