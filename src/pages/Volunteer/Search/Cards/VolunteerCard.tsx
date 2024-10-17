@@ -2,6 +2,7 @@ import { Button, Card, CardActions, CardContent, CardMedia, Typography } from '@
 import { Volunteer } from '../../../../interfaces';
 
 import ProfileDefaultPicture from "../../../../images/logo/submark.png"
+import {Fragment, useEffect} from "react";
 
 interface VolunteerCardProps {
     volunteer: Volunteer
@@ -11,23 +12,30 @@ export default function VolunteerCard(props: VolunteerCardProps) {
 
     const { volunteer } = props;
 
+    useEffect(() => {
+        if (volunteer.profile_picture === null) {
+            volunteer.profile_picture = ProfileDefaultPicture
+        }
+    }, []);
     return(
-        <div>
+        <Fragment>
             <Card
                 sx={{
                     width: '100%',
                     height: '100%'
                 }}
             >
-                <CardMedia
-                    component="img"
-                    height="185"
-                    image={volunteer.profile_picture ? volunteer.profile_picture : ProfileDefaultPicture}
-                    alt="Volunteer profile picture"
+                <img
+                    src={(volunteer.profile_picture !== "NULL") ? volunteer.profile_picture : require('../../../../images/logo/submark.png').default}
+                    alt="profile"
+                    style={{
+                        height: '200px',
+                        objectFit: 'cover',
+                        width: '100%',
+                    }}
                 />
                 <CardContent
                     sx={{
-                        backgroundColor: "rgba(0, 0, 0, 0.70)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center"
@@ -76,7 +84,8 @@ export default function VolunteerCard(props: VolunteerCardProps) {
                         style={{
                             width: '100%',
                             display: 'flex',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
+                            marginBottom: '5px'
                         }}
                     >
                         <Button
@@ -93,6 +102,6 @@ export default function VolunteerCard(props: VolunteerCardProps) {
                     </div>
                 </CardActions>
             </Card>
-        </div>
+        </Fragment>
     )
 }
