@@ -217,8 +217,9 @@ export default function ProfilePage(props: any) {
             const startTime = new Date(mission.start_date) 
             const endTime = new Date(mission.end_date) 
 
-            const hours = endTime.getHours() - startTime.getHours();
-            const minutes = endTime.getMinutes() - startTime.getMinutes();
+            let days = endTime.getDay() - startTime.getDay();
+            let hours = (endTime.getHours() + 24 * days) - startTime.getHours();
+            let minutes = Math.abs(endTime.getMinutes() - startTime.getMinutes());
             justHours += hours;
             justMinutes += minutes
           })

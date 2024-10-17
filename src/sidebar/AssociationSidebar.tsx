@@ -27,12 +27,11 @@ const pagesLink: { [pageName: string]: string } = {};
 
 if (localStorage.getItem("token") !== null) {
   settings.push("Profile", "Réglages", "Déconnexion");
-  pages.push("Accueil", "Missions", "Calendrier", "Référents", "Affiliations");
+  pages.push("Accueil", "Calendrier", "Référents", "Affiliations");
   pagesLink["Accueil"] = "accueil";
-  pagesLink["Missions"] = "";
   pagesLink["Calendrier"] = "calendrier";
   pagesLink["Référents"] = "referent";
-  pagesLink["Affiliations"] = localStorage.getItem("role") === "company" ? "affiliatedAssociations" : "affiliatedCompanies";
+  pagesLink["Affiliations"] ="affiliatedCompanies";
 } else {
   settings.push("Connexion", "Inscription");
 }
@@ -200,7 +199,8 @@ export default function AssociationSidebar() {
                           window.location.reload();
                           window.location.href = "/";
                           break;
-                        case "Connexion" || "Inscription":
+                        case "Connexion":
+                        case "Inscription":
                           window.location.href = "/auth";
                           break;
                         default:
