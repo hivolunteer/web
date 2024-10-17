@@ -65,10 +65,6 @@ const EventCalendar = () => {
         });
     };
 
-    const getCalendar = async (token: string) => {
-
-    }
-
     useEffect(() => {
         const token = localStorage.getItem("token");
 
