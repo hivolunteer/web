@@ -19,10 +19,13 @@ function MissionsPanel() {
         }).then((response) => {
             if (response.status === 200) {
                 response.json().then(async (data) => {
+                    console.log("MISSION PANEL DATA: ", data)
                     const next_missions = data.active.slice(0, 4)
                     setNextMissions(next_missions);
+                    console.log("NEXT MISSIONS: ", nextMissions)
                     const draft_missions = data.draft.slice(0, 4)
                     setDraftMissions(draft_missions);
+                    console.log("FRIENDS MISSIONS: ", draftMissions)
                 })
             }
         })
@@ -32,7 +35,7 @@ function MissionsPanel() {
         <div className="component-missions-panel-container">
             <div className="component-missions-panel-missions">
                 <div className="component-missions-panel-button">
-                    <Button
+                    <Button 
                         variant="contained"
                         className="new-mission"
                         style={{
