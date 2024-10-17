@@ -14,6 +14,7 @@ import { AddCategoryModal } from "./AddCategoryModal";
 import AddDatePickerEventModal from "./AddDatePickerEventModal";
 import config from "../../config";
 import ModifyDatePickerEventModal from "./ModifyDatePickerEventModal";
+import { Mission } from "../../pages/Volunteer/Search/Interfaces";
 
 const locales = { fr };
 const localizer = dateFnsLocalizer({ format, parse, startOfWeek, getDay, locales });
@@ -36,6 +37,7 @@ const EventCalendar = () => {
     const [currentEvent, setCurrentEvent] = useState<Event | IEventInfo | null>(null);
     const [eventInfoModal, setEventInfoModal] = useState(false);
     const [events, setEvents] = useState<IEventInfo[]>([]);
+    const [missions, setMissions] = useState<IEventInfo[]>([]);
     const [categories, setCategories] = useState<ICategory[]>([]);
     const [eventFormData, setEventFormData] = useState<EventFormData>(initialEventFormState);
     const [datePickerEventFormData, setDatePickerEventFormData] = useState<DatePickerEventFormData>(initialDatePickerEventFormData);
@@ -66,19 +68,15 @@ const EventCalendar = () => {
     };
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
-
-        Promise.all([
-            fetch(`${config.apiUrl}/calendar/`, {
-                method: "GET",
-                headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
-            }),
-            fetch(`${config.apiUrl}/missions/association/`, {
-                method: "GET",
-                headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
-            }),
-        ]).then(([calendarResponse, missionsResponse]) => {
+        const calendar = fetch(`${config.apiUrl}/calendar/`, {
+            method: 'GET',
+            headers: {
+              authorization: `Bearer ${localStorage.getItem('token')}`,
+              'Content-Type': 'application/json',
+            },
+        }).then((calendarResponse) => {
             if (calendarResponse.status === 200) {
+                console.log(calendarResponse);
                 return calendarResponse.json().then((calendarData) => {
                     const formattedEvents = calendarData.map((task: any) => ({
                         id: task.id,
@@ -87,26 +85,48 @@ const EventCalendar = () => {
                         start: new Date(task.start_date),
                         end: new Date(task.end_date),
                     }));
-                    setEvents(formattedEvents);
-                });
-            }
-
-            if (missionsResponse.status === 200) {
-                return missionsResponse.json().then((missionsData) => {
-                    const formattedEvents = missionsData.map((task: any) => ({
-                        title: task.title,
-                        description: task.description,
-                        start: new Date(task.start_date),
-                        end: new Date(task.end_date),
-                    }));
-                    setEvents(formattedEvents);
+                    setMissions(formattedEvents);
                 });
             }
         }).catch((error) => {
             console.error(error);
         });
-    }, []);
+    }, [
+        setMissions
+    ]);
 
+    useEffect(() => {
+        fetch(`${config.apiUrl}/missions/association/`, {
+                method: 'GET',
+                headers: {
+                  authorization: `Bearer ${localStorage.getItem('token')}`,
+                  'Content-Type': 'application/json',
+                },
+            }).then((missionsResponse) => {
+                if (missionsResponse.status === 200) {
+                    return missionsResponse.json().then((missionsData) => {
+                        const formattedEvents = missionsData.active.map((task: any) => ({
+                            title: task.title,
+                            description: task.description,
+                            start: new Date(task.start_date),
+                            end: new Date(task.end_date),
+                        }));
+                        setEvents(formattedEvents);
+                    });
+                }
+            }).catch((error) => {
+                console.error(error);
+            }
+        );
+    }, [
+        setEvents,
+        setCategories,
+        setExistingEvents,
+        setResponse,
+        setModifyEventModalOpen,
+    ]);
+
+    
     const handleSelectEvent = (event: IEventInfo) => {
         setCurrentEvent(event);
         setEventInfoModal(true);
@@ -122,7 +142,7 @@ const EventCalendar = () => {
         setOpenDatepickerModal(false);
     };
 
-    const onAddEvent = (e: MouseEvent<HTMLButtonElement>) => {
+    const onAddEvent = (e: MouseEvent<HTMLButtonElement>): EventFormData => {
         const data: IEventInfo = {
             ...eventFormData,
             _id: generateId(),
@@ -135,6 +155,7 @@ const EventCalendar = () => {
         setEvents(newEvents);
         setEventFormData(initialEventFormState);
         handleClose();
+        return eventFormData;
     };
 
     const onAddEventFromDatePicker = (e: MouseEvent<HTMLButtonElement>) => {
@@ -162,6 +183,12 @@ const EventCalendar = () => {
         setEventInfoModal(false);
     };
 
+    const changeHours = (date: Date | undefined) => {
+        const newDate = new Date(date as Date);
+        newDate.setDate(newDate.getDate() + 1);
+        return newDate;
+    }
+
     const createNewEvent = () => {
         const token = localStorage.getItem("token");
         const body = {
@@ -169,10 +196,12 @@ const EventCalendar = () => {
             description: datePickerEventFormData?.description || eventFormData.description,
             category: datePickerEventFormData?.category || eventFormData.categoryId,
             start_date: datePickerEventFormData?.start_date || currentEvent?.start,
-            end_date: datePickerEventFormData?.end_date || currentEvent?.end,
+            end_date: currentEvent?.allDay || datePickerEventFormData?.allDay ? changeHours(datePickerEventFormData?.start_date || currentEvent?.start) : datePickerEventFormData?.end_date || currentEvent?.end,
             location: datePickerEventFormData?.location,
             id_mission: datePickerEventFormData?.id_mission
         };
+        console.log(currentEvent?.allDay || datePickerEventFormData?.allDay);
+        console.log();
 
         fetch(`${config.apiUrl}/calendar/create`, {
             method: "POST",
@@ -292,7 +321,7 @@ const EventCalendar = () => {
                         <Calendar
                             localizer={localizer}
                             culture={"fr"}
-                            events={events}
+                            events={[...events, ...missions]}
                             onSelectEvent={handleSelectEvent}
                             onSelectSlot={handleSelectSlot}
                             selectable

@@ -87,6 +87,7 @@ const FilterModal = (props: {modalProps: Modal}) => {
             allow_minors: allowMinors,
             duration: minutes
         }
+        console.log(dates)
         if (checkDefaultValue())
             search = false
         fetch(`${config.apiUrl}/search/missions`, {

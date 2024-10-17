@@ -18,7 +18,7 @@ interface IProps {
     handleClose: Dispatch<SetStateAction<void>>
     eventFormData: EventFormData
     setEventFormData: Dispatch<SetStateAction<EventFormData>>
-    onAddEvent: (e: MouseEvent<HTMLButtonElement>) => void
+    onAddEvent: (e: MouseEvent<HTMLButtonElement>) => EventFormData
     categories: ICategory[]
 }
 
