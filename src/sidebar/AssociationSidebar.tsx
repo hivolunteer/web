@@ -42,7 +42,7 @@ export default function AssociationSidebar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
-  const [notifications, setNotifications] = React.useState([]);
+  const [notifications, setNotifications] = React.useState<any[]>([]);
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => { setAnchorElNav(event.currentTarget); };
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => { setAnchorElUser(event.currentTarget); };
   const handleCloseNavMenu = () => { setAnchorElNav(null); };
@@ -159,7 +159,7 @@ export default function AssociationSidebar() {
           </Box>
           {localStorage.getItem("token") ?
           <Box sx={{ marginRight: "1%" }}>
-            <NotificationBell notifications={notifications} onDeleteNotification={handleDeleteNotification} />
+            <NotificationBell notifications={notifications} setNotifications={setNotifications} />
           </Box>
           : null }
           <Box sx={{ flexGrow: 0, alignContent: 'center' }}>

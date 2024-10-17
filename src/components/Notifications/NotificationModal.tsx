@@ -46,7 +46,10 @@ const NotificationModal: React.FC<NotificationModalProps> = ({ notifications, on
                       <Typography variant="body1" component="p">
                           {notification.message}
                       </Typography>
-                      <IconButton onClick={() => handleDeleteNotification(notification.id, notifications, setNotifications)}>
+                      <IconButton onClick={() => {
+                        //console.log("eip hell")
+                        handleDeleteNotification(notification.id, notifications, setNotifications)
+                        }}>
                           <CloseIcon />
                       </IconButton>
                   </Box>

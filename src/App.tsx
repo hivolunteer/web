@@ -20,7 +20,6 @@ import AssociationSidebar from "./sidebar/AssociationSidebar";
 import CompanySidebar from "./sidebar/CompanySidebar";
 import CompanyRouter from "./routers/NoConnectCompanyRouter";
 import CompanyRouterConnected from "./routers/ConnectCompanyRouter";
-import CompanySidebar from "./sidebar/CompanySidebar";
 
 function NoConnectRouter() {
   return (
