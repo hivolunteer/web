@@ -216,13 +216,11 @@ export default function ProfilePage(props: any) {
           data.passed.map((mission : Mission) => {
             const startTime = new Date(mission.start_date)
             const endTime = new Date(mission.end_date)
-            const meantime = new Date(endTime.valueOf() - startTime.valueOf())
-
-            let hours = endTime.getHours() - startTime.getHours();
+            //const meantime = new Date(endTime.valueOf() - startTime.valueOf())
+            
+            let days = endTime.getDay() - startTime.getDay();
+            let hours = (endTime.getHours() + 24 * days) - startTime.getHours();
             let minutes = endTime.getMinutes() - startTime.getMinutes();
-
-            hours = meantime.getHours();
-            minutes = meantime.getMinutes();
             justHours += hours;
             justMinutes += minutes
           })
