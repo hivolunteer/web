@@ -161,7 +161,7 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
                             </div>
                             <div className='mission-body-with-icon' style={{ marginBottom: '2px' }}>
                             {(isVolunteerMission) ? <EmojiEmotionsIcon/> : <BusinessIcon />}
-                            <p style={{ marginLeft: '10px' }}>{isVolunteerMission ? "Bénévole" : "Association"}</p>
+                            <p style={{ marginLeft: '10px' }}>{isVolunteerMission ? "Bénévole" : mission?.title}</p>
                             </div>
 
                         </div>
