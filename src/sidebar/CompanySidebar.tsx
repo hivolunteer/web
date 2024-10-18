@@ -90,7 +90,7 @@ export default function CompanySidebar() {
         };
 
         (count === 0) && fetchNotifications();
-        (count === 1) && setTimeout(() => setCount(0), 1000);
+        (count === 1) && setTimeout(() => setCount(0), 300000);
 
     }, [count]);
 

@@ -39,13 +39,13 @@ function NoConnectRouter() {
 function ConnectRouter() {
   return (
     <Router>
-      {localStorage.getItem("role") === "volunteer" ? (
-          <VolunteerSidebar />
-        ) : localStorage.getItem("role") === "association" ? (
-          <AssociationSidebar />
+        { localStorage.getItem("role") === "company" ? (
+            <CompanySidebar />
+        ) : localStorage.getItem("role") === "volunteer" ? (
+            <VolunteerSidebar />
         ) : (
-          <CompanySidebar />
-      )}
+            <AssociationSidebar />
+        )}
       <Routes>
         {localStorage.getItem("role") === "volunteer" ? (
             <Route path="/*" element={<VolunteerRouterConnected />} />

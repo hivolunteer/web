@@ -40,22 +40,27 @@ const NotificationModal: React.FC<NotificationModalProps> = ({ notifications, on
               Notifications
             </Typography>
           </Box>
-          {notifications.map((notification, index) => (
-              <div key={index}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Typography variant="body1" component="p">
-                          {notification.message}
-                      </Typography>
-                      <IconButton onClick={() => {
-                        //console.log("eip hell")
-                        handleDeleteNotification(notification.id, notifications, setNotifications)
-                        }}>
-                          <CloseIcon />
-                      </IconButton>
-                  </Box>
-                  {index < notifications.length - 1 && <Divider sx={{mt: 2, mb: 2}}/>}
-              </div>
-          ))}
+            {notifications.length === 0 ? (
+                <Typography variant="body1" component="p" color={"grey"}>
+                    Pas de notification pour le moment
+                </Typography>
+            ) : (
+                notifications.map((notification, index) => (
+                    <div key={index}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <Typography variant="body1" component="p">
+                                {notification.message}
+                            </Typography>
+                            <IconButton onClick={() => {
+                                handleDeleteNotification(notification.id, notifications, setNotifications)
+                            }}>
+                                <CloseIcon />
+                            </IconButton>
+                        </Box>
+                        {index < notifications.length - 1 && <Divider sx={{mt: 2, mb: 2}}/>}
+                    </div>
+                ))
+            )}
         </Box>
       </Popover>
   );
