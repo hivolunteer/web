@@ -23,6 +23,7 @@ import EditPasswordModal from "./EditPasswordModal";
 import { CardActions, CardContent } from "@mui/material";
 import CardWidgetsRevenueReport from "./statsComponent";
 import EmployeeRanking from "./cardStats";
+import { textAlign } from "@mui/system";
 
 type newProfile = {
   name: string;
@@ -500,43 +501,41 @@ export default function ProfilePage(props: any) {
           <h2>
             Description de l'association
           </h2>
-          <h4 style={{
-            padding: "20px",
-            textAlign: "center",
-          }}>
+          <p style={{ textAlign: 'center'}}>
             {description === null || description === undefined || description === "" ? "Aucune description n'est disponible pour cette association" : description}
-          </h4>
+          </p>
           <h2>
             Contact
           </h2>
           <div style={{
             display: "flex",
             flexDirection: "column",
-            alignItems: "flex-start",
-            justifyContent: "flex-start",
+            alignItems: "center",
+            justifyContent: "center",
             textAlign: "center",
-            padding: "20px",
+            marginBottom: "50px",
+            padding: "10px",
           }}>
             <label>E-mail:</label>
-            <h4>
+            <a href="mailto:">
               {email}
-            </h4>
+            </a>
             <label>Numéro de téléphone:</label>
-            <h4>
+            <a href="tel:">
               {phone}
-            </h4>
+            </a>
           </div>
-        </div><div className="profile-row">
-        </div><div className="profile-btn-div">
-          <button className="profile-pic-btn" onClick={() => { navigate("/settings/profile_information"); }}>
+        </div>
+        <div className="profile-btn-div">
+          <Button sx={{marginInlineEnd: '5rem'}} variant="contained" color="primary" onClick={() => { navigate("/settings/profile_information"); }}>
             Mettre à jour le profile
-          </button>
+          </Button>
           {/* <button className="delete-account-btn" onClick={deleteAccount}>
                   Supprimer le compte
               </button> */}
-          <button className="profile-pic-btn edit" onClick={() => setOpenDialog(true)} style={{ backgroundColor: "#FFD700" }}>
+          <Button variant="contained" color="secondary" onClick={() => setOpenDialog(true)} style={{ backgroundColor: "#FFD700" }}>
             Modifier le mot de passe
-          </button>
+          </Button>
           <EditPasswordModal modalProps={{ open: openDialog, onClose: closeDialog }} />
         </div>        
       </>

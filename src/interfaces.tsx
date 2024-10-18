@@ -41,7 +41,7 @@ export interface Mission {
   title: string,
   rating: Rating | null,
   picture: string,
-  theme_id: number,
+  theme_id: number | null,
   accept_minors: boolean,
   status: number
 }
