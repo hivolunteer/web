@@ -33,6 +33,7 @@ export default function CompanySidebar() {
     const [settings, setsettings] = React.useState<string[]>([]);
     const [pagesLink, setPagesLink] = React.useState<{ [pageName: string]: string }>({})
     const [notifications, setNotifications] = React.useState<any[]>([]);
+    const [count, setCount] = React.useState<number>(0);
 
     React.useEffect(() => {
         if (settings.length === 0) {
@@ -66,7 +67,7 @@ export default function CompanySidebar() {
     React.useEffect(() => {
         const fetchNotifications = async () => {
             try {
-                await fetch(`${config.apiUrl}/notifications/list/Company/personal`, {
+                await fetch(`${config.apiUrl}/notifications/list/Association/personal`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -79,6 +80,7 @@ export default function CompanySidebar() {
                                 return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
                             });
                             setNotifications(sortedNotifications);
+                            setCount(1)
                         })
                     }
                 });
@@ -87,13 +89,10 @@ export default function CompanySidebar() {
             }
         };
 
-        const waitTime = async () => {
-            await new Promise(r => setTimeout(r, 1000));
-        }
+        (count === 0) && fetchNotifications();
+        (count === 1) && setTimeout(() => setCount(0), 1000);
 
-        fetchNotifications();
-        waitTime();
-    });
+    }, [count]);
 
     const handleLogout = () => {
         localStorage.clear();

@@ -47,6 +47,7 @@ export default function AssociationSidebar() {
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => { setAnchorElUser(event.currentTarget); };
   const handleCloseNavMenu = () => { setAnchorElNav(null); };
   const handleCloseUserMenu = () => { setAnchorElUser(null); };
+  const [count, setCount] = React.useState(0);
 
   const handleMenuItemClick = (setting: string) => {
     handleCloseUserMenu();
@@ -78,6 +79,7 @@ export default function AssociationSidebar() {
                 return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
               });
               setNotifications(sortedNotifications);
+              setCount(1)
             })
           }
         });
@@ -85,8 +87,11 @@ export default function AssociationSidebar() {
         console.error(error);
       }
     };
-    fetchNotifications();
-  }, []);
+
+    (count === 0) && fetchNotifications();
+    (count === 1) && setTimeout(() => setCount(0), 1000);
+
+  }, [count]);
 
   const handleLogout = () => {
     localStorage.clear();
