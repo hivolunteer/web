@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { InputAdornment, Tab, Tabs, TextField } from "@mui/material";
+import { Button, InputAdornment, Tab, Tabs, TextField } from "@mui/material";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import "../../Association/Search/Search.scss";
 import { Mission } from "../../../interfaces";
@@ -78,6 +78,24 @@ function MyMission(props: any) {
         </div>
       </div>
       <div className="centered-container">
+      <div style={{display: 'flex', justifyContent: 'center', marginBottom: '20px', marginTop: '20px'}}>
+        <Button 
+            variant="contained"
+            className="new-mission"
+            style={{
+                backgroundColor: '#67A191',
+                color: '#FFFEFF',
+                textTransform: 'none',
+                borderRadius: '10px',
+                fontSize: '15px',
+                height: '20%',
+                boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+            }}
+            onClick={() => {window.location.href = 'mission/create'}}
+        >
+            Créer une mission
+        </Button>
+        </div>
         <div className="tabs-container">
           <Tabs
             value={subType.id}
