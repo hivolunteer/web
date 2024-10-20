@@ -9,6 +9,8 @@ import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined
 import NearMeOutlinedIcon from '@mui/icons-material/NearMeOutlined';
 import config from "../config";
 import { Mission, Association } from '../interfaces';
+import getHour from '../functions/getHour';
+import getDate from '../functions/getDate';
 
 function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
     const { mission, isToday } = props;
@@ -181,7 +183,7 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
                         <div className='mission-body'>
                             <div className='mission-body-with-icon' style={{ display: 'flex', flexDirection: 'row' }}>
                                 <CalendarMonthOutlinedIcon />
-                                <p style={{ marginLeft: '10px' }}> {convertDay(mission.start_date.toString())} {convertHour(mission.start_date.toString())}h - {convertDay(mission.end_date.toString())} {convertHour(mission.end_date.toString())}h </p>
+                                <p style={{ marginLeft: '10px' }}> {getDate(mission.start_date as Date)} {getHour(mission.start_date as Date)} - {getDate(mission.end_date as Date)} {getHour(mission.end_date as Date)} </p>
                             </div>
                             <div className='mission-body-with-icon' style={{ marginBottom: '2px', display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
                                 <NearMeOutlinedIcon />
