@@ -31,19 +31,27 @@ interface Location {
   postal_code: string,
 }
 
-function TextDisplayer(props: any) {
-  const element = props.element;
-
+function TextDisplayer({ element }: { element: string | number | undefined }) {
   if (element === null || element === undefined) {
     return (
       <div className="manage-mission-information-container">
         <p className="manage-mission-information-container-text">Non défini</p>
       </div>
     );
-  } else {
+  } else if (typeof element === 'number') {
     return (
       <div className="manage-mission-information-container">
-        {element}
+        <p className="manage-mission-information-container-text">{element}</p>
+      </div>
+    );
+  } else {
+    // Format the text to display it correctly in many lines
+    const text = (element as string).split('\n').map((item: string, key: number) => {
+      return <span key={key}>{item}<br /></span>
+    });
+    return (
+      <div className="manage-mission-information-container">
+        {text}
       </div>
     );
   }
@@ -172,8 +180,8 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
               </div>
               <h4> Nombre de volontaires </h4>
               <TextDisplayer element={mission?.max_volunteers} />
-              <h4> Thème </h4>
-              <TextDisplayer element={theme} />
+              {/* <h4> Thème </h4>
+              <TextDisplayer element={theme} /> */}
               <h4> Status </h4>
               <p className={props.MissionStatus === 1 ? "manage-mission-information-status-published" : props.MissionStatus === 2 ? "manage-mission-information-status-canceled" : props.MissionStatus === 3 ? "manage-mission-information-status-passed" : "manage-mission-information-status-draft"}>
                 {props.MissionStatus === 1 ? "En ligne" : props.MissionStatus === 2 ? "Annulée" : props.MissionStatus === 3 ? "Passée" : "Brouillon"}
