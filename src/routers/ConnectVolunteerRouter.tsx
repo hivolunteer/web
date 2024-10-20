@@ -22,6 +22,7 @@ import ReferentHistory from "../pages/Volunteer/Referent/ReferentHistory";
 import MyMission from "../pages/Volunteer/MyMissions/MyMissions";
 
 import TeamRanking from "../pages/Volunteer/Employee/TeamRanking";
+import ModifyLocationModal from "../pages/Association/Missions/Modal/ModifyLocationModal";
 
 function ConnectVolunteerRouter() {
     return (
@@ -31,6 +32,7 @@ function ConnectVolunteerRouter() {
             <Route path="/follows" element={<FollowAssociation />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/profile/blocked" element={<BlockedUsersList />} />
+            <Route path="/modifyAddress" element={<ModifyLocationModal/>} />
             <Route path="/accueil" element={<Search />} />
             <Route path="/association/:associationId" element={<AssociationProfile />} />
             <Route path="/mission/:missionID" element={<MissionDetails />} />
