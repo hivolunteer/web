@@ -198,7 +198,7 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
         </AccordionDetails>
         <AccordionActions>
           <Button size="small" color="warning" onClick={() => window.location.href = `/${mission?.id}/edit`}>Modifier</Button>
-          <Button size="small" color="info" onClick={() => window.location.href = `/mission/${mission?.id}`}>Visualiser</Button>
+          <Button size="small" color="info" onClick={() => window.location.href = `/mission/close/${mission?.id}`}>Visualiser</Button>
         </AccordionActions>
       </Accordion>
     </div>
