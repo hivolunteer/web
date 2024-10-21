@@ -115,8 +115,8 @@ function PublicProfile() {
   }
 
   function handleRejectRequest() {
-    fetch(`${config.apiUrl}/friends/reject/${volunteerId}`, {
-      method: 'POST',
+    fetch(`${config.apiUrl}/friends/deny/${volunteerId}`, {
+      method: 'DELETE',
       headers: {
         authorization: `Bearer ${localStorage.getItem('token')}`,
         'Content-Type': 'application/json'
