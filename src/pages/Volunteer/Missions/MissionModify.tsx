@@ -4,7 +4,7 @@
  * @utility This page is used to create a mission
 */
 
-import { Alert, Autocomplete, Box, Button, Chip, Grid, TextField} from "@mui/material";
+import { Alert, Autocomplete, Box, Button, Chip, Grid, Link, TextField} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import { Image } from "mui-image";
 import { LocalizationProvider, DateTimePicker, TimePicker } from "@mui/x-date-pickers";
@@ -17,7 +17,7 @@ import config from "../../../config";
 import LocationModal from "../../Association/Missions/Modal/LocationModal";
 import noImage from "../../../images/lottie/noImage.json";
 import { useParams } from 'react-router-dom';
-
+import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 
 interface MissionModificationData {
   missionName?: string;
@@ -230,6 +230,22 @@ export default function EditMission() {
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
       <Box>
+        <Box
+          style={{
+            display: "flex",
+            justifyContent: "left",
+            alignContent: "left",
+            height: "1vh",
+            marginTop: "2em",
+            marginLeft: "0.5em"
+          }}
+        >
+          <Link href="#" onClick={() => window.history.back()} color="inherit"
+            style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+            <ArrowBackOutlinedIcon onClick={() => window.history.back()} color="action" style={{ cursor: 'pointer' }} />
+            Retour
+          </Link>
+        </Box>
         <Box
           style={{
             display: "flex",
