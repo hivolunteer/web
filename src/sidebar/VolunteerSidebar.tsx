@@ -136,7 +136,7 @@ export default function VolunteerSidebar() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={() => { console.log("hd"); }}>{page}</MenuItem>
+                <MenuItem key={page} onClick={() => { window.location.href = `/${pagesLink[page]}`; console.log(pagesLink[page]); }}>{page}</MenuItem>
               ))}
             </Menu>
           </Box>
