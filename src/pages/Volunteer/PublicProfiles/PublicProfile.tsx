@@ -207,7 +207,7 @@ function PublicProfile() {
               Débloquer
             </Button>
           )}
-          {(friendshipStatus !== -1 && friendshipStatus !== 13) && (
+          {(friendshipStatus !== -1 && friendshipStatus !== 13 && friendshipStatus !== 20) && (
             <Button variant="text" color="error" onClick={handleUnfriend}>
               Retirer
             </Button>
