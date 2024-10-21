@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
+import { Accordion, AccordionDetails, AccordionSummary, Card, CardContent, CardHeader } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import config from "../../../../config";
 import './ManageMissionVolunteers.scss'
@@ -58,15 +58,15 @@ function ManageMissionVolunteers(props: ManageMissionVolunteersProps) {
     }, [mission_id]); 
 
   return (
-    <Accordion className="volunteer-manage-mission-accordion" defaultExpanded={true}>
-        <AccordionSummary
+    <Card className="volunteer-manage-mission-accordion" sx={{ marginTop: '1em' }}>
+        <CardHeader
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
             id="panel1a-header"
         >
             Gestion des participants
-        </AccordionSummary>
-        <AccordionDetails>
+        </CardHeader>
+        <CardContent>
             {ListVolunteers.length === 0 ?
                 <p>Aucun participant pour le moment</p>
                 :  
@@ -76,8 +76,8 @@ function ManageMissionVolunteers(props: ManageMissionVolunteersProps) {
                     ))}
                 </div>
             }
-        </AccordionDetails>
-    </Accordion>
+        </CardContent>
+    </Card>
   )
 }
 

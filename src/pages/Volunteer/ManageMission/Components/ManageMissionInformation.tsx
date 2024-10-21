@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button } from "@mui/material";
+import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button, Card, CardActionArea, CardActions, CardContent, CardHeader } from "@mui/material";
 import Grid from "@mui/system/Unstable_Grid";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import config from "../../../../config";
@@ -159,15 +159,15 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
           <h1> {mission?.title} </h1>
         </div>
       </div>
-      <Accordion className="volunteer-manage-mission-accordion" defaultExpanded={true}>
-        <AccordionSummary
+      <Card className="volunteer-manage-mission-accordion" sx={{ marginTop: '1em' }}>
+        <CardHeader
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
           Informations de la mission
-        </AccordionSummary>
-        <AccordionDetails>
+        </CardHeader>
+        <CardContent>
           <Grid container spacing={3}>
             <Grid xs={6}>
               <h4> Date de la mission </h4>
@@ -195,12 +195,12 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
               <TextDisplayer element={mission?.practical_information} />
             </Grid>
           </Grid>
-        </AccordionDetails>
-        <AccordionActions>
+        </CardContent>
+        <CardActions>
           <Button size="small" color="warning" onClick={() => window.location.href = `/${mission?.id}/edit`}>Modifier</Button>
           <Button size="small" color="info" onClick={() => window.location.href = `/mission/close/${mission?.id}`}>Visualiser</Button>
-        </AccordionActions>
-      </Accordion>
+        </CardActions>
+      </Card>
     </div>
   );
 }
