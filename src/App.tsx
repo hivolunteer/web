@@ -13,14 +13,13 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { ThemeProvider, useTheme } from "@mui/material";
 import { myTheme } from "./theme/theme";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import Home from "./pages/NonConnected/Home/Home";
 import VolunteerSidebar from "./sidebar/VolunteerSidebar";
 import AssociationSidebar from "./sidebar/AssociationSidebar";
 import CompanySidebar from "./sidebar/CompanySidebar";
 import CompanyRouter from "./routers/NoConnectCompanyRouter";
 import CompanyRouterConnected from "./routers/ConnectCompanyRouter";
-import CompanySidebar from "./sidebar/CompanySidebar";
 
 function NoConnectRouter() {
   return (

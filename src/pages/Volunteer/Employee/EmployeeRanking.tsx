@@ -45,7 +45,7 @@ const colums: GridColDef[] = [
     field: 'name',
     headerName: 'Employé',
     type: 'string',
-    renderCell: (params) => (
+    renderCell: (params : any) => (
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <Avatar src={params.row.profile_picture} sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500 }} alt={params.row.name}>
           {getInitials(params.row.name)}
@@ -74,7 +74,7 @@ const colums: GridColDef[] = [
     field: 'team',
     headerName: 'Équipe',
     type: 'string',
-    renderCell: (params) => (
+    renderCell: (params : any) => (
       <Typography
         noWrap
         component={Link}
@@ -97,7 +97,7 @@ const colums: GridColDef[] = [
     field: 'nb_missions',
     headerName: 'Nombre de missions',
     type: 'number',
-    renderCell: (params) => (
+    renderCell: (params : any) => (
       <Typography
         noWrap
         sx={{
@@ -119,7 +119,7 @@ const colums: GridColDef[] = [
     field: 'bee',
     headerName: 'Bee',
     type: 'number',
-    renderCell: (params) => (
+    renderCell: (params : any) => (
       <Typography
         noWrap
         sx={{
@@ -141,7 +141,7 @@ const colums: GridColDef[] = [
     sortable: false,
     field: 'actions',
     headerName: 'Actions',
-    renderCell: (params) => (
+    renderCell: (params : any) => (
       <RowAction volunteerId={params.row.id} teamId={params.row.team.id} />
     )
   }
