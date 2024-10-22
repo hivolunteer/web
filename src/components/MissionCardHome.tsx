@@ -99,23 +99,20 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
 
     // misc functions
 
-    function convertDay(date: string) {
-        if (date === '')
-            return ''
-        let day = date.split('T')[0].split('-')[2]
-        let month = date.split('T')[0].split('-')[1]
-        let year = date.split('T')[0].split('-')[0]
-        return `${day}/${month}/${year}`
+    const convertDay = (dateString: string) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0'); // Get the day and pad with '0' if needed
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Get the month (0-based) and pad
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    };
+    
+    function convertHour(dateString: string) {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
     }
-
-    function convertHour(date: string) {
-        if (date === '')
-            return ''
-        let hour = date.split('T')[1].split(':')[0]
-        let minutes = date.split('T')[1].split(':')[1]
-        return `${hour}:${minutes}`
-    }
-
 
     // page rendering
     return (
@@ -153,7 +150,7 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
                         <div className='mission-body'>
                             <div className='mission-body-with-icon' style={{display: 'flex', flexDirection: 'row'}}>
                                 <CalendarMonthOutlinedIcon />
-                                <p style={{ marginLeft: '10px' }}> {convertDay(mission.start_date.toString())} {convertHour(mission.start_date.toString())}h - {convertHour(mission.end_date.toString())}h </p>
+                                <p style={{ marginLeft: '10px' }}> {convertDay(mission.start_date.toString())} {convertHour(mission.start_date.toString())} - {convertHour(mission.end_date.toString())} </p>
                             </div>
                             <div className='mission-body-with-icon' style={{ marginBottom: '2px', display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
                                 <NearMeOutlinedIcon />

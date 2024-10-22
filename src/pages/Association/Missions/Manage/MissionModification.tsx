@@ -438,7 +438,7 @@ function isPresent(presetId: number, skills: number[]): boolean {
                         if (date) {
                           setForm({
                             ...form,
-                            missionDate: date.toDate(),
+                            missionDate: date.utc().toDate(),
                           });
                         }
                       }}
@@ -454,7 +454,7 @@ function isPresent(presetId: number, skills: number[]): boolean {
                         if (date) {
                           setForm({
                             ...form,
-                            missionEndDate: date.toDate(),
+                            missionEndDate: date.utc().toDate(),
                           });
                         }
                       }}

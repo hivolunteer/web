@@ -420,7 +420,7 @@ export default function MissionCreation() {
                             if (index === updatedDateRanges.length - 1) {
                               setForm({
                                 ...form,
-                                missionEndDate: date.toDate(),
+                                missionEndDate: date.utc().toDate(),
                               });
                             }
                             setMissionDateRanges(updatedDateRanges);
@@ -442,7 +442,7 @@ export default function MissionCreation() {
                             if (index === updatedDateRanges.length - 1) {
                               setForm({
                                 ...form,
-                                missionEndDate: date.toDate(),
+                                missionEndDate: date.utc().toDate(),
                               });
                             }
                             setMissionDateRanges(updatedDateRanges);

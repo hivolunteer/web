@@ -3,6 +3,7 @@ import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button
 import Grid from "@mui/system/Unstable_Grid";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import config from "../../../../config";
+import moment from "moment-timezone";
 import './ManageMissionInformation.scss';
 
 interface Mission {
@@ -68,15 +69,10 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
   const isAssociation = props.isAssociation;
 
   function formatDate(date: string) {
-    if (date === '')
-        return ''
-    let day = date.split('T')[0].split('-')[2]
-    let month = date.split('T')[0].split('-')[1]
-    let year = date.split('T')[0].split('-')[0]
-    let hour = date.split('T')[1].split(':')[0]
-    let minutes = date.split('T')[1].split(':')[1]
-    return `${day}/${month}/${year} à ${hour}:${minutes}`
-  }
+    if (date === '') return '';
+    const parisDate = moment.tz(date, 'Europe/Paris');
+    return `${parisDate.format('DD/MM/YYYY')} à ${parisDate.format('HH:mm')}`;
+}
 
   useEffect(() => {
     fetch(`${config.apiUrl}/missions/${isAssociation ? 'association' : 'close'}/${mission_id}`, {
