@@ -26,9 +26,11 @@ function SearchSection() {
 
     function handleSearch() {
         const search = document.getElementById("search-text") as HTMLInputElement;
-        console.log(search.value);
-        window.location.href = `/accueil?query=${search.value}`;
-    }
+        const searchValue = search.value.trim();
+        if (searchValue) {
+            window.location.href = `/accueil?query=${encodeURIComponent(searchValue)}`;
+        }
+    }    
 
     return (
         <Box className="component-search-section-container">
@@ -42,7 +44,9 @@ function SearchSection() {
             </div>
             <div className="component-search-section-search">
                 <InputBase className="component-search-section-search-bar" placeholder="Rechercher une mission" id="search-text" onKeyDown={(event) => {
+                    console.log("EVENT KEY", event.key)
                     if (event.key === 'Enter') {
+                        console.log("EVENT", event)
                         handleSearch();
                     }
                 }} />

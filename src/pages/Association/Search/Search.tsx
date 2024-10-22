@@ -9,6 +9,7 @@ import { Mission } from "../../../interfaces";
 import config from "../../../config";
 import TabPanel from "../../../components/TabPanel"
 import MissionPanel from "./Panels/MissionPanel";
+import { Association } from "../../Volunteer/Search/Interfaces";
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -64,9 +65,13 @@ function Search(props: any) {
       });
   }, []);
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value.toLowerCase());
-  };
+  function handleSearch() {
+    const searchValue = document.getElementById("search-text") as HTMLInputElement;
+    if (searchValue.value) {
+        setSearch(searchValue.value);
+        window.location.href = `/accueil?query=${encodeURIComponent(search)}`;
+    }
+  }
 
   return (
     <div className="page-container">
@@ -120,21 +125,21 @@ function Search(props: any) {
             <MissionPanel missionList={draftMissions} search={search} />
           ) : (
             <div className="no-missions-message">Aucune mission brouillon</div>
-          )}
+        )}
         </TabPanel>
         <TabPanel value={subType.id} index={1}>
           {publishedMissions.length > 0 ? (
             <MissionPanel missionList={publishedMissions} search={search} />
           ) : (
             <div className="no-missions-message">Aucune mission publiée</div>
-          )}
+        )}
         </TabPanel>
         <TabPanel value={subType.id} index={3}>
           {pastMissions.length > 0 ? (
             <MissionPanel missionList={pastMissions} search={search} />
           ) : (
             <div className="no-missions-message">Aucune mission passée</div>
-          )}
+        )}
         </TabPanel>
       </div>
     </div>
