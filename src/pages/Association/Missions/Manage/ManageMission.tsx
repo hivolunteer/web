@@ -18,21 +18,24 @@ function ManageMission() {
     const url = window.location.href;
     const mission_id = url.split("/").pop();
 
+    const [isCompanyMission, setIsCompanyMission] = useState<boolean>(false);
+    const [is_company_approved, setIsCompanyApproved] = useState<boolean>(false);
+
     function publishMission() {
-        fetch(`${config.apiUrl}/missions/association/upload/${mission_id}`, {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        }).then((response) => {
-            if (response.status === 201) {
-                window.location.href = `/manage/${mission_id}`;
-            } else {
-                console.log("ERROR");
-                alert("Une erreur est survenue lors de la publication de la mission");
-            }
-        });
+        // fetch(`${config.apiUrl}/missions/association/upload/${mission_id}`, {
+        //     method: 'POST',
+        //     headers: {
+        //         'content-type': 'application/json',
+        //         'Authorization': `Bearer ${localStorage.getItem('token')}`
+        //     }
+        // }).then((response) => {
+        //     if (response.status === 201) {
+        //         window.location.href = `/manage/${mission_id}`;
+        //     } else {
+        //         console.log("ERROR");
+        //         alert("Une erreur est survenue lors de la publication de la mission");
+        //     }
+        // });
     }
 
     function handleCancel () {
@@ -76,7 +79,16 @@ function ManageMission() {
 
     return (
         <div>
-            <ManageMissionInformation mission_id={mission_id} setMissionStatus={setMissionStatus} MissionStatus={MissionStatus} isAssociation={true} setMissionEndDate={setMissionEndDate} MissionEndDate={MissionEndDate}/>
+            <ManageMissionInformation 
+                mission_id={mission_id}
+                setMissionStatus={setMissionStatus}
+                MissionStatus={MissionStatus}
+                isAssociation={true}
+                setMissionEndDate={setMissionEndDate}
+                MissionEndDate={MissionEndDate}
+                setIsCompanyApproved={setIsCompanyApproved}
+                setIsCompanyMission={setIsCompanyMission}
+            />
 
             { (MissionStatus !== 0) &&
                 <ManageMissionVolunteers mission_id={mission_id} MissionStatus={MissionStatus} MissionEndDate={MissionEndDate} />
@@ -85,7 +97,13 @@ function ManageMission() {
             <div className='manage-mission-button-container'>
                 { MissionStatus === 0 &&
                     <>
-                        <Button className='manage-mission-button' variant="outlined" color="success" onClick={() => publishMission()}> Mettre en ligne </Button>
+                        <Button 
+                            className='manage-mission-button'
+                            variant="outlined"
+                            color="success"
+                            onClick={() => publishMission()}
+                            disabled={isCompanyMission && !is_company_approved}
+                        > Mettre en ligne </Button>
                         <div className='manage-mission-button-separator'/>
                     </>
                     }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './Home.scss';
 import HomeConcept from './HomeConcept';
 import HomeUsers from './HomeUsers';
