@@ -23,7 +23,7 @@ function AssociationPanel(props: {assoPages: Array<PageAssoProps>}) {
 
     return(
       <div style={{width: '100%', display: 'flex', flexDirection: 'column'}}>
-          <div style={{display: 'flex', justifyContent: 'center', width: '100vw'}}>
+          <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
           {
             (noAssociationFound) ?
               <p>
@@ -33,11 +33,11 @@ function AssociationPanel(props: {assoPages: Array<PageAssoProps>}) {
             assoPages.filter((page: PageAssoProps) => page.page === actual_page)
             .map((page: PageAssoProps) => {
               return (
-                <div style={{display: 'flex', flexWrap: 'wrap', width: '90%', justifyContent: 'center'}}>
+                <div style={{display: 'flex', flexWrap: 'wrap', width: '90%', justifyContent: 'start', margin: "0 5%"}}>
                   {
                     page.associations.map((association: Association) => {
                       return (
-                        <div key={association.id} style={{margin: '25px', width: '25%'}}>
+                        <div key={association.id} style={{margin: '25px', width: '21%'}}>
                           <AssociationCard
                             association_id={association.id}
                           />

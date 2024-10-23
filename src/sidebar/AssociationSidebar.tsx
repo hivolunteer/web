@@ -17,9 +17,8 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Sidebar.scss";
 import logoWhite from "../images/logo/submark_white.png";
 import logoImage from "../images/logo/submark.png";
-import NotificationBell from '../components/Notifications/NotificationBell';
 import config from "../config";
-import handleDeleteNotification from './DeleteNotificationApi';
+import NotificationBell from "../components/Notifications/NotificationBell";
 
 const pages: string[] = [];
 const settings: string[] = [];
@@ -27,8 +26,8 @@ const pagesLink: { [pageName: string]: string } = {};
 
 if (localStorage.getItem("token") !== null) {
   settings.push("Profile", "Réglages", "Déconnexion");
-  pages.push("Accueil", "Calendrier", "Référents", "Affiliations");
-  pagesLink["Accueil"] = "accueil";
+  pages.push("Mes missions", "Calendrier", "Référents", "Affiliations");
+  pagesLink["Mes missions"] = "accueil";
   pagesLink["Calendrier"] = "calendrier";
   pagesLink["Référents"] = "referent";
   pagesLink["Affiliations"] ="affiliatedCompanies";

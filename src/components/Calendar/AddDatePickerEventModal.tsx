@@ -25,8 +25,6 @@ interface IProps {
     categories: ICategory[]
 }
 
-
-
 const AddDatePickerEventModal = ({
                                      open,
                                      handleClose,
@@ -120,7 +118,7 @@ const AddDatePickerEventModal = ({
 
                         <Box>
                             <Typography variant="caption" color="text" component={"span"}>
-                                All day?
+                                Toute la journée
                             </Typography>
                             <Checkbox onChange={handleCheckboxChange} value={allDay} />
                         </Box>

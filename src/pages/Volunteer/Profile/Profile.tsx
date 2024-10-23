@@ -143,7 +143,7 @@ function ProfilePage(props: any) {
               <h3 style={{
                 textAlign: "left",
               }}>Temps de bénévolat :</h3>
-              {profileData.volunteering_time === 0 ? "Vous n'avez fait aucune heure de bénvolat pour l'instant" : <p>{profileData.volunteering_time} heure:</p>}
+              {profileData.volunteering_time === 0 ? "Vous n'avez fait aucune heure de bénvolat pour l'instant" : <p>{profileData.volunteering_time} heures</p>}
             </div>
             <div className="stat-item">
               <h3 style={{
@@ -199,9 +199,9 @@ function ProfilePage(props: any) {
     </div>        
       <Col sm={12} md={4} lg={3} className="profile-info"></Col><Row sm={12} md={4} lg={3} className="button-row">
         <div className="profile-btn-div">
-          <button className={"profile-pic-btn" + ((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")} onClick={() => { navigate("/profile/blocked"); } }>
+          <Button variant="contained" color="primary" className={((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")} onClick={() => { navigate("/profile/blocked"); } }>
             Gérer les utilisateurs Bloqués
-          </button>
+          </Button>
         </div>
       </Row>
       </>

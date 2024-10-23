@@ -19,9 +19,17 @@ function MissionsPanel() {
         }).then((response) => {
             if (response.status === 200) {
                 response.json().then(async (data) => {
-                    const next_missions = data.active.slice(0, 4)
+                    console.log("MISSION PANEL DATA: ", data)
+                    const sortedMissions = data.active.sort(
+                        (a: Mission, b: Mission) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime()
+                    );
+                    const next_missions = sortedMissions.slice(0, 4);
                     setNextMissions(next_missions);
-                    const draft_missions = data.draft.slice(0, 4)
+                    
+                    const sortedDraft = data.draft.sort(
+                        (a: Mission, b: Mission) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime()
+                    );
+                    const draft_missions = sortedDraft.slice(0, 4);
                     setDraftMissions(draft_missions);
                 })
             }
@@ -32,7 +40,7 @@ function MissionsPanel() {
         <div className="component-missions-panel-container">
             <div className="component-missions-panel-missions">
                 <div className="component-missions-panel-button">
-                    <Button
+                    <Button 
                         variant="contained"
                         className="new-mission"
                         style={{

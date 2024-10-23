@@ -26,9 +26,6 @@ function History() {
     
     return (
         <div>
-            <div className="history-title">
-                <h1>Historique des Missions </h1>
-            </div>
             <div className="tabs-container history">
                 <Tabs
                     value={subType.name}

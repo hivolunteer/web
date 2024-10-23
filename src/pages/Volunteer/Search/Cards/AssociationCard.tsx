@@ -1,5 +1,5 @@
 import { Card, CardContent, CardMedia, Typography } from '@mui/material';
-import { useState, useEffect } from 'react';
+import {useState, useEffect, Fragment} from 'react';
 import StarIcon from '@mui/icons-material/Star';
 import config from '../../../../config';
 import FollowButton from './FollowButton';
@@ -57,7 +57,7 @@ export default function AssociationCard(props: {association_id: number}) {
             }
         };
         return(
-            <div>
+            <Fragment>
                 <Card sx={{width: '100%', height: '100%'}}>
                     <CardMedia
                         component="img"
@@ -96,6 +96,6 @@ export default function AssociationCard(props: {association_id: number}) {
                         </Typography>
                     </CardContent>
                 </Card>
-            </div>
+            </Fragment>
         )
 }

@@ -8,7 +8,7 @@ import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import NearMeOutlinedIcon from '@mui/icons-material/NearMeOutlined';
 import config from "../config";
-import { Mission } from '../interfaces';
+import { Mission, Association } from '../interfaces';
 
 function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
     const { mission, isToday } = props;
@@ -17,6 +17,7 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
     const [missionPicture, setMissionPicture] = useState("");
     const [isOwner, setIsOwner] = useState<boolean>(false);
     const [isVolunteerMission, setIsVolunteerMission] = useState<boolean | null>(null);
+    const [association, setAssociation] = useState<Association | null>(null);
 
     const getLocation = useCallback(() => {
         fetch(`${config.apiUrl}/locations/${mission.location.toString()}`, {
@@ -28,12 +29,32 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
         }).then((response) => {
             if (response.status === 200) {
                 response.json().then((data) => {
-                    let _location =  `${data.street_number} ${(data.street_number_suffix === null) ? '' : data.street_number_suffix } ${data.street_type} ${data.street_name}, ${data.postal_code} ${data.city}`
+                    let _location = `${data.street_number} ${(data.street_number_suffix === null) ? '' : data.street_number_suffix} ${data.street_type} ${data.street_name}, ${data.postal_code} ${data.city}`
                     setlocation(_location);
                 });
             }
         });
     }, [mission.location]);
+
+    // use mission owner id to get association name
+    useEffect(() => {
+        if (mission.owner_id) {
+            fetch(`${config.apiUrl}/associations/profile/${mission.owner_id}`, {
+                method: 'GET',
+                headers: {
+                    authorization: `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'application/json'
+                }
+            }).then((response) => {
+                if (response.status === 200) {
+                    response.json().then((data) => {
+                        setAssociation(data?.association);
+                        console.log(association);
+                    });
+                }
+            });
+        }
+    }, [mission.owner_id]);
 
     useEffect(() => {
         if (location === "") {
@@ -116,6 +137,13 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
         return `${hour}:${minutes}`
     }
 
+    const [userRole, setUserRole] = useState<string | null>(null);
+
+    useEffect(() => {
+        const role = localStorage.getItem('role');
+        console.log(role);
+        setUserRole(role);
+    }, []);
 
     // page rendering
     return (
@@ -146,22 +174,32 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
                             alt="mission picture"
                         />
                     </div>
-                    <div style={{ flex: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' }}>
+                    <div style={{ flex: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', margin: '20px' }}>
                         <div className='mission-header'>
                             <p style={{ fontWeight: 'bold' }}> {mission.title} </p>
                         </div>
                         <div className='mission-body'>
-                            <div className='mission-body-with-icon' style={{display: 'flex', flexDirection: 'row'}}>
+                            <div className='mission-body-with-icon' style={{ display: 'flex', flexDirection: 'row' }}>
                                 <CalendarMonthOutlinedIcon />
                                 <p style={{ marginLeft: '10px' }}> {convertDay(mission.start_date.toString())} {convertHour(mission.start_date.toString())}h - {convertDay(mission.end_date.toString())} {convertHour(mission.end_date.toString())}h </p>
                             </div>
-                            <div className='mission-body-with-icon' style={{ marginBottom: '2px', display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
+                            <div className='mission-body-with-icon' style={{ marginBottom: '2px', display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
                                 <NearMeOutlinedIcon />
                                 <p style={{ marginLeft: '10px', width: '80%' }}> {location} </p>
                             </div>
                             <div className='mission-body-with-icon' style={{ marginBottom: '2px' }}>
-                            {(isVolunteerMission) ? <EmojiEmotionsIcon/> : <BusinessIcon />}
-                            <p style={{ marginLeft: '10px' }}>{isVolunteerMission ? "Bénévole" : "Association"}</p>
+                                {(isVolunteerMission && userRole === 'volunteer') && (
+                                    <>
+                                        <EmojiEmotionsIcon />
+                                        <p style={{ marginLeft: '10px' }}>Bénévole</p>
+                                    </>
+                                )}
+                                {(!isVolunteerMission && userRole === 'volunteer') && (
+                                    <>
+                                        <BusinessIcon />
+                                        <p style={{ marginLeft: '10px' }}>{association?.name}</p>
+                                    </>
+                                )}
                             </div>
 
                         </div>

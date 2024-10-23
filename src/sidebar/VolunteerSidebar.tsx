@@ -18,8 +18,8 @@ import "./Sidebar.scss";
 import logoWhite from "../images/logo/submark_white.png";
 import logoImage from "../images/logo/submark.png";
 import config from "../config";
-import NotificationBell from '../components/Notifications/NotificationBell';
-import handleDeleteNotification from './DeleteNotificationApi';
+import NotificationBell from "../components/Notifications/NotificationBell";
+
 
 export default function VolunteerSidebar() {
   let color_blind = localStorage.getItem("color_blind") === "true";
@@ -70,10 +70,10 @@ export default function VolunteerSidebar() {
     if (settings.length === 0) {
       if (localStorage.getItem("token") !== null) {
         settings.push("Profile", "Réglages", "Déconnexion");
-        pages.push("Recherche", "Mes Missions", "Historique des Missions");
+        pages.push("Recherche", "Mes Missions", "Historique de participation");
         pagesLink["Recherche"] = "accueil";
         pagesLink["Mes Missions"] = "myMissions";
-        pagesLink["Historique des Missions"] = "history";
+        pagesLink["Historique de participation"] = "history";
       } else {
         settings.push("Connexion", "Inscription");
       }

@@ -33,11 +33,11 @@ function VolunteerPanel(props: {volunteerPages: Array<VolunteerPage>}) {
                     volunteerPages.filter((page: VolunteerPage) => page.page === actual_page)
                         .map((page: VolunteerPage) => {
                             return (
-                              <div style={{display: 'flex', flexWrap: 'wrap', width: '90%', justifyContent: 'center'}}>
+                              <div style={{display: 'flex', flexWrap: 'wrap', width: '90%', justifyContent: 'flex-start', margin: "0  5%"}}>
                                     {
                                         page.volunteers.map((volunteer: Volunteer) => {
                                             return (
-                                              <div key={volunteer.id} style={{margin: '25px', width: '25%'}}>
+                                              <div key={volunteer.id} style={{margin: '25px', width: '20%'}}>
                                                     <VolunteerCard volunteer={volunteer} />
                                                 </div>
                                             )

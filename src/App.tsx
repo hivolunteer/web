@@ -19,11 +19,7 @@ import VolunteerSidebar from "./sidebar/VolunteerSidebar";
 import AssociationSidebar from "./sidebar/AssociationSidebar";
 import CompanySidebar from "./sidebar/CompanySidebar";
 import CompanyRouter from "./routers/NoConnectCompanyRouter";
-<<<<<<< HEAD
-  import CompanyRouterConnected from "./routers/ConnectCompanyRouter";
-=======
 import CompanyRouterConnected from "./routers/ConnectCompanyRouter";
->>>>>>> origin/HIVE-SPRINT-6-Notifications
 
 function NoConnectRouter() {
   return (

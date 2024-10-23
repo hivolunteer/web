@@ -19,6 +19,19 @@ import logoWhite from "../images/logo/submark_white.png";
 import logoImage from "../images/logo/submark.png";
 import config from "../config";
 import NotificationBell from '../components/Notifications/NotificationBell';
+const pages: string[] = [];
+const settings: string[] = [];
+const pagesLink: { [pageName: string]: string } = {};
+
+if (localStorage.getItem("token") !== null) {
+  settings.push("Profile", "Réglages", "Déconnexion");
+  pages.push("Accueil", "Équipes", "Affiliations");
+  pagesLink["Accueil"] = "accueil";
+  pagesLink["Équipes"] = "teams";
+  pagesLink["Affiliations"] = "affiliatedAssociations";
+} else {
+  settings.push("Connexion", "Inscription");
+}
 
 export default function CompanySidebar() {
     let color_blind = localStorage.getItem("color_blind") === "true";
@@ -29,26 +42,8 @@ export default function CompanySidebar() {
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => { setAnchorElUser(event.currentTarget); };
     const handleCloseNavMenu = () => { setAnchorElNav(null); };
     const handleCloseUserMenu = () => { setAnchorElUser(null); };
-    const [pages, setPages] = React.useState<string[]>([]);
-    const [settings, setsettings] = React.useState<string[]>([]);
-    const [pagesLink, setPagesLink] = React.useState<{ [pageName: string]: string }>({})
     const [notifications, setNotifications] = React.useState<any[]>([]);
     const [count, setCount] = React.useState<number>(0);
-
-    React.useEffect(() => {
-        if (settings.length === 0) {
-            if (localStorage.getItem("token") !== null) {
-                settings.push("Profile", "Réglages", "Déconnexion");
-                pages.push("Recherche", "Missions", "Affiliations");
-                pagesLink["Recherche"] = "accueil";
-                pagesLink["Missions"] = "missions";
-                pagesLink["Affiliations"] = localStorage.getItem("role") === "company" ? "affiliatedAssociations" : "affiliatedCompanies";
-            } else {
-                settings.push("Connexion", "Inscription");
-            }
-
-        }
-    }, [settings]);
 
     const handleMenuItemClick = (setting: string) => {
         handleCloseUserMenu();
