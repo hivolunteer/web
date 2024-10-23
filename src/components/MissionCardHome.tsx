@@ -1,5 +1,5 @@
 import { CardMedia } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Card from 'react-bootstrap/Card';
 import '../pages/Volunteer/Home/Home.scss';
 
@@ -8,7 +8,7 @@ import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import NearMeOutlinedIcon from '@mui/icons-material/NearMeOutlined';
 import config from "../config";
-import { Mission, Association, Volunteer } from '../interfaces';
+import { Mission } from '../interfaces';
 
 function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
     const { mission, isToday } = props;
@@ -18,7 +18,7 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
     const [isOwner, setIsOwner] = useState<boolean>(false);
     const [isVolunteerMission, setIsVolunteerMission] = useState<boolean | null>(null);
 
-    function getLocation() {
+    const getLocation = useCallback(() => {
         fetch(`${config.apiUrl}/locations/${mission.location.toString()}`, {
             method: 'GET',
             headers: {
@@ -33,15 +33,15 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
                 });
             }
         });
-    }
+    }, [mission.location]);
 
     useEffect(() => {
         if (location === "") {
             getLocation();
         }
-    }, [location]);
+    }, [location, getLocation]);
 
-    const getMissionPicture = (isCloseMission: boolean) => {
+    const getMissionPicture = useCallback((isCloseMission: boolean) => {
         if (mission && mission.picture && mission.picture.startsWith('/uploads')) {
             fetch(`${config.apiUrl}/uploads/${isCloseMission ? 'volunteer' : 'association'}/mission/${mission.id}`, {
                 method: 'GET',
@@ -56,13 +56,13 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
                         console.log(objectUrl);
                     })
                     .catch((error) => {
-                    console.error(error);
+                        console.error(error);
                     });
             });
-        }
-        if (mission && mission.picture)
+        } else if (mission && mission.picture) {
             setMissionPicture(mission.picture);
-    }
+        }
+    }, [mission]); 
 
     useEffect(() => {
         if (isVolunteerMission === null) {
@@ -85,18 +85,18 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
                             }
                         }
                     });
-                } else
+                } else {
                     setIsVolunteerMission(false);
                     getMissionPicture(false);
                     const ownerId = Number(localStorage.getItem('id'));
                     if (mission.owner_id === ownerId && localStorage.getItem('role') === 'association') {
                         setIsOwner(true);
                     }
+                }
             });
-
         }
-    }, [isVolunteerMission]);
-
+    }, [isVolunteerMission, mission?.id, mission?.description, mission?.owner_id, mission?.title, getMissionPicture]);
+    
     // misc functions
 
     function convertDay(date: string) {

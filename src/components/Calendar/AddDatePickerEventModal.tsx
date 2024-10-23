@@ -15,7 +15,6 @@ import {
 import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers"
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns"
 import {EventCreationData, ICategory} from "./EventCalendar"
-import config from "../../config";
 
 interface IProps {
     open: boolean
@@ -36,7 +35,7 @@ const AddDatePickerEventModal = ({
                                      onAddEvent,
                                      categories,
                                  }: IProps) => {
-    const { title, description, start_date, end_date, allDay, category} = datePickerEventFormData
+    const { title, description, start_date, end_date, allDay} = datePickerEventFormData
 
     const onClose = () => {
         handleClose()

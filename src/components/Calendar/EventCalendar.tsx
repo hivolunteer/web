@@ -1,5 +1,5 @@
-import React, { MouseEvent, SetStateAction, useEffect, useState } from "react";
-import { Box, Button, ButtonGroup, Card, CardContent, CardHeader, Container, Divider } from "@mui/material";
+import { MouseEvent, useEffect, useState } from "react";
+import { Box, Button, ButtonGroup, Card, CardContent, CardHeader, Container, Divider, Alert } from "@mui/material";
 import { Calendar, dateFnsLocalizer, type Event } from "react-big-calendar";
 import format from "date-fns/format";
 import parse from "date-fns/parse";
@@ -39,7 +39,6 @@ const EventCalendar = () => {
     const [categories, setCategories] = useState<ICategory[]>([]);
     const [eventFormData, setEventFormData] = useState<EventFormData>(initialEventFormState);
     const [datePickerEventFormData, setDatePickerEventFormData] = useState<DatePickerEventFormData>(initialDatePickerEventFormData);
-    const [existingEvents, setExistingEvents] = useState<IEventInfo[]>([]);
     const [response, setResponse] = useState<{ error: Boolean; message: string }>({ error: false, message: "" });
     const [modifyEventModalOpen, setModifyEventModalOpen] = useState(false);
 
@@ -313,6 +312,7 @@ const EventCalendar = () => {
                             style={{ height: 900 }}
                         />
                     </CardContent>
+                    {response.error && <Alert severity="error">{response.message}</Alert>}
                 </Card>
             </Container>
         </Box>

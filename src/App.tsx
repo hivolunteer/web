@@ -13,7 +13,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { ThemeProvider, useTheme } from "@mui/material";
 import { myTheme } from "./theme/theme";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import Home from "./pages/NonConnected/Home/Home";
 import VolunteerSidebar from "./sidebar/VolunteerSidebar";
 import AssociationSidebar from "./sidebar/AssociationSidebar";
@@ -61,7 +61,7 @@ function ConnectRouter() {
 
 function App() {
 
-  const theme = useTheme();
+  useTheme();
 
   useEffect(() => {
     localStorage.getItem("token") ? document.body.style.backgroundColor = "#f5f5f5" : document.body.style.backgroundColor = "#DFDFDF"
