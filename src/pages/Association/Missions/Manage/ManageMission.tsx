@@ -22,20 +22,20 @@ function ManageMission() {
     const [is_company_approved, setIsCompanyApproved] = useState<boolean>(false);
 
     function publishMission() {
-        // fetch(`${config.apiUrl}/missions/association/upload/${mission_id}`, {
-        //     method: 'POST',
-        //     headers: {
-        //         'content-type': 'application/json',
-        //         'Authorization': `Bearer ${localStorage.getItem('token')}`
-        //     }
-        // }).then((response) => {
-        //     if (response.status === 201) {
-        //         window.location.href = `/manage/${mission_id}`;
-        //     } else {
-        //         console.log("ERROR");
-        //         alert("Une erreur est survenue lors de la publication de la mission");
-        //     }
-        // });
+        fetch(`${config.apiUrl}/missions/association/upload/${mission_id}`, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        }).then((response) => {
+            if (response.status === 201) {
+                window.location.href = `/manage/${mission_id}`;
+            } else {
+                console.log("ERROR");
+                alert("Une erreur est survenue lors de la publication de la mission");
+            }
+        });
     }
 
     function handleCancel () {

@@ -1,5 +1,5 @@
 import { CardMedia } from '@mui/material';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import Card from 'react-bootstrap/Card';
 import '../pages/Volunteer/Home/Home.scss';
 
@@ -19,7 +19,7 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
     const [isVolunteerMission, setIsVolunteerMission] = useState<boolean | null>(null);
     const [association, setAssociation] = useState<Association | null>(null);
 
-    const getLocation = useCallback(() => {
+    function getLocation() {
         fetch(`${config.apiUrl}/locations/${mission.location.toString()}`, {
             method: 'GET',
             headers: {
@@ -34,7 +34,7 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
                 });
             }
         });
-    }, [mission.location]);
+    }
 
     // use mission owner id to get association name
     useEffect(() => {
@@ -60,9 +60,9 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
         if (location === "") {
             getLocation();
         }
-    }, [location, getLocation]);
+    }, [location]);
 
-    const getMissionPicture = useCallback((isCloseMission: boolean) => {
+    const getMissionPicture = (isCloseMission: boolean) => {
         if (mission && mission.picture && mission.picture.startsWith('/uploads')) {
             fetch(`${config.apiUrl}/uploads/${isCloseMission ? 'volunteer' : 'association'}/mission/${mission.id}`, {
                 method: 'GET',
@@ -83,7 +83,7 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
         } else if (mission && mission.picture) {
             setMissionPicture(mission.picture);
         }
-    }, [mission]); 
+    }
 
     useEffect(() => {
         if (isVolunteerMission === null) {
