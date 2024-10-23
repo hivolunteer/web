@@ -6,6 +6,7 @@ import Settings from '../pages/Company/Settings/Settings';
 import ProfileInformationModal from '../pages/Company/Settings/ProfileInformation';
 import Team from '../pages/Company/Team/Team';
 import ModifyPassword from '../pages/Company/Settings/ModifyPassword';
+import Missions from '../pages/Company/Missions/Missions';
 
 function ConnectCompanyRouter() {
     return(

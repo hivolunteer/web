@@ -95,6 +95,7 @@ function HomeMisssionCard(props: {mission: number}) {
                 backgroundColor: '#FFFEFF'
             }}
             onClick={() => {
+                console.log(mission.id)
                 window.location.href = `/manage/${mission.id}`
             }}
         >

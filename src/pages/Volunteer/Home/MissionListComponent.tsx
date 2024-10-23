@@ -1,9 +1,6 @@
-import MissionCard from "../../../components/Mission/MissionCardComponent";
 import MissionCardHome from "../../../components/MissionCardHome";
-import config from '../../../config';
 import './MissionListComponent.scss'
 import { Mission } from "../../../interfaces";
-import { useEffect, useState } from "react";
 
 function MissionsList(props: {missions: Mission[]}) {
     const missions = props.missions;

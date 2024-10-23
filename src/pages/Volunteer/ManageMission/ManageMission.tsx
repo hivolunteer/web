@@ -5,7 +5,8 @@ import { Button } from '@mui/material';
 import './ManageMission.scss';
 import ManageMissionVolunteers from './Components/ManageMissionVolunteers';
 
-function ManageMission() {
+const ManageMission = () => {
+
     const [MissionStatus, setMissionStatus] = useState<number>(0);
     const [MissionEndDate, setMissionEndDate] = useState<Date>(new Date());
 

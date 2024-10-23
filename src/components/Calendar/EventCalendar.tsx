@@ -119,7 +119,6 @@ const EventCalendar = () => {
     }, [
         setEvents,
         setCategories,
-        setExistingEvents,
         setResponse,
         setModifyEventModalOpen,
     ]);
