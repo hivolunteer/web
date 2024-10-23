@@ -8,17 +8,17 @@ import HomeContact from './HomeContact';
 import VolunteerSidebar from '../../../sidebar/VolunteerSidebar';
 import AssociationSidebar from '../../../sidebar/AssociationSidebar';
 import CompanySidebar from '../../../sidebar/CompanySidebar';
+
 function Home() {
     return (
         <div>
-            {localStorage.getItem("role") === "volunteer" ? (
-                <VolunteerSidebar />
-              ) : localStorage.getItem("role") === "association" ? (
-                <AssociationSidebar />
-              ) : (
+            { localStorage.getItem("role") === "company" ? (
                 <CompanySidebar />
+            ) : localStorage.getItem("role") === "volunteer" ? (
+                <VolunteerSidebar />
+            ) : (
+                <AssociationSidebar />
             )}
-
             <HomeConcept />
             <HomeUsers />
             <HomeTeam />

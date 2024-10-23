@@ -4,10 +4,10 @@ import Home from '../pages/Company/Home/Home';
 import AffiliatedAssociations from '../pages/Company/AffiliatedAssociations/AffiliatedAssociations';
 import Settings from '../pages/Company/Settings/Settings';
 import ProfileInformationModal from '../pages/Company/Settings/ProfileInformation';
+import Missions from '../pages/Company/Missions/Missions';
 import Team from '../pages/Company/Team/Team';
 import ModifyPassword from '../pages/Company/Settings/ModifyPassword';
 
-import Missions from '../pages/Company/Missions/Missions';
 function ConnectCompanyRouter() {
     return(
         <Routes>

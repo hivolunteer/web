@@ -27,9 +27,8 @@ const pagesLink: { [pageName: string]: string } = {};
 
 if (localStorage.getItem("token") !== null) {
   settings.push("Profile", "Réglages", "Déconnexion");
-  pages.push("Accueil", "Missions", "Calendrier", "Référents", "Affiliations");
+  pages.push("Accueil", "Calendrier", "Référents", "Affiliations");
   pagesLink["Accueil"] = "accueil";
-  pagesLink["Missions"] = "";
   pagesLink["Calendrier"] = "calendrier";
   pagesLink["Référents"] = "referent";
   pagesLink["Affiliations"] ="affiliatedCompanies";
@@ -43,11 +42,12 @@ export default function AssociationSidebar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
-  const [notifications, setNotifications] = React.useState([]);
+  const [notifications, setNotifications] = React.useState<any[]>([]);
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => { setAnchorElNav(event.currentTarget); };
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => { setAnchorElUser(event.currentTarget); };
   const handleCloseNavMenu = () => { setAnchorElNav(null); };
   const handleCloseUserMenu = () => { setAnchorElUser(null); };
+  const [count, setCount] = React.useState(0);
 
   const handleMenuItemClick = (setting: string) => {
     handleCloseUserMenu();
@@ -79,6 +79,7 @@ export default function AssociationSidebar() {
                 return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
               });
               setNotifications(sortedNotifications);
+              setCount(1)
             })
           }
         });
@@ -86,8 +87,11 @@ export default function AssociationSidebar() {
         console.error(error);
       }
     };
-    fetchNotifications();
-  }, []);
+
+    (count === 0) && fetchNotifications();
+    (count === 1) && setTimeout(() => setCount(0), 1000);
+
+  }, [count]);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -160,7 +164,7 @@ export default function AssociationSidebar() {
           </Box>
           {localStorage.getItem("token") ?
           <Box sx={{ marginRight: "1%" }}>
-            <NotificationBell notifications={notifications} onDeleteNotification={handleDeleteNotification} />
+            <NotificationBell notifications={notifications} setNotifications={setNotifications} />
           </Box>
           : null }
           <Box sx={{ flexGrow: 0, alignContent: 'center' }}>
