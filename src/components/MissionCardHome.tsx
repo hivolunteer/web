@@ -49,7 +49,6 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
                 if (response.status === 200) {
                     response.json().then((data) => {
                         setAssociation(data?.association);
-                        console.log(association);
                     });
                 }
             });
@@ -116,7 +115,7 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
                 }
             });
         }
-    }, [isVolunteerMission, mission?.id, mission?.description, mission?.owner_id, mission?.title, getMissionPicture]);
+    }, [isVolunteerMission]);
     
     // misc functions
 
@@ -161,7 +160,7 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
                 backgroundColor: isToday ? '#ffecbd' : '#FFFEFF'
             }}
             onClick={() => {
-                window.location.href = isOwner ? `/manage/${mission.id}` : isVolunteerMission ? `/mission/close/${mission.id}` : `/mission/${mission.id}`
+                window.location.href = isOwner ? `/mission/${mission.id}` : isVolunteerMission ? `/mission/close/${mission.id}` : `/mission/${mission.id}`
             }}
         >
             <Card.Body style={{ width: '100%' }}>

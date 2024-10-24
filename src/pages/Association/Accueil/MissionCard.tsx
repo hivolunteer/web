@@ -46,7 +46,7 @@ function MissionCard(props: { mission: any }) {
                 backgroundColor: '#FFFEFF'
             }}
             onClick={() => {
-                window.location.href = `/manage/${props.mission.id}`
+                window.location.href = `/miaaion/${props.mission.id}`
             }}
         >
             <Card.Body style={{width: '100%'}}>
