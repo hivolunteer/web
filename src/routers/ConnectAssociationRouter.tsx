@@ -24,7 +24,7 @@ function ConnectAssociationRouter() {
             <Route path="/missionCreation" element={<MissionCreation />} />
             <Route path="/modifyAddress" element={<ModifyLocationModal/>} />
             <Route path="/modifyProfile" element={<ModifyProfilePage />} />
-            <Route path="/manage/:id" element={<ManageMission />} />
+            <Route path="/mission/:id" element={<ManageMission />} />
             <Route path="/profile/volunteer/:id" element={<ExternalProfile />} />
             <Route path="/:id/edit" element={<MissionModification />} />
             <Route path="/accueil" element={<Search />} />

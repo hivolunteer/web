@@ -211,7 +211,7 @@ export default function EditMission() {
       
           // Wait for approximately 2 seconds before redirecting
           setTimeout(() => {
-              window.location.href = `/manage/${missionID}`;
+              window.location.href = `/mission/${missionID}`;
           }, 2000);
       
           return response.body;
@@ -221,7 +221,7 @@ export default function EditMission() {
 
         setResponse({error: true, message: "Erreur lors de la modification de mission"});
         setTimeout(() => {
-          window.location.href = `/manage/${missionID}`;
+          window.location.href = `/mission/${missionID}`;
         }, 2000);
       })
       

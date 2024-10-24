@@ -49,7 +49,6 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
                 if (response.status === 200) {
                     response.json().then((data) => {
                         setAssociation(data?.association);
-                        console.log(association);
                     });
                 }
             });
@@ -80,9 +79,9 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
                         console.error(error);
                     });
             });
-        }
-        if (mission && mission.picture)
+        } else if (mission && mission.picture) {
             setMissionPicture(mission.picture);
+        }
     }
 
     useEffect(() => {
@@ -106,18 +105,18 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
                             }
                         }
                     });
-                } else
+                } else {
                     setIsVolunteerMission(false);
-                getMissionPicture(false);
-                const ownerId = Number(localStorage.getItem('id'));
-                if (mission.owner_id === ownerId && localStorage.getItem('role') === 'association') {
-                    setIsOwner(true);
+                    getMissionPicture(false);
+                    const ownerId = Number(localStorage.getItem('id'));
+                    if (mission.owner_id === ownerId && localStorage.getItem('role') === 'association') {
+                        setIsOwner(true);
+                    }
                 }
             });
-
         }
     }, [isVolunteerMission]);
-
+    
     // misc functions
 
     function convertDay(date: string) {
@@ -161,7 +160,7 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
                 backgroundColor: isToday ? '#ffecbd' : '#FFFEFF'
             }}
             onClick={() => {
-                window.location.href = isOwner ? `/manage/${mission.id}` : isVolunteerMission ? `/mission/close/${mission.id}` : `/mission/${mission.id}`
+                window.location.href = isOwner ? `/mission/${mission.id}` : isVolunteerMission ? `/mission/close/${mission.id}` : `/mission/${mission.id}`
             }}
         >
             <Card.Body style={{ width: '100%' }}>

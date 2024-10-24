@@ -1,13 +1,12 @@
 import { Card, CardContent, CardMedia, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
-import config from '../config';
+import config from '../../../config';
 
 export default function MissionCard(props: {mission_id: number}) {
     
         const [mission, setMission] = useState<Mission | undefined>(undefined);
-        const [missionPicture, setMissionPicture] = useState<string | null>(null);
+        const [associationLogo, setAssociationLogo] = useState<string>('');
         const [associationName, setAssociationName] = useState<string>('');
-        const [associationLogo, setAssociationLogo] = useState<string | null>(null);
         const [location, setLocation] = useState<string>('');
 
         interface Mission {
@@ -77,29 +76,6 @@ export default function MissionCard(props: {mission_id: number}) {
         }
         , [mission])
 
-        useEffect(() => {
-            // si la string de mission.picture ne commence pas par /uploads, c'est que c'est une URL externe
-            if (mission && mission.picture && mission.picture.startsWith('/uploads')) {
-                fetch(`${config.apiUrl}/uploads/association/mission/${mission.id}`, {
-                    method: 'GET',
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`
-                    },
-                }).then((response) => {
-                    response.blob()
-                        .then((blob) => {
-                            const objectUrl = URL.createObjectURL(blob);
-                            setMissionPicture(objectUrl);
-                            console.log(objectUrl);
-                        })
-                        .catch((error) => {
-                        console.error(error);
-                        });
-                });
-            } else
-            if (mission && mission.picture)
-                setMissionPicture(mission.picture);
-        }, []);    
 
         const findDay = (date: string | undefined) => {
             if (!date)
@@ -126,13 +102,12 @@ export default function MissionCard(props: {mission_id: number}) {
 
         return(
             <div>
-                <Card sx={{width: '100%', height: '100%', borderBottom: '5px solid #5d9082'}}
-                >
+                <Card sx={{width: '100%', height: '100%'}}>
                     <CardMedia
                         component="img"
                         height="185"
-                        image={(missionPicture === null || missionPicture === '') ? 'https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg' : missionPicture}
-                        alt="Mission picture"
+                        image={mission?.picture ? mission?.picture : "d "}
+                        alt="Association logo"
                     />
                     <CardContent sx={{backgroundColor: "rgba(0, 0, 0, 0.70)", display: "flex", alignItems: "center", justifyContent: "center"}}>
                         <Typography variant="body2" color="white">

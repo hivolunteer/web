@@ -55,7 +55,9 @@ type ManageMissionInformationProps = {
   MissionStatus: number,
   setMissionEndDate: any,
   MissionEndDate: Date,
-  isAssociation: boolean
+  isAssociation: boolean,
+  setIsCompanyApproved: (isCompanyApproved: boolean) => void,
+  setIsCompanyMission: (isCompanyMission: boolean) => void,
 }
 
 function ManageMissionInformation(props: ManageMissionInformationProps) {
@@ -91,43 +93,45 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
     }).then((response) => {
       if (response.status === 200) {
         response.json().then((data) => {
-          const mission = (isAssociation ? data.association_mission : data.close_mission)
-          missionData = mission;
-          setMission(mission);
-
-          getTheme(localStorage.getItem('token') as string, mission.theme_id).then((theme) => {
-            setTheme(theme);
-          });
+            const mission : any = (isAssociation ? data.association_mission : data.close_mission)
+            missionData = mission;
+            setMission(mission);
     
-          SetMissionStatus(mission.status);
-          SetMissionEndDate(mission.end_date);
-          setMissionPicture(mission.picture);
-          fetch(`${config.apiUrl}/locations/${mission.location}`, {
-            method: 'GET',
-            headers: {
-              'content-type': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-          }).then((response) => {
-            if (response.status === 200) {
-              response.json().then((data) => {
-                setLocation(data);
-              })
-            }
-          })
-          console.log("MISSION PICTURE", missionPicture);
-          if (mission.picture && mission.picture.startsWith('/uploads')) {
-            fetch(`${config.apiUrl}/uploads/${isAssociation ? 'association' : 'volunteer'}/mission/${mission_id}`, {
-              method: 'GET',
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`
-              },
+            getTheme(localStorage.getItem('token') as string, mission.theme_id).then((theme) => {
+                setTheme(theme);
+              });
+    
+            props.setIsCompanyApproved(isAssociation ? data.association_mission.approved_company : data.close_mission.is_approved_company);
+            props.setIsCompanyMission(isAssociation ? ((data.association_mission.company_id !== null) ? true : false) : data.close_mission.is_company);
+            SetMissionStatus(mission.status);
+            SetMissionEndDate(mission.end_date);
+            setMissionPicture(mission.picture);
+            fetch(`${config.apiUrl}/locations/${mission.location}`, {
+                method: 'GET',
+                headers: {
+                    'content-type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
             }).then((response) => {
-              console.log(response);
-              response.blob()
-                .then((blob) => {
-                  const objectUrl = URL.createObjectURL(blob);
-                  setMissionPicture(objectUrl);
+                if (response.status === 200) {
+                    response.json().then((data) => {
+                        setLocation(data);
+                    })
+                }
+            })
+            console.log("MISSION PICTURE", missionPicture);
+            if (mission.picture && mission.picture.startsWith('/uploads')) {
+              fetch(`${config.apiUrl}/uploads/${isAssociation ? 'association' : 'volunteer'}/mission/${mission_id}`, {
+                method: 'GET',
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem('token')}`
+                },
+              }).then((response) => {
+                console.log(response);
+                response.blob()
+                  .then((blob) => {
+                    const objectUrl = URL.createObjectURL(blob);
+                    setMissionPicture(objectUrl);
                 })
                 .catch((error) => {
                   console.error(error);

@@ -4,7 +4,6 @@ import { TextField, Dialog, DialogActions, DialogContent, DialogContentText, Dia
 import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { EventCreationData, ICategory, IEventInfo } from "./EventCalendar";
-import config from "../../config";
 import CloseIcon from '@mui/icons-material/Close';
 
 interface IProps {
