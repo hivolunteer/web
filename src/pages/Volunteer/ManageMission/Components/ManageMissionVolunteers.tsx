@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Accordion, AccordionDetails, AccordionSummary, Card, CardContent, CardHeader } from '@mui/material'
+import { useEffect, useState } from 'react'
+import { Card, CardContent, CardHeader } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import config from "../../../../config";
 import './ManageMissionVolunteers.scss'
@@ -45,7 +45,6 @@ function ManageMissionVolunteers(props: ManageMissionVolunteersProps) {
   const [ListVolunteers, setListVolunteers] = useState<Volunteer[]>([]);
 
   const mission_id = props.mission_id;
-  const MissionEndDate = props.MissionEndDate;
 
   useEffect(() => {
     fetch(`${config.apiUrl}/missions/close/volunteers/${mission_id}`, {

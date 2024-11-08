@@ -1,4 +1,4 @@
-import React, { MouseEvent, SetStateAction, useEffect, useState } from "react";
+import React, { MouseEvent, useEffect, useState } from "react";
 import { Box, Button, ButtonGroup, Card, CardContent, CardHeader, Container, Divider } from "@mui/material";
 import { Calendar, dateFnsLocalizer, type Event } from "react-big-calendar";
 import format from "date-fns/format";
@@ -14,7 +14,6 @@ import { AddCategoryModal } from "./AddCategoryModal";
 import AddDatePickerEventModal from "./AddDatePickerEventModal";
 import config from "../../config";
 import ModifyDatePickerEventModal from "./ModifyDatePickerEventModal";
-import { Mission } from "../../pages/Volunteer/Search/Interfaces";
 
 const locales = { fr };
 const localizer = dateFnsLocalizer({ format, parse, startOfWeek, getDay, locales });
@@ -41,8 +40,8 @@ const EventCalendar = () => {
     const [categories, setCategories] = useState<ICategory[]>([]);
     const [eventFormData, setEventFormData] = useState<EventFormData>(initialEventFormState);
     const [datePickerEventFormData, setDatePickerEventFormData] = useState<DatePickerEventFormData>(initialDatePickerEventFormData);
-    const [existingEvents, setExistingEvents] = useState<IEventInfo[]>([]);
-    const [response, setResponse] = useState<{ error: Boolean; message: string }>({ error: false, message: "" });
+    const [, setExistingEvents] = useState<IEventInfo[]>([]);
+    const [, setResponse] = useState<{ error: Boolean; message: string }>({ error: false, message: "" });
     const [modifyEventModalOpen, setModifyEventModalOpen] = useState(false);
 
     const handleSelectSlot = (event: Event) => {
@@ -68,7 +67,7 @@ const EventCalendar = () => {
     };
 
     useEffect(() => {
-        const calendar = fetch(`${config.apiUrl}/calendar/`, {
+        fetch(`${config.apiUrl}/calendar/`, {
             method: 'GET',
             headers: {
               authorization: `Bearer ${localStorage.getItem('token')}`,

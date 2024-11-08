@@ -137,7 +137,7 @@ const MissionDetails = () => {
                     })
                 }
             })
-        }, [id, location_id]);
+        }, [id, location_id, mission])
     
     function createIcal() : string | null {
         if (mission) {
@@ -224,7 +224,7 @@ const MissionDetails = () => {
 
                 })
             
-        }, [isRegistered])
+        }, [isRegistered, id])
 
         useEffect(() => {
             fetch(`${config.apiUrl}/missions/volunteer/friends/${id}`, {
@@ -236,7 +236,7 @@ const MissionDetails = () => {
             })
                 .then(response => response.json())
                 .then((data) => setFriends(data))
-        }, [])
+        }, [id])
 
     return (
         <div className='mission-details-container'>

@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Avatar, Button, Divider, Link, Modal, Typography } from '@mui/material';
 import './ProfilCard.scss';
 import config from '../../../../config';
-import { useNavigate } from "react-router-dom";
 import { Association } from '../../../../interfaces';
-import { borderRadius, Box } from '@mui/system';
+import { Box } from '@mui/system';
 
 interface AssociationProfilCardProps extends React.HTMLAttributes<HTMLDivElement> {
     association: Association;
@@ -14,7 +13,6 @@ interface AssociationProfilCardProps extends React.HTMLAttributes<HTMLDivElement
 
 function AssociationProfilCard({ className, association, onDeleteReferent, ...props }: AssociationProfilCardProps) {
 
-    const navigate = useNavigate();
     const [openModal, setOpenModal] = useState(false);
 
     const handleOpenModal = () => {

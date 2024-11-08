@@ -3,9 +3,7 @@ import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import config from "../../../../config";
 import './LocationModal.scss'
-import { parse } from "path";
 import ModifyLocationModal from "./ModifyLocationModal";
-import React from "react";
 import { useNavigate } from "react-router-dom";
 
 interface Address {
@@ -50,7 +48,7 @@ const LocationModal = ({
 }: LocationModalProps) => {
 
   const [basicAddress, setBasicAddress] = useState<Address>(location);
-  const [selectedLocation, setSelectedLocation] = useState<AddressDB | null>(null);
+  const [selectedLocation,] = useState<AddressDB | null>(null);
   const [localisations, setLocationList] = useState<AddressDB[]>([]);
   const street_suffix = [
     'BIS', 'TER', 'QUATER'
@@ -78,15 +76,15 @@ const LocationModal = ({
     navigate("/modifyAddress", { state: { selectedLocation: location } });
   };
 
-  const updateLocation = (newLocation: any) => {
-    setBasicAddress(newLocation);
-    setLocation(newLocation);
-    let address = newLocation.name + ' ' + String(newLocation.postal_code) + ' ' + newLocation.city + ', ' + String(newLocation.street_number) + ' ';
-    if (newLocation.street_number_suffix) address += newLocation.street_number_suffix + ' ';
-    address += newLocation.street_type + ' ' + newLocation.street_name;
-    setLocationString(address);
-    setId(newLocation.id);
-  };
+  // const updateLocation = (newLocation: any) => {
+  //   setBasicAddress(newLocation);
+  //   setLocation(newLocation);
+  //   let address = newLocation.name + ' ' + String(newLocation.postal_code) + ' ' + newLocation.city + ', ' + String(newLocation.street_number) + ' ';
+  //   if (newLocation.street_number_suffix) address += newLocation.street_number_suffix + ' ';
+  //   address += newLocation.street_type + ' ' + newLocation.street_name;
+  //   setLocationString(address);
+  //   setId(newLocation.id);
+  // };
 
   useEffect(() => {
     fetch(`${config.apiUrl}/locations`, {

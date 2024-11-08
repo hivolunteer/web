@@ -14,7 +14,7 @@ function ProfileInformationModal() {
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
     const [profilePicture, setProfilePicture] = useState("");
-    const [showModal, setShowModal] = useState(true);
+    const [showModal] = useState(true);
     const [error, setError] = useState("");
     const [alert, setAlert] = useState(false);
 

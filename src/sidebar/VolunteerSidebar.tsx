@@ -30,11 +30,11 @@ export default function VolunteerSidebar() {
   const handleCloseNavMenu = () => { setAnchorElNav(null); };
   const handleCloseUserMenu = () => { setAnchorElUser(null); };
   const [pages, setPages] = React.useState<string[]>([]);
-  const [settings, setsettings] = React.useState<string[]>([]);
-  const [pagesLink, setPagesLink] = React.useState<{ [pageName: string]: string }>({})
+  const [settings] = React.useState<string[]>([]);
+  const [pagesLink, setPagesLink] = React.useState<{ [pageName: string]: string }>({});
   const [isFetchRef, setIsFetchRef] = React.useState(false);
 
-  const isReferent = async () => {
+  const isReferent = React.useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
       fetch(`${config.apiUrl}/referent/volunteer`, {
@@ -46,22 +46,25 @@ export default function VolunteerSidebar() {
       }).then((response) => {
         if (response.status === 200) {
           response.json().then((body: any[]) => {
-            setPages([...pages, "Missions Assignées"]);
-            pagesLink["Missions Assignées"] = "referent/missions";
+            setPages((prevPages) => [...prevPages, "Missions Assignées"]);
+            setPagesLink((prevPagesLink) => ({
+              ...prevPagesLink,
+              "Missions Assignées": "referent/missions",
+            }));
           });
         }
       });
     } catch (e) {
       console.log(e);
     }
-  }
+  }, []);
 
   React.useEffect(() => {
     if (!isFetchRef) {
       setIsFetchRef(true);
       isReferent();
     }
-  }, [isFetchRef]);
+  }, [isFetchRef, isReferent]);
 
   React.useEffect(() => {
     if (settings.length === 0) {
@@ -76,7 +79,7 @@ export default function VolunteerSidebar() {
       }
 
     }
-  }, [settings]);
+  }, [settings, pagesLink, pages]);
 
   const handleMenuItemClick = (setting: string) => {
     handleCloseUserMenu();

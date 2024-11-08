@@ -11,7 +11,7 @@ import VolunteerRouter from "./routers/NoConnectVolunteerRouter";
 import VolunteerRouterConnected from "./routers/ConnectVolunteerRouter";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
-import { ThemeProvider, useTheme } from "@mui/material";
+import { ThemeProvider } from "@mui/material";
 import { myTheme } from "./theme/theme";
 import { useEffect } from "react";
 import Home from "./pages/NonConnected/Home/Home";
@@ -60,8 +60,6 @@ function ConnectRouter() {
 }
 
 function App() {
-
-  const theme = useTheme();
 
   useEffect(() => {
     localStorage.getItem("token") ? document.body.style.backgroundColor = "#f5f5f5" : document.body.style.backgroundColor = "#DFDFDF"

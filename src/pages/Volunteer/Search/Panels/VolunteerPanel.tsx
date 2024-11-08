@@ -19,7 +19,7 @@ function VolunteerPanel(props: {volunteerPages: Array<VolunteerPage>}) {
             setNovolunteerFound(false)
             setMaxPage(volunteerPages.length)
         }
-    }, []);
+    }, [volunteerPages])
 
     return (
         <div style={{width: '100%', display: 'flex', flexDirection: 'column'}}>

@@ -7,7 +7,7 @@
 import { Autocomplete, Box, Button, Chip, Grid, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Image } from "mui-image";
-import { LocalizationProvider, DateTimePicker, TimePicker } from "@mui/x-date-pickers";
+import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import Lottie from "lottie-react";
 import moment from "moment";

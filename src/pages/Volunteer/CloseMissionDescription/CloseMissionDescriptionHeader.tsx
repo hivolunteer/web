@@ -1,8 +1,7 @@
-import React from 'react';
 import { MdOutlineCalendarMonth, MdOutlineNearMe } from 'react-icons/md';
 import getDate from '../../../functions/getDate';
 import getHour from '../../../functions/getHour';
-import { Association, Mission } from '../../../interfaces';
+import { Mission } from '../../../interfaces';
 import { Volunteer } from '../../Association/Missions/Manage/Interfaces';
 
 const MissionDetailsHeader = (props: { mission: Mission, volunteer: Volunteer, location: string }) => {

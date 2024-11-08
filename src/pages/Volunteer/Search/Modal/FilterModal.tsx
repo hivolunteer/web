@@ -1,12 +1,9 @@
-import { Dialog, DialogTitle, TextField, Button, Autocomplete, Checkbox, Chip } from "@mui/material";
+import { Dialog, TextField, Button, Autocomplete, Checkbox, Chip } from "@mui/material";
 import { useEffect, useState } from "react";
 
 import { Modal, Skill } from "../Interfaces"; 
 import { DatePicker, TimePicker} from "@mui/x-date-pickers";
 import config from "../../../../config";
-import React from "react";
-import useWindowSize from "../../../../functions/useWindowSize";
-
 
 const FilterModal = (props: {modalProps: Modal}) => {
 

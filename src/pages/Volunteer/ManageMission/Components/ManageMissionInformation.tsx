@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button, Card, CardActionArea, CardActions, CardContent, CardHeader } from "@mui/material";
+import { Button, Card, CardActions, CardContent, CardHeader } from "@mui/material";
 import Grid from "@mui/system/Unstable_Grid";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import config from "../../../../config";
@@ -70,7 +70,7 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
   const [mission, setMission] = useState<Mission>();
   const [location, setLocation] = useState<Location>();
   const [missionPicture, setMissionPicture] = useState<string>("");
-  const [theme, setTheme] = useState<string>('');
+  const [, setTheme] = useState<string>('');
 
   const mission_id = props.mission_id;
   const SetMissionStatus = props.setMissionStatus;
@@ -89,7 +89,6 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
   }
 
   useEffect(() => {
-    let missionData: Mission | undefined = mission;
     fetch(`${config.apiUrl}/missions/${isAssociation ? 'association' : 'close'}/${mission_id}`, {
       method: 'GET',
       headers: {
@@ -100,7 +99,6 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
       if (response.status === 200) {
         response.json().then((data) => {
           const mission = (isAssociation ? data.association_mission : data.close_mission)
-          missionData = mission;
           setMission(mission);
 
           getTheme(localStorage.getItem('token') as string, mission.theme_id).then((theme) => {
@@ -147,7 +145,7 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
         window.location.href = "/";
       }
     });
-  }, []);
+  }, [mission_id, isAssociation, SetMissionStatus, SetMissionEndDate, missionPicture]);
 
   return (
     <div>

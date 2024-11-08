@@ -4,8 +4,8 @@
  * @utility This page is used to modify a mission
 */
 
-import {Autocomplete, Box, Button, Chip, Grid, TextField, FormControlLabel, Checkbox} from "@mui/material";
-import React, {useEffect, useState} from "react";
+import { Autocomplete, Box, Button, Chip, Grid, TextField, FormControlLabel, Checkbox } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import Lottie from "lottie-react";
@@ -16,7 +16,6 @@ import config from "../../../../config";
 import LocationModal from "../Modal/LocationModal";
 import noImage from "../../../../images/lottie/noImage.json";
 import { useParams } from "react-router-dom";
-import { log } from "console";
 
 interface MissionModificationData {
   missionName?: string;
@@ -79,10 +78,6 @@ export default function MissionModification() {
   const [locationStr, setLocationStr] = useState<string | null>(null);
   const [locationId, setLocationId] = useState<number | null>(null);
 
-  const [missionDateRanges, setMissionDateRanges] = useState<
-    { start: Date | null; end: Date | null }[]
-  >([{ start: null, end: null }]);
-
   const handleClose = () => {
     setOpen(false);
   };
@@ -91,7 +86,7 @@ export default function MissionModification() {
 
   function InputFileUpload({ onFileChange }: { onFileChange: (file: File) => void }) {
     const [preview, setPreview] = useState<string | null>(null);
-  
+
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       if (event.target.files && event.target.files.length > 0) {
         const file = event.target.files[0];
@@ -99,7 +94,7 @@ export default function MissionModification() {
         setPreview(URL.createObjectURL(file)); // Set the image preview
       }
     };
-  
+
     return (
       <label htmlFor="upload-photo">
         {preview ? (
@@ -128,7 +123,7 @@ export default function MissionModification() {
         />
       </label>
     );
-  }  
+  }
 
   const handleImageChange = (file: File) => {
     setForm(
@@ -139,7 +134,31 @@ export default function MissionModification() {
     )
     setImage(file);
   };
+
   // useEffect to get skills from database
+  function fetchSkills(presets: SkillDatabase[]) {
+    fetch(`${config.apiUrl}/missions/skills/${mission_id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify({ associationmission: true })
+    }).then((response) => {
+      if (response.status === 200) {
+        response.json().then((data) => {
+          if (data && data.length > 0) {
+            const skills: number[] = data.map((skill: any) => skill.skill_id);
+            const selectedSkills: SkillDatabase[] = presets.filter((skill: SkillDatabase) => {
+              return isPresent(skill.id, skills)
+            })
+
+            setSelectedSkills(selectedSkills);
+          }
+        });
+      }
+    })
+  }
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -151,40 +170,17 @@ export default function MissionModification() {
       },
     }).then((response) => {
       if (response.status === 200) {
-        response.json().then((data: SkillDatabase[]) => {                   
+        response.json().then((data: SkillDatabase[]) => {
           setSkillDb(data);
           fetchSkills(data);
         });
       }
     })
-  }, []);
+  }, [fetchSkills]);
 
-function fetchSkills(presets: SkillDatabase[]) {
-  fetch(`${config.apiUrl}/missions/skills/${mission_id}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${localStorage.getItem('token')}`
-    },
-    body: JSON.stringify({ associationmission: true })
-    }).then((response) => {
-    if (response.status === 200) {
-      response.json().then((data) => {
-        if (data && data.length > 0) {
-          const skills: number[] = data.map((skill: any) => skill.skill_id);
-          const selectedSkills: SkillDatabase[]= presets.filter((skill: SkillDatabase) => {
-            return isPresent(skill.id, skills)
-          })
-          
-          setSelectedSkills(selectedSkills);
-        }
-      });
-    }
-  })
-}
-function isPresent(presetId: number, skills: number[]): boolean {
-  return skills.includes(presetId)
-}
+  function isPresent(presetId: number, skills: number[]): boolean {
+    return skills.includes(presetId)
+  }
 
   useEffect(() => {
     // Get mission info
@@ -212,44 +208,44 @@ function isPresent(presetId: number, skills: number[]): boolean {
           fetch(`${config.apiUrl}/locations/${data.association_mission?.location}`, {
             method: 'GET',
             headers: {
-                'content-type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+              'content-type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
           }).then((response) => {
-              if (response.status === 200) {
-                  response.json().then((data) => {
-                      setLocationId(data.id);
-                      setAddress(
-                        {
-                          name: data.name,
-                          street_number: data.street_number,
-                          street_number_suffix: data.street_number_suffix,
-                          street_name: data.street_name,
-                          street_type: data.street_type,
-                          city: data.city,
-                          departement_id: data.departement_id,
-                          postal_code: data.postal_code,
-                        }
-                      );
-                      setLocationStr(`${data.street_number || ''} ${data.street_number_suffix || ''} ${data.street_name || ''} ${data.street_type || ''}, ${data.postal_code || ''} ${data.city || ''}`);
-                  })
-              }
+            if (response.status === 200) {
+              response.json().then((data) => {
+                setLocationId(data.id);
+                setAddress(
+                  {
+                    name: data.name,
+                    street_number: data.street_number,
+                    street_number_suffix: data.street_number_suffix,
+                    street_name: data.street_name,
+                    street_type: data.street_type,
+                    city: data.city,
+                    departement_id: data.departement_id,
+                    postal_code: data.postal_code,
+                  }
+                );
+                setLocationStr(`${data.street_number || ''} ${data.street_number_suffix || ''} ${data.street_name || ''} ${data.street_type || ''}, ${data.postal_code || ''} ${data.city || ''}`);
+              })
+            }
           })
-         
+
         })
-        .catch(
-          (error) => {
-            console.error("Error while fetching mission data");
-          }
-        )
+          .catch(
+            (error) => {
+              console.error("Error while fetching mission data");
+            }
+          )
       }
     })
-  } , [mission_id]);
+  }, [mission_id]);
 
   // handle modification of the mission
   const modifyMission = () => {
     const token = localStorage.getItem("token");
-     
+
     const body = {
       max_volunteers: form?.missionVolunteersNumber,
       description: form?.missionDescription,
@@ -305,11 +301,11 @@ function isPresent(presetId: number, skills: number[]): boolean {
         });
       }
     })
-    .catch(
-      (error) => {
-        console.error("Error while modifying mission");
-      }
-    )
+      .catch(
+        (error) => {
+          console.error("Error while modifying mission");
+        }
+      )
   };
 
   return (
@@ -335,12 +331,12 @@ function isPresent(presetId: number, skills: number[]): boolean {
         <Box component="form">
           <Grid container spacing={3} className="wrapper" style={{ display: "flex", justifyContent: "center" }}>
             <LocationModal
-                open={open}
-                handleClose={handleClose}
-                location={address}
-                setLocation={setAddress}
-                setLocationString={setLocationStr}
-                setId={setLocationId}
+              open={open}
+              handleClose={handleClose}
+              location={address}
+              setLocation={setAddress}
+              setLocationString={setLocationStr}
+              setId={setLocationId}
             />
             <Grid item xs={8} lg={8} display="flex" justifyContent="center">
               <TextField
@@ -364,7 +360,7 @@ function isPresent(presetId: number, skills: number[]): boolean {
                 fullWidth
                 id="name"
                 inputMode={"numeric"}
-                inputProps={{min: 1}}
+                inputProps={{ min: 1 }}
                 label={!form?.missionVolunteersNumber ? "Nombre de bénévoles" : null}
                 value={form?.missionVolunteersNumber}
                 onChange={(missionVolunteersNumber) => {
@@ -476,8 +472,8 @@ function isPresent(presetId: number, skills: number[]): boolean {
                 filterSelectedOptions
                 renderInput={(params) => (
                   <TextField
-                  {...params}
-                  label="Compétences"
+                    {...params}
+                    label="Compétences"
                   />
                 )}
                 renderTags={(value, getTagProps) =>
@@ -493,21 +489,21 @@ function isPresent(presetId: number, skills: number[]): boolean {
               />
             </Grid>
             <Grid item xs={8} lg={8} sx={{ display: "flex", justifyContent: "space-evenly" }}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={form?.missionAcceptMinors || false}
-                  onChange={(event) => {
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={form?.missionAcceptMinors || false}
+                    onChange={(event) => {
                       setForm({
                         ...form,
                         missionAcceptMinors: event.target.checked,
                       });
                     }
-                  }
-                />
-              }
-              label="Accepter les personnes mineures"
-            />
+                    }
+                  />
+                }
+                label="Accepter les personnes mineures"
+              />
             </Grid>
           </Grid>
           <Box
