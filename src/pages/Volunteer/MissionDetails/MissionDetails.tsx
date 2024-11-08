@@ -249,7 +249,7 @@ const MissionDetails = () => {
         (mission_skills.length !== 0) ? <SkillDisplay skills={mission_skills} /> : null
       }
       <div className='mission-details-content-center'>
-        <h2> Amis Inscrits à la mission </h2>
+        <h2> Amis inscrits à la mission </h2>
         <p style={{ marginTop: '-10px', marginBottom: '20px' }}>
           Vous avez {friends.length} {(friends.length <= 1) ? 'ami inscrit' : 'amis inscrits'} à cette mission.
 
