@@ -40,7 +40,7 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
 
   // use mission owner id to get association name
   useEffect(() => {
-    if (mission.owner_id) {
+    if (mission.owner_id && !association) {
       fetch(`${config.apiUrl}/associations/profile/${mission.owner_id}`, {
         method: 'GET',
         headers: {
