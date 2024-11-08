@@ -291,7 +291,7 @@ function Search(props: any) {
       </div>
       <div className="centered-container">
         {
-          subType.name !== "Bénévoles" &&
+          subType.name === "Missions" &&
           <div className="filter-container">
             <Button
               className={
@@ -307,7 +307,7 @@ function Search(props: any) {
                 setOpen(true);
               }}
             >
-              Afficher les filtres
+              Filtres
             </Button>
             <FilterModalComponent modalProps={modalProps} />
           </div>
