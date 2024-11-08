@@ -1,4 +1,4 @@
-import { Button, Card, CardActions, CardContent, Typography } from '@mui/material';
+import { Card, CardContent, Typography } from '@mui/material';
 import { Volunteer } from '../../../../interfaces';
 
 import ProfileDefaultPicture from "../../../../images/logo/submark.png"
@@ -17,15 +17,10 @@ export default function VolunteerCard(props: VolunteerCardProps) {
       volunteer.profile_picture = ProfileDefaultPicture
     }
   }, [volunteer]);
-  
+
   return (
     <Fragment>
-      <Card
-        sx={{
-          width: '100%',
-          height: '100%'
-        }}
-      >
+      <Card sx={{ width: '100%', height: '100%' }} onClick={() => window.location.href = `/volunteer/${volunteer.id}`}>
         <img
           src={(volunteer.profile_picture !== "NULL") ? volunteer.profile_picture : require('../../../../images/logo/submark.png').default}
           alt="profile"
@@ -66,28 +61,6 @@ export default function VolunteerCard(props: VolunteerCardProps) {
             {volunteer.first_name} {volunteer.last_name}
           </Typography>
         </CardContent>
-        <CardActions>
-          <div
-            style={{
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              marginBottom: '5px'
-            }}
-          >
-            <Button
-              size="small"
-              color="primary"
-              href={`/volunteer/${volunteer.id}`}
-              variant="contained"
-              sx={{
-                color: 'white'
-              }}
-            >
-              Voir le profil
-            </Button>
-          </div>
-        </CardActions>
       </Card>
     </Fragment>
   )
