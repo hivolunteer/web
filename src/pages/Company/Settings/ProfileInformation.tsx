@@ -12,6 +12,7 @@ function ProfileInformationModal() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [siren, setSiren] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
   const [showModal,] = useState(true);
   const [error, setError] = useState("");
@@ -52,6 +53,7 @@ function ProfileInformationModal() {
               setEmail(data?.company?.email);
               setPhone(data?.company?.phone);
               setProfilePicture(data?.company?.profile_picture);
+              setSiren(data?.company?.siren);
             });
           } else {
             console.log(response);
@@ -202,6 +204,23 @@ function ProfileInformationModal() {
                 type="text"
                 value={phone}
                 onChange={handlePhoneChange}
+                margin="normal"
+              />
+            </div>
+            <div style={{ marginTop: "20px" }}>
+              <Typography style={{
+                fontWeight: "bold"
+              }}>
+                SIREN
+              </Typography>
+              <TextField
+                fullWidth
+                variant="outlined"
+                id="siren"
+                name="siren"
+                type="text"
+                value={siren}
+                disabled
                 margin="normal"
               />
             </div>
