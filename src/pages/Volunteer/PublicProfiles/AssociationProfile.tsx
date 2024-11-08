@@ -108,7 +108,7 @@ function PublicProfile() {
       </div>
 
       <Grid container spacing={3} sx={{ padding: '2em' }}>
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <Item style={{ height: '100%' }}>
             <h2 style={{ color: 'black', fontSize: '1.5rem' }}>Statistiques</h2>
             <div style={{ marginLeft: '1.3em', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
@@ -131,7 +131,7 @@ function PublicProfile() {
           </Item>
         </Grid>
 
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <Item>
             <h2 style={{ color: 'black', fontSize: '1.5rem' }}>Dernières missions</h2>
             <div style={{ display: 'flex', flexDirection: 'column', paddingLeft: '2em', paddingRight: '2em' }}>
