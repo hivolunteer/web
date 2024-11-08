@@ -51,7 +51,6 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
         if (response.status === 200) {
           response.json().then((data) => {
             setAssociation(data?.association);
-            console.log(association);
           });
         }
       });
@@ -76,7 +75,6 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
           .then((blob) => {
             const objectUrl = URL.createObjectURL(blob);
             setMissionPicture(objectUrl);
-            console.log(objectUrl);
           })
           .catch((error) => {
             console.error(error);
@@ -143,7 +141,6 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
 
   useEffect(() => {
     const role = localStorage.getItem('role');
-    console.log(role);
     setUserRole(role);
   }, []);
 
@@ -176,20 +173,20 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
               alt="mission picture"
             />
           </div>
-          <div style={{ flex: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', margin: '20px' }}>
+          <div style={{ flex: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', marginBottom: '20px', marginRight: '20px' }}>
             <div className='mission-header'>
-              <p style={{ fontWeight: 'bold' }}> {mission.title} </p>
+              <p style={{ fontWeight: 'bold', fontSize: '1.2em' }}> {mission.title} </p>
             </div>
             <div className='mission-body'>
               <div className='mission-body-with-icon' style={{ display: 'flex', flexDirection: 'row' }}>
                 <CalendarMonthOutlinedIcon />
                 <p style={{ marginLeft: '10px' }}> {getDate(mission.start_date as Date)} {getHour(mission.start_date as Date)} - {getDate(mission.end_date as Date)} {getHour(mission.end_date as Date)} </p>
               </div>
-              <div className='mission-body-with-icon' style={{ marginBottom: '2px', display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+              <div className='mission-body-with-icon' style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
                 <NearMeOutlinedIcon />
                 <p style={{ marginLeft: '10px', width: '80%' }}> {location} </p>
               </div>
-              <div className='mission-body-with-icon' style={{ marginBottom: '2px' }}>
+              <div className='mission-body-with-icon'>
                 {(isVolunteerMission && userRole === 'volunteer') && (
                   <>
                     <EmojiEmotionsIcon />
