@@ -14,6 +14,7 @@ function ProfileInformationModal() {
   const [phone, setPhone] = useState("");
   const [siren, setSiren] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
+  const [description, setDescription] = useState("");
   const [showModal,] = useState(true);
   const [error, setError] = useState("");
   const [alert, setAlert] = useState(false);
@@ -54,6 +55,7 @@ function ProfileInformationModal() {
               setPhone(data?.company?.phone);
               setProfilePicture(data?.company?.profile_picture);
               setSiren(data?.company?.siren);
+              setDescription(data?.company?.description);
             });
           } else {
             console.log(response);
@@ -137,6 +139,8 @@ function ProfileInformationModal() {
             style={{
               marginTop: "20px",
               gap: "10px",
+              maxHeight: "500px",
+              overflow: "auto",
             }}
           >
             <div>
@@ -206,6 +210,24 @@ function ProfileInformationModal() {
                 onChange={handlePhoneChange}
                 margin="normal"
               />
+            </div>
+            <div style={{ marginTop: "20px" }}>
+                <Typography style={{
+                fontWeight: "bold"
+                }}>
+                  Description
+                </Typography>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  id="description"
+                  name="description"
+                  type="text"
+                  value={description}
+                  multiline
+                  rows={3}
+                  margin="normal"
+                />
             </div>
             <div style={{ marginTop: "20px" }}>
               <Typography style={{
