@@ -22,7 +22,7 @@ import ReferentHistory from "../pages/Volunteer/Referent/ReferentHistory";
 import MyMission from "../pages/Volunteer/MyMissions/MyMissions";
 
 import TeamRanking from "../pages/Volunteer/Employee/TeamRanking";
-import ModifyLocationModal from "../pages/Association/Missions/Modal/ModifyLocationModal";
+import EmployeeRanking from "../pages/Volunteer/Employee/EmployeeRanking";
 
 function ConnectVolunteerRouter() {
   return (
@@ -32,7 +32,6 @@ function ConnectVolunteerRouter() {
       <Route path="/follows" element={<FollowAssociation />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/profile/blocked" element={<BlockedUsersList />} />
-      <Route path="/modifyAddress" element={<ModifyLocationModal />} />
       <Route path="/accueil" element={<Search />} />
       <Route path="/association/:associationId" element={<AssociationProfile />} />
       <Route path="/mission/:missionID" element={<MissionDetails />} />
@@ -44,9 +43,10 @@ function ConnectVolunteerRouter() {
       <Route path={"/settings"} element={<Settings />} />
       <Route path="/settings/modify_password" element={<ChangePassword />} />
       <Route path="/settings/referents" element={<AssociationReferent />} />
-      <Route path="/manage/:id" element={<ManageMission />} />
+      <Route path="/mission/:id" element={<ManageMission />} />
       <Route path="/settings/profile_information" element={<ProfileInformationModal />} />
-      <Route path="/employee/team/rank" element={<TeamRanking />} />
+      <Route path="/employee/teamrank" element={<TeamRanking />} />
+      <Route path="/employee/rank" element={<EmployeeRanking />} />
       <Route path="/myMissions" element={<MyMission />} />
       <Route path="*" element={<h1> Error 404 Volunteer </h1>} />
     </Routes>

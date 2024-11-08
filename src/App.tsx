@@ -11,7 +11,7 @@ import VolunteerRouter from "./routers/NoConnectVolunteerRouter";
 import VolunteerRouterConnected from "./routers/ConnectVolunteerRouter";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
-import { ThemeProvider } from "@mui/material";
+import { ThemeProvider, useTheme } from "@mui/material";
 import { myTheme } from "./theme/theme";
 import { useEffect } from "react";
 import Home from "./pages/NonConnected/Home/Home";
@@ -39,13 +39,13 @@ function NoConnectRouter() {
 function ConnectRouter() {
   return (
     <Router>
-      {localStorage.getItem("role") === "volunteer" ? (
-          <VolunteerSidebar />
-        ) : localStorage.getItem("role") === "association" ? (
-          <AssociationSidebar />
+        { localStorage.getItem("role") === "company" ? (
+            <CompanySidebar />
+        ) : localStorage.getItem("role") === "volunteer" ? (
+            <VolunteerSidebar />
         ) : (
-          <CompanySidebar />
-      )}
+            <AssociationSidebar />
+        )}
       <Routes>
         {localStorage.getItem("role") === "volunteer" ? (
             <Route path="/*" element={<VolunteerRouterConnected />} />
@@ -60,6 +60,8 @@ function ConnectRouter() {
 }
 
 function App() {
+
+  useTheme();
 
   useEffect(() => {
     localStorage.getItem("token") ? document.body.style.backgroundColor = "#f5f5f5" : document.body.style.backgroundColor = "#DFDFDF"

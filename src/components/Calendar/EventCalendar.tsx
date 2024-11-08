@@ -1,5 +1,5 @@
 import React, { MouseEvent, useEffect, useState } from "react";
-import { Box, Button, ButtonGroup, Card, CardContent, CardHeader, Container, Divider } from "@mui/material";
+import { Alert, Box, Button, ButtonGroup, Card, CardContent, CardHeader, Container, Divider } from "@mui/material";
 import { Calendar, dateFnsLocalizer, type Event } from "react-big-calendar";
 import format from "date-fns/format";
 import parse from "date-fns/parse";
@@ -41,7 +41,7 @@ const EventCalendar = () => {
     const [eventFormData, setEventFormData] = useState<EventFormData>(initialEventFormState);
     const [datePickerEventFormData, setDatePickerEventFormData] = useState<DatePickerEventFormData>(initialDatePickerEventFormData);
     const [, setExistingEvents] = useState<IEventInfo[]>([]);
-    const [, setResponse] = useState<{ error: Boolean; message: string }>({ error: false, message: "" });
+    const [response, setResponse] = useState<{ error: Boolean; message: string }>({ error: false, message: "" });
     const [modifyEventModalOpen, setModifyEventModalOpen] = useState(false);
 
     const handleSelectSlot = (event: Event) => {
@@ -119,7 +119,6 @@ const EventCalendar = () => {
     }, [
         setEvents,
         setCategories,
-        setExistingEvents,
         setResponse,
         setModifyEventModalOpen,
     ]);
@@ -338,6 +337,7 @@ const EventCalendar = () => {
                             style={{ height: 900 }}
                         />
                     </CardContent>
+                    {response.error && <Alert severity="error">{response.message}</Alert>}
                 </Card>
             </Container>
         </Box>

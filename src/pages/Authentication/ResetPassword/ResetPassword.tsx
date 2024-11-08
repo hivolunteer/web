@@ -6,32 +6,33 @@ import config from "../../../config";
 const titleLogo = require("../../../images/logo/primary_logo.png");
 
 function ResetPassword() {
-  const [strength, setStrength] = useState<boolean>(true);
-  const [identical, setIdentical] = useState<boolean>(true);
-  const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [type, setType] = useState<string>("");
-  const [token, setToken] = useState<string>("");
+    const [strength, setStrength] = useState<boolean>(true);
+    const [identical, setIdentical] = useState<boolean>(true);
 
-  useEffect(() => {
-    console.log("TEST")
-    const queryParameters = new URLSearchParams(window.location.search)
-    setToken(queryParameters.get('token') as string);
-    let type = window.location.pathname.split('/')[1];
-    setType(type);
-  }, []);
-  /* Function to check strength password */
-  const checkStrength = (password: string) => {
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@:_#$%.^&*])(?=.{8,})/;
-    // regex : 1 uppercase, 1 lowercase, 1 number, 1 special character (!@:_#$%.^&*), 8 characters minimum
-    if (regex.test(password)) {
-      setStrength(true);
-      return true;
-    } else {
-      setStrength(false);
-      return false;
+    const [password, setPassword] = useState<string>("");
+    const [confirmPassword, setConfirmPassword] = useState<string>("");
+
+    const [type, setType] = useState<string>("");
+    const [token, setToken] = useState<string>("");
+
+    useEffect(() => {
+        const queryParameters = new URLSearchParams(window.location.search)
+        setToken(queryParameters.get('token') as string);
+        let type = window.location.pathname.split('/')[1];
+        setType(type);
+    }, []);
+    /* Function to check strength password */
+    const checkStrength = (password: string) => {
+        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@:_#$%.^&*])(?=.{8,})/;
+        // regex : 1 uppercase, 1 lowercase, 1 number, 1 special character (!@:_#$%.^&*), 8 characters minimum
+        if (regex.test(password)) {
+            setStrength(true);
+            return true;
+        } else {
+            setStrength(false);
+            return false;
+        }
     }
-  }
 
   function validateForm() {
     if ((!checkStrength(password)) || (password !== confirmPassword)) {

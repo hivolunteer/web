@@ -33,7 +33,7 @@ const AddDatePickerEventModal = ({
   onAddEvent,
   categories,
 }: IProps) => {
-  const { title, description, start_date, end_date, allDay, category } = datePickerEventFormData
+  const { title, description, start_date, end_date, allDay } = datePickerEventFormData
 
   const onClose = () => {
     handleClose()

@@ -16,6 +16,7 @@ import config from "../../../../config";
 import LocationModal from "../Modal/LocationModal";
 import noImage from "../../../../images/lottie/noImage.json";
 import { useParams } from "react-router-dom";
+import CompanyModal from "../Modal/CompanyModal";
 
 interface MissionModificationData {
   missionName?: string;
@@ -83,6 +84,13 @@ export default function MissionModification() {
   };
 
   const mission_id = useParams()['id']
+
+  const [companyModal, setCompanyModal] = useState<boolean>(false);
+  const [selectedCompany, setSelectedCompany] = useState<{ id: number, name: string, profile_picture: string} | null>(null)
+
+  const handleCloseCompanyModal = () => {
+    setCompanyModal(false);
+  };
 
   function InputFileUpload({ onFileChange }: { onFileChange: (file: File) => void }) {
     const [preview, setPreview] = useState<string | null>(null);
@@ -256,6 +264,7 @@ export default function MissionModification() {
       title: form?.missionName,
       skills: selectedSkills,
       accept_minors: form?.missionAcceptMinors,
+      company_id: (selectedCompany !== null) ? selectedCompany.id : null
     };
     fetch(`${config.apiUrl}/missions/association/update/${mission_id}`, {
       method: "POST",
@@ -505,6 +514,42 @@ export default function MissionModification() {
                 label="Accepter les personnes mineures"
               />
             </Grid>
+          </Grid>
+          <Grid container spacing={3} style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+              {
+                (selectedCompany === null) && (
+                  <Button
+                    variant="outlined"
+                    onClick={() => {
+                      setCompanyModal(true);
+                    }}
+                  >
+                    Ajouter une entreprise affiliée
+                  </Button>
+                ) 
+              }
+              {
+                (selectedCompany !== null) && (
+                  <Box>
+                  <Button
+                      variant="outlined"
+                        style={{
+                          width: "100%"
+                        }}
+                        onClick={() => {
+                          setCompanyModal(true);
+                        }}
+                  >
+                    {selectedCompany.name}
+                  </Button>
+                  </Box>
+                )
+              }
+              <CompanyModal
+                selectCompany={setSelectedCompany}
+                companyModal={companyModal}
+                closeCompanyModal={handleCloseCompanyModal}
+              />
           </Grid>
           <Box
             style={{
