@@ -19,7 +19,7 @@ function ConnectCompanyRouter() {
             <Route path="/teams" element={<Team />} />
             <Route path="/settings/modify_password" element={<ModifyPassword />} />
             <Route path={"/missions"} element={<Missions />} />
-            <Route path="*" element={<h1> Error 404 Asso </h1>} />
+            <Route path="*" element={<h1> Error 404 Company </h1>} />
         </Routes>
     )
 }
