@@ -8,6 +8,7 @@ export class AuthenticationService {
             body: JSON.stringify(user)
         }).then((response) => {
             if (response.status === 200) {
+
                 response.json().then((data) => {
                     localStorage.setItem('token', data.token)
                     localStorage.setItem('color_blind', 'false')
@@ -72,9 +73,6 @@ export class AuthenticationService {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(user)
         });
-        response.json().then((data) => {
-            localStorage.setItem('token', data.token)
-        })
         return response.status;
     }
 
@@ -85,9 +83,6 @@ export class AuthenticationService {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(user)
         });
-        response.json().then((data) => {
-            localStorage.setItem('token', data.token)
-        })
         return response.status;
     }
 
@@ -98,9 +93,6 @@ export class AuthenticationService {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(user)
         });
-        response.json().then((data) => {
-            localStorage.setItem('token', data.token)
-        })
         return response.status;
     }
 }
