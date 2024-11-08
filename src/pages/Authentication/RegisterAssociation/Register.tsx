@@ -119,11 +119,9 @@ function RegisterAssociation() {
           case 201:
               setResponse({
                   error: false,
-                  message: "Inscription réussie",
+                  message: "Consultez vos mails pour finaliser l'inscription",
               });
               localStorage.setItem("role", "association");
-              navigate("/");
-              window.location.reload();
               break;
           case 400:
               setResponse({
