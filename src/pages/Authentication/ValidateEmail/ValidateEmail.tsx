@@ -9,16 +9,23 @@ import config from "../../../config";
 import { Volunteer } from "../../../interfaces";
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 
+function setType(role: string) {
+  if (role === "association" ||role === "volunteer") {
+    return role + "s";
+  }
+  return "companies";
+}
+
 export default function ValidateEmail() {
   const navigate = useNavigate();
-  const [isSent, setIsSent] = useState<boolean>(false);
-  const [stat, setstat] = useState(0);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const email = searchParams.get("email");
+  const role = searchParams.get("role");
+  const type = setType(role as string);
 
   const sendValidateEmailRequest = () => {
-    fetch(`${config.apiUrl}/volunteers/validateEmail`, {
+    fetch(`${config.apiUrl}/${type}/validateEmail`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -28,14 +35,12 @@ export default function ValidateEmail() {
         email: email
       }),
     }).then((response) => {
-      setstat(response.status)
       if (response.status === 201) {
         response.json().then((data) => {
           localStorage.setItem("role", "volunteer");
           localStorage.setItem('token', data.token);
           localStorage.setItem('color_blind', 'false');
           localStorage.setItem('id', data.id);
-          setIsSent(true);
           navigate("/");
           window.location.reload();
         });
