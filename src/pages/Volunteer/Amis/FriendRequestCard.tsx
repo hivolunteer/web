@@ -1,8 +1,8 @@
 import { Button, Card, CardActions, CardContent, CardMedia, Typography } from '@mui/material';
-import { Volunteer } from '../../../interfaces';
+import {Mission, Volunteer} from '../../../interfaces';
 import ProfileDefaultPicture from "../../../images/logo/submark.png";
 import config from "../../../config";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 
 interface FriendRequestCardProps {
     volunteer: Volunteer,
@@ -12,14 +12,29 @@ export default function FriendRequestCard(props: FriendRequestCardProps) {
     const [friendshipStatus, setFriendshipStatus] = useState<number>(0);
     const { volunteer } = props;
 
+    useEffect(() => {
+        fetch(`${config.apiUrl}/friends/${volunteer.id}`, {
+            method: 'GET',
+            headers: {
+                authorization: `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((data) => data.json())
+            .then((data: any) => {
+                console.log("TEST data", data); // here I have user_id1 and user_id2 and I want to ake
+            });
+    }, []);
+
+
     const handleAcceptFriendRequest = () => {
-        fetch(`${config.apiUrl}/friends/accept/${volunteer.id}`, {
+        fetch(`${config.apiUrl}/friends/accept/${localStorage.getItem("id")}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
-            body: JSON.stringify({ id: localStorage.getItem("id") })
+            body: JSON.stringify({ id: volunteer.id })
         })
             .then((response) => {
                 if (!response.ok) {
