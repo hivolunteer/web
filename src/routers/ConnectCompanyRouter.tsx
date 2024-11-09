@@ -7,6 +7,7 @@ import ProfileInformationModal from '../pages/Company/Settings/ProfileInformatio
 import Team from '../pages/Company/Team/Team';
 import ModifyPassword from '../pages/Company/Settings/ModifyPassword';
 import Missions from '../pages/Company/Missions/Missions';
+import FAQ from '../pages/Company/FAQ/Faq';
 
 function ConnectCompanyRouter() {
     return(
@@ -19,6 +20,7 @@ function ConnectCompanyRouter() {
             <Route path="/teams" element={<Team />} />
             <Route path="/settings/modify_password" element={<ModifyPassword />} />
             <Route path={"/missions"} element={<Missions />} />
+            <Route path="/faq" element={< FAQ />} />
             <Route path="*" element={<h1> Error 404 Asso </h1>} />
         </Routes>
     )

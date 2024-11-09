@@ -25,10 +25,11 @@ const pagesLink: { [pageName: string]: string } = {};
 
 if (localStorage.getItem("token") !== null) {
   settings.push("Profil", "Réglages", "Déconnexion");
-  pages.push("Accueil", "Équipes", "Affiliations");
+  pages.push("Accueil", "Équipes", "Affiliations", "FAQ");
   pagesLink["Accueil"] = "accueil";
   pagesLink["Équipes"] = "teams";
   pagesLink["Affiliations"] = "affiliatedAssociations";
+  pagesLink["FAQ"] = "faq";
 } else {
   settings.push("Connexion", "Inscription");
 }

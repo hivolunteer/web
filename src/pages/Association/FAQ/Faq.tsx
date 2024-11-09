@@ -92,7 +92,36 @@ function FAQ() {
                     answer: "La note moyenne est calculée en fonction des évaluations de tous les participants ayant commenté la mission. Elle est mise à jour automatiquement dès qu'un nouveau commentaire est ajouté."
                 }
             ]
-        },        
+        },
+        {
+            page: "Calendrier",
+            questions: [
+                {
+                    question: "Comment ajouter un événement à mon calendrier ?",
+                    answer: "Pour ajouter un événement, cliquez sur le bouton 'Ajouter un événement' sur votre page de calendrier. Remplissez les informations demandées telles que le titre, la date, l'heure et les catégories, puis enregistrez l'événement."
+                },
+                {
+                    question: "Puis-je voir mes événements dans différentes vues (jour, semaine, mois) ?",
+                    answer: "Oui, vous pouvez basculer entre différentes vues de votre calendrier (jour, semaine, mois) en utilisant les options de navigation en haut du calendrier. Cela vous permet de mieux organiser et visualiser vos événements selon vos préférences."
+                },
+                {
+                    question: "Comment modifier un événement existant ?",
+                    answer: "Pour modifier un événement, cliquez sur l'événement dans votre calendrier, puis sélectionnez l'option 'Modifier'. Vous pourrez alors ajuster les informations de l'événement telles que la date, l'heure, les catégories ou la description."
+                },
+                {
+                    question: "Puis-je supprimer un événement de mon calendrier ?",
+                    answer: "Oui, vous pouvez supprimer un événement en cliquant dessus pour ouvrir les détails, puis en sélectionnant l'option 'Supprimer l'événement'. Cela retirera l'événement de votre calendrier de manière permanente."
+                },
+                {
+                    question: "Comment ajouter une nouvelle catégorie pour mes événements ?",
+                    answer: "Pour ajouter une catégorie, ouvrez la fenêtre modale 'Ajouter une catégorie'. Choisissez un titre et une couleur pour la catégorie, puis cliquez sur 'Ajouter'. La nouvelle catégorie apparaîtra dans la liste des catégories disponibles."
+                },
+                {
+                    question: "Puis-je voir mes missions dans le calendrier ?",
+                    answer: "Oui, vous pouvez voir vos différentes missions dans le calendrier."
+                }
+            ]
+        },   
         {
             page: "Entreprises Affiliées",
             questions: [
@@ -152,31 +181,17 @@ function FAQ() {
                 {
                     question: "Est-ce que les autres utilisateurs peuvent voir mon profil externe ?",
                     answer: "Oui, votre profil externe est public et accessible aux autres utilisateurs de la plateforme."
+                },
+                {
+                    question: "Comment modifier mes informations de profil ?",
+                    answer: "Rendez-vous dans les Réglages, puis cliquez sur le bouton 'Informations de profil'. Modifiez les champs nécessaires et sauvegardez les modifications en utilisant le bouton 'Sauvegarder les changements'."
+                },
+                {
+                    question: "Comment supprimer mon compte ?",
+                    answer: "Rendez-vous dans les réglages, puis appuyez sur le bouton 'Supprimer le compte'. Confirmez l'action pour supprimer définitivement votre compte."
                 }
             ]
-        },
-        {
-            page: "Calendrier",
-            questions: [
-                {
-                    question: "Comment ajouter un événement à mon calendrier ?",
-                    answer: "Pour ajouter un événement, cliquez sur le bouton 'Ajouter un événement' sur votre page de calendrier. Remplissez les informations demandées telles que le titre, la date, l'heure et les catégories, puis enregistrez l'événement."
-                },
-                {
-                    question: "Puis-je voir mes événements dans différentes vues (jour, semaine, mois) ?",
-                    answer: "Oui, vous pouvez basculer entre différentes vues de votre calendrier (jour, semaine, mois) en utilisant les options de navigation en haut du calendrier. Cela vous permet de mieux organiser et visualiser vos événements selon vos préférences."
-                },
-                {
-                    question: "Comment modifier un événement existant ?",
-                    answer: "Pour modifier un événement, cliquez sur l'événement dans votre calendrier, puis sélectionnez l'option 'Modifier'. Vous pourrez alors ajuster les informations de l'événement telles que la date, l'heure, les catégories ou la description."
-                },
-                {
-                    question: "Puis-je supprimer un événement de mon calendrier ?",
-                    answer: "Oui, vous pouvez supprimer un événement en cliquant dessus pour ouvrir les détails, puis en sélectionnant l'option 'Supprimer l'événement'. Cela retirera l'événement de votre calendrier de manière permanente."
-                },
-                
-            ]
-        }        
+        }
     ];
 
     return (
