@@ -176,8 +176,8 @@ export default function MissionCreation() {
         skills: newSkill,
         theme_id: undefined,
         picture: "https://feelloo.com/wp-content/uploads/2019/10/jeune-chat-pexels-104827-900x598.jpeg",
+        is_company: is_company
       };
-      console.log(body);
       fetch(`${config.apiUrl}/missions/close/create`, {
         method: "POST",
         headers: {
