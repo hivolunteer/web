@@ -24,7 +24,7 @@ const settings: string[] = [];
 const pagesLink: { [pageName: string]: string } = {};
 
 if (localStorage.getItem("token") !== null) {
-  settings.push("Profile", "Réglages", "Déconnexion");
+  settings.push("Profil", "Réglages", "Déconnexion");
   pages.push("Accueil", "Équipes", "Affiliations");
   pagesLink["Accueil"] = "accueil";
   pagesLink["Équipes"] = "teams";
@@ -48,7 +48,7 @@ export default function CompanySidebar() {
     const handleMenuItemClick = (setting: string) => {
         handleCloseUserMenu();
         switch (setting) {
-            case "Profile":
+            case "Profil":
                 navigate("/profile");
                 break;
             case "Déconnexion":
@@ -179,11 +179,11 @@ export default function CompanySidebar() {
                         >
                             {settings.map((setting) => (
                                 <MenuItem key={setting} onClick={() => handleMenuItemClick(setting)} >
-                                    <Typography textAlign="center" component={Link} to={setting === "Profile" ? "/profile" : "/"}
+                                    <Typography textAlign="center" component={Link} to={setting === "Profil" ? "/profile" : "/"}
                                                 onClick={() => {
                                                     handleCloseUserMenu();
                                                     switch (setting) {
-                                                        case "Profile":
+                                                        case "Profil":
                                                             navigate("/profile");
                                                             break;
                                                         case "Réglages":

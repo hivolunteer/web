@@ -69,7 +69,7 @@ export default function VolunteerSidebar() {
   React.useEffect(() => {
     if (settings.length === 0) {
       if (localStorage.getItem("token") !== null) {
-        settings.push("Profile", "Réglages", "Déconnexion");
+        settings.push("Profil", "Réglages", "Déconnexion");
         pages.push("Recherche", "Mes Missions", "Historique de participation");
         pagesLink["Recherche"] = "accueil";
         pagesLink["Mes Missions"] = "myMissions";
@@ -84,7 +84,7 @@ export default function VolunteerSidebar() {
   const handleMenuItemClick = (setting: string) => {
     handleCloseUserMenu();
     switch (setting) {
-      case "Profile":
+      case "Profil":
         navigate("/profile");
         break;
       case "Déconnexion":
@@ -215,11 +215,11 @@ export default function VolunteerSidebar() {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={() => handleMenuItemClick(setting)} >
-                  <Typography textAlign="center" component={Link} to={setting === "Profile" ? "/profile" : "/"}
+                  <Typography textAlign="center" component={Link} to={setting === "Profil" ? "/profile" : "/"}
                     onClick={() => {
                       handleCloseUserMenu();
                       switch (setting) {
-                        case "Profile":
+                        case "Profil":
                           navigate("/profile");
                           break;
                         case "Réglages":

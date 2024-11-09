@@ -507,7 +507,7 @@ export default function ProfilePage(props: any) {
         </div>
         <div className="profile-btn-div">
           <Button sx={{marginInlineEnd: '5rem'}} variant="contained" color="primary" onClick={() => { navigate("/settings/profile_information"); }}>
-            Mettre à jour le profile
+            Mettre à jour le profil
           </Button>
           {/* <button className="delete-account-btn" onClick={deleteAccount}>
                   Supprimer le compte
