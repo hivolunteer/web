@@ -3,7 +3,6 @@ import { Volunteer } from "../../../../interfaces";
 import VolunteerCard from "../Cards/VolunteerCard";
 import { VolunteerPage } from "../Interfaces";
 
-
 function VolunteerPanel(props: {volunteerPages: Array<VolunteerPage>}) {
 
     const { volunteerPages } = props;
