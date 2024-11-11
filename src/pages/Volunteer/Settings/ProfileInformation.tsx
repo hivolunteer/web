@@ -127,7 +127,7 @@ function ProfileInformationModal() {
                         boxShadow: 24,
                         p: 4,
                     }}>
-                    <h2 id="modal-modal-title">Profile Information</h2>
+                    <h2 id="modal-modal-title">Informations du Profil</h2>
                     <p id="modal-modal-description">Changer les informations du profil</p>
                     <IconButton
                         style={{

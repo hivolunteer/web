@@ -193,7 +193,7 @@ function ModifyProfilePage(props: any) {
                     </div>
                     <div className="profile-btn-div">
                         <button className="profile-pic-btn" onClick={updateProfile}>
-                            Mettre à jour le profile
+                            Mettre à jour le profil
                         </button>
                         {/* <button className="delete-account-btn" onClick={deleteAccount}>
                             Supprimer le compte
