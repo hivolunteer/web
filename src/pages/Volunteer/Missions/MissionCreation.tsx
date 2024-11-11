@@ -4,8 +4,8 @@
  * @utility This page is used to create a mission
 */
 
-import {Autocomplete, Box, Button, Chip, Grid, TextField} from "@mui/material";
-import React, {useEffect, useState} from "react";
+import { Autocomplete, Box, Button, Chip, Grid, TextField, FormControlLabel, Checkbox } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { Image } from "mui-image";
 import { LocalizationProvider, DateTimePicker, TimePicker } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
@@ -16,7 +16,7 @@ import "moment/locale/de";
 import config from "../../../config";
 import LocationModal from "../../Association/Missions/Modal/LocationModal";
 import noImage from "../../../images/lottie/noImage.json";
-import {Alert} from "@mui/material";
+import { Alert } from "@mui/material";
 
 interface MissionCreationData {
   missionName?: string;
@@ -61,6 +61,9 @@ export default function MissionCreation() {
   const [newSkill, setNewSkill] = useState<Array<number>>([]);
   const [skillDb, setSkillDb] = useState<Array<SkillDatabase>>([]);
   const [alertContent, setAlertContent] = useState<{ error: boolean, message: string, id: number }>({ error: false, message: "", id: 0 });
+  const [is_company, setIsCompany] = useState(false);
+  const [isEmployee, setIsEmployee] = useState<boolean | null>(null);
+
 
   // preparation for adress modal
   const [open, setOpen] = React.useState<boolean>(false);
@@ -107,41 +110,56 @@ export default function MissionCreation() {
     return () => clearTimeout(timer);
   }, [alertContent]);
 
+  useEffect(() => {
+    if (isEmployee == null) {
+      fetch(`${config.apiUrl}/teams/employee/teamRanking`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }).then((response) => {
+        setIsEmployee(response.status === 200);
+      })
+
+    }
+  }, [isEmployee]);
+
   // handle creation of new mission
   const createNewMission = () => {
     if (form?.missionName === undefined || form?.missionName?.length === 0) {
       let msg = "Le champ du titre de la mission est obligatoire"
-    
+
       setAlertContent({ error: true, message: msg, id: 0 });
       return;
     }
     if (form?.missionDescription === undefined || form?.missionDescription?.length === 0) {
       let msg = "Le champ de description est obligatoire"
-    
+
       setAlertContent({ error: true, message: msg, id: 0 });
       return;
     }
     if (form?.missionVolunteersNumber === undefined || form?.missionVolunteersNumber === 0) {
       let msg = "Le nombre de volontaires ne peut pas être 0"
-    
+
       setAlertContent({ error: true, message: msg, id: 0 });
       return;
     }
     if (form?.missionDate === undefined) {
       let msg = "La mission doit avoir une date de début"
-    
+
       setAlertContent({ error: true, message: msg, id: 0 });
       return;
     }
     if (form?.missionEndDate === undefined) {
       let msg = "La mission doit avoir une date de fin"
-    
+
       setAlertContent({ error: true, message: msg, id: 0 });
       return;
     }
     if (form.missionAddress === undefined && locationId === null) {
       let msg = "La mission doit avoir une adresse"
-    
+
       setAlertContent({ error: true, message: msg, id: 0 });
       return;
     }
@@ -158,30 +176,29 @@ export default function MissionCreation() {
         skills: newSkill,
         theme_id: undefined,
         picture: "https://feelloo.com/wp-content/uploads/2019/10/jeune-chat-pexels-104827-900x598.jpeg",
+        is_company: is_company
       };
-      console.log(body);
       fetch(`${config.apiUrl}/missions/close/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + token, 
+          Authorization: "Bearer " + token,
         },
         body: JSON.stringify(body),
+      }).then((response) => {
+        if (response.status === 201) {
+          setAlertContent({ error: false, message: "Mission créée", id: 0 });
+          window.location.href = "/";
+          return response.body;
+        }
+        if (response.status === 404 || response.status === 500) {
+          if (response.body) {
+            console.log(response.body);
+            setAlertContent({ error: true, message: "Veuillez réessayer (vérifier la localisation de votre mission)", id: 0 });
+            return;
+          }
+        }
       })
-        .then((response) => {
-          if (response.status === 201) {
-            setAlertContent({ error: false, message: "Mission créée", id: 0 }); 
-            window.location.href = "/";
-            return response.body;
-          }
-          if (response.status === 404 || response.status === 500) {
-            if (response.body) {
-              console.log(response.body);
-              setAlertContent({ error: true, message: "Veuillez réessayer (vérifier la localisation de votre mission)", id: 0 });
-              return;
-            }
-          }
-        })
     } catch (e) {
       console.log("Erreur Critque : ", e);
       setAlertContent({ error: true, message: "Erreur Serveur", id: 0 });
@@ -268,13 +285,13 @@ export default function MissionCreation() {
           </label>
         </Box>
         {alertContent.message &&
-              <div className="blocked-user-alert">
-                <Alert severity={alertContent.error ? "error" : "success"}
-                >
-                  {alertContent.message}
-                </Alert>
-              </div>
-            }
+          <div className="blocked-user-alert">
+            <Alert severity={alertContent.error ? "error" : "success"}
+            >
+              {alertContent.message}
+            </Alert>
+          </div>
+        }
         <Box component="form">
           <Grid container spacing={3}  >
             <Grid item xs={6} lg={6}>
@@ -338,12 +355,12 @@ export default function MissionCreation() {
                 {(locationStr !== null) ? locationStr : "Ajouter une adresse"}
               </p>
               <LocationModal
-                  open={open}
-                  handleClose={handleClose}
-                  location={address}
-                  setLocation={setAddress}
-                  setLocationString={setLocationStr}
-                  setId={setLocationId}
+                open={open}
+                handleClose={handleClose}
+                location={address}
+                setLocation={setAddress}
+                setLocationString={setLocationStr}
+                setId={setLocationId}
               />
             </Grid>
             <Grid item xs={6} lg={3}>
@@ -361,16 +378,16 @@ export default function MissionCreation() {
             </Grid>
             <Grid item xs={6} lg={3}>
               <TimePicker
-                  label="Fin de la mission"
-                  format="HH:mm"
-                  defaultValue={moment.utc().local()}
-                  onChange={(date) => {
-                    setForm({
-                      ...form,
-                      missionEndDate: moment(date).utc().local().toDate(),
-                    });
-                  }}
-                />
+                label="Fin de la mission"
+                format="HH:mm"
+                defaultValue={moment.utc().local()}
+                onChange={(date) => {
+                  setForm({
+                    ...form,
+                    missionEndDate: moment(date).utc().local().toDate(),
+                  });
+                }}
+              />
             </Grid>
             <Grid item xs={6} lg={6}>
               <TextField
@@ -382,7 +399,7 @@ export default function MissionCreation() {
                 id="name"
                 inputMode={"numeric"}
                 label="Nombre de bénévoles"
-                inputProps={{min: 1}}
+                inputProps={{ min: 1 }}
                 value={form?.missionVolunteersNumber}
                 onChange={(missionVolunteersNumber) => {
                   setForm({
@@ -394,7 +411,7 @@ export default function MissionCreation() {
                 }}
               />
             </Grid>
-            
+
             <Grid item xs={12} lg={6}>
               <Autocomplete
                 multiple
@@ -425,6 +442,14 @@ export default function MissionCreation() {
                 }}
               />
             </Grid>
+          </Grid>
+          <Grid>
+            {isEmployee ? (
+              <FormControlLabel
+                control={<Checkbox checked={is_company} onChange={(e) => setIsCompany(e.target.checked)} />}
+                label="Lier à l'entreprise ?"
+              />
+            ) : (<p></p>)}
           </Grid>
           <Box
             style={{

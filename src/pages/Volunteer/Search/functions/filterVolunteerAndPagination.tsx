@@ -2,8 +2,7 @@ import { Volunteer } from "../../../../interfaces";
 import { VolunteerPage, VolunteerProps } from "../Interfaces";
 
 function filterVolunteerAndPagination(props: VolunteerProps ) {
-    console.log(props)
-    let filteredVolunteers : Volunteer[] = props.volunteersList.filter(({ first_name, last_name, email }: Volunteer) => 
+    let filteredVolunteers : Volunteer[] = props.volunteersList.filter(({ first_name, last_name, email }: Volunteer) =>
         !props.search.length || 
         [first_name, last_name, email].some(field => field.toLowerCase().includes(props.search.toLowerCase()))
     );

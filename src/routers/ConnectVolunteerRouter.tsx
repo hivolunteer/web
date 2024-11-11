@@ -23,6 +23,7 @@ import MyMission from "../pages/Volunteer/MyMissions/MyMissions";
 import TeamRanking from "../pages/Volunteer/Employee/TeamRanking";
 import EmployeeRanking from "../pages/Volunteer/Employee/EmployeeRanking";
 import FAQ from "../pages/Volunteer/FAQ/Faq";
+import FriendRequests from "../pages/Volunteer/Amis/FriendRequests";
 
 function ConnectVolunteerRouter() {
     return (
@@ -31,6 +32,7 @@ function ConnectVolunteerRouter() {
             <Route path="/history" element={<History />} />
             <Route path="/follows" element={<FollowAssociation />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path={"/friends"} element={< FriendRequests />} />
             <Route path="/profile/blocked" element={<BlockedUsersList />} />
             <Route path="/accueil" element={<Search />} />
             <Route path="/association/:associationId" element={<AssociationProfile />} />

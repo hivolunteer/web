@@ -21,7 +21,7 @@ function ConnectCompanyRouter() {
             <Route path="/settings/modify_password" element={<ModifyPassword />} />
             <Route path={"/missions"} element={<Missions />} />
             <Route path="/faq" element={< FAQ />} />
-            <Route path="*" element={<h1> Error 404 Asso </h1>} />
+            <Route path="*" element={<h1> Error 404 Company </h1>} />
         </Routes>
     )
 }

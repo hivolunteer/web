@@ -69,7 +69,7 @@ export default function VolunteerSidebar() {
   React.useEffect(() => {
     if (settings.length === 0) {
       if (localStorage.getItem("token") !== null) {
-        settings.push("Profil", "Réglages", "Déconnexion");
+        settings.push("Profile", "Demandes d'amis", "Réglages", "Déconnexion");
         pages.push("Recherche", "Mes Missions", "Historique de participation", "FAQ");
         pagesLink["Recherche"] = "accueil";
         pagesLink["Mes Missions"] = "myMissions";
@@ -99,7 +99,7 @@ export default function VolunteerSidebar() {
   React.useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        await fetch(`${config.apiUrl}/notifications/list/Association/personal`, {
+        await fetch(`${config.apiUrl}/notifications/list/Volunteer/personal`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -223,6 +223,9 @@ export default function VolunteerSidebar() {
                         case "Profil":
                           navigate("/profile");
                           break;
+                        case "Demandes d'amis":
+                            window.location.href = "/friends";
+                            break;
                         case "Réglages":
                           window.location.href = "/settings";
                           break;
