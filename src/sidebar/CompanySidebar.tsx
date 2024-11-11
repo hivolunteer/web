@@ -62,7 +62,7 @@ export default function CompanySidebar() {
     React.useEffect(() => {
         const fetchNotifications = async () => {
             try {
-                await fetch(`${config.apiUrl}/notifications/list/Association/personal`, {
+                await fetch(`${config.apiUrl}/notifications/list/Company/personal`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
