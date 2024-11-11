@@ -9,7 +9,6 @@ import config from "../../../config";
 
 function MissionCard(props: { mission: any }) {
 
-    // misc functions
     let associationPicture = '';
 
     function convertDay(date: string) {

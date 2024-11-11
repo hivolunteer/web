@@ -64,7 +64,10 @@
     }
 
     .profile-details {
+      width: fit-content;
       flex: 1;
+      border-color: #666;
+      border-width: 5px;
       text-align: left;
     }
 

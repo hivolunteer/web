@@ -209,7 +209,6 @@ function RegisterVolunteer() {
       checkInput(data);
     }
     /* If all states are true, send data */
-    console.log(first_name, last_name, birthdate, phone, email, password, major, strength, emailFormat, phoneFormat);
     sendData(data);
   };
 

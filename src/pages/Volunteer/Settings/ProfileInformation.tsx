@@ -256,7 +256,6 @@ function ProfileInformationModal() {
                 </Box>
             </Modal>
         </div>
-);
-}
+)};
 
 export default ProfileInformationModal;

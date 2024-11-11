@@ -4,14 +4,13 @@
  * @utility This page is used to create a mission
 */
 
-import { Autocomplete, Box, Button, Chip, Grid, TextField } from "@mui/material";
+import { Autocomplete, Box, Button, Chip, Grid, TextField, FormControlLabel, Checkbox } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Image } from "mui-image";
 import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import Lottie from "lottie-react";
 import moment from "moment";
-import "moment/locale/de";
 //import './MissionCreation.scss';
 import config from "../../../config";
 import LocationModal from "../../Association/Missions/Modal/LocationModal";
@@ -61,6 +60,9 @@ export default function MissionCreation() {
   const [newSkill, setNewSkill] = useState<Array<number>>([]);
   const [skillDb, setSkillDb] = useState<Array<SkillDatabase>>([]);
   const [alertContent, setAlertContent] = useState<{ error: boolean, message: string, id: number }>({ error: false, message: "", id: 0 });
+  const [is_company, setIsCompany] = useState(false);
+  const [isEmployee, setIsEmployee] = useState<boolean | null>(null);
+
 
   // preparation for adress modal
   const [open, setOpen] = React.useState<boolean>(false);
@@ -106,6 +108,21 @@ export default function MissionCreation() {
     }, 5000);
     return () => clearTimeout(timer);
   }, [alertContent]);
+
+  useEffect(() => {
+    if (isEmployee == null) {
+      fetch(`${config.apiUrl}/teams/employee/teamRanking`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }).then((response) => {
+        setIsEmployee(response.status === 200);
+      })
+
+    }
+  }, [isEmployee]);
 
   // handle creation of new mission
   const createNewMission = () => {
@@ -158,8 +175,8 @@ export default function MissionCreation() {
         skills: newSkill,
         theme_id: undefined,
         picture: "https://feelloo.com/wp-content/uploads/2019/10/jeune-chat-pexels-104827-900x598.jpeg",
+        is_company: is_company
       };
-      console.log(body);
       fetch(`${config.apiUrl}/missions/close/create`, {
         method: "POST",
         headers: {
@@ -167,21 +184,20 @@ export default function MissionCreation() {
           Authorization: "Bearer " + token,
         },
         body: JSON.stringify(body),
+      }).then((response) => {
+        if (response.status === 201) {
+          setAlertContent({ error: false, message: "Mission créée", id: 0 });
+          window.location.href = "/";
+          return response.body;
+        }
+        if (response.status === 404 || response.status === 500) {
+          if (response.body) {
+            console.log(response.body);
+            setAlertContent({ error: true, message: "Veuillez réessayer (vérifier la localisation de votre mission)", id: 0 });
+            return;
+          }
+        }
       })
-        .then((response) => {
-          if (response.status === 201) {
-            setAlertContent({ error: false, message: "Mission créée", id: 0 });
-            window.location.href = "/";
-            return response.body;
-          }
-          if (response.status === 404 || response.status === 500) {
-            if (response.body) {
-              console.log(response.body);
-              setAlertContent({ error: true, message: "Veuillez réessayer (vérifier la localisation de votre mission)", id: 0 });
-              return;
-            }
-          }
-        })
     } catch (e) {
       console.log("Erreur Critque : ", e);
       setAlertContent({ error: true, message: "Erreur Serveur", id: 0 });
@@ -430,6 +446,14 @@ export default function MissionCreation() {
                 }}
               />
             </Grid>
+          </Grid>
+          <Grid>
+            {isEmployee ? (
+              <FormControlLabel
+                control={<Checkbox checked={is_company} onChange={(e) => setIsCompany(e.target.checked)} />}
+                label="Lier à l'entreprise ?"
+              />
+            ) : (<p></p>)}
           </Grid>
           <Box
             style={{

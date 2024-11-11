@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import config from '../../../config';
 import './AssociationProfile.scss';
 import { useParams, Link } from 'react-router-dom';
+import FollowButton from '../Search/Cards/FollowButton';
 
 interface Association {
   id: number;
@@ -44,6 +45,7 @@ const Item = styled(Paper)(({ theme }) => ({
 function PublicProfile() {
   const { associationId } = useParams<{ associationId: string }>();
   const [profileData, setProfileData] = useState<AssociationProfileData | null>(null);
+  const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -81,6 +83,26 @@ function PublicProfile() {
           missions,
           nb_missions
         });
+        
+        fetch(`${config.apiUrl}/follows/`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        }).then((response: any) => {
+          if (response.status === 200) {
+            response.json().then((data: any) => {
+              for (const follow of data) {
+                if (follow.association_id === Number(associationId)) {
+                  setIsFollowing(true);
+                  return;
+                }
+              };
+            })
+          }
+        })
+
       } catch (error) {
         console.error('Error fetching profile:', error);
       }
@@ -88,6 +110,23 @@ function PublicProfile() {
 
     fetchData();
   }, [associationId]);
+
+  const handleFollow = async () => {
+    try {
+      await fetch(`${config.apiUrl}/follows`, {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ association_id: Number(associationId) }),
+      });
+      setIsFollowing(!isFollowing);
+    } catch (error) {
+      console.error('Error following association', error);
+    }
+    setIsFollowing(!isFollowing);
+  };
 
   if (!profileData) {
     return <div>Chargement...</div>;
@@ -98,9 +137,13 @@ function PublicProfile() {
       <div className="profile-card">
         <div className="profile-image" style={{ backgroundImage: `url(${profileData?.association?.profile_picture || 'https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg'})` }} />
         <CardContent className="profile-details">
-          <Typography variant="h5" component="div" className="profile-name">
-            {profileData?.association?.name}
-          </Typography>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Typography variant="h5" component="div" className="profile-name">
+              {profileData?.association?.name}
+            </Typography>
+            <FollowButton associationId={ Number(associationId)} isFollowing={isFollowing} onFollow={handleFollow} />
+          </div>
+
           <Typography variant="body2" color="text.secondary" className="profile-description">
             {profileData?.association?.description}
           </Typography>
