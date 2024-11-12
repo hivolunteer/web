@@ -56,11 +56,11 @@ function AffiliatedAssociations(props: any) {
 
     return (
         <div className="affiliated-associations">
-            <h1 className="affiliated-associations-title">Entreprises affiliées</h1>
+            <h1 className="affiliated-associations-title">Associations affiliées</h1>
             <div className="affiliated-associations-list-header">
                 {
                     (associationList.length === 0) ?
-                        <p> Aucune entreprise afffiliée pour le moment </p>
+                        <p> Aucune association afffiliée pour le moment </p>
                     :
                         associationList.map((association: Association) => (
                             <div className="association-row" key={association.id}>
@@ -79,7 +79,7 @@ function AffiliatedAssociations(props: any) {
                                   className="icon-card"
                                   title="Supprimer le référent"
                                   onClick={() => {
-                                    if (window.confirm('Êtes-vous sûr de vouloir supprimer cette entreprise affiliée ? Cette action est irréversible.')) {
+                                    if (window.confirm('Êtes-vous sûr de vouloir supprimer cette association affiliée ? Cette action est irréversible.')) {
                                       unLinkAssociation(association.id);
                                     }
                                   }}
