@@ -48,7 +48,6 @@ function ProfilePage(props: any) {
     })
     .then(response => response.json())
     .then(data => {
-      console.log(data);
       setVolunteerId(data.volunteer.id);
     })
    .catch(error => {

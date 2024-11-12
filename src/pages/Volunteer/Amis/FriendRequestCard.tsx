@@ -6,21 +6,21 @@ import {useEffect, useState} from "react";
 
 interface FriendRequestCardProps {
     volunteer: Volunteer,
+    isPending: boolean;
 }
 
 export default function FriendRequestCard(props: FriendRequestCardProps) {
     const [friendshipStatus, setFriendshipStatus] = useState<number>(0);
     const { volunteer } = props;
 
-
     const handleAcceptFriendRequest = () => {
-        fetch(`${config.apiUrl}/friends/accept/${localStorage.getItem("id")}`, {
+        fetch(`${config.apiUrl}/friends/accept/${volunteer.id}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
-            body: JSON.stringify({ id: volunteer.id })
+            body: JSON.stringify({ id: localStorage.getItem("id") })
         })
             .then((response) => {
                 if (!response.ok) {
@@ -54,9 +54,27 @@ export default function FriendRequestCard(props: FriendRequestCardProps) {
             });
     };
 
+    const handleWithdrawRequest = () => {
+        fetch(`${config.apiUrl}/friends/remove/${volunteer.id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            body: JSON.stringify({ id: localStorage.getItem("id") })
+        })
+            .then((response) => response.json())
+            .then(data => {
+                setFriendshipStatus(3);
+            })
+            .catch(error => {
+                console.error("Error withdrawing friend request:", error);
+            });
+    }
+
     return (
         <div>
-            <Card
+                <Card
                 sx={{
                     width: '100%',
                     height: '100%'
@@ -101,46 +119,43 @@ export default function FriendRequestCard(props: FriendRequestCardProps) {
                         margin: 'auto',
                         marginBottom: '10px',
                     }}>
-                        <div
-                            style={{
-                                width: '100%',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                marginBottom: '10px',
-                            }}
-                        >
-                            <Button
-                                color="primary"
-                                variant="contained"
-                                onClick={handleAcceptFriendRequest}
-                                disabled={friendshipStatus === 1}
-                                sx={{
-                                    color: 'white'
-                                }}
-                            >
-                                {friendshipStatus === 1 ? "Confirmé" : "Confirmer"}
-                            </Button>
-                        </div>
-                        <div
-                            style={{
-                                width: '100%',
-                                display: 'flex',
-                                justifyContent: 'center'
-                            }}
-                        >
-                            <Button
-                                size="medium"
-                                color="secondary"
-                                onClick={handleDenyFriendRequest}
-                                variant="contained"
-                                disabled={friendshipStatus === 2}
-                                sx={{
-                                    color: 'white'
-                                }}
-                            >
-                                {friendshipStatus === 2 ? "Refusé" : "Refuser"}
-                            </Button>
-                        </div>
+                        {props.isPending ? (
+                            <>
+                                <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
+                                    <Button
+                                        color="primary"
+                                        variant="contained"
+                                        onClick={handleAcceptFriendRequest}
+                                        sx={{ color: 'white' }}
+                                    >
+                                        Confirmer
+                                    </Button>
+                                </div>
+                                <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+                                    <Button
+                                        size="medium"
+                                        color="secondary"
+                                        onClick={handleDenyFriendRequest}
+                                        variant="contained"
+                                        sx={{ color: 'white' }}
+                                    >
+                                        Refuser
+                                    </Button>
+                                </div>
+                            </>
+                        ) : (
+                            <div style={{ width: '100%', display: ' flex', justifyContent: 'center' }}>
+                                <Button
+                                    size="medium"
+                                    color="secondary"
+                                    onClick={handleWithdrawRequest}
+                                    variant="contained"
+                                    sx={{ color: 'white' }}
+                                >
+                                    Retirer
+                                </Button>
+                            </div>
+                        )}
                     </div>
                 </CardActions>
             </Card>
