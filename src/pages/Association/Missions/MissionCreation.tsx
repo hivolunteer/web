@@ -17,7 +17,7 @@ import LocationModal from "./Modal/LocationModal";
 import noImage from "../../../images/lottie/noImage.json";
 import { Referent } from "./Interface/Referent";
 import ReferentModal from "./Modal/ReferentModal";
-import MissionPanel from "../../Volunteer/Search/Panels/MissionPanel";
+import CompanyModal from "./Modal/CompanyModal";
 
 interface MissionCreationData {
   missionName?: string;
@@ -80,6 +80,13 @@ export default function MissionCreation() {
   const [locationStr, setLocationStr] = useState<string | null>(null);
   const [locationId, setLocationId] = useState<number | null>(null);
 
+  const [companyModal, setCompanyModal] = useState<boolean>(false);
+  const [selectedCompany, setSelectedCompany] = useState<{ id: number, name: string, profile_picture: string} | null>(null)
+
+  const handleCloseCompanyModal = () => {
+    setCompanyModal(false);
+  }
+
   const [missionDateRanges, setMissionDateRanges] = useState<
     { start: Date | null; end: Date | null }[]
   >([{ start: null, end: null }]);
@@ -114,7 +121,7 @@ export default function MissionCreation() {
         setPreview(URL.createObjectURL(file)); // Set the image preview
       }
     };
-  
+    
     return (
       <label htmlFor="upload-photo">
         {preview ? (
@@ -174,14 +181,13 @@ export default function MissionCreation() {
     let startDates: Date[] = [];
     let endDates: Date[] = [];
 
-    missionDateRanges
-    .map((mission: {start: Date | null; end: Date | null}) => {
+    missionDateRanges.forEach((mission: {start: Date | null; end: Date | null}) => {
       if ((mission.start === null) || (mission.end === null)) {
-        alert("Pas de dates entrées")
+      alert("Pas de dates entrées");
       }
-      if (mission.start) startDates.push(mission.start)
-      if (mission.end) endDates.push(mission.end)
-    })
+      if (mission.start) startDates.push(mission.start);
+      if (mission.end) endDates.push(mission.end);
+    });
      
     const body = {
       max_volunteers: form?.missionVolunteersNumber,
@@ -194,6 +200,7 @@ export default function MissionCreation() {
       skills: newSkill,
       referents: referents,
       accept_minors: form?.missionAcceptMinors,
+      company_id: (selectedCompany !== null) ? selectedCompany.id : null
     };
     console.log(body);
     fetch(`${config.apiUrl}/missions/association/create`, {
@@ -410,6 +417,7 @@ export default function MissionCreation() {
                       <DateTimePicker
                         label="Date et heure de début de la mission"
                         format="DD/MM/YYYY HH:mm"
+                        minDateTime={moment.utc().local()}
                         defaultValue={moment.utc().local()}
                         value={dateRange.start ? moment(dateRange.start) : null}
                         slotProps={{ textField: { fullWidth: true } }}
@@ -516,6 +524,42 @@ export default function MissionCreation() {
                 label="Accepter les personnes mineures"
               />
             </Grid>
+          </Grid>
+          <Grid container spacing={3} style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+              {
+                (selectedCompany === null) && (
+                  <Button
+                    variant="outlined"
+                    onClick={() => {
+                      setCompanyModal(true);
+                    }}
+                  >
+                    Ajouter une entreprise affiliée
+                  </Button>
+                ) 
+              }
+              {
+                (selectedCompany !== null) && (
+                  <Box>
+                  <Button
+                      variant="outlined"
+                        style={{
+                          width: "100%"
+                        }}
+                        onClick={() => {
+                          setCompanyModal(true);
+                        }}
+                  >
+                    {selectedCompany.name}
+                  </Button>
+                  </Box>
+                )
+              }
+              <CompanyModal
+                selectCompany={setSelectedCompany}
+                companyModal={companyModal}
+                closeCompanyModal={handleCloseCompanyModal}
+              />
           </Grid>
           <Box
             style={{

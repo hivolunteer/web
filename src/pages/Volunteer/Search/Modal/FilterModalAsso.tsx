@@ -1,4 +1,4 @@
-import { Dialog, DialogTitle, Button, Checkbox, Rating } from "@mui/material";
+import { Dialog, Button, Checkbox, Rating } from "@mui/material";
 import React, { useState } from "react";
 
 import { ModalAsso } from "../Interfaces"; 
@@ -68,9 +68,9 @@ const FilterModal = (props: {modalProps: ModalAsso}) => {
         }}
         >
             {/* Second Category : Préférences de la mission */}
-            <div style={{display: 'flex', justifyContent: 'center'}}>
-                <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around'}}>
-                    <div style={{flex: 1}}>
+            <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
+                <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around', width: '100%'}}>
+                    <div style={{flex: 1, marginLeft: "3%"}}>
                         <h3> Préférences </h3>
                         <div style={{display: 'flex', flexDirection: 'column'}}>
                             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', margin: '-2% -1%'}}>
@@ -95,9 +95,12 @@ const FilterModal = (props: {modalProps: ModalAsso}) => {
             </div>
             {/* Third Category : Dates du début et de la fin de la mission */}
             <div style={{display: 'flex', flexDirection: 'column'}}>
-            <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around'}}>
-                    <h3> Note Minimale </h3>
-                    <div style={{display: 'flex', alignItems: 'center'}}>
+            <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', marginLeft: "3%"}}>
+                <div style={{flex: 1}}>
+                    <h3 > Note Minimale </h3>
+                </div>
+
+                    <div style={{display: 'flex', alignItems: 'center', flex: 2}}>
                     <Rating
                       name="simple-controlled"
                       value={value}

@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {Alert, Box, Button, Grid, IconButton, InputAdornment, Link, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Grid, IconButton, InputAdornment, Link, TextField, Typography } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { AuthenticationService } from "../../../services/authentication.service";
 import "./Login.scss";
 import titleLogo from "../../../images/logo/primary_logo.png";
 import ForgotPasswordModal from "../ForgotPasswordModal/ForgotPasswordModal";
-import config from "../../../config";
 import AutohideSnackbar from "../../../components/SnackBar";
 
 function LoginVolunteer() {
@@ -20,12 +19,10 @@ function LoginVolunteer() {
   const [showPassword, setShowPassword] = React.useState(false);
   /* Set mail format state */
   const [emailFormat, setEmailFormat] = useState(true);
-  /* Set phone format state */
-  const [phoneFormat, setPhoneFormat] = useState(true);
   /* State complete for all inputs*/
   const [email, setEmail] = useState(true);
   const [password, setPassword] = useState(true);
-  const [fodder, setFodder] = useState(true);
+  const [fodder] = useState(true);
 
   const navigate = useNavigate();
 
@@ -121,7 +118,7 @@ function LoginVolunteer() {
               message: "Erreur inconnue, veuillez réessayer plus tard",
             });
           });
-          // Handle the case where response_status is null
+        // Handle the case where response_status is null
       }
     }
   };
@@ -244,9 +241,10 @@ function LoginVolunteer() {
                 response={response.error}
               />
             )}
-            <div style={{ marginTop: "10px", justifyContent: "flex-end", display: "flex" }}> 
-                <a className="forgot-password"
-                    onClick={() => {setOpen(true);
+            <div style={{ marginTop: "10px", justifyContent: "flex-end", display: "flex" }}>
+              <a className="forgot-password"
+                onClick={() => {
+                  setOpen(true);
                 }}>
                 Mot de passe oublié ?
               </a>
@@ -268,7 +266,7 @@ function LoginVolunteer() {
             >
               Connexion
             </Button>
-            <Grid container justifyContent="center" sx={{ mb: 1 }}>
+            <Grid container justifyContent="center" sx={{ mb: 4 }}>
               <Grid item>
                 <Link href="/volunteers/register" variant="body2">
                   Vous n'avez pas de compte ? Inscrivez-vous

@@ -4,7 +4,10 @@ import { Checkbox } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Divider from "@mui/material/Divider";
 import config from "../../../config";
-//import { SideBar } from "../../../components/Sidebar";
+import ConfirmationModal from "../../../components/ConfirmationModal";
+import {Alert} from "@mui/material";
+import { useEffect } from "react";
+
 
 function Settings() {
     const [popupVisible, setPopupVisible] = useState(false);
@@ -47,8 +50,9 @@ function Settings() {
     }
 
 
+    const [openConfirmationModal, setopenConfirmationModal] = useState(false);
+    const [alertContent, setAlertContent] = useState<{ error: boolean, message: string, id: number }>({ error: false, message: "", id: 0 });
   const deleteAccount = () => {
-    if (window.confirm('Are you sure you want to delete your account?')) {
       let url = `${config.apiUrl}/volunteers/delete`;
       fetch(url, {
         method: 'DELETE',
@@ -58,22 +62,43 @@ function Settings() {
       })
         .then((response) => {
           if (response.status === 200) {
-            alert('Account deleted successfully');
+            setAlertContent({ error: false, message: 'Compte supprimé avec succès', id: 0 })
             // Redirect to the login page
             localStorage.clear();
             window.location.reload();
             window.location.href = '/';
           } else {
             console.log('Error deleting account');
+            setAlertContent({ error: true, message: 'Erreur lors de la suppression du compte', id: 0 })
           }
         })
         .catch((error) => {
           console.log(error);
+          setAlertContent({ error: true, message: 'Erreur serveur, veuillez réessayer plus tard', id: 0 })
         });
-    }
+  }
+  const handleCloseConfirmationModal = () => {
+    setopenConfirmationModal(false);
   }
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAlertContent({ error: false, message: '', id: 0 });
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [alertContent]);
+
     return (
+        <>
+        {alertContent.message &&
+        <div className="blocked-user-alert">
+          <Alert severity={alertContent.error ? "error" : "success"}
+          >
+            {alertContent.message}
+          </Alert>
+        </div>
+      }
+        
         <div className={handleClickColorBlind()}>
             <h1> Réglages </h1>
             <button className={"color-blind-button"} onClick = {() => history("/settings/referents")}>
@@ -113,12 +138,24 @@ function Settings() {
                 Changer le mot de passe
             </button>
             <div className="profile-btn-div">
-        <button className="delete-account-btn" onClick={deleteAccount}>
+        <button className="delete-account-btn" onClick={() => setopenConfirmationModal(true)}>
         Supprimer le compte
       </button>
+      {
+          openConfirmationModal && 
+          <ConfirmationModal
+            handleClose={handleCloseConfirmationModal}
+            title="Suppression de compte"
+            description="Voulez-vous supprimer votre compte ? Cette action est irréversible."
+            yes_choice="Oui"
+            no_choice="Non"
+            yes_function={deleteAccount}
+          />
+        }
       </div>
             <Divider orientation="vertical" variant="middle" flexItem />
         </div>
+        </>
     );
 }
 

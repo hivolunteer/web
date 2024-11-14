@@ -18,6 +18,7 @@ import "./Sidebar.scss";
 import logoWhite from "../images/logo/submark_white.png";
 import logoImage from "../images/logo/submark.png";
 import config from "../config";
+import NotificationBell from "../components/Notifications/NotificationBell";
 
 
 export default function VolunteerSidebar() {
@@ -30,11 +31,13 @@ export default function VolunteerSidebar() {
   const handleCloseNavMenu = () => { setAnchorElNav(null); };
   const handleCloseUserMenu = () => { setAnchorElUser(null); };
   const [pages, setPages] = React.useState<string[]>([]);
-  const [settings, setsettings] = React.useState<string[]>([]);
-  const [pagesLink, setPagesLink] = React.useState<{ [pageName: string]: string }>({})
+  const [settings] = React.useState<string[]>([]);
+  const [pagesLink, setPagesLink] = React.useState<{ [pageName: string]: string }>({});
   const [isFetchRef, setIsFetchRef] = React.useState(false);
+  const [notifications, setNotifications] = React.useState<any[]>([]);
+  const [count, setCount] = React.useState(0);
 
-  const isReferent = async () => {
+  const isReferent = React.useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
       fetch(`${config.apiUrl}/referent/volunteer`, {
@@ -46,42 +49,46 @@ export default function VolunteerSidebar() {
       }).then((response) => {
         if (response.status === 200) {
           response.json().then((body: any[]) => {
-            setPages([...pages, "Missions Assignées"]);
-            pagesLink["Missions Assignées"] = "referent/missions";
+            setPages((prevPages) => [...prevPages, "Missions Assignées"]);
+            setPagesLink((prevPagesLink) => ({
+              ...prevPagesLink,
+              "Missions Assignées": "referent/missions",
+            }));
           });
         }
       });
     } catch (e) {
       console.log(e);
     }
-  }
+  }, []);
 
   React.useEffect(() => {
     if (!isFetchRef) {
       setIsFetchRef(true);
       isReferent();
     }
-  }, [isFetchRef]);
+  }, [isFetchRef, isReferent]);
 
   React.useEffect(() => {
     if (settings.length === 0) {
       if (localStorage.getItem("token") !== null) {
-        settings.push("Profile", "Réglages", "Déconnexion");
-        pages.push("Recherche", "Mes Missions", "Historique des Missions");
+        settings.push("Profile", "Demandes d'amis", "Réglages", "Déconnexion");
+        pages.push("Recherche", "Mes Missions", "Historique de participation", "FAQ");
         pagesLink["Recherche"] = "accueil";
         pagesLink["Mes Missions"] = "myMissions";
-        pagesLink["Historique des Missions"] = "history";
+        pagesLink["Historique de participation"] = "history";
+        pagesLink["FAQ"] = "faq";
       } else {
         settings.push("Connexion", "Inscription");
       }
 
     }
-  }, [settings]);
+  }, [settings, pagesLink, pages]);
 
   const handleMenuItemClick = (setting: string) => {
     handleCloseUserMenu();
     switch (setting) {
-      case "Profile":
+      case "Profil":
         navigate("/profile");
         break;
       case "Déconnexion":
@@ -91,6 +98,36 @@ export default function VolunteerSidebar() {
         break;
     }
   };
+
+  React.useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        await fetch(`${config.apiUrl}/notifications/list/Volunteer/personal`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        }).then((response) => {
+          if (response.status === 200) {
+            response.json().then((data) => {
+              const sortedNotifications = data.notifications.sort((a: any, b: any) => {
+                return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+              });
+              setNotifications(sortedNotifications);
+              setCount(1)
+            })
+          }
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    (count === 0) && fetchNotifications();
+    (count === 1) && setTimeout(() => setCount(0), 1000);
+
+  }, [count]);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -136,7 +173,7 @@ export default function VolunteerSidebar() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={() => { console.log("hd"); }}>{page}</MenuItem>
+                <MenuItem key={page} onClick={() => { window.location.href = `/${pagesLink[page]}`; console.log(pagesLink[page]); }}>{page}</MenuItem>
               ))}
             </Menu>
           </Box>
@@ -161,7 +198,9 @@ export default function VolunteerSidebar() {
               </Button>
             ))}
           </Box>
-
+          <Box sx={{ marginRight: "1%" }}>
+            <NotificationBell notifications={notifications} setNotifications={setNotifications} />
+          </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -180,13 +219,16 @@ export default function VolunteerSidebar() {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={() => handleMenuItemClick(setting)} >
-                  <Typography textAlign="center" component={Link} to={setting === "Profile" ? "/profile" : "/"}
+                  <Typography textAlign="center" component={Link} to={setting === "Profil" ? "/profile" : "/"}
                     onClick={() => {
                       handleCloseUserMenu();
                       switch (setting) {
-                        case "Profile":
+                        case "Profil":
                           navigate("/profile");
                           break;
+                        case "Demandes d'amis":
+                            window.location.href = "/friends";
+                            break;
                         case "Réglages":
                           window.location.href = "/settings";
                           break;

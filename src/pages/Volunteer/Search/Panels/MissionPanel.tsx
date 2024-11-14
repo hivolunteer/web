@@ -33,11 +33,11 @@ function MissionPanel(props: {missions: Array<PageMission>}) {
                 missions.filter((page: PageMission) => page.page === actual_page)
                 .map((page: PageMission) => {
                   return (
-                    <div style={{display: 'flex', flexWrap: 'wrap', width: '90%', justifyContent: 'center'}}>
+                    <div style={{display: 'flex', flexWrap: 'wrap', width: '90%', justifyContent: 'flex-start'}}>
                       {
                         page.missions.map((mission: MissionComplete) => {
                           return (
-                            <div className="mission_card" key={mission.id} style={{margin: '25px'}}>
+                            <div className="mission-card" key={mission.id} style={{margin: '25px'}}>
                               <MissionCardHome mission={mission as Mission} isToday={isToday(mission.start_date)} />
                             </div>
                           )

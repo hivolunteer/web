@@ -20,12 +20,17 @@ function MissionsPanel() {
             if (response.status === 200) {
                 response.json().then(async (data) => {
                     console.log("MISSION PANEL DATA: ", data)
-                    const next_missions = data.active.slice(0, 4)
+                    const sortedMissions = data.active.sort(
+                        (a: Mission, b: Mission) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime()
+                    );
+                    const next_missions = sortedMissions.slice(0, 4);
                     setNextMissions(next_missions);
-                    console.log("NEXT MISSIONS: ", nextMissions)
-                    const draft_missions = data.draft.slice(0, 4)
+                    
+                    const sortedDraft = data.draft.sort(
+                        (a: Mission, b: Mission) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime()
+                    );
+                    const draft_missions = sortedDraft.slice(0, 4);
                     setDraftMissions(draft_missions);
-                    console.log("FRIENDS MISSIONS: ", draftMissions)
                 })
             }
         })

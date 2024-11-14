@@ -1,12 +1,9 @@
-import { Dialog, DialogTitle, TextField, Button, Autocomplete, Checkbox, Chip } from "@mui/material";
+import { Dialog, TextField, Button, Autocomplete, Checkbox, Chip } from "@mui/material";
 import { useEffect, useState } from "react";
 
 import { Modal, Skill } from "../Interfaces"; 
 import { DatePicker, TimePicker} from "@mui/x-date-pickers";
 import config from "../../../../config";
-import React from "react";
-import useWindowSize from "../../../../functions/useWindowSize";
-
 
 const FilterModal = (props: {modalProps: Modal}) => {
 
@@ -87,6 +84,7 @@ const FilterModal = (props: {modalProps: Modal}) => {
             allow_minors: allowMinors,
             duration: minutes
         }
+        console.log(dates)
         if (checkDefaultValue())
             search = false
         fetch(`${config.apiUrl}/search/missions`, {
@@ -133,12 +131,12 @@ const FilterModal = (props: {modalProps: Modal}) => {
             }
         }}
         >
-            <div>
+            <div style={{margin: "10px"}}>
                 {/* Second Category : Préférences de la mission */}
-                <div style={{display: 'flex', justifyContent: 'center'}}>
-                    <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around'}}>
+                <div style={{display: 'flex', justifyContent: 'center', width: "100%"}}>
+                    <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around', width: "100%"}}>
                         <div style={{flex: 1, display: 'flex', flexDirection: 'column'}}>
-                            <h3> Préférences </h3>
+                            <h3 style={{marginLeft:"3%"}}> Préférences </h3>
                             <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
                                 <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                                     <Checkbox
@@ -212,16 +210,17 @@ const FilterModal = (props: {modalProps: Modal}) => {
                     </div>
                 </div>
                 {/* Third Category : Dates du début et de la fin de la mission */}
-                <div style={{display: 'flex', flexDirection: 'column'}}>
+                <div style={{display: 'flex', flexDirection: 'column', width:"100%"}}>
                     <div style={{display: 'flex', flexDirection: 'column'}}>
-                        <div style={{width: '90%', display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center'}}>
+                        <div style={{width: '95%', display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center',  margin: "0 2.5%"}}>
                             <h3> Dates du début et de la fin de la mission </h3>
-                            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                            <div style={{display: 'flex', alignItems: 'center', justifyContent: "center"}}>
                                 <DatePicker
                                     label="Début"
                                     onChange={(newDate) => setDates([newDate, dates[1]])}
                                     views={['year', 'month', 'day']}
                                     defaultValue={null}
+                                    sx={{width: "50%"}}
                                 />
                                 <div style={{width: '4%'}} />
                                 <DatePicker
@@ -230,10 +229,11 @@ const FilterModal = (props: {modalProps: Modal}) => {
                                     views={['year', 'month', 'day']}
                                     value={dates[1]}
                                     defaultValue={null}
+                                    sx={{width: "50%"}}
                                 />
                             </div>
                         </div>
-                        <div style={{width: '90%', textAlign: 'center'}}>
+                        <div style={{width: '95%', textAlign: 'center'}}>
                             <h3> Séléctionner la durée maximale de la mission </h3>
                             <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                                 <TimePicker

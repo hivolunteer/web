@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import Home from "./pages/NonConnected/Home/Home";
 import VolunteerSidebar from "./sidebar/VolunteerSidebar";
 import AssociationSidebar from "./sidebar/AssociationSidebar";
+import CompanySidebar from "./sidebar/CompanySidebar";
 import CompanyRouter from "./routers/NoConnectCompanyRouter";
 import CompanyRouterConnected from "./routers/ConnectCompanyRouter";
 
@@ -38,15 +39,21 @@ function NoConnectRouter() {
 function ConnectRouter() {
   return (
     <Router>
-      {localStorage.getItem("role") === "volunteer" ? <VolunteerSidebar /> : <AssociationSidebar />}
+        { localStorage.getItem("role") === "company" ? (
+            <CompanySidebar />
+        ) : localStorage.getItem("role") === "volunteer" ? (
+            <VolunteerSidebar />
+        ) : (
+            <AssociationSidebar />
+        )}
       <Routes>
-      {localStorage.getItem("role") === "volunteer" ? (
-  <Route path="/*" element={<VolunteerRouterConnected />} />
-) : localStorage.getItem("role") === "company" ? (
-  <Route path="/*" element={<CompanyRouterConnected />} />
-) : (
-  <Route path="/*" element={<AssociationRouterConnected />} />
-)}
+        {localStorage.getItem("role") === "volunteer" ? (
+            <Route path="/*" element={<VolunteerRouterConnected />} />
+          ) : localStorage.getItem("role") === "company" ? (
+            <Route path="/*" element={<CompanyRouterConnected />} />
+          ) : (
+            <Route path="/*" element={<AssociationRouterConnected />} />
+        )}
       </Routes>
     </Router>
   );
@@ -54,7 +61,7 @@ function ConnectRouter() {
 
 function App() {
 
-  const theme = useTheme();
+  useTheme();
 
   useEffect(() => {
     localStorage.getItem("token") ? document.body.style.backgroundColor = "#f5f5f5" : document.body.style.backgroundColor = "#DFDFDF"

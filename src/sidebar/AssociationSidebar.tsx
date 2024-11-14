@@ -18,20 +18,20 @@ import "./Sidebar.scss";
 import logoWhite from "../images/logo/submark_white.png";
 import logoImage from "../images/logo/submark.png";
 import config from "../config";
-
+import NotificationBell from "../components/Notifications/NotificationBell";
 
 const pages: string[] = [];
 const settings: string[] = [];
 const pagesLink: { [pageName: string]: string } = {};
 
 if (localStorage.getItem("token") !== null) {
-  settings.push("Profile", "Réglages", "Déconnexion");
-  pages.push("Accueil", "Missions", "Calendrier", "Référents", "Affiliations");
-  pagesLink["Accueil"] = "accueil";
-  pagesLink["Missions"] = "";
+  settings.push("Profil", "Réglages", "Déconnexion");
+  pages.push("Mes missions", "Calendrier", "Référents", "Affiliations", "FAQ");
+  pagesLink["Mes missions"] = "accueil";
   pagesLink["Calendrier"] = "calendrier";
   pagesLink["Référents"] = "referent";
-  pagesLink["Affiliations"] = localStorage.getItem("role") === "company" ? "affiliatedAssociations" : "affiliatedCompanies";
+  pagesLink["Affiliations"] = "affiliatedCompanies";
+  pagesLink["FAQ"] = "faq";
 } else {
   settings.push("Connexion", "Inscription");
 }
@@ -42,15 +42,17 @@ export default function AssociationSidebar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
+  const [notifications, setNotifications] = React.useState<any[]>([]);
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => { setAnchorElNav(event.currentTarget); };
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => { setAnchorElUser(event.currentTarget); };
   const handleCloseNavMenu = () => { setAnchorElNav(null); };
   const handleCloseUserMenu = () => { setAnchorElUser(null); };
+  const [count, setCount] = React.useState(0);
 
   const handleMenuItemClick = (setting: string) => {
     handleCloseUserMenu();
     switch (setting) {
-      case "Profile":
+      case "Profil":
         navigate("/profile");
         break;
       case "Déconnexion":
@@ -60,6 +62,36 @@ export default function AssociationSidebar() {
         break;
     }
   };
+
+  React.useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        await fetch(`${config.apiUrl}/notifications/list/Association/personal`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        }).then((response) => {
+          if (response.status === 200) {
+            response.json().then((data) => {
+              const sortedNotifications = data.notifications.sort((a: any, b: any) => {
+                return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+              });
+              setNotifications(sortedNotifications);
+              setCount(1)
+            })
+          }
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    (count === 0) && fetchNotifications();
+    (count === 1) && setTimeout(() => setCount(0), 1000);
+
+  }, [count]);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -130,8 +162,12 @@ export default function AssociationSidebar() {
               </Button>
             ))}
           </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
+          {localStorage.getItem("token") ?
+          <Box sx={{ marginRight: "1%" }}>
+            <NotificationBell notifications={notifications} setNotifications={setNotifications} />
+          </Box>
+          : null }
+          <Box sx={{ flexGrow: 0, alignContent: 'center' }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="User" src={logoImage} />
@@ -149,14 +185,14 @@ export default function AssociationSidebar() {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={() => handleMenuItemClick(setting)} >
-                  <Typography textAlign="center" component={Link} to={setting === "Profile" ? "/profile" : "/"}
+                  <Typography textAlign="center" component={Link} to={setting === "Profil" ? "/profile" : "/"}
                     onClick={() => {
                       handleCloseUserMenu();
                       switch (setting) {
                         case "Créer une mission":
                           window.location.href = "/mission/create";
                           break;
-                        case "Profile":
+                        case "Profil":
                           navigate("/profile");
                           break;
                         case "Réglages":
@@ -168,7 +204,8 @@ export default function AssociationSidebar() {
                           window.location.reload();
                           window.location.href = "/";
                           break;
-                        case "Connexion" || "Inscription":
+                        case "Connexion":
+                        case "Inscription":
                           window.location.href = "/auth";
                           break;
                         default:

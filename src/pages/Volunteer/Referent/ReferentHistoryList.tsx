@@ -8,6 +8,7 @@ function ReferentHistoryList( {is_active} : {is_active: boolean}) {
     const [missions, setMissions] = useState([]);
 
     useEffect(() => {
+        console.log(is_active)
         fetch(`${config.apiUrl}/referent/volunteer/mission/${is_active ? 'active' : 'passed'}`, {
             method: 'GET',
             headers: {
@@ -17,7 +18,11 @@ function ReferentHistoryList( {is_active} : {is_active: boolean}) {
         }).then((response) => {
             if (response.status === 200) {
                 response.json().then((data) => {
-                    setMissions(data)
+                    const sortedMissions = data.sort(
+                        (a: { start_date: Date }, b: { start_date: Date }) => 
+                            new Date(b.start_date).getTime() - new Date(a.start_date).getTime()
+                    );
+                    setMissions(sortedMissions)
                 })
             }
         }
