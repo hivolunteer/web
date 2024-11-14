@@ -35,6 +35,7 @@ function ConnectAssociationRouter() {
             <Route path="/referent" element={<ReferentPage />} />
             <Route path="/affiliatedCompanies" element={<AffiliatedCompanies />} />
             <Route path="/faq" element={< FAQ />} />
+            <Route path="manage/:id" element={<ManageMission />} />
             <Route path="*" element={<h1> Error 404 Asso </h1>} />
         </Routes>
     )

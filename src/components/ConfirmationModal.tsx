@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import "./ConfirmationModal.scss"
 import { RiCloseLine } from "react-icons/ri";
 

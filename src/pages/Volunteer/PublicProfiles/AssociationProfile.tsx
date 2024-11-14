@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Card, CardContent, Typography, CardMedia } from '@mui/material';
+import { Card, CardContent, Typography, CardMedia, Grid, Paper } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import config from '../../../config';
 import './AssociationProfile.scss';
 import { useParams, Link } from 'react-router-dom';
@@ -30,6 +31,16 @@ interface AssociationProfileData {
   missions: Mission[];
   nb_missions: number;
 }
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(2),
+  color: theme.palette.text.secondary,
+  ...theme.applyStyles('dark', {
+    backgroundColor: '#1A2027',
+  }),
+}));
 
 function PublicProfile() {
   const { associationId } = useParams<{ associationId: string }>();
@@ -139,61 +150,64 @@ function PublicProfile() {
         </CardContent>
       </div>
 
-      <div className="background-card">
-        <Card className="stats-card">
-          <CardContent>
-            <h2>Statistiques</h2>
-            <div className="stat-item">
-              <h3>Bee score:</h3>
-              <p>{profileData?.association?.bee}</p>
+      <Grid container spacing={3} sx={{ padding: '2em' }}>
+        <Grid item xs={12} sm={6}>
+          <Item style={{ height: '100%' }}>
+            <h2 style={{ color: 'black', fontSize: '1.5rem' }}>Statistiques</h2>
+            <div style={{ marginLeft: '1.3em', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <p className="association-profile-stats">
+                Note : {profileData?.association?.rating} ⭐
+              </p>
+              <p className="association-profile-stats">
+                Score Bee : {profileData?.association?.bee} 🐝
+              </p>
+              <p className="association-profile-stats">
+                Nombre de missions proposées : {profileData?.nb_missions}
+              </p>
+              <p className="association-profile-stats">
+                Nombre de bénévoles qui vous suivent : {profileData?.nb_followers}
+              </p>
+              <p className="association-profile-stats">
+                Nombre total d'heures de bénévolat : {profileData?.association?.nb_hours} heures
+              </p>
             </div>
-            <div className="stat-item">
-              <h3>Nombre de missions proposées:</h3>
-              <p>{profileData?.nb_missions}</p>
-            </div>
-            <div className="stat-item">
-              <h3>Nombre de bénévoles qui vous suivent:</h3>
-              <p>{profileData?.nb_followers}</p>
-            </div>
-            <div className="stat-item">
-              <h3>Nombre total d'heures de bénévolat:</h3>
-              <p>{profileData?.association?.nb_hours} heures</p>
-            </div>
-          </CardContent>
-        </Card>
+          </Item>
+        </Grid>
 
-        <Card className="missions-card">
-          <CardContent>
-            <h2>5 dernières missions proposées</h2>
-            {profileData?.missions && profileData.missions.length > 0 ? (
-              profileData.missions.slice(-5).reverse().map(mission => (
-                <Link to={`/mission/${mission.id}`} key={mission.id} className="mission-link">
-                  <Card className="mission-item">
-                    <CardMedia
-                      component="img"
-                      image={mission.picture}
-                      alt={mission.title}
-                      className="mission-image"
-                    />
-                    <div className="mission-details">
-                      <Typography variant="h6" component="h2" color="text.primary" className="mission-title" style={{ textAlign: 'left' }}>
-                        {mission.title}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" className="mission-date">
-                        Du {new Date(mission.start_date).toLocaleDateString()} au {new Date(mission.end_date).toLocaleDateString()}
-                      </Typography>
-                    </div>
-                  </Card>
-                </Link>
-              ))
-            ) : (
-              <div className="no-missions-container">
-                <p>Aucune mission proposée pour le moment.</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+        <Grid item xs={12} sm={6}>
+          <Item>
+            <h2 style={{ color: 'black', fontSize: '1.5rem' }}>Dernières missions</h2>
+            <div style={{ display: 'flex', flexDirection: 'column', paddingLeft: '2em', paddingRight: '2em' }}>
+              {profileData?.missions && profileData.missions.length > 0 ? (
+                profileData.missions.slice(-5).reverse().map(mission => (
+                  <Link to={`/mission/${mission.id}`} key={mission.id} className="mission-link" style={{ textDecoration: 'none' }}>
+                    <Card className="mission-item">
+                      <CardMedia
+                        component="img"
+                        image={mission.picture}
+                        alt={mission.title}
+                        className="mission-image"
+                      />
+                      <div className="mission-details">
+                        <Typography variant="h6" component="h2" color="text.primary" className="mission-title" style={{ textAlign: 'left' }}>
+                          {mission.title}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" className="mission-date">
+                          Du {new Date(mission.start_date).toLocaleDateString()} au {new Date(mission.end_date).toLocaleDateString()}
+                        </Typography>
+                      </div>
+                    </Card>
+                  </Link>
+                ))
+              ) : (
+                <div className="no-missions-container">
+                  <p>Aucune mission proposée pour le moment.</p>
+                </div>
+              )}
+            </div>
+          </Item>
+        </Grid>
+      </Grid>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { Dialog, DialogTitle, Button, Checkbox, Rating } from "@mui/material";
+import { Dialog, Button, Checkbox, Rating } from "@mui/material";
 import React, { useState } from "react";
 
 import { ModalAsso } from "../Interfaces"; 

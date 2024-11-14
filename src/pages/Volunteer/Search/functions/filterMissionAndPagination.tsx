@@ -1,4 +1,3 @@
-import { Mission } from "../../../../interfaces";
 import { FilterMissionProps, MissionComplete, PageMission } from "../Interfaces";
 
 function filterMissionAndPagination(props: FilterMissionProps ) {

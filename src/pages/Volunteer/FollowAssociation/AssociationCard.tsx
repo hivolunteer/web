@@ -1,5 +1,5 @@
 import Card from 'react-bootstrap/Card';
-import { CardContent, CardMedia } from '@mui/material';
+import { CardMedia } from '@mui/material';
 import { useEffect, useState } from 'react';
 import config from '../../../config';
 import FollowButton from '../Search/Cards/FollowButton';
@@ -26,7 +26,7 @@ function AssociationCard(props: {id: number}) {
                 })
             }
         })
-    }, [])
+    }, [props.id])
 
     const handleFollow = async () => {
         try {
