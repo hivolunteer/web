@@ -6,50 +6,77 @@ import { Mission } from "../../../interfaces";
 import config from "../../../config";
 import TabPanel from "../../../components/TabPanel"
 import MissionPanel from "../../Association/Search/Panels/MissionPanel";
-import { Team } from "../../../interfaces";
+import { Team, Volunteer, Company } from "../../../interfaces";
+import { Button } from "react-bootstrap";
 
 export default function Dashboard() {
-/*
-{
-  "message": "Company Dashboard Retrieved Successfully",
-  "teams": [
-    {
-      "id": 1,
-      "company_id": 1,
-      "name": "vv",
-      "description": null,
-      "affiliation_token": null,
-      "bee": 0
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [company, setCompany] = useState<Company | null>(null);
+  const [employees, setEmployees] = useState<Volunteer[]>([]);
+  const [linkedAssociationsNumber, setLinkedAssociationsNumber] = useState(0);
+  const [linkedMissionsNumber, setLinkedMissionsNumber] = useState(0);
+  const token = localStorage.getItem('token');
+  const id = localStorage.getItem('id');
+  const [nb, setnb] = useState(1);
+
+  useEffect(() => {
+    console.log("FETCH DATA BOZO");
+    if (!company) {
+      fetch(`${config.apiUrl}/companies/dashboard`, {
+        method: 'GET',
+        headers: {
+          authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      }).then((response) => {
+        if (response.ok) {
+          response.json().then((body) => {
+            setTeams(body.teams);
+            setEmployees(body.employees);
+            setCompany(body.company);
+            setLinkedAssociationsNumber(body.linked_associations_nb);
+            setLinkedMissionsNumber(body.linked_missions_nb);
+
+            printData();
+          });
+        }
+      });
     }
-  ],
-  "employees": [
-    {
-      "id": 51,
-      "first_name": "Rudeus",
-      "last_name": "Greyrat",
-      "bee": 0,
-      "phone": "azbbz",
-      "rating": "0",
-      "profile_picture": "",
-      "team_id": 1
+  }, [company]);
+
+  function printData(index?: Number) {
+    if (index) {
+      console.log("INDEX: " + index);
+    } else {
+      console.log("NULL");
     }
-  ],
-  "company": {
-    "name": "evil company",
-    "email": "bozo@gmail.com",
-    "description": null,
-    "phone": null,
-    "profile_picture": null,
-    "is_premium": false,
-    "is_verified": false
-  },
-  "linked_associations_nb": 0,
-  "linked_missions_nb": 0
-}
-*/
+    console.log(`teams : ${JSON.stringify(teams)}`);
+    console.log(`employees : ${JSON.stringify(employees)}`);
+    console.log(`company : ${JSON.stringify(company)}`);
+    console.log(`linked asso : ${linkedAssociationsNumber}`);
+    console.log(`linked missi : ${linkedMissionsNumber}`);
+  }
+
+  function Placeholder() {
+    return (
+      <div>
+        <h1>placeholder</h1>
+      </div>
+    );
+  }
+
+  function Data() {
+    return (
+      <div>
+        <h1>{company!.name}</h1>
+      </div>
+    );
+  }
+
   return (
     <div className="page-container">
-      <h1>orepizjo</h1>
+      {(company == null) ? <Placeholder/> : <Data/>}
+      <Button onClick={() => { printData(nb); setnb(nb + 1); }}>DISP DATA</Button>
     </div>
   );
 }
