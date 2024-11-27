@@ -16,13 +16,7 @@ import { Box } from "@mui/material";
 import Paper from '@mui/material/Paper';
 
 import config from "../../../config";
-
-interface Team {
-    id: number;
-    name: string;
-    company_id: number;
-    description: string;
-  }
+import { Team } from "../../../interfaces";
 
 interface m_Teams {
   team: Team;

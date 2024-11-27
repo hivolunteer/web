@@ -92,3 +92,11 @@ export interface Company {
   siren: string,
   profile_picture: string
 }
+
+export interface Team {
+  id: number;
+  name: string;
+  company_id: number;
+  description: string;
+  affiliation_token: string;
+}
