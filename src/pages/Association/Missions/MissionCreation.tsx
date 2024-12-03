@@ -418,6 +418,7 @@ export default function MissionCreation() {
                       <DateTimePicker
                         label="Date et heure de début de la mission"
                         format="DD/MM/YYYY HH:mm"
+                        minDateTime={moment.utc().local()}
                         defaultValue={moment.utc().local()}
                         value={dateRange.start ? moment(dateRange.start) : null}
                         slotProps={{ textField: { fullWidth: true } }}

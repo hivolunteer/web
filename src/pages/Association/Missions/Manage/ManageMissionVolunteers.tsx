@@ -410,10 +410,6 @@ function ManageMissionVolunteers(props: ManageMissionVolunteersProps) {
                         }
                     </div>
                 </AccordionDetails>
-                <AccordionActions>
-                    <Button size="small" color="warning" onClick={() => window.location.href = `/${mission_id}/edit`}>Modifier</Button>
-                    <Button size="small" color="info" onClick={() => window.location.href = `/mission/${mission_id}`}>Visualiser</Button>
-                </AccordionActions>
             </Accordion>
         </div>
         {response.message && (

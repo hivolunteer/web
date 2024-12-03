@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Home.scss';
 import HomeConcept from './HomeConcept';
 import HomeUsers from './HomeUsers';
@@ -11,12 +11,12 @@ import CompanySidebar from '../../../sidebar/CompanySidebar';
 function Home() {
     return (
         <div>
-            {localStorage.getItem("role") === "volunteer" ? (
-                <VolunteerSidebar />
-              ) : localStorage.getItem("role") === "association" ? (
-                <AssociationSidebar />
-              ) : (
+            { localStorage.getItem("role") === "company" ? (
                 <CompanySidebar />
+            ) : localStorage.getItem("role") === "volunteer" ? (
+                <VolunteerSidebar />
+            ) : (
+                <AssociationSidebar />
             )}
 
             <HomeConcept />

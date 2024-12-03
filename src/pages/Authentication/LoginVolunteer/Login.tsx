@@ -268,7 +268,7 @@ function LoginVolunteer() {
             >
               Connexion
             </Button>
-            <Grid container justifyContent="center" sx={{ mb: 1 }}>
+            <Grid container justifyContent="center" sx={{ mb: 4 }}>
               <Grid item>
                 <Link href="/volunteers/register" variant="body2">
                   Vous n'avez pas de compte ? Inscrivez-vous

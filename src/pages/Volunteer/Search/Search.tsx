@@ -129,6 +129,9 @@ function Search(props: any) {
       volunteer_missions.map((mission: Mission) => {
         mission_list.push(mission)
       });
+      mission_list.sort(
+        (a: Mission, b: Mission) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime()
+    );
       setMissionList(mission_list)
      })
   }, [])

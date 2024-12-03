@@ -46,6 +46,9 @@ function MissionsPanel() {
             }
         }));
 
+        new_missions.sort(
+            (a: { start_date: Date }, b: { start_date: Date }) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime()
+        );
         return new_missions.slice(0, 4);
     }
 
@@ -59,19 +62,37 @@ function MissionsPanel() {
         }).then((response) => {
             if (response.status === 200) {
                 response.json().then(async (data) => {
-                    console.log("MISSION PANEL DATA: ", data)
-                    const next_missions = data.next_missions
+                    const next_missions = data?.next_missions?.length ? data.next_missions.sort(
+                        (a: { start_date: Date }, b: { start_date: Date }) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime()
+                    ) : [];
                     setNextMissions(await getMission(next_missions));
-                    console.log("NEXT MISSIONS: ", nextMissions)
-                    const friends_missions = data.friends_missions
+
+                    const friends_missions = data?.friends_missions?.length ? data.friends_missions.sort(
+                        (a: { start_date: Date }, b: { start_date: Date }) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime()
+                    ) : [];
                     setFriendsMissions(await getMission(friends_missions));
-                    console.log("FRIENDS MISSIONS: ", friendsMissions)
-                    const following_missions = data.associations_missions
+
+                    const following_missions = data?.associations_missions?.length ? data.associations_missions.sort(
+                        (a: { start_date: Date }, b: { start_date: Date }) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime()
+                    ) : [];
                     setFollowingMissions(await getMission(following_missions));
                 })
             }
         })
     }, []);
+
+    useEffect(() => {
+        console.log("UPDATED NEXT MISSIONS: ", nextMissions);
+    }, [nextMissions]);
+
+    useEffect(() => {
+        console.log("UPDATED FRIENDS MISSIONS: ", friendsMissions);
+    }, [friendsMissions]);
+
+    useEffect(() => {
+        console.log("UPDATED FOLLOWING MISSIONS: ", followingMissions);
+    }, [followingMissions]);
+
 
     return (
         <div className="component-missions-panel-container">

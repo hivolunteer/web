@@ -66,8 +66,9 @@
 }
 
 .profile-btn-div {
-  margin: 0 40%;
   display: flex;
+  justify-content: center;
+  align-items: initial;
 }
 
 .profile-btn-div .edit {
@@ -97,19 +98,6 @@
   height: 3.0625rem;
   flex-shrink: 0; 
   text-align: left;
-}
-
-.profile-pic-btn {
-  padding: 0.5rem 1rem;
-  align-items: center;
-  margin: 0.5rem;
-  border: none;
-  border-radius: 20px;
-  background-color: #67a191;
-}
-
-.profile-pic-btn:hover {
-  background-color: #5b8971;
 }
 
 .profile-pic-btn-color-blind {

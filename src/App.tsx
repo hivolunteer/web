@@ -13,14 +13,13 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { ThemeProvider, useTheme } from "@mui/material";
 import { myTheme } from "./theme/theme";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import Home from "./pages/NonConnected/Home/Home";
 import VolunteerSidebar from "./sidebar/VolunteerSidebar";
 import AssociationSidebar from "./sidebar/AssociationSidebar";
 import CompanySidebar from "./sidebar/CompanySidebar";
 import CompanyRouter from "./routers/NoConnectCompanyRouter";
 import CompanyRouterConnected from "./routers/ConnectCompanyRouter";
-import CompanySidebar from "./sidebar/CompanySidebar";
 
 function NoConnectRouter() {
   return (
@@ -40,13 +39,13 @@ function NoConnectRouter() {
 function ConnectRouter() {
   return (
     <Router>
-      {localStorage.getItem("role") === "volunteer" ? (
-          <VolunteerSidebar />
-        ) : localStorage.getItem("role") === "association" ? (
-          <AssociationSidebar />
+        { localStorage.getItem("role") === "company" ? (
+            <CompanySidebar />
+        ) : localStorage.getItem("role") === "volunteer" ? (
+            <VolunteerSidebar />
         ) : (
-          <CompanySidebar />
-      )}
+            <AssociationSidebar />
+        )}
       <Routes>
         {localStorage.getItem("role") === "volunteer" ? (
             <Route path="/*" element={<VolunteerRouterConnected />} />
@@ -62,7 +61,7 @@ function ConnectRouter() {
 
 function App() {
 
-  const theme = useTheme();
+  useTheme();
 
   useEffect(() => {
     localStorage.getItem("token") ? document.body.style.backgroundColor = "#f5f5f5" : document.body.style.backgroundColor = "#DFDFDF"

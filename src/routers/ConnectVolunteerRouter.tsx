@@ -43,7 +43,7 @@ function ConnectVolunteerRouter() {
             <Route path={"/settings"} element={<Settings />} />
             <Route path="/settings/modify_password" element={<ChangePassword />} />
             <Route path="/settings/referents" element={<AssociationReferent />} />
-            <Route path="/manage/:id" element={<ManageMission />} />
+            <Route path="/mission/:id" element={<ManageMission />} />
             <Route path="/settings/profile_information" element={<ProfileInformationModal />} />
             <Route path="/employee/teamrank" element={<TeamRanking/>} />
             <Route path="/employee/rank" element={<EmployeeRanking/>} />

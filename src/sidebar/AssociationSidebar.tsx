@@ -17,9 +17,8 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Sidebar.scss";
 import logoWhite from "../images/logo/submark_white.png";
 import logoImage from "../images/logo/submark.png";
-import NotificationBell from '../components/Notifications/NotificationBell';
 import config from "../config";
-import handleDeleteNotification from './DeleteNotificationApi';
+import NotificationBell from "../components/Notifications/NotificationBell";
 
 const pages: string[] = [];
 const settings: string[] = [];
@@ -27,9 +26,8 @@ const pagesLink: { [pageName: string]: string } = {};
 
 if (localStorage.getItem("token") !== null) {
   settings.push("Profile", "Réglages", "Déconnexion");
-  pages.push("Accueil", "Missions", "Calendrier", "Référents", "Affiliations");
-  pagesLink["Accueil"] = "accueil";
-  pagesLink["Missions"] = "";
+  pages.push("Mes missions", "Calendrier", "Référents", "Affiliations");
+  pagesLink["Mes missions"] = "accueil";
   pagesLink["Calendrier"] = "calendrier";
   pagesLink["Référents"] = "referent";
   pagesLink["Affiliations"] ="affiliatedCompanies";
@@ -43,11 +41,12 @@ export default function AssociationSidebar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
-  const [notifications, setNotifications] = React.useState([]);
+  const [notifications, setNotifications] = React.useState<any[]>([]);
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => { setAnchorElNav(event.currentTarget); };
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => { setAnchorElUser(event.currentTarget); };
   const handleCloseNavMenu = () => { setAnchorElNav(null); };
   const handleCloseUserMenu = () => { setAnchorElUser(null); };
+  const [count, setCount] = React.useState(0);
 
   const handleMenuItemClick = (setting: string) => {
     handleCloseUserMenu();
@@ -79,6 +78,7 @@ export default function AssociationSidebar() {
                 return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
               });
               setNotifications(sortedNotifications);
+              setCount(1)
             })
           }
         });
@@ -86,8 +86,11 @@ export default function AssociationSidebar() {
         console.error(error);
       }
     };
-    fetchNotifications();
-  }, []);
+
+    (count === 0) && fetchNotifications();
+    (count === 1) && setTimeout(() => setCount(0), 1000);
+
+  }, [count]);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -160,7 +163,7 @@ export default function AssociationSidebar() {
           </Box>
           {localStorage.getItem("token") ?
           <Box sx={{ marginRight: "1%" }}>
-            <NotificationBell notifications={notifications} onDeleteNotification={handleDeleteNotification} />
+            <NotificationBell notifications={notifications} setNotifications={setNotifications} />
           </Box>
           : null }
           <Box sx={{ flexGrow: 0, alignContent: 'center' }}>

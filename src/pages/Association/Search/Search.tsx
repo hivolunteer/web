@@ -58,6 +58,15 @@ function Search(props: any) {
         const draft: Mission[] = Array.isArray(data.draft) ? data.draft : [];
         const active: Mission[] = Array.isArray(data.active) ? data.active : [];
         const passed: Mission[] = Array.isArray(data.passed) ? data.passed : [];
+        draft.sort(
+          (a: { start_date: Date }, b: { start_date: Date }) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime()
+        );
+        active.sort(
+          (a: { start_date: Date }, b: { start_date: Date }) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime()
+        );
+        passed.sort(
+          (a: { start_date: Date }, b: { start_date: Date }) => new Date(b.start_date).getTime() - new Date(a.start_date).getTime()
+        );
 
         setDraftMissions(draft);
         setPublishedMissions(active);

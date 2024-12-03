@@ -19,7 +19,19 @@ import logoWhite from "../images/logo/submark_white.png";
 import logoImage from "../images/logo/submark.png";
 import config from "../config";
 import NotificationBell from '../components/Notifications/NotificationBell';
-import handleDeleteNotification from './DeleteNotificationApi';
+const pages: string[] = [];
+const settings: string[] = [];
+const pagesLink: { [pageName: string]: string } = {};
+
+if (localStorage.getItem("token") !== null) {
+  settings.push("Profile", "Réglages", "Déconnexion");
+  pages.push("Accueil", "Équipes", "Affiliations");
+  pagesLink["Accueil"] = "accueil";
+  pagesLink["Équipes"] = "teams";
+  pagesLink["Affiliations"] = "affiliatedAssociations";
+} else {
+  settings.push("Connexion", "Inscription");
+}
 
 export default function CompanySidebar() {
     let color_blind = localStorage.getItem("color_blind") === "true";
@@ -30,25 +42,8 @@ export default function CompanySidebar() {
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => { setAnchorElUser(event.currentTarget); };
     const handleCloseNavMenu = () => { setAnchorElNav(null); };
     const handleCloseUserMenu = () => { setAnchorElUser(null); };
-    const [pages, setPages] = React.useState<string[]>([]);
-    const [settings, setsettings] = React.useState<string[]>([]);
-    const [pagesLink, setPagesLink] = React.useState<{ [pageName: string]: string }>({})
-    const [notifications, setNotifications] = React.useState([]);
-
-    React.useEffect(() => {
-        if (settings.length === 0) {
-            if (localStorage.getItem("token") !== null) {
-                settings.push("Profile", "Réglages", "Déconnexion");
-                pages.push("Recherche", "Missions", "Affiliations");
-                pagesLink["Recherche"] = "accueil";
-                pagesLink["Missions"] = "missions";
-                pagesLink["Affiliations"] = localStorage.getItem("role") === "company" ? "affiliatedAssociations" : "affiliatedCompanies";
-            } else {
-                settings.push("Connexion", "Inscription");
-            }
-
-        }
-    }, [settings]);
+    const [notifications, setNotifications] = React.useState<any[]>([]);
+    const [count, setCount] = React.useState<number>(0);
 
     const handleMenuItemClick = (setting: string) => {
         handleCloseUserMenu();
@@ -67,7 +62,7 @@ export default function CompanySidebar() {
     React.useEffect(() => {
         const fetchNotifications = async () => {
             try {
-                await fetch(`${config.apiUrl}/notifications/list/Company/personal`, {
+                await fetch(`${config.apiUrl}/notifications/list/Association/personal`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -80,6 +75,7 @@ export default function CompanySidebar() {
                                 return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
                             });
                             setNotifications(sortedNotifications);
+                            setCount(1)
                         })
                     }
                 });
@@ -87,8 +83,11 @@ export default function CompanySidebar() {
                 console.error(error);
             }
         };
-        fetchNotifications();
-    }, []);
+
+        (count === 0) && fetchNotifications();
+        (count === 1) && setTimeout(() => setCount(0), 300000);
+
+    }, [count]);
 
     const handleLogout = () => {
         localStorage.clear();
@@ -160,7 +159,7 @@ export default function CompanySidebar() {
                         ))}
                     </Box>
                     <Box sx={{ marginRight: "1%" }}>
-                        <NotificationBell notifications={notifications} onDeleteNotification={handleDeleteNotification} />
+                        <NotificationBell notifications={notifications} setNotifications={setNotifications}/>
                     </Box>
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open settings">

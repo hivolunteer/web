@@ -7,27 +7,21 @@ import "./Profile.scss";
 import { useNavigate } from "react-router-dom";
 import { Mission } from "../../../interfaces";
 
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Modal from '@mui/material/Modal';
-
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 
 import EditPasswordModal from "./EditPasswordModal";
-import { CardActions, CardContent } from "@mui/material";
+import CardWidgetsRevenueReport from "./statsComponent";
+import EmployeeRanking from "./cardStats";
+import { textAlign } from "@mui/system";
+
+const submark  = require("../../../images/logo/submark.png")
 
 type newProfile = {
   name: string;
   description: string;
   email: string;
   phone: string;
-  profile_picture: string;
+  profile_picture: string | null | undefined
 };
 
 type VProfile = {
@@ -69,7 +63,7 @@ export default function ProfilePage(props: any) {
     const [description, setDescription] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [phone, setPhone] = useState<string>("");
-    const [profilePicture, setProfilePicture] = useState<string>("");
+    const [profilePicture, setProfilePicture] = useState<string | null>();
     const [bee, setBee] = useState<Float32Array>();
     const [rating, setRating] = useState<number>(0);
     const [hours, setHours] = useState<number>(0);
@@ -89,8 +83,7 @@ export default function ProfilePage(props: any) {
     const handleOpenParticipant = () => setOpenParticipant(true);
     const handleCloseParticipant = () => setOpenParticipant(false);
 
-    const image =
-        "https://urgo.fr/wp-content/uploads/2022/03/Logo-Reforestaction.png";
+    const image = "https://urgo.fr/wp-content/uploads/2022/03/Logo-Reforestaction.png";
         
     const navigate = useNavigate();
 
@@ -217,8 +210,9 @@ export default function ProfilePage(props: any) {
             const startTime = new Date(mission.start_date) 
             const endTime = new Date(mission.end_date) 
 
-            const hours = endTime.getHours() - startTime.getHours();
-            const minutes = endTime.getMinutes() - startTime.getMinutes();
+            let days = endTime.getDay() - startTime.getDay();
+            let hours = (endTime.getHours() + 24 * days) - startTime.getHours();
+            let minutes = Math.abs(endTime.getMinutes() - startTime.getMinutes());
             justHours += hours;
             justMinutes += minutes
           })
@@ -247,7 +241,6 @@ export default function ProfilePage(props: any) {
                 .then((response) => {
                     if (response.status === 200) {
                         response.json().then((data) => {
-                          setProfilePicture(data.association.profile_picture);
                             setName(data.association.name);
                             setDescription(data.association.description);
                             setEmail(data.association.email);
@@ -284,11 +277,6 @@ export default function ProfilePage(props: any) {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
   }
-
-  /* function validatePhone(phone: string): boolean {
-    const re = /^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/;
-    return re.test(phone);
-  } */
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files ? event.target.files[0] : null;
@@ -329,16 +317,11 @@ export default function ProfilePage(props: any) {
       console.error("Invalid email");
       return;
     }
-    // if (!validatePhone(phone)) {
-    //   console.error('Invalid phone number');
-    //   return;
-    // }
-    console.log(name, email, phone, profilePicture);
     let profile: newProfile = {
       name: name,
       email: email,
       phone: phone,
-      profile_picture: profilePicture,
+      profile_picture: (profilePicture == null) ? null : profilePicture,
       description: ""
     };
 
@@ -368,8 +351,8 @@ export default function ProfilePage(props: any) {
           textAlign: "center",
           padding: "10px",
         }}>
-          <img src={image} alt="Logo de profil" />
-          <h1>Association: {name} </h1>
+          <img src={(profilePicture !== null) ? profilePicture : submark } alt="Logo de profil"  style={{width: "auto", height: "200px"}}/>
+          <h1>{name} </h1>
           <h2 className="header-rating"> {rating} / 5 </h2>
         </div>
 
@@ -378,6 +361,7 @@ export default function ProfilePage(props: any) {
           <h2>
             Bénévoles
           </h2>
+          <EmployeeRanking nb_followers={followers} nb_participation={totalParticipation} />
           <Grid container alignItems="stretch" style={{
             display: 'flex',
             justifyContent: 'center',
@@ -387,15 +371,15 @@ export default function ProfilePage(props: any) {
               display: 'flex',
               marginBottom: "30px",
             }}>
-              <Card className={"card-component"} style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
+              {/* <Card className={"card-component"} style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center', borderRadius : '1rem'}}>
                 <h1>
                   {followers}
                 </h1>
                 <h4>
-                  {followers ? "Volontaires vous suivent" : "Vous n'avez actuellement aucun follower"}
+                  {followers ? "Bénévoles vous suivent" : "Vous n'avez actuellement aucun follower"}
                 </h4>
               </Card>
-              <Card className={"card-component"} style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
+              <Card className={"card-component"} style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center', borderRadius : '1rem'}}>
                 <CardContent style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center', margin: "-15px"}}>
                 <h1>
                   {totalParticipation}
@@ -445,13 +429,13 @@ export default function ProfilePage(props: any) {
                   </Box>
                 </Modal>
                 </CardActions>
-              </Card>
+              </Card> */}
             </Grid>
           </Grid>
           <h2>
             Historique
           </h2>
-          <Grid container alignItems="stretch" style={{
+          {/*<Grid container alignItems="stretch" style={{
             display: 'flex',
             justifyContent: 'center',
             alignItems: "space-between",
@@ -489,49 +473,50 @@ export default function ProfilePage(props: any) {
                 </h4>
               </Card>
             </Grid>
-          </Grid>
+          </Grid>*/}
+          <div style={{display: "flex", justifyContent: "center"}}>
+            <CardWidgetsRevenueReport />
+          </div>
           <h2>
             Description de l'association
           </h2>
-          <h4 style={{
-            padding: "20px",
-            textAlign: "center",
-          }}>
+          <p style={{ textAlign: 'center'}}>
             {description === null || description === undefined || description === "" ? "Aucune description n'est disponible pour cette association" : description}
-          </h4>
+          </p>
           <h2>
             Contact
           </h2>
           <div style={{
             display: "flex",
             flexDirection: "column",
-            alignItems: "flex-start",
-            justifyContent: "flex-start",
+            alignItems: "center",
+            justifyContent: "center",
             textAlign: "center",
-            padding: "20px",
+            marginBottom: "50px",
+            padding: "10px",
           }}>
             <label>E-mail:</label>
-            <h4>
+            <a href="mailto:">
               {email}
-            </h4>
+            </a>
             <label>Numéro de téléphone:</label>
-            <h4>
+            <a href="tel:">
               {phone}
-            </h4>
+            </a>
           </div>
-        </div><div className="profile-row">
-        </div><div className="profile-btn-div">
-          <button className="profile-pic-btn" onClick={() => { navigate("/settings/profile_information"); }}>
+        </div>
+        <div className="profile-btn-div">
+          <Button sx={{marginInlineEnd: '5rem'}} variant="contained" color="primary" onClick={() => { navigate("/settings/profile_information"); }}>
             Mettre à jour le profile
-          </button>
+          </Button>
           {/* <button className="delete-account-btn" onClick={deleteAccount}>
                   Supprimer le compte
               </button> */}
-          <button className="profile-pic-btn edit" onClick={() => setOpenDialog(true)} style={{ backgroundColor: "#FFD700" }}>
+          <Button variant="contained" color="secondary" onClick={() => setOpenDialog(true)} style={{ backgroundColor: "#FFD700" }}>
             Modifier le mot de passe
-          </button>
+          </Button>
           <EditPasswordModal modalProps={{ open: openDialog, onClose: closeDialog }} />
-        </div>
+        </div>        
       </>
   );
 }

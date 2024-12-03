@@ -18,8 +18,8 @@ import "./Sidebar.scss";
 import logoWhite from "../images/logo/submark_white.png";
 import logoImage from "../images/logo/submark.png";
 import config from "../config";
-import NotificationBell from '../components/Notifications/NotificationBell';
-import handleDeleteNotification from './DeleteNotificationApi';
+import NotificationBell from "../components/Notifications/NotificationBell";
+
 
 export default function VolunteerSidebar() {
   let color_blind = localStorage.getItem("color_blind") === "true";
@@ -34,7 +34,8 @@ export default function VolunteerSidebar() {
   const [settings, setsettings] = React.useState<string[]>([]);
   const [pagesLink, setPagesLink] = React.useState<{ [pageName: string]: string }>({})
   const [isFetchRef, setIsFetchRef] = React.useState(false);
-  const [notifications, setNotifications] = React.useState([]);
+  const [notifications, setNotifications] = React.useState<any[]>([]);
+  const [count, setCount] = React.useState(0);
 
   const isReferent = async () => {
     try {
@@ -69,10 +70,10 @@ export default function VolunteerSidebar() {
     if (settings.length === 0) {
       if (localStorage.getItem("token") !== null) {
         settings.push("Profile", "Réglages", "Déconnexion");
-        pages.push("Recherche", "Mes Missions", "Historique des Missions");
+        pages.push("Recherche", "Mes Missions", "Historique de participation");
         pagesLink["Recherche"] = "accueil";
         pagesLink["Mes Missions"] = "myMissions";
-        pagesLink["Historique des Missions"] = "history";
+        pagesLink["Historique de participation"] = "history";
       } else {
         settings.push("Connexion", "Inscription");
       }
@@ -97,7 +98,7 @@ export default function VolunteerSidebar() {
   React.useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        await fetch(`${config.apiUrl}/notifications/list/Volunteer/personal`, {
+        await fetch(`${config.apiUrl}/notifications/list/Association/personal`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -110,6 +111,7 @@ export default function VolunteerSidebar() {
                 return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
               });
               setNotifications(sortedNotifications);
+              setCount(1)
             })
           }
         });
@@ -117,8 +119,11 @@ export default function VolunteerSidebar() {
         console.error(error);
       }
     };
-    fetchNotifications();
-  }, []);
+
+    (count === 0) && fetchNotifications();
+    (count === 1) && setTimeout(() => setCount(0), 1000);
+
+  }, [count]);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -190,7 +195,7 @@ export default function VolunteerSidebar() {
             ))}
           </Box>
           <Box sx={{ marginRight: "1%" }}>
-            <NotificationBell notifications={notifications} onDeleteNotification={handleDeleteNotification} />
+            <NotificationBell notifications={notifications} setNotifications={setNotifications} />
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
