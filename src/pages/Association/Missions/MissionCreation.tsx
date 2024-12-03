@@ -4,8 +4,8 @@
  * @utility This page is used to create a mission
 */
 
-import {Autocomplete, Box, Button, Chip, Grid, TextField, FormControlLabel, Checkbox, Alert} from "@mui/material";
-import React, {useEffect, useState} from "react";
+import { Autocomplete, Box, Button, Chip, Grid, TextField, FormControlLabel, Checkbox, Alert } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import Lottie from "lottie-react";
@@ -65,6 +65,14 @@ export default function MissionCreation() {
   const [skillDb, setSkillDb] = useState<Array<SkillDatabase>>([]);
   const [response, setResponse] = useState<{ error: boolean; message: string }>({ error: false, message: "" });
 
+  const [formErrors, setFormErrors] = useState<any>({
+    missionName: "",
+    missionDescription: "",
+    missionPracticalInformation: "",
+    missionVolunteersNumber: "",
+    missionDateRanges: "",
+  });
+
   // preparation for adress modal
   const [open, setOpen] = React.useState<boolean>(false);
   const [address, setAddress] = useState<Address>({
@@ -81,7 +89,7 @@ export default function MissionCreation() {
   const [locationId, setLocationId] = useState<number | null>(null);
 
   const [companyModal, setCompanyModal] = useState<boolean>(false);
-  const [selectedCompany, setSelectedCompany] = useState<{ id: number, name: string, profile_picture: string} | null>(null)
+  const [selectedCompany, setSelectedCompany] = useState<{ id: number, name: string, profile_picture: string } | null>(null)
 
   const handleCloseCompanyModal = () => {
     setCompanyModal(false);
@@ -113,7 +121,7 @@ export default function MissionCreation() {
   }
   function InputFileUpload({ onFileChange }: { onFileChange: (file: File) => void }) {
     const [preview, setPreview] = useState<string | null>(null);
-  
+
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       if (event.target.files && event.target.files.length > 0) {
         const file = event.target.files[0];
@@ -121,7 +129,7 @@ export default function MissionCreation() {
         setPreview(URL.createObjectURL(file)); // Set the image preview
       }
     };
-    
+
     return (
       <label htmlFor="upload-photo">
         {preview ? (
@@ -150,7 +158,7 @@ export default function MissionCreation() {
         />
       </label>
     );
-  }  
+  }
 
   const handleImageChange = (file: File) => {
     setImage(file);
@@ -181,14 +189,42 @@ export default function MissionCreation() {
     let startDates: Date[] = [];
     let endDates: Date[] = [];
 
-    missionDateRanges.forEach((mission: {start: Date | null; end: Date | null}) => {
+    setFormErrors({
+      missionName: "",
+      missionDescription: "",
+      missionPracticalInformation: "",
+      missionVolunteersNumber: "",
+      missionDateRanges: "",
+    });
+
+    if (!form?.missionName) {
+      setFormErrors((prev: any) => ({ ...prev, missionName: "Nom de la mission est requis" }));
+      return;
+    }
+    if (!form?.missionDescription) {
+      setFormErrors((prev: any) => ({ ...prev, missionDescription: "Description de la mission est requise" }));
+      return;
+    }
+    if (!form?.missionPracticalInformation) {
+      setFormErrors((prev: any) => ({ ...prev, missionPracticalInformation: "Informations pratiques sont requises" }));
+      return;
+    }
+    if (!form?.missionVolunteersNumber) {
+      setFormErrors((prev: any) => ({ ...prev, missionVolunteersNumber: "Nombre de bénévoles est requis" }));
+      return;
+    }
+    
+    missionDateRanges.forEach((mission: { start: Date | null; end: Date | null }) => {
       if ((mission.start === null) || (mission.end === null)) {
-      alert("Pas de dates entrées");
+        alert("Pas de dates entrées");
+      }
+      if (mission?.start && mission.end && mission.start > mission.end) {
+        alert("La date de début doit être inférieure à la date de fin");
       }
       if (mission.start) startDates.push(mission.start);
       if (mission.end) endDates.push(mission.end);
     });
-     
+    
     const body = {
       max_volunteers: form?.missionVolunteersNumber,
       description: form?.missionDescription,
@@ -202,7 +238,7 @@ export default function MissionCreation() {
       accept_minors: form?.missionAcceptMinors,
       company_id: (selectedCompany !== null) ? selectedCompany.id : null
     };
-    console.log(body);
+
     fetch(`${config.apiUrl}/missions/association/create`, {
       method: "POST",
       headers: {
@@ -237,22 +273,22 @@ export default function MissionCreation() {
                 }
               }
             )
-            .catch(
-              (error) => {
-                setResponse({ error: true, message: "Erreur lors de l'upload de l'image" });
-                console.error("Error while uploading image");
-              })
+              .catch(
+                (error) => {
+                  setResponse({ error: true, message: "Erreur lors de l'upload de l'image" });
+                  console.error("Error while uploading image");
+                })
           });
-        
+
         });
       }
     })
-    .catch(
-      (error) => {
-        setResponse({ error: true, message: "Erreur lors de la création de la mission" });
-        console.error("Error while creating mission");
-      }
-    )
+      .catch(
+        (error) => {
+          setResponse({ error: true, message: "Erreur lors de la création de la mission" });
+          console.error("Error while creating mission");
+        }
+      )
   };
 
   useEffect(() => {
@@ -299,12 +335,12 @@ export default function MissionCreation() {
         <Box component="form">
           <Grid container spacing={3} className="wrapper" style={{ display: "flex", justifyContent: "center" }}>
             <LocationModal
-                open={open}
-                handleClose={handleClose}
-                location={address}
-                setLocation={setAddress}
-                setLocationString={setLocationStr}
-                setId={setLocationId}
+              open={open}
+              handleClose={handleClose}
+              location={address}
+              setLocation={setAddress}
+              setLocationString={setLocationStr}
+              setId={setLocationId}
             />
             <Grid item xs={8} lg={8} display="flex" justifyContent="center">
               <TextField
@@ -318,6 +354,8 @@ export default function MissionCreation() {
                 onChange={(missionName) => {
                   setForm({ ...form, missionName: missionName.target.value });
                 }}
+                error={!!formErrors.missionName}
+                helperText={formErrors.missionName}
               />
             </Grid>
             <Grid item xs={8} lg={8}>
@@ -330,7 +368,7 @@ export default function MissionCreation() {
                 id="name"
                 inputMode={"numeric"}
                 label="Nombre de bénévoles"
-                inputProps={{min: 1}}
+                inputProps={{ min: 1 }}
                 value={form?.missionVolunteersNumber}
                 onChange={(missionVolunteersNumber) => {
                   setForm({
@@ -340,6 +378,8 @@ export default function MissionCreation() {
                     ),
                   });
                 }}
+                error={!!formErrors.missionVolunteersNumber}
+                helperText={formErrors.missionVolunteersNumber}
               />
             </Grid>
             <Grid item xs={8} lg={8} style={{ display: "flex", justifyContent: "center" }}>
@@ -369,6 +409,8 @@ export default function MissionCreation() {
                     missionDescription: missionDescription.target.value,
                   });
                 }}
+                error={!!formErrors.missionDescription}
+                helperText={formErrors.missionDescription}
               />
             </Grid>
             <Grid item xs={8} lg={8}>
@@ -388,11 +430,13 @@ export default function MissionCreation() {
                       missionPracticalInformation.target.value,
                   });
                 }}
+                error={!!formErrors.missionPracticalInformation}
+                helperText={formErrors.missionPracticalInformation}
               />
             </Grid>
             <Grid item xs={8} lg={8}>
               <Button
-              variant="outlined"
+                variant="outlined"
                 style={{
                   width: "100%"
                 }}
@@ -428,7 +472,7 @@ export default function MissionCreation() {
                             if (index === updatedDateRanges.length - 1) {
                               setForm({
                                 ...form,
-                                missionEndDate: date.utc().toDate(),
+                                missionDate: date.utc().toDate(),
                               });
                             }
                             setMissionDateRanges(updatedDateRanges);
@@ -479,7 +523,7 @@ export default function MissionCreation() {
                 {missionDateRanges.length > 1 && (
                   <Button
                     variant="outlined"
-                    style={{marginLeft: "10px"}}
+                    style={{ marginLeft: "10px" }}
                     color="error"
                     onClick={() => handleRemoveDateRange(missionDateRanges.length - 1)}
                   >
@@ -526,40 +570,40 @@ export default function MissionCreation() {
             </Grid>
           </Grid>
           <Grid container spacing={3} style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
-              {
-                (selectedCompany === null) && (
+            {
+              (selectedCompany === null) && (
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    setCompanyModal(true);
+                  }}
+                >
+                  Ajouter une entreprise affiliée
+                </Button>
+              )
+            }
+            {
+              (selectedCompany !== null) && (
+                <Box>
                   <Button
                     variant="outlined"
+                    style={{
+                      width: "100%"
+                    }}
                     onClick={() => {
                       setCompanyModal(true);
                     }}
                   >
-                    Ajouter une entreprise affiliée
-                  </Button>
-                ) 
-              }
-              {
-                (selectedCompany !== null) && (
-                  <Box>
-                  <Button
-                      variant="outlined"
-                        style={{
-                          width: "100%"
-                        }}
-                        onClick={() => {
-                          setCompanyModal(true);
-                        }}
-                  >
                     {selectedCompany.name}
                   </Button>
-                  </Box>
-                )
-              }
-              <CompanyModal
-                selectCompany={setSelectedCompany}
-                companyModal={companyModal}
-                closeCompanyModal={handleCloseCompanyModal}
-              />
+                </Box>
+              )
+            }
+            <CompanyModal
+              selectCompany={setSelectedCompany}
+              companyModal={companyModal}
+              closeCompanyModal={handleCloseCompanyModal}
+            />
           </Grid>
           <Box
             style={{
