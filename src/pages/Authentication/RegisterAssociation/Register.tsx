@@ -216,13 +216,13 @@ function RegisterAssociation() {
                                     InputProps={{
                                         style: { color: "#2D2A32",
                                                  boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                                                 borderRadius: "10px"
+                                                 borderRadius: "10px",
                                                }
                                     }}
                                 />
                                 {/* If first_name is empty, display an error message */}
                                 {!name && (
-                                    <Alert severity="error">
+                                    <Alert severity="error" sx={{maxWidth: "20rem"}}>
                                         Le nom de l'association est requis
                                     </Alert>
                                 )}
@@ -246,7 +246,7 @@ function RegisterAssociation() {
                                 />
                                 {/* If rna is empty, display an error message */}
                                 {!rna && (
-                                    <Alert severity="error">
+                                    <Alert severity="error" sx={{maxWidth: "20rem"}}>
                                         Le numéro RNA est requis
                                     </Alert>
                                 )}
@@ -282,13 +282,13 @@ function RegisterAssociation() {
 
                                 {/* If phone is empty, display an error message */}
                                 {!phone && (
-                                    <Alert severity="error">
+                                    <Alert severity="error" sx={{maxWidth: "20rem"}}>
                                         Un numéro de téléphone est requis
                                     </Alert>
                                 )}
                                 {/* If phone is not empty but format is not correct, display a warning message */}
                                 {(phone && !phoneFormat) && (
-                                    <Alert severity="warning">
+                                    <Alert severity="warning" sx={{maxWidth: "20rem"}}>
                                         Le format du numéro de téléphone doit être +336XXXXXXXX
                                     </Alert>
                                 )}
@@ -311,13 +311,13 @@ function RegisterAssociation() {
                                 />
                                 {/* If email is empty, display an error message */}
                                 {!email && (
-                                    <Alert severity="error">
+                                    <Alert severity="error" sx={{maxWidth: "20rem"}}>
                                         L'adresse email est requise
                                     </Alert>
                                 )}
                                 {/* If email is not empty but format is not correct, display a warning message */}
                                 {(email && !emailFormat) && (
-                                    <Alert severity="warning">
+                                    <Alert severity="warning" sx={{maxWidth: "20rem"}}>
                                         Le format de l'adresse email doit être au format xxxxxx.xxxx@xxx.com
                                     </Alert>
                                 )}
@@ -336,7 +336,6 @@ function RegisterAssociation() {
                                         style: { color: "#2D2A32",
                                                  boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
                                                  borderRadius: "10px",
-                                                 marginRight: "10px"
                                                },
                                         endAdornment: (
                                           <InputAdornment position="end">
@@ -352,13 +351,13 @@ function RegisterAssociation() {
                                 />
                                 {/* If password is empty, display an error message */}
                                 {!password && (
-                                    <Alert severity="error">
+                                    <Alert severity="error" sx={{maxWidth: "20rem"}}>
                                         Un mot de passe est requis
                                     </Alert>
                                 )}
                                 {/* If password is not empty but not strong enough, display a warning message */}
                                 {(password && !strength) && (
-                                    <Alert severity="warning">
+                                    <Alert severity="warning" sx={{maxWidth: "20rem"}}>
                                         Le mot de passe doit contenir au moins 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial parmi : !@:_#$%.^&*
                                     </Alert>
                                 )}
