@@ -69,13 +69,21 @@ function Search(props: any) {
         setPublishedMissions(active);
         setPastMissions(passed);
       });
+       // Set the initial search state from URL query
+      const params = new URLSearchParams(window.location.search);
+      const query = params.get("query");
+      if (query) {
+        setSearch(query);
+      }
   }, []);
 
+  function handleSearchInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setSearch(event.target.value);
+  }
+
   function handleSearch() {
-    const searchValue = document.getElementById("search-text") as HTMLInputElement;
-    if (searchValue.value) {
-        setSearch(searchValue.value);
-        window.location.href = `/accueil?query=${encodeURIComponent(search)}`;
+    if (search.trim()) {
+      window.location.href = `/accueil?query=${encodeURIComponent(search)}`;
     }
   }
 
@@ -90,7 +98,10 @@ function Search(props: any) {
             InputProps={{
               endAdornment: (
                 <InputAdornment position="start">
-                  <SearchOutlinedIcon />
+                  <SearchOutlinedIcon
+                    onClick={handleSearch}
+                    style={{ cursor: "pointer" }}
+                  />
                 </InputAdornment>
               ),
             }}
@@ -100,7 +111,7 @@ function Search(props: any) {
               borderRadius: "10px",
             }}
             value={search}
-            onChange={handleSearch}
+            onChange={handleSearchInputChange}
           />
         </div>
       </div>
