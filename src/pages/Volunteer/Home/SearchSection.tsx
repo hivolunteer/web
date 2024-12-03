@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./SearchSection.scss";
 import config from "../../../config";
-import { Box, Grid, IconButton, InputBase, TextField } from "@mui/material";
+import { Box, IconButton, InputBase } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
 function SearchSection() {

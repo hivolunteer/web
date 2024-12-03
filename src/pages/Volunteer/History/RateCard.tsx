@@ -114,7 +114,7 @@ function RateCard(props: { mission: number }) {
         });
       }
     });
-  }, []);
+  }, [props.mission]);
 
   // misc functions
 

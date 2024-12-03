@@ -1,6 +1,5 @@
-import { Alert, Button, CardMedia } from '@mui/material';
+import { Alert, Button } from '@mui/material';
 import { useEffect, useState } from 'react';
-import Card from 'react-bootstrap/Card';
 import "./BlockedUsersList.scss"
 import config from "../config";
 import { Volunteer } from '../interfaces';
