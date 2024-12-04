@@ -44,9 +44,7 @@ function SearchSection() {
             </div>
             <div className="component-search-section-search">
                 <InputBase className="component-search-section-search-bar" placeholder="Rechercher une mission" id="search-text" onKeyDown={(event) => {
-                    console.log("EVENT KEY", event.key)
                     if (event.key === 'Enter') {
-                        console.log("EVENT", event)
                         handleSearch();
                     }
                 }} />

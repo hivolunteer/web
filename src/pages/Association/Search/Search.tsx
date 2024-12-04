@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { InputAdornment, Tab, Tabs, TextField } from "@mui/material";
+import { useSearchParams } from "react-router-dom";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import "./Search.scss";
 import { Mission } from "../../../interfaces";
 import config from "../../../config";
 import TabPanel from "../../../components/TabPanel"
 import MissionPanel from "./Panels/MissionPanel";
-import { Association } from "../../Volunteer/Search/Interfaces";
 
 // interface ExpandMoreProps extends IconButtonProps {
 //   expand: boolean;
@@ -41,6 +41,7 @@ function Search(props: any) {
   ];
 
   const [subType, setSubType] = useState<Subtype>(subtypes[0]);
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     fetch(`${config.apiUrl}/missions/association/`, {
@@ -69,6 +70,11 @@ function Search(props: any) {
         setPublishedMissions(active);
         setPastMissions(passed);
       });
+      const subTypeId = searchParams.get("subType");
+      if (subTypeId) {
+        const selectedSubType = subtypes.find((subtype) => subtype.id === parseInt(subTypeId));
+        if (selectedSubType) setSubType(selectedSubType);
+      }
        // Set the initial search state from URL query
       const params = new URLSearchParams(window.location.search);
       const query = params.get("query");
