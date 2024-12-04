@@ -192,13 +192,6 @@ function ProfilePage(props: any) {
           </Card>
         </div>
       </div>
-      <Col sm={12} md={4} lg={3} className="profile-info"></Col><Row sm={12} md={4} lg={3} className="button-row">
-        <div className="profile-btn-div">
-          <Button variant="contained" color="primary" className={((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")} onClick={() => { navigate("/profile/blocked"); }}>
-            Gérer les utilisateurs Bloqués
-          </Button>
-        </div>
-      </Row>
     </>
   );
 };

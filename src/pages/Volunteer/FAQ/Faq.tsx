@@ -142,10 +142,6 @@ function FAQ() {
                     answer: "Sur le profil du bénévole cliquer sur Ajouter/Retirer/Bloquer le bénévole en question."
                 },
                 {
-                    question: "Comment puis-je gérer les utilisateurs bloqués ?",
-                    answer: "Utilisez le bouton 'Gérer les utilisateurs Bloqués' pour accéder à la gestion des utilisateurs bloqués et les débloquer si nécessaire."
-                },
-                {
                     question: "Comment modifier mes informations de profil ?",
                     answer: "Rendez-vous dans les Réglages, puis cliquez sur le bouton 'Informations de profil'. Modifiez les champs nécessaires et sauvegardez les modifications en utilisant le bouton 'Sauvegarder les changements'."
                 },

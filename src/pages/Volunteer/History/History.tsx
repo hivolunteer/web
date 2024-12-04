@@ -1,70 +1,36 @@
-import {useState} from "react";
-import { Tab, Tabs } from '@mui/material'
-import './History.scss'
+import { useState } from "react";
+import { Tab, Tabs } from '@mui/material';
+import './History.scss';
 import TabPanel from "../../../components/TabPanel";
 import PassedMissionPanel from "./Panel/PassedMissionPanel";
 import ActiveMissionPanel from "./Panel/ActiveMissionPanel";
 
 function History() {
 
-    interface Subtype {
-        id: number;
-        name: string;
-      }
-    
-      let subtypes : Array<Subtype> = [
-        {
-          id: 1,
-          name: "Actives"
-        },
-        {
-          id: 2,
-          name: "Passées"
-        }
-      ]
-      const [subType, setSubType] = useState<Subtype>(subtypes[0])
-    
+    const [value, setValue] = useState(1);
+
+    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+        setValue(newValue);
+    };
+
     return (
-        <div>
-            <div className="tabs-container history">
-                <Tabs
-                    value={subType.name}
-                    onChange={(e, value) => {
-                        setSubType(subtypes.filter((subtype) => subtype.name === value)[0]);
-                    }}
-                    variant="fullWidth"
-                    sx={{ borderBottom: 0, width: '80%'}}
-                >
-                    <Tab
-                        label="Actives"
-                        value="Actives"
-                        sx={{
-                            background: "#FFFFFF",
-                        }}
-                    />
-                    <Tab
-                        label="Passées"
-                        value="Passées"
-                        sx={{
-                            background: "#FFFFFF",
-                        }}
-                    />
+        <div style={{ marginTop: '20px', marginLeft: '10px' }}>
+            <p className="history-title">Historique des missions</p>
+            <p className="history-description">Retrouvez ici l'historique des missions auxquelles vous participez selon leur statut.</p>
+            <div className="history-container">
+                <Tabs value={value} onChange={handleChange} aria-label="Mission Status" variant="fullWidth">
+                    <Tab label="Actives" value={1} />
+                    <Tab label="Passées" value={2} />
                 </Tabs>
-                <TabPanel
-                    value={subType.id}
-                    index={1}
-                >
+                <TabPanel value={value} index={1}>
                     <ActiveMissionPanel />
                 </TabPanel>
-                <TabPanel
-                    value={subType.id}
-                    index={2}
-                >
+                <TabPanel value={value} index={2}>
                     <PassedMissionPanel />
                 </TabPanel>
             </div>
         </div>
-    )
+    );
 }
 
-export default History
+export default History;

@@ -27,14 +27,20 @@ function PassedMissionPanel() {
 
     return (
         <div className='panel-div'>
-            {missions.map((mission) => (
-                <div style={{width: '45%', margin: ' 0 2.5%'}}>
-                <RateCard
-                    key={mission}
-                    mission={mission}
-                />
-            </div>
-            ))}
+            {missions.length === 0 ? (
+                <p>
+                    Aucune mission active.
+                </p>
+            ) : (
+                missions.map((mission) => (
+                    <div style={{width: '45%', margin: ' 0 2.5%'}}>
+                    <RateCard
+                        key={mission}
+                        mission={mission}
+                    />
+                </div>
+            ))
+        )}
         </div>
     )
 }
