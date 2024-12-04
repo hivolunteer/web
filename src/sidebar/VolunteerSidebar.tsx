@@ -55,7 +55,7 @@ export default function VolunteerSidebar() {
               }
               return prevPages;
             });
-
+  
             setPagesLink((prevPagesLink) => ({
               ...prevPagesLink,
               "Missions Assignées": "referent/missions",
@@ -67,7 +67,7 @@ export default function VolunteerSidebar() {
       console.log(e);
     }
   }, []);
-
+  
   React.useEffect(() => {
     if (!isFetchRef) {
       setIsFetchRef(true);
@@ -94,7 +94,7 @@ export default function VolunteerSidebar() {
   const handleMenuItemClick = (setting: string) => {
     handleCloseUserMenu();
     switch (setting) {
-      case "Profil":
+      case "Profile":
         navigate("/profile");
         break;
       case "Déconnexion":
@@ -225,16 +225,16 @@ export default function VolunteerSidebar() {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={() => handleMenuItemClick(setting)} >
-                  <Typography textAlign="center" component={Link} to={setting === "Profil" ? "/profile" : "/"}
+                  <Typography textAlign="center" component={Link} to={setting === "Profile" ? "/profile" : "/"}
                     onClick={() => {
                       handleCloseUserMenu();
                       switch (setting) {
-                        case "Profil":
+                        case "Profile":
                           navigate("/profile");
                           break;
                         case "Demandes d'amis":
-                            window.location.href = "/friends";
-                            break;
+                          window.location.href = "/friends";
+                          break;
                         case "Réglages":
                           window.location.href = "/settings";
                           break;

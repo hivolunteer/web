@@ -157,38 +157,40 @@ function ReferentPage() {
           display: 'flex',
           justifyContent: 'center'
         }}>
-          {
-            (referentList.length === 0) ?
-              <p> Aucun référent pour le moment </p>
-              :
-              referentList.map((referent: Referent) => {
-                return (
-                  <div className="referent-row" style={{ width: "50%" }}>
-                    <div className="referent-picture">
-                      <img
-                        src={(referent.profile_picture !== null) ? referent.profile_picture : profileImage}
-                        alt="profile_picture"
-                        className="picture"
-                      />
+          <div className="referent-list-header">
+            {
+              (referentList.length === 0) ?
+                <p> Aucun référent pour le moment </p>
+                :
+                referentList.map((referent: Referent) => {
+                  return (
+                    <div className="referent-row" key={referent.id} style={{ width: "50%" }}>
+                      <div className="referent-picture">
+                        <img
+                          src={(referent.profile_picture !== null) ? referent.profile_picture : profileImage}
+                          alt="profile_picture"
+                          className="picture"
+                        />
+                      </div>
+                      <p className="referent-name" style={{ fontWeight: "bold" }}>
+                        {referent.first_name} {referent.last_name}
+                      </p>
+                      <p className="referent-email" style={{ fontStyle: "italic", textDecoration: "underline" }}>
+                        {referent.email}
+                      </p>
+                      <div className="referent-action">
+                        <MdOutlineDelete
+                          className="icon-card"
+                          title="Supprimer le référent"
+                          onClick={() => unLinkReferent(referent.id)}
+                          size={20}
+                        />
+                      </div>
                     </div>
-                    <p className="referent-name" style={{ fontWeight: "bold" }}>
-                      {referent.first_name} {referent.last_name}
-                    </p>
-                    <p className="referent-email" style={{ fontStyle: "italic", textDecoration: "underline" }}>
-                      {referent.email}
-                    </p>
-                    <div className="referent-action">
-                      <MdOutlineDelete
-                        className="icon-card"
-                        title="Supprimer le référent"
-                        onClick={() => unLinkReferent(referent.id)}
-                        size={20}
-                      />
-                    </div>
-                  </div>
-                )
-              })
-          }
+                  )
+                })
+            }
+          </div>
         </div>
       </div>
     </div>
