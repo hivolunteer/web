@@ -14,6 +14,7 @@ import Settings from '../pages/Association/Settings/Settings';
 import ProfileInformationModal from '../pages/Association/Settings/ProfileInformation';
 import AffiliatedCompanies from '../pages/Association/AffiliatedCompanies/AffiliatedCompanies';
 import ModifyLocationModal from '../pages/Association/Missions/Modal/ModifyLocationModal';
+import ModifyPassword from '../pages/Association/Settings/ModifyPassword';
 import FAQ from '../pages/Association/FAQ/Faq';
 
 function ConnectAssociationRouter() {
@@ -32,6 +33,7 @@ function ConnectAssociationRouter() {
             <Route path="/calendrier" element={<EventCalendar />} />
             <Route path='/settings' element={<Settings />} />
             <Route path="/settings/profile_information" element={<ProfileInformationModal />} />
+            <Route path="/settings/modify_password" element={<ModifyPassword />} />
             <Route path="/referent" element={<ReferentPage />} />
             <Route path="/affiliatedCompanies" element={<AffiliatedCompanies />} />
             <Route path="/faq" element={< FAQ />} />
