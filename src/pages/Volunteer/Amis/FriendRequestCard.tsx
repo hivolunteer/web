@@ -128,7 +128,7 @@ export default function FriendRequestCard(props: FriendRequestCardProps) {
                                         onClick={handleAcceptFriendRequest}
                                         sx={{ color: 'white' }}
                                     >
-                                        Confirmer
+                                        {friendshipStatus === 1 ? "Confirmé" : "Confirmer"}
                                     </Button>
                                 </div>
                                 <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
@@ -139,7 +139,7 @@ export default function FriendRequestCard(props: FriendRequestCardProps) {
                                         variant="contained"
                                         sx={{ color: 'white' }}
                                     >
-                                        Refuser
+                                        {friendshipStatus === 2 ? "Refusé" : "Refuser"}
                                     </Button>
                                 </div>
                             </>
@@ -152,7 +152,7 @@ export default function FriendRequestCard(props: FriendRequestCardProps) {
                                     variant="contained"
                                     sx={{ color: 'white' }}
                                 >
-                                    Retirer
+                                    {friendshipStatus === 3 ? "Retiré" : "Retirer"}
                                 </Button>
                             </div>
                         )}

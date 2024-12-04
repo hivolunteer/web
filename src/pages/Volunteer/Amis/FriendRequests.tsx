@@ -3,6 +3,7 @@ import FriendRequestCard from "./FriendRequestCard";
 import { Volunteer } from "../../../interfaces";
 import config from "../../../config";
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
+import fr from "date-fns/locale/fr";
 
 function FriendRequests() {
     const [volunteerList, setVolunteerList] = useState<Volunteer[]>([]);
@@ -69,7 +70,7 @@ function FriendRequests() {
 
                 if (response.status === 200) {
                     const data = await response.json();
-                    setFriends(data); // Set friends directly from fetched data
+                    setFriends(data);
                 }
             } catch (error) {
                 console.error("Error fetching friends:", error);
@@ -77,28 +78,27 @@ function FriendRequests() {
         };
 
         fetchFriends();
-    }, [localId]); // Add localId as a dependency
+    }, [localId]);
 
     const filteredVolunteers = volunteerList.filter(volunteer => {
+        const status = volunteerStatuses[volunteer.id] || null; // Get the status for the volunteer
         if (activeSection === 'pending') {
             return (
                 localId !== volunteer.id.toString() &&
                 localId !== null &&
-                volunteerStatuses[volunteer.id] === 0 &&
-                friends.some(friend => friend.user_id1 === volunteer.id)
+                friends.some(friend => friend.user_id1 === volunteer.id && friend.status === 0)
             );
         } else {
             return (
                 localId !== volunteer.id.toString() &&
                 localId !== null &&
-                volunteerStatuses[volunteer.id] === 0 &&
-                friends.some(friend => friend.user_id2 === volunteer.id)
+                friends.some(friend => friend.user_id2 === volunteer.id && friend.status === 0)
             );
         }
     });
 
     return (
-        <div style={{ width: '100%', display: 'flex', flexDirection: 'column'}}>
+        <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }} >
             <ToggleButtonGroup
                 color={'primary'}
                 value={activeSection}
@@ -116,7 +116,10 @@ function FriendRequests() {
             <div style={{ display: 'flex', justifyContent: 'center', width: '100vw' }}>
                 {filteredVolunteers.map((volunteer: Volunteer) => (
                     <div key={volunteer.id} style={{ margin: '25px', width: '25%' }}>
-                        <FriendRequestCard volunteer={volunteer} isPending={activeSection === 'pending'} />
+                        <FriendRequestCard
+                            volunteer={volunteer}
+                            isPending={activeSection === 'pending'}
+                        />
                     </div>
                 ))}
             </div>
