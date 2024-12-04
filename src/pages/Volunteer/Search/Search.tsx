@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
-import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import { Button, InputAdornment, Tab, Tabs, TextField } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import "./Search.scss";
@@ -19,20 +17,20 @@ import filterMissionAndPagination from "./functions/filterMissionAndPagination";
 import filterAssoAndPagination from "./functions/filterAssoAndPagination";
 import filterVolunteerAndPagination from "./functions/filterVolunteerAndPagination";
 
-interface ExpandMoreProps extends IconButtonProps {
-  expand: boolean;
-}
+// interface ExpandMoreProps extends IconButtonProps {
+//   expand: boolean;
+// }
 
-const ExpandMore = styled((props: ExpandMoreProps) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-  marginLeft: "auto",
-  transition: theme.transitions.create("transform", {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
+// const ExpandMore = styled((props: ExpandMoreProps) => {
+//   const { expand, ...other } = props;
+//   return <IconButton {...other} />;
+// })(({ theme, expand }) => ({
+//   transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
+//   marginLeft: "auto",
+//   transition: theme.transitions.create("transform", {
+//     duration: theme.transitions.duration.shortest,
+//   }),
+// }));
 
 function Search(props: any) {
   const [missionList, setMissionList] = useState<Mission[]>([]);
@@ -40,7 +38,7 @@ function Search(props: any) {
   const [volunteerList, setVolunteerList] = useState<Array<Volunteer>>([]);
   const [location_search, setLocation] = useState<string>("");
   const [search, setSearch] = useState<string>("");
-  const [locations, setLocations] = useState<{[key: number]: string}>({});
+  const [locations, setLocations] = useState<{ [key: number]: string }>({});
   const width = useWindowSize().width as number;
 
   // Subtype of the search
@@ -50,7 +48,7 @@ function Search(props: any) {
     name: string;
   }
 
-  let subtypes : Array<Subtype> = [
+  let subtypes: Array<Subtype> = [
     {
       id: 1,
       name: "Missions"
@@ -112,86 +110,90 @@ function Search(props: any) {
 
   useEffect(() => {
     fetch(`${config.apiUrl}/missions/`, {
-        method: 'GET',
-        headers: {
-            authorization: `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'application/json'
-        }
+      method: 'GET',
+      headers: {
+        authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json'
+      }
     }).then((data => data.json()))
-    .then((data : any) => {
-      let association_missions = data.associations_missions
-      let mission_list : Mission[] = [];
-      association_missions
-      .map((mission: Mission) => {
-        mission_list.push(mission)
+      .then((data: any) => {
+        let association_missions = data.associations_missions
+        let mission_list: Mission[] = [];
+        association_missions
+          .map((mission: Mission) => {
+            mission_list.push(mission);
+            return null;
+          })
+        let volunteer_missions = data.close_missions
+        volunteer_missions.map((mission: Mission) => {
+          mission_list.push(mission)
+          return null;
+        });
+        mission_list.sort(
+          (a: Mission, b: Mission) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime()
+        );
+        setMissionList(mission_list)
       })
-      let volunteer_missions = data.close_missions
-      volunteer_missions.map((mission: Mission) => {
-        mission_list.push(mission)
-      });
-      mission_list.sort(
-        (a: Mission, b: Mission) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime()
-    );
-      setMissionList(mission_list)
-     })
   }, [])
 
   useEffect(() => {
     fetch(`${config.apiUrl}/associations/`, {
-        method: 'GET',
-        headers: {
-            authorization: `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'application/json'
-        }
+      method: 'GET',
+      headers: {
+        authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json'
+      }
     }).then((response) => {
-        if (response.status === 200) {
-          response.json().then((data) => {
-              let association_list : Association[] = [];
-              data
-              .map((association: Association) => {
-                  association_list.push(association)
-              })
-              setAssociations(association_list)
-          })
-        }
-      })
-     }, [])
+      if (response.status === 200) {
+        response.json().then((data) => {
+          let association_list: Association[] = [];
+          data
+            .map((association: Association) => {
+              association_list.push(association)
+              return null;
+            })
+          setAssociations(association_list)
+        })
+      }
+    })
+  }, [])
 
-    // Get all location names and ids
-    useEffect(() => {
-      fetch(`${config.apiUrl}/locations/`, {
-          method: 'GET',
-          headers: {
-              authorization: `Bearer ${localStorage.getItem('token')}`,
-              'Content-Type': 'application/json'
-          }
-      }).then((response) => {
-        if (response.status === 200) {
-          response.json().then((data) => {
-            // stock locations and location ids
-            let locs: { [key: number]: string } = {};
-            data
+  // Get all location names and ids
+  useEffect(() => {
+    fetch(`${config.apiUrl}/locations/`, {
+      method: 'GET',
+      headers: {
+        authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json'
+      }
+    }).then((response) => {
+      if (response.status === 200) {
+        response.json().then((data) => {
+          // stock locations and location ids
+          let locs: { [key: number]: string } = {};
+          data
             .map((location: any) => {
               locs[location.id] = location.city;
+              return null;
             })
-            setLocations(locs);
-          })
-        }
-      })
-    }, [])
+          setLocations(locs);
+        })
+      }
+    })
+  }, [])
 
   useEffect(() => {
-      fetch(`${config.apiUrl}/volunteers`, {
-          method: "GET",
-          headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-      })
-          .then((response) => response.json())
-          .then((data) => {
-              setVolunteerList(data);
-          });
+    fetch(`${config.apiUrl}/volunteers`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setVolunteerList(data);
+      });
   }, []);
 
   const handleSearch = (e: any) => {
@@ -204,8 +206,8 @@ function Search(props: any) {
   }
 
 
-  function returnMissions() : Array<PageMission> {
-    let props : FilterMissionProps = {
+  function returnMissions(): Array<PageMission> {
+    let props: FilterMissionProps = {
       missionList: missionList as Array<MissionComplete>,
       filteredMissions: filteredMissions as Array<MissionComplete>,
       search: search,
@@ -217,8 +219,8 @@ function Search(props: any) {
     return missions;
   }
 
-  function returnAssociations() : Array<PageAssoProps> {
-    let props : filterAssoProps = {
+  function returnAssociations(): Array<PageAssoProps> {
+    let props: filterAssoProps = {
       associationList: associationList,
       filteredAssociations: filteredAssociations,
       search: search,
@@ -227,8 +229,8 @@ function Search(props: any) {
     return filterAssoAndPagination(props)
   }
 
-  function returnVolunteers() : Array<VolunteerPage> {
-    let props : VolunteerProps = {
+  function returnVolunteers(): Array<VolunteerPage> {
+    let props: VolunteerProps = {
       volunteersList: volunteerList,
       search: search
     }
@@ -247,8 +249,8 @@ function Search(props: any) {
               subType.name === "Missions"
                 ? "Rechercher une mission"
                 : subType.name === "Associations"
-                ? "Rechercher une association"
-                : "Rechercher un bénévole"
+                  ? "Rechercher une association"
+                  : "Rechercher un bénévole"
             }
             InputProps={{
               endAdornment: (
@@ -289,21 +291,23 @@ function Search(props: any) {
       </div>
       <div className="centered-container">
         {
-          subType.name !== "Bénévoles" &&
+          subType.name === "Missions" &&
           <div className="filter-container">
             <Button
               className={
                 "filter-btn-search"
               }
               sx={{
-                  background: (localStorage.getItem('color_blind') === 'true') ? '#dedede' : '#ffcf56', ":hover": {background: (localStorage.getItem('color_blind') === 'true') ? '#dedede' : '#ffcf56',
-              }}}
+                background: (localStorage.getItem('color_blind') === 'true') ? '#dedede' : '#ffcf56', ":hover": {
+                  background: (localStorage.getItem('color_blind') === 'true') ? '#dedede' : '#ffcf56',
+                }
+              }}
               variant="contained"
               onClick={() => {
                 setOpen(true);
               }}
             >
-              Afficher les filtres
+              Filtres
             </Button>
             <FilterModalComponent modalProps={modalProps} />
           </div>

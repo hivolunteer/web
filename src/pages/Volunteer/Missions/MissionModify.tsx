@@ -4,8 +4,8 @@
  * @utility This page is used to create a mission
 */
 
-import { Alert, Autocomplete, Box, Button, Chip, Grid, TextField} from "@mui/material";
-import React, {useEffect, useState} from "react";
+import { Alert, Autocomplete, Box, Button, Chip, Grid, Link, TextField} from "@mui/material";
+import React, {useCallback, useEffect, useState} from "react";
 import { Image } from "mui-image";
 import { LocalizationProvider, DateTimePicker, TimePicker } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
@@ -17,7 +17,7 @@ import config from "../../../config";
 import LocationModal from "../../Association/Missions/Modal/LocationModal";
 import noImage from "../../../images/lottie/noImage.json";
 import { useParams } from 'react-router-dom';
-
+import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 
 interface MissionModificationData {
   missionName?: string;
@@ -71,7 +71,7 @@ export default function EditMission() {
   })
   const [newSkill, setNewSkill] = useState<Array<number>>([]);
   const [skillDb, setSkillDb] = useState<Array<SkillDatabase>>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [, setError] = useState<string | null>(null);
   const [response, setResponse] = useState<{error: boolean, message: string}>({error: false, message: ""});
 
   // preparation for adress modal
@@ -93,7 +93,7 @@ export default function EditMission() {
     setOpen(false);
   };
 
-  async function getMissionById(missionId: number) {
+  const getMissionById: (missionId: number) => Promise<void> = useCallback(async (missionId: number) => {
     try {
       const response = await fetch(`${config.apiUrl}/missions/close/${missionId}`, {
         method: "GET",
@@ -154,13 +154,13 @@ export default function EditMission() {
       console.error('Load Error:', error);
       setError(`An error occurred: ${(error as Error).message}`);
     }
-  }
+  }, [form, locationStr]);
 
   useEffect(() => {
     if (missionID) {
       getMissionById(parseInt(missionID));
     }
-  }, [missionID]);
+  }, [missionID, getMissionById]);
 
   // useEffect to get skills from database
 
@@ -230,6 +230,22 @@ export default function EditMission() {
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
       <Box>
+        <Box
+          style={{
+            display: "flex",
+            justifyContent: "left",
+            alignContent: "left",
+            height: "1vh",
+            marginTop: "2em",
+            marginLeft: "0.5em"
+          }}
+        >
+          <Link href="#" onClick={() => window.history.back()} color="inherit"
+            style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+            <ArrowBackOutlinedIcon onClick={() => window.history.back()} color="action" style={{ cursor: 'pointer' }} />
+            Retour
+          </Link>
+        </Box>
         <Box
           style={{
             display: "flex",

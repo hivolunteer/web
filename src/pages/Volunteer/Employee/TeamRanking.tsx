@@ -1,5 +1,4 @@
-import { promises } from "dns";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import * as React from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -18,58 +17,58 @@ import Paper from '@mui/material/Paper';
 import config from "../../../config";
 
 interface Team {
-    id: number;
-    name: string;
-    company_id: number;
-    description: string;
-  }
+  id: number;
+  name: string;
+  company_id: number;
+  description: string;
+}
 
 interface m_Teams {
   team: Team;
   total_bee: number;
 }
 
-  interface m_Teams_Member {
-    last_name: string;
-    first_name: string;
-    email: string;
-    id: number;
-    bee: number;
+interface m_Teams_Member {
+  last_name: string;
+  first_name: string;
+  email: string;
+  id: number;
+  bee: number;
+}
+
+interface Cartouche {
+  name: string
+  description: string
+  bee: number
+  id: number;
+  members: m_Teams_Member[];
+  name_list: string[];
+  name_list_str: string;
+  ranking: number | string;
+}
+
+
+function Row(props: { row: Cartouche }) {
+  const { row } = props;
+  const [open, setOpen] = React.useState(false);
+
+  let bgColor = "#FFFFFF"
+  if (row.ranking === 1) {
+    //bgColor = "#e7c300"
+    row.ranking = "🥇"
+  }
+  if (row.ranking === 2) {
+    //bgColor = "silver"
+    row.ranking = "🥈"
+  }
+  if (row.ranking === 3) {
+    //bgColor = "#cd7f32"
+    row.ranking = "🥉"
   }
 
-  interface Cartouche {
-    name: string
-    description: string
-    bee: number
-    id: number;
-    members: m_Teams_Member[];
-    name_list: string[];
-    name_list_str: string;
-    ranking: number | string;
-  }
-
-
-  function Row(props: { row: Cartouche}) {
-    const { row } = props;
-    const [open, setOpen] = React.useState(false);
-
-    let bgColor = "#FFFFFF"
-    if (row.ranking == 1) {
-      //bgColor = "#e7c300"
-      row.ranking = "🥇"
-    }
-    if (row.ranking == 2) {
-      //bgColor = "silver"
-      row.ranking = "🥈"
-    }
-    if (row.ranking == 3) {
-      //bgColor = "#cd7f32"
-      row.ranking = "🥉"
-    }
-
-    return (
-      <React.Fragment>
-      <TableRow style={{backgroundColor: bgColor}} sx={{ '& > *': { borderBottom: 'unset' } }}>
+  return (
+    <React.Fragment>
+      <TableRow style={{ backgroundColor: bgColor }} sx={{ '& > *': { borderBottom: 'unset' } }}>
         <TableCell align="center">
           <IconButton
             aria-label="expand row"
@@ -79,16 +78,16 @@ interface m_Teams {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-          <TableCell align="center">
-            <Typography variant="h4">
-              {row.ranking}
-            </Typography>
-            </TableCell>
-          <TableCell component="th" scope="row" align="center">
-            {row.name}
-          </TableCell>
-          <TableCell align="center">{row.bee}</TableCell>
-          <TableCell align="center">{row.name_list_str}</TableCell>
+        <TableCell align="center">
+          <Typography variant="h4">
+            {row.ranking}
+          </Typography>
+        </TableCell>
+        <TableCell component="th" scope="row" align="center">
+          {row.name}
+        </TableCell>
+        <TableCell align="center">{row.bee}</TableCell>
+        <TableCell align="center">{row.name_list_str}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -126,19 +125,54 @@ interface m_Teams {
         </TableCell>
       </TableRow>
     </React.Fragment>
-    );
-  }
-  
+  );
+}
+
 
 export default function TeamRanking(props: any) {
 
   const [getCartouches, setCartouches] = useState<Cartouche[]>([]);
   const [getMTeams, setMTeams] = useState<m_Teams[]>([]);
   const [called, setCalled] = useState<boolean>(true);
-  
 
-    const getTeams = async () => {
-      fetch(`${config.apiUrl}/teams/employee/teamRanking`, {
+
+  const getTeams = useCallback(async () => {
+    fetch(`${config.apiUrl}/teams/employee/teamRanking`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    }).then(response => response.json()).then(data => {
+      setMTeams(data);
+    }).catch(error => {
+      console.log(error);
+    });
+  }, [setMTeams]);
+
+  const getTeamMembers = useCallback(async () => {
+    if (called === true) {
+      return;
+    }
+    setCalled(true)
+    setCartouches([])
+    let rank = 0
+
+    for (const curr_m_team of getMTeams) {
+      rank += 1;
+      let cartouche = {
+        name: curr_m_team.team.name,
+        description: curr_m_team.team.description,
+        bee: curr_m_team.total_bee,
+        id: curr_m_team.team.id,
+        members: [],
+        name_list: [],
+        name_list_str: "",
+        ranking: rank
+      };
+      let team_id = curr_m_team.team.id
+
+      await fetch(`${config.apiUrl}/teams/getTeamMembers/${team_id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -146,72 +180,29 @@ export default function TeamRanking(props: any) {
         },
       }).then(response => response.json()).then(data => {
         console.log(data);
-        
-        setMTeams(data);
+        cartouche.members = data.member_list
+        for (let i = 0; i < data.member_list.length; i += 1) {
+          if ((i + 1) >= data.member_list.length) {
+            cartouche.name_list_str += data.member_list[i].first_name
+          } else {
+            cartouche.name_list_str += data.member_list[i].first_name + ", "
+          }
+        }
+        setCartouches(getCartouches => [...getCartouches, cartouche])
       }).catch(error => {
         console.log(error);
       });
-
     }
+  }, [getMTeams, setCartouches, called, setCalled]);
 
-    const getTeamMembers = async () => {
-      if (called == true) {
-        return;
-      }
-      setCalled(true)
-      setCartouches([])
-      let rank = 0
+  useEffect(() => {
+    getTeams();
+    setCalled(false);
+  }, [getTeams, setCalled])
 
-      for (const curr_m_team of getMTeams) {
-        rank += 1;
-        let cartouche = {
-          name: curr_m_team.team.name,
-          description: curr_m_team.team.description,
-          bee: curr_m_team.total_bee,
-          id: curr_m_team.team.id,
-          members: [],
-          name_list: [],
-          name_list_str: "",
-          ranking: rank
-        };
-
-        let team_id = curr_m_team.team.id
-
-        const member_list = await fetch(`${config.apiUrl}/teams/getTeamMembers/${team_id}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        }).then(response => response.json()).then(data => {
-          console.log(data);
-          cartouche.members = data.member_list
-          for (let i = 0; i < data.member_list.length; i += 1) {
-            if ((i + 1) >= data.member_list.length) {
-              cartouche.name_list_str += data.member_list[i].first_name
-            } else {
-              cartouche.name_list_str += data.member_list[i].first_name + ", "
-            }
-          }
-          setCartouches(getCartouches => [...getCartouches, cartouche])
-          
-        }).catch(error => {
-          console.log(error);
-        });
-      }
-      
-    }
-
-    
-    
-    useEffect(() => {
-      getTeams();
-      setCalled(false);
-    }, [])
-    
-    useEffect(() => {    
-        getTeamMembers()
-    }, [getMTeams])
+  useEffect(() => {
+    getTeamMembers()
+  }, [getTeamMembers])
 
   return (
     <>
@@ -229,7 +220,7 @@ export default function TeamRanking(props: any) {
             </TableHead>
             <TableBody>
               {getCartouches.map((row) => (
-                <Row key={row.name} row={row}/>
+                <Row key={row.name} row={row} />
               ))}
             </TableBody>
           </Table>

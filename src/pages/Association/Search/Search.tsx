@@ -1,8 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import { InputAdornment, Tab, Tabs, TextField } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import "./Search.scss";
 import { Mission } from "../../../interfaces";
@@ -10,20 +7,20 @@ import config from "../../../config";
 import TabPanel from "../../../components/TabPanel"
 import MissionPanel from "./Panels/MissionPanel";
 
-interface ExpandMoreProps extends IconButtonProps {
-  expand: boolean;
-}
+// interface ExpandMoreProps extends IconButtonProps {
+//   expand: boolean;
+// }
 
-const ExpandMore = styled((props: ExpandMoreProps) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-  marginLeft: "auto",
-  transition: theme.transitions.create("transform", {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
+// const ExpandMore = styled((props: ExpandMoreProps) => {
+//   const { expand, ...other } = props;
+//   return <IconButton {...other} />;
+// })(({ theme, expand }) => ({
+//   transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
+//   marginLeft: "auto",
+//   transition: theme.transitions.create("transform", {
+//     duration: theme.transitions.duration.shortest,
+//   }),
+// }));
 
 function Search(props: any) {
   const [draftMissions, setDraftMissions] = useState<Mission[]>([]);

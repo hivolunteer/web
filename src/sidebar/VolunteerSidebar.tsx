@@ -31,13 +31,13 @@ export default function VolunteerSidebar() {
   const handleCloseNavMenu = () => { setAnchorElNav(null); };
   const handleCloseUserMenu = () => { setAnchorElUser(null); };
   const [pages, setPages] = React.useState<string[]>([]);
-  const [settings, setsettings] = React.useState<string[]>([]);
-  const [pagesLink, setPagesLink] = React.useState<{ [pageName: string]: string }>({})
+  const [settings] = React.useState<string[]>([]);
+  const [pagesLink, setPagesLink] = React.useState<{ [pageName: string]: string }>({});
   const [isFetchRef, setIsFetchRef] = React.useState(false);
   const [notifications, setNotifications] = React.useState<any[]>([]);
   const [count, setCount] = React.useState(0);
 
-  const isReferent = async () => {
+  const isReferent = React.useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
       fetch(`${config.apiUrl}/referent/volunteer`, {
@@ -49,22 +49,25 @@ export default function VolunteerSidebar() {
       }).then((response) => {
         if (response.status === 200) {
           response.json().then((body: any[]) => {
-            setPages([...pages, "Missions Assignées"]);
-            pagesLink["Missions Assignées"] = "referent/missions";
+            setPages((prevPages) => [...prevPages, "Missions Assignées"]);
+            setPagesLink((prevPagesLink) => ({
+              ...prevPagesLink,
+              "Missions Assignées": "referent/missions",
+            }));
           });
         }
       });
     } catch (e) {
       console.log(e);
     }
-  }
+  }, []);
 
   React.useEffect(() => {
     if (!isFetchRef) {
       setIsFetchRef(true);
       isReferent();
     }
-  }, [isFetchRef]);
+  }, [isFetchRef, isReferent]);
 
   React.useEffect(() => {
     if (settings.length === 0) {
@@ -80,7 +83,7 @@ export default function VolunteerSidebar() {
       }
 
     }
-  }, [settings]);
+  }, [settings, pagesLink, pages]);
 
   const handleMenuItemClick = (setting: string) => {
     handleCloseUserMenu();
@@ -170,7 +173,7 @@ export default function VolunteerSidebar() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={() => { console.log("hd"); }}>{page}</MenuItem>
+                <MenuItem key={page} onClick={() => { window.location.href = `/${pagesLink[page]}`; console.log(pagesLink[page]); }}>{page}</MenuItem>
               ))}
             </Menu>
           </Box>

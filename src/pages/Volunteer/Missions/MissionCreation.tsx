@@ -7,11 +7,10 @@
 import { Autocomplete, Box, Button, Chip, Grid, TextField, FormControlLabel, Checkbox } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Image } from "mui-image";
-import { LocalizationProvider, DateTimePicker, TimePicker } from "@mui/x-date-pickers";
+import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import Lottie from "lottie-react";
 import moment from "moment";
-import "moment/locale/de";
 //import './MissionCreation.scss';
 import config from "../../../config";
 import LocationModal from "../../Association/Missions/Modal/LocationModal";
@@ -294,27 +293,28 @@ export default function MissionCreation() {
         }
         <Box component="form">
           <Grid container spacing={3}  >
-            <Grid item xs={6} lg={6}>
+            <Grid item xs={12} lg={12}>
               <TextField
                 name="missionName"
                 required
                 fullWidth
                 id="missionName"
-                label="Nom de la mission"
+                label="Titre"
                 value={form?.missionName}
                 onChange={(missionName) => {
                   setForm({ ...form, missionName: missionName.target.value });
                 }}
               />
             </Grid>
-            <Grid item xs={6} lg={6}>
+            <Grid item xs={12} lg={6}>
               <TextField
                 name="missionDescription"
                 required
                 multiline={true}
                 fullWidth
+                rows={4}
                 id="missionDescription"
-                label="Description de la mission"
+                label="Description"
                 value={form?.missionDescription}
                 onChange={(missionDescription) => {
                   setForm({
@@ -324,12 +324,13 @@ export default function MissionCreation() {
                 }}
               />
             </Grid>
-            <Grid item xs={6} lg={6}>
+            <Grid item xs={12} lg={6}>
               <TextField
                 name="missionPracticalInformation"
                 required
                 multiline={true}
                 fullWidth
+                rows={4}
                 id="missionPracticalInformation"
                 label="Informations pratiques"
                 value={form?.missionPracticalInformation}
@@ -342,7 +343,7 @@ export default function MissionCreation() {
                 }}
               />
             </Grid>
-            <Grid item xs={6} lg={6}>
+            <Grid item xs={12} lg={12}>
               <p
                 style={{
                   textDecoration: "underline",
@@ -363,24 +364,28 @@ export default function MissionCreation() {
                 setId={setLocationId}
               />
             </Grid>
-            <Grid item xs={6} lg={3}>
+            <Grid item xs={6} lg={6}>
+            <DateTimePicker
+              label="Date de début"
+              format="DD/MM/YYYY HH:mm"
+              defaultValue={moment.utc().local()}
+              minDate={moment.utc().local()}
+              sx={{ width: "100%" }}
+              onChange={(date) => {
+                setForm({
+                  ...form,
+                  missionDate: moment(date).utc().local().toDate(),
+                });
+              }}
+            />
+            </Grid>
+            <Grid item xs={6} lg={6}>
               <DateTimePicker
-                label="Date de début"
+                label="Date de fin"
                 format="DD/MM/YYYY HH:mm"
                 defaultValue={moment.utc().local()}
-                onChange={(date) => {
-                  setForm({
-                    ...form,
-                    missionDate: moment(date).utc().local().toDate(),
-                  });
-                }}
-              />
-            </Grid>
-            <Grid item xs={6} lg={3}>
-              <TimePicker
-                label="Fin de la mission"
-                format="HH:mm"
-                defaultValue={moment.utc().local()}
+                minDate={form?.missionDate ? moment(form.missionDate) : moment.utc().local()}
+                sx={{ width: "100%" }}
                 onChange={(date) => {
                   setForm({
                     ...form,
@@ -389,7 +394,7 @@ export default function MissionCreation() {
                 }}
               />
             </Grid>
-            <Grid item xs={6} lg={6}>
+            <Grid item xs={3} lg={4}>
               <TextField
                 autoComplete="name"
                 name="missionVolunteersNumber"
@@ -411,8 +416,7 @@ export default function MissionCreation() {
                 }}
               />
             </Grid>
-
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={9} lg={8}>
               <Autocomplete
                 multiple
                 id="skills"

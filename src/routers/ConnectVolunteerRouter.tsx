@@ -26,34 +26,34 @@ import FAQ from "../pages/Volunteer/FAQ/Faq";
 import FriendRequests from "../pages/Volunteer/Amis/FriendRequests";
 
 function ConnectVolunteerRouter() {
-    return (
-        <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/history" element={<History />} />
-            <Route path="/follows" element={<FollowAssociation />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path={"/friends"} element={< FriendRequests />} />
-            <Route path="/profile/blocked" element={<BlockedUsersList />} />
-            <Route path="/accueil" element={<Search />} />
-            <Route path="/association/:associationId" element={<AssociationProfile />} />
-            <Route path="/mission/:missionID" element={<MissionDetails />} />
-            <Route path="/mission/close/:missionID" element={<CloseMissionDescription />} />
-            <Route path="/mission/create" element={<MissionCreation/>} />
-            <Route path="/:missionID/edit" element={<EditMission/>} />
-            <Route path="/volunteer/:volunteerId" element={<PublicProfile/>} />
-            <Route path="/referent/missions" element={<ReferentHistory />} />
-            <Route path={"/settings"} element={<Settings />} />
-            <Route path="/settings/modify_password" element={<ChangePassword />} />
-            <Route path="/settings/referents" element={<AssociationReferent />} />
-            <Route path="/mission/:id" element={<ManageMission />} />
-            <Route path="/settings/profile_information" element={<ProfileInformationModal />} />
-            <Route path="/employee/teamrank" element={<TeamRanking/>} />
-            <Route path="/employee/rank" element={<EmployeeRanking/>} />
-            <Route path="/myMissions" element={<MyMission />} />
-            <Route path="/faq" element={< FAQ />} />
-            <Route path="*" element={<h1> Error 404 Volunteer </h1>} />
-        </Routes>
-    );
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/history" element={<History />} />
+      <Route path="/follows" element={<FollowAssociation />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/profile/blocked" element={<BlockedUsersList />} />
+      <Route path="/accueil" element={<Search />} />
+      <Route path="/association/:associationId" element={<AssociationProfile />} />
+      <Route path="/mission/:missionID" element={<MissionDetails />} />
+      <Route path="/mission/close/:missionID" element={<CloseMissionDescription />} />
+      <Route path="/mission/create" element={<MissionCreation />} />
+      <Route path="/:missionID/edit" element={<EditMission />} />
+      <Route path="/volunteer/:volunteerId" element={<PublicProfile />} />
+      <Route path="/referent/missions" element={<ReferentHistory />} />
+      <Route path={"/settings"} element={<Settings />} />
+      <Route path="/settings/modify_password" element={<ChangePassword />} />
+      <Route path="/settings/referents" element={<AssociationReferent />} />
+      <Route path="/mission/:id" element={<ManageMission />} />
+      <Route path="/settings/profile_information" element={<ProfileInformationModal />} />
+      <Route path="/employee/teamrank" element={<TeamRanking />} />
+      <Route path="/employee/rank" element={<EmployeeRanking />} />
+      <Route path="/myMissions" element={<MyMission />} />
+      <Route path="/faq" element={< FAQ />} />
+      <Route path="/friends" element={< FriendRequests />} />
+      <Route path="*" element={<h1> Error 404 Volunteer </h1>} />
+    </Routes>
+  );
 }
 
 export default ConnectVolunteerRouter;
