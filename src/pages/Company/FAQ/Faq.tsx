@@ -87,7 +87,7 @@ function FAQ() {
                     answer: "Le score 'Bee' représente l'activité ou l'engagement de l'association. Plus le score est élevé, plus l'association est active dans le système."
                 }
             ]
-        },             
+        },
         {
             page: "Profil",
             questions: [
@@ -100,7 +100,7 @@ function FAQ() {
                     answer: "Rendez-vous dans les réglages, puis appuyez sur le bouton 'Supprimer le compte'. Confirmez l'action pour supprimer définitivement votre compte."
                 }
             ]
-        }                        
+        }
     ];
 
     return (
@@ -129,6 +129,12 @@ function FAQ() {
                     ))}
                 </div>
             ))}
+            <Typography variant="body1" sx={{ marginBottom: "2rem", marginTop: "2rem" }}>
+                Vous ne trouvez pas la réponse à votre question ?&nbsp;
+                <a href="contact/">
+                    Contactez-nous !
+                </a>
+            </Typography>
         </div>
     );
 }
