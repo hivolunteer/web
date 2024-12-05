@@ -1,13 +1,7 @@
 import { useState, useEffect } from "react";
-import { InputAdornment, Tab, Tabs, TextField } from "@mui/material";
-import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import "../../Association/Search/Search.scss";
-import { Mission } from "../../../interfaces";
+import { InputAdornment, Tab, Tabs, TextField, Button } from "@mui/material";
 import config from "../../../config";
-import TabPanel from "../../../components/TabPanel"
-import MissionPanel from "../../Association/Search/Panels/MissionPanel";
 import { Team, Volunteer, Company } from "../../../interfaces";
-import { Button } from "react-bootstrap";
 
 export default function Dashboard() {
   const [teams, setTeams] = useState<Team[]>([]);
