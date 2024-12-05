@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./Settings.scss";
-import { Checkbox } from "@mui/material";
+import { Button, Divider, Checkbox, Modal, Typography, Box } from '@mui/material';
 import { useNavigate } from "react-router-dom";
-import Divider from "@mui/material/Divider";
 import config from "../../../config";
 import ConfirmationModal from "../../../components/ConfirmationModal";
 import {Alert} from "@mui/material";
@@ -15,6 +14,7 @@ function Settings() {
         localStorage.getItem("color_blind") === "true"
     );
     const colorblindOptions = ["Mode daltonien"];
+    const [openModal, setOpenModal] = useState(false);
     const history = useNavigate();
 
     const handleClick = () => {
@@ -49,33 +49,40 @@ function Settings() {
         return className;
     }
 
+    const handleOpenModal = () => {
+      setOpenModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setOpenModal(false);
+    };
 
     const [openConfirmationModal, setopenConfirmationModal] = useState(false);
     const [alertContent, setAlertContent] = useState<{ error: boolean, message: string, id: number }>({ error: false, message: "", id: 0 });
   const deleteAccount = () => {
-      let url = `${config.apiUrl}/volunteers/delete`;
-      fetch(url, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
+    let url = `${config.apiUrl}/volunteers/delete`;
+    fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          setAlertContent({ error: false, message: 'Compte supprimé avec succès', id: 0 })
+          // Redirect to the login page
+          localStorage.clear();
+          window.location.reload();
+          window.location.href = '/';
+        } else {
+          console.log('Error deleting account');
+          setAlertContent({ error: true, message: 'Erreur lors de la suppression du compte', id: 0 })
+        }
       })
-        .then((response) => {
-          if (response.status === 200) {
-            setAlertContent({ error: false, message: 'Compte supprimé avec succès', id: 0 })
-            // Redirect to the login page
-            localStorage.clear();
-            window.location.reload();
-            window.location.href = '/';
-          } else {
-            console.log('Error deleting account');
-            setAlertContent({ error: true, message: 'Erreur lors de la suppression du compte', id: 0 })
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-          setAlertContent({ error: true, message: 'Erreur serveur, veuillez réessayer plus tard', id: 0 })
-        });
+      .catch((error) => {
+        console.log(error);
+        setAlertContent({ error: true, message: 'Erreur serveur, veuillez réessayer plus tard', id: 0 })
+      });
   }
   const handleCloseConfirmationModal = () => {
     setopenConfirmationModal(false);
@@ -138,9 +145,36 @@ function Settings() {
                 Changer le mot de passe
             </button>
             <div className="profile-btn-div">
-        <button className="delete-account-btn" onClick={() => setopenConfirmationModal(true)}>
-        Supprimer le compte
-      </button>
+            <Button variant="contained" color="error" onClick={handleOpenModal}>Supprimer le compte</Button>
+            <div>
+                <Modal open={openModal} onClose={handleCloseModal}>
+                    <Box sx={{
+                            position: 'absolute' as 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: 400,
+                            bgcolor: 'background.paper',
+                            boxShadow: 24,
+                            p: 2,
+                            borderRadius: '10px',
+                        }}>
+                        <Typography variant="h6" component="h2" color="#2D2A32" marginBottom={1} sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            Supprimer le compte
+                        </Typography>
+                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                            <p className='association-referent-modal-description'>
+                            Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.
+                            </p>
+                        </Typography>
+                        <Divider />
+                        <div className='association-referent-modal-buttons'>
+                            <Button onClick={handleCloseModal} variant="outlined">Annuler</Button>
+                            <Button onClick={deleteAccount} variant="contained" color="error">Supprimer</Button>
+                        </div>
+                    </Box>
+                </Modal>
+            </div>
       {
           openConfirmationModal && 
           <ConfirmationModal

@@ -49,7 +49,13 @@ export default function VolunteerSidebar() {
       }).then((response) => {
         if (response.status === 200) {
           response.json().then((body: any[]) => {
-            setPages((prevPages) => [...prevPages, "Missions Assignées"]);
+            setPages((prevPages) => {
+              if (!prevPages.includes("Missions Assignées")) {
+                return [...prevPages, "Missions Assignées"];
+              }
+              return prevPages;
+            });
+  
             setPagesLink((prevPagesLink) => ({
               ...prevPagesLink,
               "Missions Assignées": "referent/missions",
@@ -61,7 +67,7 @@ export default function VolunteerSidebar() {
       console.log(e);
     }
   }, []);
-
+  
   React.useEffect(() => {
     if (!isFetchRef) {
       setIsFetchRef(true);
@@ -198,9 +204,11 @@ export default function VolunteerSidebar() {
               </Button>
             ))}
           </Box>
+          {localStorage.getItem("token") ?
           <Box sx={{ marginRight: "1%" }}>
             <NotificationBell notifications={notifications} setNotifications={setNotifications} />
           </Box>
+          : null }
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -227,8 +235,8 @@ export default function VolunteerSidebar() {
                           navigate("/profile");
                           break;
                         case "Demandes d'amis":
-                            window.location.href = "/friends";
-                            break;
+                          window.location.href = "/friends";
+                          break;
                         case "Réglages":
                           window.location.href = "/settings";
                           break;

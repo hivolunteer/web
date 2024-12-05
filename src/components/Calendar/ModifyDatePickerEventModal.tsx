@@ -5,6 +5,7 @@ import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { EventCreationData, ICategory, IEventInfo } from "./EventCalendar";
 import CloseIcon from '@mui/icons-material/Close';
+import moment from "moment";
 
 interface IProps {
     open: boolean;
@@ -114,16 +115,15 @@ const ModifyDatePickerEventModal = ({ open, handleClose, datePickerEventFormData
                 <DateTimePicker
                   label="Date de début"
                   value={start_date}
+                  ampm={false}
                   format={"dd/MM/yyyy HH:mm"}
-                  ampm={true}
-                  minutesStep={30}
                   onChange={(newValue) =>
                     setDatePickerEventFormData((prevState) => ({
                       ...prevState,
                       start_date: new Date(newValue!),
                     }))
                   }
-                  slotProps={{ textField: { variant: "outlined" } }}
+                  slotProps={{ textField: { fullWidth: true } }}
                 />
               </Box>
 
@@ -139,8 +139,7 @@ const ModifyDatePickerEventModal = ({ open, handleClose, datePickerEventFormData
                 disabled={allDay}
                 format={"dd/MM/yyyy HH:mm"}
                 minDate={start_date}
-                minutesStep={30}
-                ampm={true}
+                ampm={false}
                 value={allDay ? null : end_date}
                 onChange={(newValue) =>
                   setDatePickerEventFormData((prevState) => ({
@@ -148,7 +147,7 @@ const ModifyDatePickerEventModal = ({ open, handleClose, datePickerEventFormData
                     end_date: new Date(newValue!),
                   }))
                 }
-                slotProps={{ textField: { variant: "outlined" } }}
+                slotProps={{ textField: { fullWidth: true } }}
               />
             </LocalizationProvider>
             <Autocomplete

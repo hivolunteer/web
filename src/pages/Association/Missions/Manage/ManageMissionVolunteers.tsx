@@ -158,6 +158,7 @@ function ManageMissionVolunteers(props: ManageMissionVolunteersProps) {
     const [ListVolunteers, setListVolunteers] = useState<Volunteer[]>([]);
     const [response, setResponse] = useState<{ error: boolean, message: string }>({ error: false, message: "" });
     const mission_id = props.mission_id;
+    const mission_status = props.MissionStatus;
     const MissionStatus = props.MissionStatus;
     const MissionEndDate = props.MissionEndDate;
 
@@ -310,7 +311,7 @@ function ManageMissionVolunteers(props: ManageMissionVolunteersProps) {
                     >
                         Gestion des participants
                     </AccordionSummary>
-                    {!isExpired ? (
+                    {mission_status === 3 ? (
                         <AccordionActions>
                             <Button
                                 variant="contained"
@@ -323,9 +324,6 @@ function ManageMissionVolunteers(props: ManageMissionVolunteersProps) {
                             </Button>
                         </AccordionActions>
                     ) : null }
-                    {response.message && (
-                        <Alert severity={response.error ? "error" : "success"}>{response.message}</Alert>
-                    )}
                     <AccordionDetails>
                         <div className="association-manage-mission-volunteers-list-container">
                             { MissionStatus !== 1 ?

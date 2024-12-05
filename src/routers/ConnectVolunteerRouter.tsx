@@ -24,6 +24,7 @@ import TeamRanking from "../pages/Volunteer/Employee/TeamRanking";
 import EmployeeRanking from "../pages/Volunteer/Employee/EmployeeRanking";
 import FAQ from "../pages/Volunteer/FAQ/Faq";
 import FriendRequests from "../pages/Volunteer/Amis/FriendRequests";
+import ContactUs from "../pages/Contact Us/Contact";
 
 function ConnectVolunteerRouter() {
   return (
@@ -51,6 +52,7 @@ function ConnectVolunteerRouter() {
       <Route path="/myMissions" element={<MyMission />} />
       <Route path="/faq" element={< FAQ />} />
       <Route path="/friends" element={< FriendRequests />} />
+      <Route path="/contact" element={< ContactUs />} />
       <Route path="*" element={<h1> Error 404 Volunteer </h1>} />
     </Routes>
   );

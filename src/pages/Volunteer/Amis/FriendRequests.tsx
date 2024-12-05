@@ -114,14 +114,17 @@ function FriendRequests() {
                 <ToggleButton value="sent">Mes demandes d'amis</ToggleButton>
             </ToggleButtonGroup>
             <div style={{ display: 'flex', justifyContent: 'center', width: '100vw' }}>
-                {filteredVolunteers.map((volunteer: Volunteer) => (
+            { filteredVolunteers.length === 0 ? (
+                <p style={{ textAlign: 'center', marginTop: '20px' }}>
+                    Aucune demande d'ami pour le moment.
+                </p>
+            ) : (
+                filteredVolunteers.map((volunteer: Volunteer) => (
                     <div key={volunteer.id} style={{ margin: '25px', width: '25%' }}>
-                        <FriendRequestCard
-                            volunteer={volunteer}
-                            isPending={activeSection === 'pending'}
-                        />
+                        <FriendRequestCard volunteer={volunteer} />
                     </div>
-                ))}
+                ))
+            )}
             </div>
         </div>
     );

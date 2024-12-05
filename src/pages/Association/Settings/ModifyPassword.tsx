@@ -30,7 +30,7 @@ function ChangePassword() {
     };
     const fetchUserId = async () => {
         try {
-          const response = await fetch(`${config.apiUrl}/companies`, {
+          const response = await fetch(`${config.apiUrl}/associations`, {
             method: "GET",
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -70,7 +70,7 @@ function ChangePassword() {
             const id = 1; // await fetchUserId();
 
             const response = await fetch(
-                `${config.apiUrl}/companies/update_password`,
+                `${config.apiUrl}/associations/update_password`,
                 {
                     method: "POST",
                     headers: {

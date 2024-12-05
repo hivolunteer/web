@@ -13,7 +13,7 @@ function ReferentHistory() {
 
     return (
         <div style={{ marginTop: '20px', marginLeft: '10px' }}>
-            <p className="referent-history-title"> Historique de participation </p>
+            <p className="referent-history-title"> Historique - référent </p>
             <p className="referent-history-description">Retrouvez ici l'historique des missions pour lesquelles vous êtes référent.</p>
             <div className="referent-history-container">
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" variant="fullWidth">

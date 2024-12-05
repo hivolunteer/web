@@ -335,7 +335,12 @@ const LocationModal = ({
               subheader={<li />}
             >
               {parseInfo().map((location: AddressDB, index) => (
-                <div key={index} className='location-shown' style={{ justifyContent: "space-around" }} onClick={(e) => {
+                <div key={index} className='location-shown' style={{ display: "flex",
+                                                                     justifyContent: "space-between",
+                                                                     alignItems: "center",
+                                                                     padding: "8px 16px"
+                                                                  }}
+                  onClick={(e) => {
                   setBasicAddress(location);
                   setId(location.id);
                   let address = location.name + ' ' + String(location.postal_code) + ' ' + location.city + ', ' + String(location.street_number) + ' ';
@@ -347,10 +352,10 @@ const LocationModal = ({
                   handleClose();
                 }}>
                   <p>{location.name}, {location.street_number} {location.street_number_suffix} {location.street_type} {location.street_name}, {location.postal_code} {location.city}</p>
-                  <Grid item xs={8} lg={8} style={{ display: "flex", justifyContent: "end" }}>
+                  <Grid item xs={8} lg={8} style={{ display: "flex", justifyContent: "flex-end" }}>
                     <Button
                       variant="outlined"
-                      style={{ width: "auto" }}
+                      style={{ width: "150px", textAlign: "center", margin: "8px" }}
                       onClick={() => {
                         handleModifyClick(location)
                       }
@@ -371,7 +376,13 @@ const LocationModal = ({
             </Typography>
           )}
         </DialogContent>
-        <DialogContent style={{ textAlign: "center", display: 'flex', justifyContent: 'center' }}>
+        <DialogContent style={{ textAlign: "center", display: 'flex', justifyContent: 'space-between', margin: '20px 50px' }}>
+          <Button variant="outlined" color="secondary" onClick={() => {
+                                                                                        resetFields();
+                                                                                        handleClose();
+                                                                                       }}>
+            Annuler
+          </Button>
           <Button variant="contained" color="primary" onClick={() => sendData()}>
             Valider
           </Button>
