@@ -175,7 +175,7 @@ function PublicProfile() {
       </div>
 
       {(profileData?.volunteer?.id === parseInt(localStorage.getItem('id') || '')) ? (
-        <Link to="/profil" className="edit-profile-button">
+        <Link to="/profile" className="edit-profile-button">
           <Button variant="contained" color="primary">
             Modifier mon profil
           </Button>
