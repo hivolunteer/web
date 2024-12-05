@@ -1,14 +1,8 @@
 // ** React Imports
-import { MouseEvent, useState, Fragment } from 'react'
+import { Fragment } from 'react'
 
 // ** MUI Imports
-import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
-import Menu from '@mui/material/Menu'
-import Button from '@mui/material/Button'
-import MenuItem from '@mui/material/MenuItem'
-import CardHeader from '@mui/material/CardHeader'
-import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import Grid, { GridProps } from '@mui/material/Grid'
 import { styled, useTheme } from '@mui/material/styles'
@@ -20,14 +14,6 @@ import { ApexOptions } from 'apexcharts'
 // // ** Custom Components Imports
 import ReactApexcharts from 'react-apexcharts'
 
-// // ** Hook Import
-// import { useSettings } from 'src/@core/hooks/useSettings'
-
-// // ** Util Import
-// import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
-
-const yearOptions = [new Date().getFullYear() - 1, new Date().getFullYear() - 2, new Date().getFullYear() - 3]
-
 //number of missions
 const barSeries = [
   { name: 'Earning', data: [0, 0, 0, 1, 1, 3, 0, 0, 2, 3] },
@@ -36,11 +22,6 @@ const barSeries = [
 //number of hours
 const barSeries2 = [
   { name: 'Earning', data: [0, 0, 0, 4, 4, 12,0, 0, 12, 10] },
-]
-
-const lineSeries = [
-  { name: 'Last Month', data: [20, 10, 30, 16, 24, 5, 30, 23, 28, 5, 30] },
-  { name: 'This Month', data: [50, 40, 60, 46, 54, 35, 70, 53, 58, 35, 60] }
 ]
 
 const StyledGrid = styled(Grid)<GridProps>(({ theme }) => ({
@@ -54,20 +35,11 @@ const StyledGrid = styled(Grid)<GridProps>(({ theme }) => ({
 
 const CardWidgetsRevenueReport = () => {
   // ** State
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
   // ** Hooks & Var
   const theme = useTheme()
  // const { settings } = useSettings()
  // const { direction } = settings
-
-  const handleClick = (event: MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget)
-  }
-
-  const handleClose = () => {
-    setAnchorEl(null)
-  }
 
    const barOptions: ApexOptions = {
      chart: {
@@ -336,34 +308,6 @@ const CardWidgetsRevenueReport = () => {
       }
     ]
  }
-
-   const lineOptions: ApexOptions = {
-     chart: {
-       parentHeightOffset: 0,
-       toolbar: { show: false },
-       sparkline: { enabled: true }
-     },
-     stroke: {
-       width: [1, 2],
-       curve: 'smooth',
-       dashArray: [5, 0]
-     },
-     colors: [theme.palette.divider, 'rgba(10, 20, 30, 100)'],
-     grid: {
-       padding: { top: -5 },
-       yaxis: {
-         lines: { show: false }
-       }
-     },
-     xaxis: {
-       labels: { show: false },
-       axisTicks: { show: false },
-       axisBorder: { show: false }
-     },
-     yaxis: {
-       labels: { show: false }
-     }
-    }
 
   return (
     <Fragment>

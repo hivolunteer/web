@@ -33,7 +33,7 @@ export default function AssociationCommentary(props: AssociationCommentaryProps)
                 console.log(data[0])
                 setRating(data[0])
             })
-    }, [])
+    }, [id])
 
     return (
         <div className="mission-details-content-center">

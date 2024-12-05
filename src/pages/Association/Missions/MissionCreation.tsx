@@ -181,14 +181,13 @@ export default function MissionCreation() {
     let startDates: Date[] = [];
     let endDates: Date[] = [];
 
-    missionDateRanges
-    .map((mission: {start: Date | null; end: Date | null}) => {
+    missionDateRanges.forEach((mission: {start: Date | null; end: Date | null}) => {
       if ((mission.start === null) || (mission.end === null)) {
-        alert("Pas de dates entrées")
+      alert("Pas de dates entrées");
       }
-      if (mission.start) startDates.push(mission.start)
-      if (mission.end) endDates.push(mission.end)
-    })
+      if (mission.start) startDates.push(mission.start);
+      if (mission.end) endDates.push(mission.end);
+    });
      
     const body = {
       max_volunteers: form?.missionVolunteersNumber,

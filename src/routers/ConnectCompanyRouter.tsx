@@ -8,6 +8,8 @@ import Team from '../pages/Company/Team/Team';
 import ModifyPassword from '../pages/Company/Settings/ModifyPassword';
 import Missions from '../pages/Company/Missions/Missions';
 import Dashboard from '../pages/Company/Dashboard/Dashboard';
+import FAQ from '../pages/Company/FAQ/Faq';
+import ContactUs from '../pages/Contact Us/Contact';
 
 function ConnectCompanyRouter() {
     return(
@@ -21,7 +23,9 @@ function ConnectCompanyRouter() {
             <Route path="/teams" element={<Team />} />
             <Route path="/settings/modify_password" element={<ModifyPassword />} />
             <Route path={"/missions"} element={<Missions />} />
-            <Route path="*" element={<h1> Error 404 Asso </h1>} />
+            <Route path="/faq" element={< FAQ />} />
+            <Route path="/contact" element={< ContactUs />} />
+            <Route path="*" element={<h1> Error 404 Company </h1>} />
         </Routes>
     )
 }

@@ -5,10 +5,10 @@ import { Association, PageAssoProps } from "../Interfaces"
 function AssociationPanel(props: {assoPages: Array<PageAssoProps>}) {
 
     const {assoPages} = props;
-    const [noAssociationFound, setNoAssociationFound] = useState<boolean>(false)
+    const [noAssociationFound] = useState<boolean>(false)
     const [max_page, setMaxPage] = useState<number>(1)
     const [actual_page, setActualPage] = useState<number>(1)
-    const [noMissionFound, setNoMissionFound] = useState<boolean>(false)
+    const [, setNoMissionFound] = useState<boolean>(false)
 
 
     useEffect(() => {

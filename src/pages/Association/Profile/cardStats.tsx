@@ -1,58 +1,47 @@
-import { Fragment, useEffect, useState } from "react";
-import config from "../../../config";
-import { Avatar, Box, Card, CardContent, CardHeader, Divider, Icon, Typography } from "@mui/material";
+import { Fragment } from "react";
+import { Avatar, Box, Card, CardContent, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid'; // remplacer par Grid2
-import { Link } from "react-router-dom";
-import { EmojiEventsOutlined, EmojiNatureOutlined, Groups2Outlined, HiveOutlined, Person } from "@mui/icons-material";
 
 // Icon
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import GroupsIcon from '@mui/icons-material/Groups';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-import StarOutlinedIcon from '@mui/icons-material/StarOutlined';
 import EmojiPeopleOutlinedIcon from '@mui/icons-material/EmojiPeopleOutlined';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 
+// interface IEmployeesList {
+//   id: number;
+//   name: string;
+//   profile_picture: string;
+//   bee: number;
+//   team: {
+//     id: number;
+//     name: string;
+//   };
+// }
 
+// interface IEmployeeRankingInfo {
+//   nb_followers: number;
+//   nb_participation: number;
+// }
 
+// const getInitials = (string: string) =>
+//   string.split(/\s/).reduce((response, word) => (response += word.slice(0, 1)), '')
 
-interface IEmployeesList {
-  id: number;
-  name: string;
-  profile_picture: string;
-  bee: number;
-  team: {
-    id: number;
-    name: string;
-  };
-}
+// function RowAction({ volunteerId, teamId }: { volunteerId: number, teamId: number }) {
+//   return (
+//     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'baseline' }}>
+//       <Link to={`/volunteer/${volunteerId}`} style={{ textDecoration: 'none' }}>
+//         <VisibilityIcon sx={{ color: '#67A191', cursor: 'pointer', fontSize: 20, mr: 2 }} />
+//       </Link>
+//       <Link to={`/team/${teamId}`} style={{ textDecoration: 'none' }}>
+//         <GroupsIcon sx={{ color: '#67A191', cursor: 'pointer', fontSize: 20, mr: 2 }} />
+//       </Link>
+//       <Link to={`/volunteer/${volunteerId}`} style={{ textDecoration: 'none' }}>
+//         <DeleteIcon sx={{ color: '#67A191', cursor: 'pointer', fontSize: 20 }} />
+//       </Link>
+//     </Box>
+//   )
+// }
 
-interface IEmployeeRankingInfo {
-  nb_followers: number;
-  nb_participation: number;
-}
-
-const getInitials = (string: string) =>
-  string.split(/\s/).reduce((response, word) => (response += word.slice(0, 1)), '')
-
-function RowAction({ volunteerId, teamId }: { volunteerId: number, teamId: number }) {
-  return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'baseline' }}>
-      <Link to={`/volunteer/${volunteerId}`} style={{ textDecoration: 'none' }}>
-        <VisibilityIcon sx={{ color: '#67A191', cursor: 'pointer', fontSize: 20, mr: 2 }} />
-      </Link>
-      <Link to={`/team/${teamId}`} style={{ textDecoration: 'none' }}>
-        <GroupsIcon sx={{ color: '#67A191', cursor: 'pointer', fontSize: 20, mr: 2 }} />
-      </Link>
-      <Link to={`/volunteer/${volunteerId}`} style={{ textDecoration: 'none' }}>
-        <DeleteIcon sx={{ color: '#67A191', cursor: 'pointer', fontSize: 20 }} />
-      </Link>
-    </Box>
-  )
-}
-
-function HorizontalInfoGrid({ nb_followers, nb_participation}: { nb_followers : number, nb_participation : number}) {
+function HorizontalInfoGrid({ nb_followers, nb_participation }: { nb_followers: number, nb_participation: number }) {
   return (
     <Fragment>
       <Grid item xs={6} md={3} sm={6}>
@@ -70,7 +59,7 @@ function HorizontalInfoGrid({ nb_followers, nb_participation}: { nb_followers : 
             </Box>
             <Box sx={{ width: 60, height: 60, bgcolor: '#b8942121', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 1.5 }}>
               <Avatar sx={{ width: 60, height: 60, bgcolor: '#b8942100' }}>
-                <PeopleAltOutlinedIcon sx={{ fontSize: 50, color: '#b89421' }} /> 
+                <PeopleAltOutlinedIcon sx={{ fontSize: 50, color: '#b89421' }} />
               </Avatar>
             </Box>
           </CardContent>
@@ -101,19 +90,19 @@ function HorizontalInfoGrid({ nb_followers, nb_participation}: { nb_followers : 
   )
 }
 
-function EmployeeRanking({ nb_followers, nb_participation}: { nb_followers : number, nb_participation : number}) {
+function EmployeeRanking({ nb_followers, nb_participation }: { nb_followers: number, nb_participation: number }) {
 
-  const [employeesList, setEmployeesList] = useState<IEmployeesList[]>([]);
-  const [paginationModel, setPaginationModel] = useState({ page: 1, pageSize: 20 })
+  // const [employeesList, setEmployeesList] = useState<IEmployeesList[]>([]);
+  // const [paginationModel, setPaginationModel] = useState({ page: 1, pageSize: 20 })
 
   console.log(nb_followers)
   console.log(nb_participation)
   return (
-    <div style={{ padding: 10}}>
+    <div style={{ padding: 10 }}>
       <Grid container spacing={6.5}>
         <Grid item xs={12}>
-          <Grid container spacing={3} sx={{ justifyContent: 'center'}}>
-            <HorizontalInfoGrid nb_followers={nb_followers} nb_participation={nb_participation}/>
+          <Grid container spacing={3} sx={{ justifyContent: 'center' }}>
+            <HorizontalInfoGrid nb_followers={nb_followers} nb_participation={nb_participation} />
           </Grid>
         </Grid>
       </Grid>

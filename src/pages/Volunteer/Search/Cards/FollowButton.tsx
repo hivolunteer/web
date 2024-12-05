@@ -1,4 +1,4 @@
-import { IconButton, Icon } from '@mui/material';
+import { IconButton } from '@mui/material';
 import config from '../../../../config';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';

@@ -114,7 +114,7 @@ function AffiliatedCompanies(props: any) {
                     onClick={generateToken}
                     className="generate-token-button"
                     >
-                    Générer un code référent
+                    Générer un code entreprise
                     </Button>
                 ) : (
                     <div className="token-container">

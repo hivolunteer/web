@@ -1,7 +1,7 @@
 import { Association, PageAssoProps, filterAssoProps } from "../Interfaces";
 
 function filterAssoAndPagination(props: filterAssoProps ) {
-  if (props.filteredAssociations.length === 0 && props.searched == true)
+  if (props.filteredAssociations.length === 0 && props.searched === true)
     return []
   else {
     let associations = props.associationList

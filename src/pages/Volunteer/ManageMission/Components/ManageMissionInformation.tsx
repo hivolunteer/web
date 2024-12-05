@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button } from "@mui/material";
+import { Button, Card, CardActions, CardContent, CardHeader } from "@mui/material";
 import Grid from "@mui/system/Unstable_Grid";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import config from "../../../../config";
@@ -31,19 +31,27 @@ interface Location {
   postal_code: string,
 }
 
-function TextDisplayer(props: any) {
-  const element = props.element;
-
+function TextDisplayer({ element }: { element: string | number | undefined }) {
   if (element === null || element === undefined) {
     return (
       <div className="manage-mission-information-container">
         <p className="manage-mission-information-container-text">Non défini</p>
       </div>
     );
-  } else {
+  } else if (typeof element === 'number') {
     return (
       <div className="manage-mission-information-container">
-        {element}
+        <p className="manage-mission-information-container-text">{element}</p>
+      </div>
+    );
+  } else {
+    // Format the text to display it correctly in many lines
+    const text = (element as string).split('\n').map((item: string, key: number) => {
+      return <span key={key}>{item}<br /></span>
+    });
+    return (
+      <div className="manage-mission-information-container">
+        {text}
       </div>
     );
   }
@@ -64,7 +72,7 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
   const [mission, setMission] = useState<Mission>();
   const [location, setLocation] = useState<Location>();
   const [missionPicture, setMissionPicture] = useState<string>("");
-  const [theme, setTheme] = useState<string>('');
+  const [, setTheme] = useState<string>('');
 
   const mission_id = props.mission_id;
   const SetMissionStatus = props.setMissionStatus;
@@ -83,7 +91,6 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
   }
 
   useEffect(() => {
-    let missionData: Mission | undefined = mission;
     fetch(`${config.apiUrl}/missions/${isAssociation ? 'association' : 'close'}/${mission_id}`, {
       method: 'GET',
       headers: {
@@ -93,45 +100,44 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
     }).then((response) => {
       if (response.status === 200) {
         response.json().then((data) => {
-            const mission : any = (isAssociation ? data.association_mission : data.close_mission)
-            missionData = mission;
-            setMission(mission);
-    
-            getTheme(localStorage.getItem('token') as string, mission.theme_id).then((theme) => {
-                setTheme(theme);
-              });
-    
-            props.setIsCompanyApproved(isAssociation ? data.association_mission.approved_company : data.close_mission.is_approved_company);
-            props.setIsCompanyMission(isAssociation ? ((data.association_mission.company_id !== null) ? true : false) : data.close_mission.is_company);
-            SetMissionStatus(mission.status);
-            SetMissionEndDate(mission.end_date);
-            setMissionPicture(mission.picture);
-            fetch(`${config.apiUrl}/locations/${mission.location}`, {
-                method: 'GET',
-                headers: {
-                    'content-type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
+          const mission = (isAssociation ? data.association_mission : data.close_mission)
+          setMission(mission);
+
+          getTheme(localStorage.getItem('token') as string, mission.theme_id).then((theme) => {
+            setTheme(theme);
+          });
+
+          props.setIsCompanyApproved(isAssociation ? data.association_mission.approved_company : data.close_mission.is_approved_company);
+          props.setIsCompanyMission(isAssociation ? ((data.association_mission.company_id !== null) ? true : false) : data.close_mission.is_company);
+          SetMissionStatus(mission.status);
+          SetMissionEndDate(mission.end_date);
+          setMissionPicture(mission.picture);
+          fetch(`${config.apiUrl}/locations/${mission.location}`, {
+            method: 'GET',
+            headers: {
+              'content-type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          }).then((response) => {
+            if (response.status === 200) {
+              response.json().then((data) => {
+                setLocation(data);
+              })
+            }
+          })
+          console.log("MISSION PICTURE", missionPicture);
+          if (mission.picture && mission.picture.startsWith('/uploads')) {
+            fetch(`${config.apiUrl}/uploads/${isAssociation ? 'association' : 'volunteer'}/mission/${mission_id}`, {
+              method: 'GET',
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+              },
             }).then((response) => {
-                if (response.status === 200) {
-                    response.json().then((data) => {
-                        setLocation(data);
-                    })
-                }
-            })
-            console.log("MISSION PICTURE", missionPicture);
-            if (mission.picture && mission.picture.startsWith('/uploads')) {
-              fetch(`${config.apiUrl}/uploads/${isAssociation ? 'association' : 'volunteer'}/mission/${mission_id}`, {
-                method: 'GET',
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem('token')}`
-                },
-              }).then((response) => {
-                console.log(response);
-                response.blob()
-                  .then((blob) => {
-                    const objectUrl = URL.createObjectURL(blob);
-                    setMissionPicture(objectUrl);
+              console.log(response);
+              response.blob()
+                .then((blob) => {
+                  const objectUrl = URL.createObjectURL(blob);
+                  setMissionPicture(objectUrl);
                 })
                 .catch((error) => {
                   console.error(error);
@@ -143,7 +149,7 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
         window.location.href = "/";
       }
     });
-  }, []);
+  }, [mission_id, isAssociation, SetMissionStatus, SetMissionEndDate, missionPicture]);
 
   return (
     <div>
@@ -155,15 +161,15 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
           <h1> {mission?.title} </h1>
         </div>
       </div>
-      <Accordion className="volunteer-manage-mission-accordion" defaultExpanded={true}>
-        <AccordionSummary
+      <Card className="volunteer-manage-mission-accordion" sx={{ marginTop: '1em' }}>
+        <CardHeader
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
           Informations de la mission
-        </AccordionSummary>
-        <AccordionDetails>
+        </CardHeader>
+        <CardContent>
           <Grid container spacing={3}>
             <Grid xs={6}>
               <h4> Date de la mission </h4>
@@ -176,8 +182,8 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
               </div>
               <h4> Nombre de volontaires </h4>
               <TextDisplayer element={mission?.max_volunteers} />
-              <h4> Thème </h4>
-              <TextDisplayer element={theme} />
+              {/* <h4> Thème </h4>
+              <TextDisplayer element={theme} /> */}
               <h4> Status </h4>
               <p className={props.MissionStatus === 1 ? "manage-mission-information-status-published" : props.MissionStatus === 2 ? "manage-mission-information-status-canceled" : props.MissionStatus === 3 ? "manage-mission-information-status-passed" : "manage-mission-information-status-draft"}>
                 {props.MissionStatus === 1 ? "En ligne" : props.MissionStatus === 2 ? "Annulée" : props.MissionStatus === 3 ? "Passée" : "Brouillon"}
@@ -191,12 +197,12 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
               <TextDisplayer element={mission?.practical_information} />
             </Grid>
           </Grid>
-        </AccordionDetails>
-        <AccordionActions>
+        </CardContent>
+        <CardActions>
           <Button size="small" color="warning" onClick={() => window.location.href = `/${mission?.id}/edit`}>Modifier</Button>
-          <Button size="small" color="info" onClick={() => window.location.href = `/mission/${mission?.id}`}>Visualiser</Button>
-        </AccordionActions>
-      </Accordion>
+          <Button size="small" color="info" onClick={() => window.location.href = localStorage.getItem('role') === 'association' ? `/manage/${mission?.id}` :  `/mission/close/${mission?.id}`}>Visualiser</Button>
+        </CardActions>
+      </Card>
     </div>
   );
 }

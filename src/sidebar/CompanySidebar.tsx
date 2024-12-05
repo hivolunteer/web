@@ -24,11 +24,12 @@ const settings: string[] = [];
 const pagesLink: { [pageName: string]: string } = {};
 
 if (localStorage.getItem("token") !== null) {
-  settings.push("Profile", "Réglages", "Déconnexion");
-  pages.push("Accueil", "Équipes", "Affiliations");
+  settings.push("Profil", "Réglages", "Déconnexion");
+  pages.push("Accueil", "Équipes", "Affiliations", "FAQ");
   pagesLink["Accueil"] = "accueil";
   pagesLink["Équipes"] = "teams";
   pagesLink["Affiliations"] = "affiliatedAssociations";
+  pagesLink["FAQ"] = "faq";
 } else {
   settings.push("Connexion", "Inscription");
 }
@@ -48,7 +49,7 @@ export default function CompanySidebar() {
     const handleMenuItemClick = (setting: string) => {
         handleCloseUserMenu();
         switch (setting) {
-            case "Profile":
+            case "Profil":
                 navigate("/profile");
                 break;
             case "Déconnexion":
@@ -62,7 +63,7 @@ export default function CompanySidebar() {
     React.useEffect(() => {
         const fetchNotifications = async () => {
             try {
-                await fetch(`${config.apiUrl}/notifications/list/Association/personal`, {
+                await fetch(`${config.apiUrl}/notifications/list/Company/personal`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -179,11 +180,11 @@ export default function CompanySidebar() {
                         >
                             {settings.map((setting) => (
                                 <MenuItem key={setting} onClick={() => handleMenuItemClick(setting)} >
-                                    <Typography textAlign="center" component={Link} to={setting === "Profile" ? "/profile" : "/"}
+                                    <Typography textAlign="center" component={Link} to={setting === "Profil" ? "/profile" : "/"}
                                                 onClick={() => {
                                                     handleCloseUserMenu();
                                                     switch (setting) {
-                                                        case "Profile":
+                                                        case "Profil":
                                                             navigate("/profile");
                                                             break;
                                                         case "Réglages":

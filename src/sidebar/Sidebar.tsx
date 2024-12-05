@@ -21,11 +21,11 @@ import logoImage from "../images/logo/submark.png";
 const pages: string[] = [];
 const settings: string[] = [];
 if (localStorage.getItem("token") !== null) {
-  pages.push("Accueil", "Calendrier", "Profile");
+  pages.push("Accueil", "Calendrier", "Profil");
 }
 
 if (localStorage.getItem("token") !== null) {
-  settings.push("Créer une mission", "Profile", "Réglages", "Referent", "Logout");
+  settings.push("Créer une mission", "Profil", "Réglages", "Referent", "Logout");
 } else {
   settings.push("Connexion", "Inscription");
 }
@@ -58,7 +58,7 @@ function ResponsiveAppBar() {
     handleCloseUserMenu();
 
     switch (setting) {
-      case "Profile":
+      case "Profil":
         navigate("/profile");
         break;
       case "Logout":
@@ -208,14 +208,14 @@ function ResponsiveAppBar() {
                   <Typography
                     textAlign="center"
                     component={Link}
-                    to={setting === "Profile" ? "/profile" : "/"}
+                    to={setting === "Profil" ? "/profile" : "/"}
                     onClick={() => {
                       handleCloseUserMenu();
                       switch (setting) {
                         case "Créer une mission":
                           window.location.href = "/missionCreation";
                           break;
-                        case "Profile":
+                        case "Profil":
                           navigate("/profile");
                           break;
                         case "Réglages":
