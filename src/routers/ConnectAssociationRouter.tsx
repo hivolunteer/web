@@ -15,6 +15,7 @@ import ProfileInformationModal from '../pages/Association/Settings/ProfileInform
 import AffiliatedCompanies from '../pages/Association/AffiliatedCompanies/AffiliatedCompanies';
 import ModifyLocationModal from '../pages/Association/Missions/Modal/ModifyLocationModal';
 import FAQ from '../pages/Association/FAQ/Faq';
+import ContactUs from '../pages/Contact Us/Contact';
 
 function ConnectAssociationRouter() {
     return(
@@ -35,6 +36,7 @@ function ConnectAssociationRouter() {
             <Route path="/referent" element={<ReferentPage />} />
             <Route path="/affiliatedCompanies" element={<AffiliatedCompanies />} />
             <Route path="/faq" element={< FAQ />} />
+            <Route path="/contact" element={< ContactUs />} />
             <Route path="manage/:id" element={<ManageMission />} />
             <Route path="*" element={<h1> Error 404 Asso </h1>} />
         </Routes>
