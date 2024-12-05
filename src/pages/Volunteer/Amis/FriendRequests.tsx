@@ -62,15 +62,17 @@ function FriendRequests(props: any) {
     return (
         <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
             <div style={{ display: 'flex', justifyContent: 'center', width: '100vw' }}>
-                {
-                    filteredVolunteers.map((volunteer: Volunteer) => {
-                        return (
-                            <div key={volunteer.id} style={{ margin: '25px', width: '25%' }}>
-                                <FriendRequestCard volunteer={volunteer} />
-                            </div>
-                        )
-                    })
-                }
+            { filteredVolunteers.length === 0 ? (
+                <p style={{ textAlign: 'center', marginTop: '20px' }}>
+                    Aucune demande d'ami pour le moment.
+                </p>
+            ) : (
+                filteredVolunteers.map((volunteer: Volunteer) => (
+                    <div key={volunteer.id} style={{ margin: '25px', width: '25%' }}>
+                        <FriendRequestCard volunteer={volunteer} />
+                    </div>
+                ))
+            )}
             </div>
         </div>
     );

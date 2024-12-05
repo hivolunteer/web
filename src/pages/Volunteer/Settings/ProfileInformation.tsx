@@ -18,8 +18,21 @@ function ProfileInformationModal() {
     const [error, setError] = useState("");
     const [alert, setAlert] = useState(false);
 
-    const handleClose = () => history("/settings");
+    const handleClose = () => {
+        setAlert(false);
+        history("/settings");
+    };
 
+    const validatePhoneNumber = (phone: string) => {
+        const phoneRegex = /^\+(?:[0-9] ?){6,14}[0-9]$/;
+        return phoneRegex.test(phone);
+    };
+    
+    const validateEmail = (email: string) => {
+        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        return emailRegex.test(email);
+    };
+    
     const handleFirstNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setFirstName(event.target.value);
     }
@@ -37,7 +50,11 @@ function ProfileInformationModal() {
     };
 
     const handleProfilePictureChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setProfilePicture(event.target.value);
+        const file = event.target.files?.[0];
+        if (file) {
+            const fileUrl = URL.createObjectURL(file);
+            setProfilePicture(fileUrl);
+        }
     };
 
     useEffect(() => {
@@ -59,8 +76,8 @@ function ProfileInformationModal() {
                             setProfilePicture(data.volunteer.profile_picture);
                         });
                     } else {
-                        console.log("Error fetching profile");
-                        console.log(response);
+                        setError("Failed to fetch profile details.");
+                        setAlert(true);
                     }
                 })
                 .catch((error) => {
@@ -73,7 +90,20 @@ function ProfileInformationModal() {
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+        let validationError = "";
+        if (!firstName.trim() || !lastName.trim()) {
+            validationError = "Prénom et Nom sont obligatoires.";
+        } else if (!validateEmail(email)) {
+            validationError = "L'adresse e-mail n'est pas valide.";
+        } else if (!validatePhoneNumber(phone)) {
+            validationError = "Le numéro de téléphone n'est pas valide.";
+        }
 
+        if (validationError) {
+            setError(validationError);
+            setAlert(true);
+            return;
+        }
         try {
             const response = await fetch(
                 `${config.apiUrl}/volunteers/update`,
@@ -102,9 +132,11 @@ function ProfileInformationModal() {
             setEmail("");
             setPhone("");
             setProfilePicture("");
+            setAlert(false);
             handleClose();
         } catch (error) {
             setError((error as Error).message);
+            setAlert(true);
         }
     };
 
@@ -143,24 +175,27 @@ function ProfileInformationModal() {
                         style={{
                             marginTop: "20px",
                             gap: "10px",
+                            maxHeight: "500px",
+                            overflow: "auto",
                         }}
                     >
                         <div>
-                            <Typography style={{
-                                fontWeight: "bold"
-                            }}>
+                            <Typography style={{ fontWeight: "bold" }}>
                                 Photo de profil
                             </Typography>
-                            <TextField
-                                fullWidth
-                                variant="outlined"
-                                id="profilePicture"
-                                name="profilePicture"
-                                type="text"
-                                value={profilePicture}
+                            <input
+                                type="file"
+                                accept="image/*"
                                 onChange={handleProfilePictureChange}
-                                margin="normal"
+                                style={{ marginBottom: "10px" }}
                             />
+                            {profilePicture && (
+                                <img
+                                    src={profilePicture}
+                                    alt="Profile Preview"
+                                    style={{ maxWidth: "100px", marginTop: "10px" }}
+                                />
+                            )}
                         </div>
                         <div style={{marginTop: "20px"}}>
                             <Typography style={{
@@ -232,14 +267,18 @@ function ProfileInformationModal() {
                         </div>
                         {alert && (
                             <Alert
-                                onClose={() => {
-                                    setAlert(false);
-                                }}
-                                severity="error"
-                            >
-                                <AlertTitle>Error</AlertTitle>
-                                {error}
-                            </Alert>
+                            severity="error"
+                            sx={{
+                              backgroundColor: "#f8d7da",
+                              color: "#721c24",
+                              border: "1px solid #f5c6cb",
+                              borderRadius: "4px",
+                              mt: 2,
+                            }}
+                          >
+                            <AlertTitle style={{ fontWeight: "bold" }}>Erreur</AlertTitle>
+                            {error}
+                          </Alert>
                         )}
                         <div
                             style={{

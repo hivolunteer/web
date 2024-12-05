@@ -33,7 +33,7 @@ function ReferentHistoryList( {is_active} : {is_active: boolean}) {
         <div className="referent-history-missions-list">
             {missions.length === 0 && (
                 is_active 
-                    ? <p>Aucune association ne vous a assigné de missions</p> 
+                    ? <p>Aucune association ne vous a assigné de missions.</p> 
                     : <p>Engagez-vous auprès d'une association !</p>
             )}
             <div className="component-missions-list-missions">

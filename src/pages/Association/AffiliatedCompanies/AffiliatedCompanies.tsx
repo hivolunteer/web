@@ -17,7 +17,7 @@ interface Association {
 function AffiliatedCompanies(props: any) {
     const [companyList, setCompanyList] = useState<Company[]>([]);
     const [association, setAssociation] = useState<Association | null>(null)
-
+    const [copyMessage, setCopyMessage] = useState<string | null>(null);
 
     useEffect(() => {
         fetch(`${config.apiUrl}/associations/profile`, {
@@ -104,6 +104,13 @@ function AffiliatedCompanies(props: any) {
             })
     }
 
+    function handleCopyCode(code: string) {
+        navigator.clipboard.writeText(code);
+        setCopyMessage('Copié au presse-papier');
+        
+        setTimeout(() => setCopyMessage(null), 2000);
+    }
+
     return (
         <div className="affiliated-companies">
             <h1 className="affiliated-companies-title">Entreprises affiliées</h1>
@@ -123,22 +130,27 @@ function AffiliatedCompanies(props: any) {
                         <span className="bold">Code entreprise: </span>
                         {association?.company_token}
                         </p>
-                        <div className="icon-container">
-                        <MdOutlineCopyAll
-                            className="icon"
-                            title="Copier le code"
-                            onClick={() => navigator.clipboard.writeText(association?.company_token as string)}
-                        />
-                        <MdOutlineRestartAlt
-                            className="icon"
-                            title="Changer le code"
-                            onClick={generateToken}
-                        />
+                        <div>
+                            <MdOutlineCopyAll
+                                className="icon"
+                                title="Copier le code"
+                                onClick={() => handleCopyCode(association?.company_token as string)}
+                            />
+                            <MdOutlineRestartAlt
+                                className="icon"
+                                title="Changer le code"
+                                onClick={generateToken}
+                            />
                         </div>
                     </div>
                     </div>
                 )}
             </div>
+            {copyMessage &&
+            <div className="msg-container" >
+                <p className="copy-message">{copyMessage}</p>
+            </div>
+            }
             <div className="affiliated-companies-list-header">
                 {
                     (companyList.length === 0) ?

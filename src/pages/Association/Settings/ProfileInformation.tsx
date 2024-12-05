@@ -19,12 +19,20 @@ function ProfileInformationModal() {
   const [error, setError] = useState("");
   const [alert, setAlert] = useState(false);
 
-  const handleClose = () => history("/settings");
+  const handleClose = () => {
+    setAlert(false);
+    history("/settings");
+  };
 
-  // function validateEmail(email: string): boolean {
-  //     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  //     return emailRegex.test(email);
-  //   }
+  const validatePhoneNumber = (phone: string) => {
+    const phoneRegex = /^\+(?:[0-9] ?){6,14}[0-9]$/;
+    return phoneRegex.test(phone);
+  };
+
+  const validateEmail = (email: string) => {
+      const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      return emailRegex.test(email);
+  };
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
@@ -47,7 +55,11 @@ function ProfileInformationModal() {
   };
 
   const handleProfilePictureChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setProfilePicture(event.target.value);
+    const file = event.target.files?.[0];
+    if (file) {
+      const fileUrl = URL.createObjectURL(file);
+      setProfilePicture(fileUrl);
+    }
   };
 
   useEffect(() => {
@@ -85,6 +97,20 @@ function ProfileInformationModal() {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    let validationError = "";
+    if (!name.trim() || !rna.trim() || !description.trim()) {
+        validationError = "Nom, RNA et description sont obligatoires.";
+    } else if (!validateEmail(email)) {
+        validationError = "L'adresse e-mail n'est pas valide.";
+    } else if (!validatePhoneNumber(phone)) {
+        validationError = "Le numéro de téléphone n'est pas valide.";
+    }
+    
+    if (validationError) {
+        setError(validationError);
+        setAlert(true);
+        return;
+    }
 
     try {
       const response = await fetch(
@@ -120,6 +146,7 @@ function ProfileInformationModal() {
       handleClose();
     } catch (error) {
       setError((error as Error).message);
+      setAlert(true);
     }
   };
 
@@ -159,6 +186,8 @@ function ProfileInformationModal() {
             style={{
               marginTop: "20px",
               gap: "10px",
+              maxHeight: "500px",
+              overflow: "auto",
             }}
           >
             <div style={{ marginTop: "20px" }}>
@@ -167,16 +196,19 @@ function ProfileInformationModal() {
               }}>
                 Image de profil
               </Typography>
-              <TextField
-                fullWidth
-                variant="outlined"
-                id="profilePicture"
-                name="profilePicture"
-                type="text"
-                value={profilePicture}
+              <input
+                type="file"
+                accept="image/*"
                 onChange={handleProfilePictureChange}
-                margin="normal"
+                style={{ marginBottom: "10px" }}
               />
+              {profilePicture && (
+                <img
+                  src={profilePicture}
+                  alt="Profile Preview"
+                  style={{ maxWidth: "100px", marginTop: "10px" }}
+                />
+              )}
             </div>
             <div style={{ marginTop: "20px" }}>
               <Typography style={{
