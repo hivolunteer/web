@@ -73,7 +73,8 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
   const [mission, setMission] = useState<Mission>();
   const [location, setLocation] = useState<Location>();
   const [missionPicture, setMissionPicture] = useState<string>("");
-  const [, setTheme] = useState<string>('');
+  const [theme, setTheme] = useState<string>('');
+  const [isblobCreated, setIsBlobCreated] = useState<boolean>(false);
 
   const mission_id = props.mission_id;
   const SetMissionStatus = props.setMissionStatus;
@@ -87,6 +88,7 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
 }
 
   useEffect(() => {
+    if (isblobCreated) return;
     fetch(`${config.apiUrl}/missions/${isAssociation ? 'association' : 'close'}/${mission_id}`, {
       method: 'GET',
       headers: {
@@ -99,9 +101,10 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
           const mission = (isAssociation ? data.association_mission : data.close_mission)
           setMission(mission);
 
-          getTheme(localStorage.getItem('token') as string, mission.theme_id).then((theme) => {
-            setTheme(theme);
-          });
+          if (mission.theme_id)
+            getTheme(localStorage.getItem('token') as string, mission.theme_id).then((theme) => {
+              setTheme(theme);
+            });
 
           props.setIsCompanyApproved(isAssociation ? data.association_mission.approved_company : data.close_mission.is_approved_company);
           props.setIsCompanyMission(isAssociation ? ((data.association_mission.company_id !== null) ? true : false) : data.close_mission.is_company);
@@ -121,7 +124,6 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
               })
             }
           })
-          console.log("MISSION PICTURE", missionPicture);
           if (mission.picture && mission.picture.startsWith('/uploads')) {
             fetch(`${config.apiUrl}/uploads/${isAssociation ? 'association' : 'volunteer'}/mission/${mission_id}`, {
               method: 'GET',
@@ -129,11 +131,11 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
               },
             }).then((response) => {
-              console.log(response);
               response.blob()
                 .then((blob) => {
                   const objectUrl = URL.createObjectURL(blob);
                   setMissionPicture(objectUrl);
+                  setIsBlobCreated(true);
                 })
                 .catch((error) => {
                   console.error(error);
@@ -145,7 +147,7 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
         window.location.href = "/";
       }
     });
-  }, [mission_id, isAssociation, SetMissionStatus, SetMissionEndDate, missionPicture]);
+  }, [mission_id, isAssociation, missionPicture, isblobCreated]);
 
   return (
     <div>
