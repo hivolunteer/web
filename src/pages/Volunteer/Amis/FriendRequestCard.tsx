@@ -1,8 +1,8 @@
 import { Button, Card, CardActions, CardContent, CardMedia, Typography } from '@mui/material';
-import {Mission, Volunteer} from '../../../interfaces';
+import {Volunteer} from '../../../interfaces';
 import ProfileDefaultPicture from "../../../images/logo/submark.png";
 import config from "../../../config";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 
 interface FriendRequestCardProps {
     volunteer: Volunteer,

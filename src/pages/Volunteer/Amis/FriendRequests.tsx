@@ -3,7 +3,6 @@ import FriendRequestCard from "./FriendRequestCard";
 import { Volunteer } from "../../../interfaces";
 import config from "../../../config";
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
-import fr from "date-fns/locale/fr";
 
 function FriendRequests() {
     const [volunteerList, setVolunteerList] = useState<Volunteer[]>([]);
@@ -81,7 +80,6 @@ function FriendRequests() {
     }, [localId]);
 
     const filteredVolunteers = volunteerList.filter(volunteer => {
-        const status = volunteerStatuses[volunteer.id] || null; // Get the status for the volunteer
         if (activeSection === 'pending') {
             return (
                 localId !== volunteer.id.toString() &&
@@ -121,7 +119,8 @@ function FriendRequests() {
             ) : (
                 filteredVolunteers.map((volunteer: Volunteer) => (
                     <div key={volunteer.id} style={{ margin: '25px', width: '25%' }}>
-                        <FriendRequestCard volunteer={volunteer} />
+                        <FriendRequestCard volunteer={volunteer} isPending={activeSection === 'pending'}
+ />
                     </div>
                 ))
             )}
