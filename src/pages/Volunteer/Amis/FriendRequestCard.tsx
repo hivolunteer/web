@@ -42,8 +42,7 @@ export default function FriendRequestCard(props: FriendRequestCardProps) {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-            body: JSON.stringify({ id: localStorage.getItem("id") })
+            }
         })
             .then((response) => response.json())
             .then(data => {
@@ -60,8 +59,7 @@ export default function FriendRequestCard(props: FriendRequestCardProps) {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-            body: JSON.stringify({ id: localStorage.getItem("id") })
+            }
         })
             .then((response) => response.json())
             .then(data => {
