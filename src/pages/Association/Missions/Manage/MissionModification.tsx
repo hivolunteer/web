@@ -443,7 +443,7 @@ export default function MissionModification() {
                         if (date) {
                           setForm({
                             ...form,
-                            missionDate: date.toDate(),
+                            missionDate: date.utc().toDate(),
                           });
                         }
                       }}
@@ -459,7 +459,7 @@ export default function MissionModification() {
                         if (date) {
                           setForm({
                             ...form,
-                            missionEndDate: date.toDate(),
+                            missionEndDate: date.utc().toDate(),
                           });
                         }
                       }}

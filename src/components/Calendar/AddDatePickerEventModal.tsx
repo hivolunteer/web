@@ -103,16 +103,15 @@ const AddDatePickerEventModal = ({
               <DateTimePicker
                 label="Date de début"
                 value={start_date}
+                ampm={false}
                 format={"dd/MM/yyyy HH:mm"}
-                ampm={true}
-                minutesStep={30}
+                slotProps={{ textField: { fullWidth: true } }}
                 onChange={(newValue) =>
                   setDatePickerEventFormData((prevState) => ({
                     ...prevState,
                     start_date: new Date(newValue!),
                   }))
                 }
-                slotProps={{ textField: { variant: 'outlined' } }}
               />
             </Box>
 
@@ -128,16 +127,15 @@ const AddDatePickerEventModal = ({
               disabled={allDay}
               format={"dd/MM/yyyy HH:mm"}
               minDate={start_date}
-              minutesStep={30}
-              ampm={true}
+              ampm={false}
               value={allDay ? null : end_date}
+              slotProps={{ textField: { fullWidth: true } }}
               onChange={(newValue) =>
                 setDatePickerEventFormData((prevState) => ({
                   ...prevState,
                   end_date: new Date(newValue!),
                 }))
               }
-              slotProps={{ textField: { variant: 'outlined' } }}
 
             //renderInput={(params) => <TextField {...params} />}
             />

@@ -50,9 +50,6 @@ export default function CompanySidebar() {
     const handleMenuItemClick = (setting: string) => {
         handleCloseUserMenu();
         switch (setting) {
-            case "Profil":
-                navigate("/profile");
-                break;
             case "Déconnexion":
                 handleLogout();
                 break;
@@ -160,9 +157,11 @@ export default function CompanySidebar() {
                             </Button>
                         ))}
                     </Box>
+                    {localStorage.getItem("token") ?
                     <Box sx={{ marginRight: "1%" }}>
                         <NotificationBell notifications={notifications} setNotifications={setNotifications} />
                     </Box>
+                    : null }
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
