@@ -7,6 +7,7 @@ import ProfileInformationModal from '../pages/Company/Settings/ProfileInformatio
 import Team from '../pages/Company/Team/Team';
 import ModifyPassword from '../pages/Company/Settings/ModifyPassword';
 import Missions from '../pages/Company/Missions/Missions';
+import Dashboard from '../pages/Company/Dashboard/Dashboard';
 import FAQ from '../pages/Company/FAQ/Faq';
 import ContactUs from '../pages/Contact Us/Contact';
 
@@ -15,6 +16,7 @@ function ConnectCompanyRouter() {
         <Routes>
             <Route path="/" element={<Home/>} />
             <Route path="/accueil" element={<Home/>} />
+            <Route path="/profile" element={<Dashboard />} />
             <Route path="/affiliatedAssociations" element={<AffiliatedAssociations />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/settings/profile_information" element={<ProfileInformationModal />} />
