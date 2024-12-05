@@ -26,6 +26,7 @@ function RateCard(props: { mission: number }) {
   interface Mission {
     owner_id: number;
     title: string;
+    picture: string;
     end_date: string;
     start_date: string;
     pratical_info: string;
@@ -35,6 +36,7 @@ function RateCard(props: { mission: number }) {
     title: "",
     end_date: "",
     start_date: "",
+    picture: "",
     owner_id: 0,
     pratical_info: "",
   });
@@ -179,9 +181,10 @@ function RateCard(props: { mission: number }) {
                 width: "150px",
               }}
               image={
-                associationPicture === ""
+                
+                mission.picture === ""
                   ? "https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg"
-                  : associationPicture
+                  : mission.picture
               }
               alt="association picture"
             />

@@ -94,7 +94,7 @@ export default function VolunteerSidebar() {
   const handleMenuItemClick = (setting: string) => {
     handleCloseUserMenu();
     switch (setting) {
-      case "Profil":
+      case "Profile":
         navigate("/profile");
         break;
       case "Déconnexion":

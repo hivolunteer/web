@@ -2,16 +2,16 @@ import * as React from "react";
 import MenuItem from "@mui/material/MenuItem";
 import MenuIcon from "@mui/icons-material/Menu";
 import {
-  AppBar,
-  Box,
-  Toolbar,
-  IconButton,
-  Typography,
-  Menu,
-  Container,
-  Avatar,
-  Button,
-  Tooltip,
+    AppBar,
+    Box,
+    Toolbar,
+    IconButton,
+    Typography,
+    Menu,
+    Container,
+    Avatar,
+    Button,
+    Tooltip,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import "./Sidebar.scss";
@@ -24,13 +24,15 @@ const settings: string[] = [];
 const pagesLink: { [pageName: string]: string } = {};
 
 if (localStorage.getItem("token") !== null) {
-  settings.push("Réglages", "Déconnexion");
-  pages.push("Équipes", "Affiliations", "FAQ");
-  pagesLink["Équipes"] = "teams";
-  pagesLink["Affiliations"] = "affiliatedAssociations";
-  pagesLink["FAQ"] = "faq";
+    settings.push("Profil", "Réglages", "Déconnexion");
+    pages.push("Accueil", "Équipes", "Affiliations", "Classement", "FAQ");
+    pagesLink["Accueil"] = "accueil";
+    pagesLink["Équipes"] = "teams";
+    pagesLink["Affiliations"] = "affiliatedAssociations";
+    pagesLink["Classement"] = "rank";
+    pagesLink["FAQ"] = "faq";
 } else {
-  settings.push("Connexion", "Inscription");
+    settings.push("Connexion", "Inscription");
 }
 
 export default function CompanySidebar() {
@@ -97,37 +99,37 @@ export default function CompanySidebar() {
                 <Toolbar disableGutters>
                     <Avatar alt="User" src={logoWhite} />
                     <Typography variant="h6" noWrap component="a" href="/"
-                                sx={{
-                                    mr: 2,
-                                    display: { xs: "none", md: "flex" },
-                                    fontFamily: "montserrat",
-                                    fontWeight: "bold",
-                                    letterSpacing: ".3rem",
-                                    color: "#F5F5F5",
-                                    textDecoration: "none",
-                                }}
+                        sx={{
+                            mr: 2,
+                            display: { xs: "none", md: "flex" },
+                            fontFamily: "montserrat",
+                            fontWeight: "bold",
+                            letterSpacing: ".3rem",
+                            color: "#F5F5F5",
+                            textDecoration: "none",
+                        }}
                     >
                         HiVolunteer
                     </Typography>
 
                     <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
                         <IconButton size="large" aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true" color="inherit"
-                                    onClick={handleOpenNavMenu}
+                            onClick={handleOpenNavMenu}
                         >
                             <MenuIcon />
                         </IconButton>
                         <Menu id="menu-appbar" anchorEl={anchorElNav} keepMounted open={Boolean(anchorElNav)} onClose={handleCloseNavMenu}
-                              anchorOrigin={{
-                                  vertical: "bottom",
-                                  horizontal: "left",
-                              }}
-                              transformOrigin={{
-                                  vertical: "top",
-                                  horizontal: "left",
-                              }}
-                              sx={{
-                                  display: { xs: "block", md: "none" },
-                              }}
+                            anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "left",
+                            }}
+                            transformOrigin={{
+                                vertical: "top",
+                                horizontal: "left",
+                            }}
+                            sx={{
+                                display: { xs: "block", md: "none" },
+                            }}
                         >
                             {pages.map((page) => (
                                 <MenuItem key={page} onClick={() => { console.log("hd"); }}>{page}</MenuItem>
@@ -135,16 +137,16 @@ export default function CompanySidebar() {
                         </Menu>
                     </Box>
                     <Typography variant="h5" noWrap component="a" href=""
-                                sx={{
-                                    mr: 2,
-                                    display: { xs: "flex", md: "none" },
-                                    flexGrow: 1,
-                                    fontFamily: "monospace",
-                                    fontWeight: 700,
-                                    letterSpacing: ".3rem",
-                                    color: "inherit",
-                                    textDecoration: "none",
-                                }}
+                        sx={{
+                            mr: 2,
+                            display: { xs: "flex", md: "none" },
+                            flexGrow: 1,
+                            fontFamily: "monospace",
+                            fontWeight: 700,
+                            letterSpacing: ".3rem",
+                            color: "inherit",
+                            textDecoration: "none",
+                        }}
                     >
                         HiVolunteer
                     </Typography>
@@ -157,7 +159,7 @@ export default function CompanySidebar() {
                     </Box>
                     {localStorage.getItem("token") ?
                     <Box sx={{ marginRight: "1%" }}>
-                      <NotificationBell notifications={notifications} setNotifications={setNotifications} />
+                        <NotificationBell notifications={notifications} setNotifications={setNotifications} />
                     </Box>
                     : null }
                     <Box sx={{ flexGrow: 0 }}>
@@ -167,42 +169,42 @@ export default function CompanySidebar() {
                             </IconButton>
                         </Tooltip>
                         <Menu id="menu-appbar" anchorEl={anchorElUser} sx={{ mt: "45px" }} keepMounted open={Boolean(anchorElUser)} onClose={handleCloseUserMenu}
-                              anchorOrigin={{
-                                  vertical: "top",
-                                  horizontal: "right",
-                              }}
-                              transformOrigin={{
-                                  vertical: "top",
-                                  horizontal: "right",
-                              }}
+                            anchorOrigin={{
+                                vertical: "top",
+                                horizontal: "right",
+                            }}
+                            transformOrigin={{
+                                vertical: "top",
+                                horizontal: "right",
+                            }}
                         >
                             {settings.map((setting) => (
                                 <MenuItem key={setting} onClick={() => handleMenuItemClick(setting)} >
                                     <Typography textAlign="center" component={Link} to={setting === "Profil" ? "/profile" : "/"}
-                                                onClick={() => {
-                                                    handleCloseUserMenu();
-                                                    switch (setting) {
-                                                        case "Profil":
-                                                            navigate("/profile");
-                                                            break;
-                                                        case "Réglages":
-                                                            window.location.href = "/settings";
-                                                            break;
-                                                        case "Déconnexion":
-                                                            localStorage.removeItem("token");
-                                                            localStorage.removeItem("role");
-                                                            window.location.reload();
-                                                            window.location.href = "/";
-                                                            break;
-                                                        case "Connexion":
-                                                        case "Inscription":
-                                                            window.location.href = "/auth";
-                                                            break;
-                                                        default:
-                                                            break;
-                                                    }
-                                                }}
-                                                style={{ textDecoration: "none", color: "inherit" }}
+                                        onClick={() => {
+                                            handleCloseUserMenu();
+                                            switch (setting) {
+                                                case "Profil":
+                                                    navigate("/profile");
+                                                    break;
+                                                case "Réglages":
+                                                    window.location.href = "/settings";
+                                                    break;
+                                                case "Déconnexion":
+                                                    localStorage.removeItem("token");
+                                                    localStorage.removeItem("role");
+                                                    window.location.reload();
+                                                    window.location.href = "/";
+                                                    break;
+                                                case "Connexion":
+                                                case "Inscription":
+                                                    window.location.href = "/auth";
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
+                                        }}
+                                        style={{ textDecoration: "none", color: "inherit" }}
                                     >
                                         {setting}
                                     </Typography>

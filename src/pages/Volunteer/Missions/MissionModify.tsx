@@ -101,7 +101,6 @@ export default function EditMission() {
           'Content-Type': 'application/json',
         }
       });
-      console.log(response);
       if (!response.ok) {
         throw new Error('HTTP error ' + response.status);
       }
@@ -120,7 +119,6 @@ export default function EditMission() {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       }).then((response) => {
-        console.log("RESPONSE", response);
         if (response.status === 200) {
           response.json().then((data) => {
             console.log(data);
@@ -157,7 +155,7 @@ export default function EditMission() {
   }, [form, locationStr]);
 
   useEffect(() => {
-    if (missionID) {
+    if (missionID && form.missionName === "") {
       getMissionById(parseInt(missionID));
     }
   }, [missionID, getMissionById]);
@@ -165,21 +163,23 @@ export default function EditMission() {
   // useEffect to get skills from database
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    fetch(`${config.apiUrl}/skills`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token, // localStorage.getItem("token")
-      },
-    }).then((response) => {
-      if (response.status === 200) {
-        response.json().then((data) => {
-          setSkillDb(data);
-        });
-      }
-    })
-  }, []);
+    if (skillDb.length === 0) {
+      const token = localStorage.getItem("token");
+      fetch(`${config.apiUrl}/skills`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token, // localStorage.getItem("token")
+        },
+      }).then((response) => {
+        if (response.status === 200) {
+          response.json().then((data) => {
+            setSkillDb(data);
+          });
+        }
+      })
+    }
+  }, [skillDb]);
 
   // handle modification of a mission
   const ModifyMission = () => {
@@ -211,7 +211,7 @@ export default function EditMission() {
       
           // Wait for approximately 2 seconds before redirecting
           setTimeout(() => {
-              window.location.href = `/mission/${missionID}`;
+              window.location.href = `/myMissions`;
           }, 2000);
       
           return response.body;
@@ -221,7 +221,7 @@ export default function EditMission() {
 
         setResponse({error: true, message: "Erreur lors de la modification de mission"});
         setTimeout(() => {
-          window.location.href = `/mission/${missionID}`;
+          window.location.href = `/myMissions`;
         }, 2000);
       })
       
