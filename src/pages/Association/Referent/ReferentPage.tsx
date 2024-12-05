@@ -195,7 +195,11 @@ function ReferentPage() {
                         <MdOutlineDelete
                           className="icon-card"
                           title="Supprimer le référent"
-                          onClick={() => unLinkReferent(referent.id)}
+                          onClick={() => {
+                            if (window.confirm('Êtes-vous sûr de vouloir supprimer ce référent ? Cette action est irréversible.')) {
+                              unLinkReferent(referent.id);
+                            }
+                          }}
                           size={20}
                         />
                       </div>

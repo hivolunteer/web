@@ -198,7 +198,6 @@ function ManageMissionInformation(props: ManageMissionInformationProps) {
         </CardContent>
         <CardActions>
           <Button size="small" color="warning" onClick={() => window.location.href = `/${mission?.id}/edit`}>Modifier</Button>
-          <Button size="small" color="info" onClick={() => window.location.href = localStorage.getItem('role') === 'association' ? `/manage/${mission?.id}` :  `/mission/close/${mission?.id}`}>Visualiser</Button>
         </CardActions>
       </Card>
     </div>

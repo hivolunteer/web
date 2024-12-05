@@ -1,8 +1,7 @@
 import "./Settings.scss";
 import { useState } from "react";
-import { Checkbox } from "@mui/material";
+import { Button, Divider, Checkbox, Modal, Typography, Box } from '@mui/material';
 import { useNavigate } from "react-router-dom";
-import Divider from "@mui/material/Divider";
 import config from "../../../config";
 
 function Settings() {
@@ -11,6 +10,7 @@ function Settings() {
         localStorage.getItem("color_blind") === "true"
     );
     const colorblindOptions = ["Mode daltonien"];
+    const [openModal, setOpenModal] = useState(false);
     const history = useNavigate();
 
     const handleClick = () => {
@@ -33,6 +33,14 @@ function Settings() {
         setPopupVisible(false);
     };
 
+    const handleOpenModal = () => {
+        setOpenModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setOpenModal(false);
+    };
+
     function handleClickColorBlind() {
         let className = "";
         if (!color_blind) {
@@ -47,29 +55,28 @@ function Settings() {
 
 
   const deleteAccount = () => {
-    if (window.confirm('Are you sure you want to delete your account?')) {
-      let url = `${config.apiUrl}/associations/`;
-      fetch(url, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': `application/json`,
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
+    let url = `${config.apiUrl}/associations/`;
+    fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': `application/json`,
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      },
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          alert('Account deleted successfully');
+          localStorage.clear();
+          window.location.reload();
+          window.location.href = '/';
+        } else {
+          console.log('Error deleting account');
+        }
       })
-        .then((response) => {
-          if (response.status === 200) {
-            alert('Account deleted successfully');
-            localStorage.clear();
-            window.location.reload();
-            window.location.href = '/';
-          } else {
-            console.log('Error deleting account');
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
+      .catch((error) => {
+        console.log(error);
+      });
+    
   }
 
     return (
@@ -109,10 +116,37 @@ function Settings() {
                 Changer le mot de passe
             </button>
             <div className="profile-btn-div">
-        <button className="delete-account-btn" onClick={deleteAccount}>
-        Supprimer le compte
-      </button>
-      </div>
+            <Button variant="contained" color="error" onClick={handleOpenModal}>Supprimer le compte</Button>
+            <div>
+                <Modal open={openModal} onClose={handleCloseModal}>
+                    <Box sx={{
+                            position: 'absolute' as 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: 400,
+                            bgcolor: 'background.paper',
+                            boxShadow: 24,
+                            p: 2,
+                            borderRadius: '10px',
+                        }}>
+                        <Typography variant="h6" component="h2" color="#2D2A32" marginBottom={1} sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            Supprimer le compte
+                        </Typography>
+                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                            <p className='association-referent-modal-description'>
+                            Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.
+                            </p>
+                        </Typography>
+                        <Divider />
+                        <div className='association-referent-modal-buttons'>
+                            <Button onClick={handleCloseModal} variant="outlined">Annuler</Button>
+                            <Button onClick={deleteAccount} variant="contained" color="error">Supprimer</Button>
+                        </div>
+                    </Box>
+                </Modal>
+            </div>
+        </div>
             <Divider orientation="vertical" variant="middle" flexItem />
         </div>
     );
