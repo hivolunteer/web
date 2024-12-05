@@ -10,6 +10,7 @@ import Missions from '../pages/Company/Missions/Missions';
 import Dashboard from '../pages/Company/Dashboard/Dashboard';
 import FAQ from '../pages/Company/FAQ/Faq';
 import ContactUs from '../pages/Contact Us/Contact';
+import EmployeeRanking from '../pages/Company/Employee/EmployeeRanking';
 
 function ConnectCompanyRouter() {
     return(
@@ -25,6 +26,7 @@ function ConnectCompanyRouter() {
             <Route path={"/missions"} element={<Missions />} />
             <Route path="/faq" element={< FAQ />} />
             <Route path="/contact" element={< ContactUs />} />
+            <Route path="/rank" element={<EmployeeRanking />} />
             <Route path="*" element={<h1> Error 404 Company </h1>} />
         </Routes>
     )
