@@ -25,7 +25,7 @@ const settings: string[] = [];
 const pagesLink: { [pageName: string]: string } = {};
 
 if (localStorage.getItem("token") !== null) {
-  settings.push("Profile", "Réglages", "Déconnexion");
+  settings.push("Profil", "Réglages", "Déconnexion");
   pages.push("Mes missions", "Calendrier", "Référents", "Affiliations", "FAQ");
   pagesLink["Mes missions"] = "accueil";
   pagesLink["Calendrier"] = "calendrier";
@@ -52,7 +52,7 @@ export default function AssociationSidebar() {
   const handleMenuItemClick = (setting: string) => {
     handleCloseUserMenu();
     switch (setting) {
-      case "Profile":
+      case "Profil":
         navigate("/profile");
         break;
       case "Déconnexion":
@@ -185,14 +185,14 @@ export default function AssociationSidebar() {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={() => handleMenuItemClick(setting)} >
-                  <Typography textAlign="center" component={Link} to={setting === "Profile" ? "/profile" : "/"}
+                  <Typography textAlign="center" component={Link} to={setting === "Profil" ? "/profile" : "/"}
                     onClick={() => {
                       handleCloseUserMenu();
                       switch (setting) {
                         case "Créer une mission":
                           window.location.href = "/mission/create";
                           break;
-                        case "Profile":
+                        case "Profil":
                           navigate("/profile");
                           break;
                         case "Réglages":

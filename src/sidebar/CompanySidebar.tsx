@@ -24,7 +24,7 @@ const settings: string[] = [];
 const pagesLink: { [pageName: string]: string } = {};
 
 if (localStorage.getItem("token") !== null) {
-  settings.push("Profil", "Réglages", "Déconnexion");
+  settings.push("Réglages", "Déconnexion");
   pages.push("Équipes", "Affiliations", "FAQ");
   pagesLink["Équipes"] = "teams";
   pagesLink["Affiliations"] = "affiliatedAssociations";
@@ -48,9 +48,6 @@ export default function CompanySidebar() {
     const handleMenuItemClick = (setting: string) => {
         handleCloseUserMenu();
         switch (setting) {
-            case "Profil":
-                navigate("/profile");
-                break;
             case "Déconnexion":
                 handleLogout();
                 break;
@@ -158,9 +155,11 @@ export default function CompanySidebar() {
                             </Button>
                         ))}
                     </Box>
+                    {localStorage.getItem("token") ?
                     <Box sx={{ marginRight: "1%" }}>
-                        <NotificationBell notifications={notifications} setNotifications={setNotifications}/>
+                      <NotificationBell notifications={notifications} setNotifications={setNotifications} />
                     </Box>
+                    : null }
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
