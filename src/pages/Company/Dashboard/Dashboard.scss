@@ -20,7 +20,7 @@
     flex-direction: column;
     align-items: flex-start;
     margin-right: 25px;
-   // height: 200px;
+    // height: 200px;
 }
 
 .header-rating {
@@ -45,9 +45,39 @@
 
 .missions-row {
     margin: 2% auto;
-// Color Blind Mode
 }
 
 .color-blind-bg {
     background-color: #3b3d3c;
+}
+
+.employees-modal-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.employee {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    box-shadow: $box-shadow;
+    margin: 2% 0;
+    width: 90%;
+}
+
+.employee-picture-modal {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 20px;
+}
+
+.profile-btn-div {
+    display: flex;
+    justify-content: center;
+    align-items: initial;
 }

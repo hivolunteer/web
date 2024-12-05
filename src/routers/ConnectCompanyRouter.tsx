@@ -14,7 +14,7 @@ function ConnectCompanyRouter() {
         <Routes>
             <Route path="/" element={<Home/>} />
             <Route path="/accueil" element={<Home/>} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" element={<Dashboard />} />
             <Route path="/affiliatedAssociations" element={<AffiliatedAssociations />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/settings/profile_information" element={<ProfileInformationModal />} />
