@@ -11,6 +11,7 @@ function ReferentPage() {
 
   const [association, setAssociation] = useState<Association | null>(null)
   const [referentList, setReferentList] = useState<Referent[]>([])
+  const [copyMessage, setCopyMessage] = useState<string | null>(null);
 
   useEffect(() => {
     document.title = "Referent"
@@ -114,6 +115,13 @@ function ReferentPage() {
       })
   }
 
+  function handleCopyCode(code: string) {
+    navigator.clipboard.writeText(code);
+    setCopyMessage('Copié au presse-papier');
+    
+    setTimeout(() => setCopyMessage(null), 2000);
+  }
+
   return (
     <div className="container">
       <div className="referent-header">
@@ -139,7 +147,7 @@ function ReferentPage() {
                 <MdOutlineCopyAll
                   className="icon"
                   title="Copier le code"
-                  onClick={() => navigator.clipboard.writeText(association?.referent_token as string)}
+                  onClick={() => handleCopyCode(association?.referent_token as string)}
                 />
                 <MdOutlineDelete
                   className="icon"
@@ -151,6 +159,11 @@ function ReferentPage() {
           </div>
         )}
       </div>
+      {copyMessage &&
+        <div className="msg-container" >
+            <p className="copy-message">{copyMessage}</p>
+        </div>
+      }
       <div className="referent-list">
         <h1 className="referent-list-title"> Liste des référents </h1>
         <div className="referent-list-header" style={{
