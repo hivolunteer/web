@@ -20,7 +20,8 @@ const MissionDetails = () => {
   const [association, setAssociation] = useState<Association | null>(null);
   const [mission_skills, setMissionSkills] = useState<Skill[]>([]);
   const [location, setLocation] = useState<string>("");
-  const [mission_status, setStatus] = useState<number>(0)
+  const [mission_status, setStatus] = useState<number>(0);
+  const [referentAssoIds, setReferentAssoIds] = useState<number[]>([]);
 
   const [currentVolunteer, setCurrentVolunteer] = useState<number>(0);
   const [friends, setFriends] = useState<Array<Volunteer>>([])
@@ -131,6 +132,19 @@ const MissionDetails = () => {
             if (mission.id === Number(id)) {
               setIsRegistered(true)
             }
+          })
+        }
+      })
+      fetch(`${config.apiUrl}/referent/volunteer`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      }).then((response) => {
+        if (response.status === 200) {
+          response.json().then((data) => {
+            setReferentAssoIds(data.map((asso: any) => asso.id))
           })
         }
       })
@@ -296,6 +310,9 @@ const MissionDetails = () => {
               Ajouter au calendrier la mission
             </a>
             <br/>
+
+            {
+              (!referentAssoIds.includes(mission?.owner_id as number)) && (
             <Button
               variant='contained'
               className='mission-details-button'
@@ -316,6 +333,8 @@ const MissionDetails = () => {
                 getButtonText()
               }
             </Button>
+              )
+            }
           </div>
       }
     </div>
