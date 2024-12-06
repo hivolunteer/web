@@ -22,8 +22,12 @@ const EditPasswordModal = (props: {modalProps: Modal}) => {
 
     async function submitNewPasssword() {
         try {
+            if (old_password === new_password) {
+                setError("L'ancien mot de passe ne peut pas être le même que le nouveau")
+                return
+            }
             if (new_password !== confirm_password) {
-                setError("Les mots de passe ne correspondent pas")
+                setError("Veuillez confirmer le nouveau mot de passe")
                 return
             }
 

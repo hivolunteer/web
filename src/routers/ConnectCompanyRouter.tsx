@@ -7,13 +7,17 @@ import ProfileInformationModal from '../pages/Company/Settings/ProfileInformatio
 import Team from '../pages/Company/Team/Team';
 import ModifyPassword from '../pages/Company/Settings/ModifyPassword';
 import Missions from '../pages/Company/Missions/Missions';
+import Dashboard from '../pages/Company/Dashboard/Dashboard';
 import FAQ from '../pages/Company/FAQ/Faq';
+import ContactUs from '../pages/Contact Us/Contact';
+import EmployeeRanking from '../pages/Company/Employee/EmployeeRanking';
 
 function ConnectCompanyRouter() {
     return(
         <Routes>
             <Route path="/" element={<Home/>} />
             <Route path="/accueil" element={<Home/>} />
+            <Route path="/profile" element={<Dashboard />} />
             <Route path="/affiliatedAssociations" element={<AffiliatedAssociations />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/settings/profile_information" element={<ProfileInformationModal />} />
@@ -21,6 +25,8 @@ function ConnectCompanyRouter() {
             <Route path="/settings/modify_password" element={<ModifyPassword />} />
             <Route path={"/missions"} element={<Missions />} />
             <Route path="/faq" element={< FAQ />} />
+            <Route path="/contact" element={< ContactUs />} />
+            <Route path="/rank" element={<EmployeeRanking />} />
             <Route path="*" element={<h1> Error 404 Company </h1>} />
         </Routes>
     )

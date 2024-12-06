@@ -19,7 +19,20 @@ function ProfileInformationModal() {
   const [error, setError] = useState("");
   const [alert, setAlert] = useState(false);
 
-  const handleClose = () => history("/settings");
+  const handleClose = () => {
+    setAlert(false);
+    history("/settings");
+  };
+
+  const validatePhoneNumber = (phone: string) => {
+    const phoneRegex = /^\+(?:[0-9] ?){6,14}[0-9]$/;
+    return phoneRegex.test(phone);
+  };
+
+  const validateEmail = (email: string) => {
+      const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      return emailRegex.test(email);
+  };
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
@@ -29,12 +42,20 @@ function ProfileInformationModal() {
     setPhone(event.target.value);
   }
 
+  const handleDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDescription(event.target.value);
+  }
+
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
 
   const handleProfilePictureChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setProfilePicture(event.target.value);
+    const file = event.target.files?.[0];
+    if (file) {
+      const fileUrl = URL.createObjectURL(file);
+      setProfilePicture(fileUrl);
+    }
   };
 
   useEffect(() => {
@@ -71,6 +92,20 @@ function ProfileInformationModal() {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    let validationError = "";
+    if (!name.trim() || !description) {
+        validationError = "Nom, RNA et description sont obligatoires.";
+    } else if (!validateEmail(email)) {
+        validationError = "L'adresse e-mail n'est pas valide.";
+    } else if (!validatePhoneNumber(phone)) {
+        validationError = "Le numéro de téléphone n'est pas valide.";
+    }
+    
+    if (validationError) {
+        setError(validationError);
+        setAlert(true);
+        return;
+    }
 
     try {
       const response = await fetch(
@@ -86,6 +121,7 @@ function ProfileInformationModal() {
             name: name,
             email: email,
             phone: phone,
+            description: description,
             profile_picture: profilePicture,
           }),
         }
@@ -97,10 +133,12 @@ function ProfileInformationModal() {
       setName("");
       setEmail("");
       setPhone("");
+      setDescription("");
       setProfilePicture("");
       handleClose();
     } catch (error) {
       setError((error as Error).message);
+      setAlert(true);
     }
   };
 
@@ -143,22 +181,25 @@ function ProfileInformationModal() {
               overflow: "auto",
             }}
           >
-            <div>
+            <div style={{ marginTop: "20px" }}>
               <Typography style={{
                 fontWeight: "bold"
               }}>
-                Photo de profil
+                Image de profil
               </Typography>
-              <TextField
-                fullWidth
-                variant="outlined"
-                id="profilePicture"
-                name="profilePicture"
-                type="text"
-                value={profilePicture}
+              <input
+                type="file"
+                accept="image/*"
                 onChange={handleProfilePictureChange}
-                margin="normal"
+                style={{ marginBottom: "10px" }}
               />
+              {profilePicture && (
+                <img
+                  src={profilePicture}
+                  alt="Profile Preview"
+                  style={{ maxWidth: "100px", marginTop: "10px" }}
+                />
+              )}
             </div>
             <div style={{ marginTop: "20px" }}>
               <Typography style={{
@@ -224,6 +265,7 @@ function ProfileInformationModal() {
                   name="description"
                   type="text"
                   value={description}
+                  onChange={handleDescriptionChange}
                   multiline
                   rows={3}
                   margin="normal"

@@ -104,7 +104,7 @@ const CardWidgetsRevenueReport = () => {
        axisTicks: { show: false },
        crosshairs: { opacity: 0 },
        axisBorder: { show: false },
-       categories: ['Janv', 'Févr', 'Mars', 'Avri', 'Mai', 'Juin', 'Juil', 'Août', 'Sept', 'Oct'],
+       categories: ['Mars', 'Avri', 'Mai', 'Juin', 'Juil', 'Août', 'Sept', 'Oct', 'Nov', 'Dec'],
        labels: {
          style: {
            colors: theme.palette.text.disabled,
@@ -238,7 +238,7 @@ const CardWidgetsRevenueReport = () => {
       axisTicks: { show: false },
       crosshairs: { opacity: 0 },
       axisBorder: { show: false },
-      categories: ['Janv', 'Févr', 'Mars', 'Avri', 'Mai', 'Juin', 'Juil', 'Août', 'Sept', 'Oct'],
+      categories: ['Mars', 'Avri', 'Mai', 'Juin', 'Juil', 'Août', 'Sept', 'Oct', 'Nov', 'Dec'],
       labels: {
         style: {
           colors: theme.palette.text.disabled,

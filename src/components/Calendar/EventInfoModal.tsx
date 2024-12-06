@@ -31,7 +31,6 @@ const EventInfoModal = ({ open, handleClose, onModifyEvent, onDeleteEvent, curre
                     <Typography sx={{ fontSize: 14, marginTop: 3 }} color="text.secondary" gutterBottom>
                         Description : {currentEvent?.description}
                     </Typography>
-
                 </DialogContentText>
                 <Box component="form"></Box>
             </DialogContent>

@@ -52,8 +52,8 @@ function AssociationProfilCard({ className, association, onDeleteReferent, ...pr
                     {association.description.split(' ').slice(0, 30).join(' ')}...
                 </p>
             </div>
-            <div className="association-referent-card__settings" onClick={handleOpenModal}>Dissocier</div>
-            <div className="association-referent-card__modal">
+            <Button sx={{marginLeft: "auto", fontWeight: "500"}} variant="outlined" onClick={handleOpenModal}>Dissocier</Button>
+            <div>
                 <Modal open={openModal} onClose={handleCloseModal}>
                     <Box sx={{
                             position: 'absolute' as 'absolute',
@@ -67,7 +67,7 @@ function AssociationProfilCard({ className, association, onDeleteReferent, ...pr
                             p: 2,
                             borderRadius: '10px',
                         }}>
-                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                        <Typography variant="h6" component="h2" color="#2D2A32" marginBottom={1} sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                             Se dissocier de l'association
                         </Typography>
                         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
@@ -77,8 +77,8 @@ function AssociationProfilCard({ className, association, onDeleteReferent, ...pr
                         </Typography>
                         <Divider />
                         <div className='association-referent-modal-buttons'>
-                            <Button onClick={handleCloseModal} style={{ color: 'blue' }}>Annuler</Button>
-                            <Button onClick={handleDissociate} style={{ color: 'red' }}>Dissocier</Button>
+                            <Button onClick={handleCloseModal} variant="outlined">Annuler</Button>
+                            <Button onClick={handleDissociate} variant="contained" color="error">Dissocier</Button>
                         </div>
                     </Box>
                 </Modal>

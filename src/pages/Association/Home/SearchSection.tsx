@@ -26,9 +26,11 @@ function SearchSection() {
 
     function handleSearch() {
         const search = document.getElementById("search-text") as HTMLInputElement;
-        console.log(search.value);
-        window.location.href = `/accueil?query=${search.value}`;
-    }
+        const searchValue = search.value.trim();
+        if (searchValue) {
+            window.location.href = `/accueil?query=${encodeURIComponent(searchValue)}`;
+        }
+    }    
 
     return (
         <Box className="component-search-section-container">

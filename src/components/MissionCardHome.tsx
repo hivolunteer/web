@@ -120,22 +120,22 @@ function MissionCardHome(props: { mission: Mission, isToday: boolean }) {
 
   // misc functions
 
-  // function convertDay(date: string) {
-  //   if (date === '')
-  //     return ''
-  //   let day = date.split('T')[0].split('-')[2]
-  //   let month = date.split('T')[0].split('-')[1]
-  //   let year = date.split('T')[0].split('-')[0]
-  //   return `${day}/${month}/${year}`
-  // }
+    function convertDay(date: string) {
+        if (date === '')
+            return ''
+        let day = date.split('T')[0].split('-')[2]
+        let month = date.split('T')[0].split('-')[1]
+        let year = date.split('T')[0].split('-')[0]
+        return `${day}/${month}/${year}`
+    }
 
-  // function convertHour(date: string) {
-  //   if (date === '')
-  //     return ''
-  //   let hour = date.split('T')[1].split(':')[0]
-  //   let minutes = date.split('T')[1].split(':')[1]
-  //   return `${hour}:${minutes}`
-  // }
+    function convertHour(date: string) {
+        if (date === '')
+            return ''
+        let hour = date.split('T')[1].split(':')[0]
+        let minutes = date.split('T')[1].split(':')[1]
+        return `${hour}:${minutes}`
+    }
 
   const [userRole, setUserRole] = useState<string | null>(null);
 

@@ -197,7 +197,7 @@ function FAQ() {
     return (
         <div className="page-container">
             <Typography variant="h4" sx={{ marginBottom: "50px" }} gutterBottom>
-                Foire aux Questions
+                Foire aux questions
             </Typography>
             {faqs.map((faqSection, index) => (
                 <div key={index}>
@@ -220,6 +220,12 @@ function FAQ() {
                     ))}
                 </div>
             ))}
+            <Typography variant="body1" sx={{ marginBottom: "2rem", marginTop: "2rem" }}>
+                Vous ne trouvez pas la réponse à votre question ?&nbsp;
+                <a href="contact/">
+                    Contactez-nous !
+                </a>
+            </Typography>
         </div>
     );
 }

@@ -11,6 +11,7 @@ function ReferentPage() {
 
   const [association, setAssociation] = useState<Association | null>(null)
   const [referentList, setReferentList] = useState<Referent[]>([])
+  const [copyMessage, setCopyMessage] = useState<string | null>(null);
 
   useEffect(() => {
     document.title = "Referent"
@@ -114,6 +115,13 @@ function ReferentPage() {
       })
   }
 
+  function handleCopyCode(code: string) {
+    navigator.clipboard.writeText(code);
+    setCopyMessage('Copié au presse-papier');
+    
+    setTimeout(() => setCopyMessage(null), 2000);
+  }
+
   return (
     <div className="container">
       <div className="referent-header">
@@ -139,7 +147,7 @@ function ReferentPage() {
                 <MdOutlineCopyAll
                   className="icon"
                   title="Copier le code"
-                  onClick={() => navigator.clipboard.writeText(association?.referent_token as string)}
+                  onClick={() => handleCopyCode(association?.referent_token as string)}
                 />
                 <MdOutlineDelete
                   className="icon"
@@ -151,44 +159,55 @@ function ReferentPage() {
           </div>
         )}
       </div>
+      {copyMessage &&
+        <div className="msg-container" >
+            <p className="copy-message">{copyMessage}</p>
+        </div>
+      }
       <div className="referent-list">
         <h1 className="referent-list-title"> Liste des référents </h1>
         <div className="referent-list-header" style={{
           display: 'flex',
           justifyContent: 'center'
         }}>
-          {
-            (referentList.length === 0) ?
-              <p> Aucun référent pour le moment </p>
-              :
-              referentList.map((referent: Referent) => {
-                return (
-                  <div className="referent-row" style={{ width: "50%" }}>
-                    <div className="referent-picture">
-                      <img
-                        src={(referent.profile_picture !== null) ? referent.profile_picture : profileImage}
-                        alt="profile_picture"
-                        className="picture"
-                      />
+          <div className="referent-list-header">
+            {
+              (referentList.length === 0) ?
+                <p> Aucun référent pour le moment </p>
+                :
+                referentList.map((referent: Referent) => {
+                  return (
+                    <div className="referent-row" key={referent.id} style={{ width: "50%" }}>
+                      <div className="referent-picture">
+                        <img
+                          src={(referent.profile_picture !== null) ? referent.profile_picture : profileImage}
+                          alt="profile_picture"
+                          className="picture"
+                        />
+                      </div>
+                      <p className="referent-name" style={{ fontWeight: "bold" }}>
+                        {referent.first_name} {referent.last_name}
+                      </p>
+                      <p className="referent-email" style={{ fontStyle: "italic", textDecoration: "underline" }}>
+                        {referent.email}
+                      </p>
+                      <div className="referent-action">
+                        <MdOutlineDelete
+                          className="icon-card"
+                          title="Supprimer le référent"
+                          onClick={() => {
+                            if (window.confirm('Êtes-vous sûr de vouloir supprimer ce référent ? Cette action est irréversible.')) {
+                              unLinkReferent(referent.id);
+                            }
+                          }}
+                          size={20}
+                        />
+                      </div>
                     </div>
-                    <p className="referent-name" style={{ fontWeight: "bold" }}>
-                      {referent.first_name} {referent.last_name}
-                    </p>
-                    <p className="referent-email" style={{ fontStyle: "italic", textDecoration: "underline" }}>
-                      {referent.email}
-                    </p>
-                    <div className="referent-action">
-                      <MdOutlineDelete
-                        className="icon-card"
-                        title="Supprimer le référent"
-                        onClick={() => unLinkReferent(referent.id)}
-                        size={20}
-                      />
-                    </div>
-                  </div>
-                )
-              })
-          }
+                  )
+                })
+            }
+          </div>
         </div>
       </div>
     </div>

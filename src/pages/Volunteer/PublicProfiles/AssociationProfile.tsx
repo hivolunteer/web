@@ -193,7 +193,15 @@ function PublicProfile() {
                           {mission.title}
                         </Typography>
                         <Typography variant="body2" color="text.secondary" className="mission-date">
-                          Du {new Date(mission.start_date).toLocaleDateString()} au {new Date(mission.end_date).toLocaleDateString()}
+                        Du {new Date(mission.start_date).toLocaleDateString('fr-FR', {
+                                                                                                timeZone: 'Europe/Paris',
+                                                                                                hour12: true,
+                                                                                                })
+                                                } au {new Date(mission.end_date).toLocaleDateString('fr-FR', {
+                                                                                                timeZone: 'Europe/Paris',
+                                                                                                hour12: true,
+                                                                                                })
+                                                }
                         </Typography>
                       </div>
                     </Card>

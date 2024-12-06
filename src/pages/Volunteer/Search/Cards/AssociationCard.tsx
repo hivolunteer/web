@@ -61,45 +61,43 @@ export default function AssociationCard(props: { association_id: number }) {
   }, [props.association_id, handleFollow]);
 
   return (
-    <Fragment>
-      <Card sx={{ width: '100%', height: '100%' }} onClick={() => (window.location.href = 'association/' + association?.id)}>
-        <CardMedia
-          component="img"
-          height="185"
-          image={association?.profile_picture ? association?.profile_picture : "d "}
-          alt="Association logo"
-        />
-        <CardContent sx={{ backgroundColor: "rgba(0, 0, 0, 0.70)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <Typography variant="body2" color="white">
-            {association?.rating}
-          </Typography>
-          <StarIcon sx={{ color: '#FFD700', marginLeft: '5px' }} />
-        </CardContent>
-        <CardContent sx={{ backgroundColor: 'white', minHeight: '100px', maxHeight: '100px' }}>
-          <Typography variant="h6" component="div" color="#2D2A32" fontWeight={550} marginBottom={1} sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-            {association?.name}
-          </Typography>
-          <Typography variant="body2" display="inline-block" style={{
-            width: '100%',
-            display: 'block',
-            whiteSpace: 'normal',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            lineHeight: '1.4em',
-            maxHeight: '5.6em',
-            position: 'relative'
-          }}>
-            {association?.description}
-          </Typography>
-        </CardContent>
-        <CardContent sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}>
-          <FollowButton isFollowing={isFollowing} onFollow={handleFollow} associationId={association?.id ?? 0} />
-          {/* <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', cursor: 'pointer', textDecoration: 'underline' }}
-            onClick={() => (window.location.href = 'association/' + association?.id)}>
-            Voir plus
-          </Typography> */}
-        </CardContent>
-      </Card>
-    </Fragment>
+      <Fragment>
+        <Card sx={{ width: '100%', height: '100%', borderColor: 'pink', borderRadius: '5px' }} onClick={() => (window.location.href = 'association/' + association?.id)}>
+          <CardMedia
+            component="img"
+            height="185"
+            image={association?.profile_picture ? association?.profile_picture : "d "}
+            alt="Association logo"
+          />
+          <CardContent sx={{ backgroundColor: "rgba(0, 0, 0, 0.70)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Typography variant="body2" color="white">
+              {association?.rating}
+            </Typography>
+            <StarIcon sx={{ color: '#FFD700', marginLeft: '5px' }} />
+          </CardContent>
+          <CardContent sx={{ backgroundColor: 'white', minHeight: '100px', maxHeight: '100px' }}>
+            <Typography variant="h6" component="div" color="#2D2A32" fontWeight={550} marginBottom={1} sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+              {association?.name}
+            </Typography>
+            <Typography variant="body2" display="inline-block" style={{
+              width: '100%',
+              display: 'block',
+              whiteSpace: 'normal',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              lineHeight: '1.4em',
+              maxHeight: '5.6em',
+              position: 'relative'
+            }}>
+              {association?.description}
+            </Typography>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}>
+            <FollowButton isFollowing={isFollowing} onFollow={handleFollow} associationId={association?.id ?? 0} />
+          </CardContent>
+        </Card>
+      </Fragment>
   )
 }

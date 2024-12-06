@@ -34,8 +34,6 @@
 .header {
   align-self: flex-end;
   justify-content: flex-end;
-  
-  
 }
 
 .profile-info {
@@ -53,32 +51,6 @@
   width: 80%;
   margin-top: 10px;
 
-  .stats-card,
-  .friends-card {
-      width: calc(50% - 70px);
-      background-color: #fff;
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-
-      h2 {
-          margin-bottom: 15px;
-      }
-
-      .stat-item {
-          margin-bottom: 10px;
-          h3 {
-              font-weight: bold;
-          }
-          ul {
-              margin-top: 5px;
-              li {
-                  list-style-type: none;
-              }
-          }
-          text-align: center;
-      }
-  }
 }
 .friend-image {
   display: inline-block;
@@ -120,7 +92,6 @@
   display: flex;
   justify-content: center;
   direction: row;
-  //margin: 0 45%;
   align-items: center;
 }
 
@@ -201,6 +172,12 @@
 
 .delete-account-btn:hover {
   background-color: rgb(224, 127, 127);
+}
+
+.chart-container {
+  width: 80%;
+  height: 80%;
+  overflow: hidden;
 }
 
 // Color Blind Mode

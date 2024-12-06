@@ -3,6 +3,7 @@ import { Button, Card, CardContent, CardMedia, Typography } from '@mui/material'
 import config from '../../../config'
 import './PublicProfile.scss';
 import { useParams, Link } from 'react-router-dom';
+import Chart from "react-apexcharts";
 
 interface Volunteer {
   id: number;
@@ -160,6 +161,47 @@ function PublicProfile() {
   }
   const formattedVolunteeringTime = formatTime(profileData?.volunteering_time);
 
+  const skillData = Array.isArray(profileData.volunteer_competencies) 
+  ? profileData.volunteer_competencies.map(skill => ({ name: skill, value: 1 }))  // Assuming each skill has a value of 1
+  : Object.entries(profileData.volunteer_competencies).map(([skill, count]) => ({
+      name: skill,
+      value: count,
+    }));
+
+  const topSkills = skillData.length > 0 ? skillData.slice(0, 5) : [{ name: "Aucune compétence", value: 0 }];
+
+  const missionData = [
+    { name: "Missions réalisées", value: profileData.missions_done },
+    { name: "Temps de bénévolat", value: profileData.volunteering_time },
+  ];
+
+  const barChartOptions = {
+    chart: {
+      id: "bar-chart",
+      type: "bar" as "bar",
+    },
+    xaxis: {
+      categories: missionData.map(data => data.name),
+    },
+  };
+
+  const barChartSeries = [
+    {
+      name: "Value",
+      data: missionData.map(data => data.value),
+    },
+  ];
+
+  const pieChartOptions = {
+    chart: {
+      id: "pie-chart",
+      type: "pie" as "pie",
+    },
+    labels: topSkills.map(data => data.name),
+  };
+
+  const pieChartSeries = topSkills.length > 0 ? topSkills.map(data => data.value) : [];
+
   return (
     <div className="public-profile-container">
       <div className="profile-card">
@@ -175,7 +217,7 @@ function PublicProfile() {
       </div>
 
       {(profileData?.volunteer?.id === parseInt(localStorage.getItem('id') || '')) ? (
-        <Link to="/profil" className="edit-profile-button">
+        <Link to="/profile" className="edit-profile-button">
           <Button variant="contained" color="primary">
             Modifier mon profil
           </Button>
@@ -223,24 +265,26 @@ function PublicProfile() {
       <div className="background-card">
         <Card className="stats-card">
           <CardContent>
-            <h2>Statistiques</h2>
-            <div className="stat-item">
-              <h3>Missions réalisées:</h3>
-              <p>{profileData?.missions_done ? profileData?.missions_done : 0}</p>
+            <h2>Statistiques</h2><div className="chart-container">
+              <Chart
+                options={barChartOptions}
+                series={barChartSeries}
+                type="bar"
+                height="80%"
+                width="80%"
+              />
             </div>
-            <div className="stat-item">
-              <h3>Temps de bénévolat:</h3>
-              <p>{formattedVolunteeringTime}</p>
-            </div>
-            <div className="stat-item">
-              <h3>Top 5 compétences:</h3>
-              {(Object.entries(profileData?.volunteer_competencies).length !== 0) ?
-                <ul>
-                  {Object.entries(profileData?.volunteer_competencies).map(([skill, count]) => (
-                    <li key={skill}>{skill}: {count}</li>
-                  ))}
-                </ul>
-                : 0}
+            <h3>Top 5 compétences :</h3>
+            <div className="chart-container">
+              {topSkills.length > 0 && topSkills[0].value > 0 ? (
+                  <Chart
+                    options={pieChartOptions}
+                    series={pieChartSeries}
+                    type="pie"
+                  />
+                ) : (
+                  <p>Aucune compétence</p>
+                )}
             </div>
             <div className="stat-item">
               <h3>Note Bee:</h3>

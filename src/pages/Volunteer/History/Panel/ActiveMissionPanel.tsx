@@ -53,21 +53,27 @@ function ActiveMissionPanel() {
 
     return (
         <div className='panel-div'>
-            {missions.filter((mission) => mission.page === page).map((mission) => (
-                <div style={{display: 'flex', flexWrap: 'wrap', flexDirection: 'row'}}>
-                    {mission.mission.map((mission) => (
-                        <div
-                            style={{width: '45%', margin: '2.5%'}}
-                        >
-                            <MissionCardHome
-                                key={mission.id}
-                                mission={mission}
-                                isToday={isToday(mission.start_date)}
-                            />
-                        </div>
-                    ))}
-                </div>
-            ))}
+            {missions.length === 0 ? (
+                <p>
+                    Aucune mission active.
+                </p>
+            ) : (
+                missions.filter((mission) => mission.page === page).map((mission) => (
+                    <div style={{display: 'flex', flexWrap: 'wrap', flexDirection: 'row'}}>
+                        {mission.mission.map((mission) => (
+                            <div
+                                style={{width: '45%', margin: '2.5%'}}
+                            >
+                                <MissionCardHome
+                                    key={mission.id}
+                                    mission={mission}
+                                    isToday={isToday(mission.start_date)}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                ))
+            )}
             {
                 max_page > 1 && (
                     <div style={{display: 'flex', justifyContent: 'center', marginTop: '20px'}}>

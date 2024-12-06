@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { InputAdornment, Tab, Tabs, TextField } from "@mui/material";
+import { useSearchParams } from "react-router-dom";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import "./Search.scss";
 import { Mission } from "../../../interfaces";
@@ -40,6 +41,7 @@ function Search(props: any) {
   ];
 
   const [subType, setSubType] = useState<Subtype>(subtypes[0]);
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     fetch(`${config.apiUrl}/missions/association/`, {
@@ -68,11 +70,28 @@ function Search(props: any) {
         setPublishedMissions(active);
         setPastMissions(passed);
       });
+      const subTypeId = searchParams.get("subType");
+      if (subTypeId) {
+        const selectedSubType = subtypes.find((subtype) => subtype.id === parseInt(subTypeId));
+        if (selectedSubType) setSubType(selectedSubType);
+      }
+       // Set the initial search state from URL query
+      const params = new URLSearchParams(window.location.search);
+      const query = params.get("query");
+      if (query) {
+        setSearch(query);
+      }
   }, []);
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value.toLowerCase());
-  };
+  function handleSearchInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setSearch(event.target.value);
+  }
+
+  function handleSearch() {
+    if (search.trim()) {
+      window.location.href = `/accueil?query=${encodeURIComponent(search)}`;
+    }
+  }
 
   return (
     <div className="page-container">
@@ -85,7 +104,10 @@ function Search(props: any) {
             InputProps={{
               endAdornment: (
                 <InputAdornment position="start">
-                  <SearchOutlinedIcon />
+                  <SearchOutlinedIcon
+                    onClick={handleSearch}
+                    style={{ cursor: "pointer" }}
+                  />
                 </InputAdornment>
               ),
             }}
@@ -95,7 +117,7 @@ function Search(props: any) {
               borderRadius: "10px",
             }}
             value={search}
-            onChange={handleSearch}
+            onChange={handleSearchInputChange}
           />
         </div>
       </div>
@@ -126,21 +148,21 @@ function Search(props: any) {
             <MissionPanel missionList={draftMissions} search={search} />
           ) : (
             <div className="no-missions-message">Aucune mission brouillon</div>
-          )}
+        )}
         </TabPanel>
         <TabPanel value={subType.id} index={1}>
           {publishedMissions.length > 0 ? (
             <MissionPanel missionList={publishedMissions} search={search} />
           ) : (
             <div className="no-missions-message">Aucune mission publiée</div>
-          )}
+        )}
         </TabPanel>
         <TabPanel value={subType.id} index={3}>
           {pastMissions.length > 0 ? (
             <MissionPanel missionList={pastMissions} search={search} />
           ) : (
             <div className="no-missions-message">Aucune mission passée</div>
-          )}
+        )}
         </TabPanel>
       </div>
     </div>

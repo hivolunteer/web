@@ -1,76 +1,129 @@
 import React, { useEffect, useState } from 'react';
 import FriendRequestCard from "./FriendRequestCard";
 import { Volunteer } from "../../../interfaces";
-import { VolunteerPage } from "../Search/Interfaces";
 import config from "../../../config";
+import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 
-function FriendRequests(props: any) {
+function FriendRequests() {
     const [volunteerList, setVolunteerList] = useState<Volunteer[]>([]);
     const [volunteerStatuses, setVolunteerStatuses] = useState<{ [key: string]: number }>({});
-    const yourId = localStorage.getItem("id");
+    const [activeSection, setActiveSection] = useState<string>('pending');
+    const [friends, setFriends] = useState<any[]>([]);
+    const localId = localStorage.getItem("id");
 
     useEffect(() => {
-        fetch(`${config.apiUrl}/volunteers/`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-        })
-            .then((response) => response.json())
-            .then((data) => {
+        const fetchVolunteers = async () => {
+            try {
+                const response = await fetch(`${config.apiUrl}/volunteers/`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                });
+                const data = await response.json();
                 setVolunteerList(data);
                 fetchStatusForVolunteers(data);
-            })
-            .catch((error) => console.error("Error fetching volunteer data:", error));
+            } catch (error) {
+                console.error("Error fetching volunteer data:", error);
+            }
+        };
+
+        fetchVolunteers();
     }, []);
 
-    const fetchStatusForVolunteers = (volunteers: Volunteer[]) => {
-        const statusPromises = volunteers.map((volunteer) =>
-            fetch(`${config.apiUrl}/friends/${volunteer.id}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-            })
-                .then((response) => response.json())
-                .then((statusData) => {
-                    if (Array.isArray(statusData) && statusData.length > 0) {
-                        const status = statusData[0].status;
-                        setVolunteerStatuses(prevStatuses => ({
-                            ...prevStatuses,
-                            [volunteer.id]: status,
-                        }));
-                    } else {
-                        setVolunteerStatuses(prevStatuses => ({
-                            ...prevStatuses,
-                            [volunteer.id]: null,
-                        }));
+    const fetchStatusForVolunteers = async (volunteers: Volunteer[]) => {
+        const statusPromises = volunteers.map(async (volunteer) => {
+            try {
+                const response = await fetch(`${config.apiUrl}/friends/${volunteer.id}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                });
+                const statusData = await response.json();
+                const status = Array.isArray(statusData) && statusData.length > 0 ? statusData[0].status : null;
+                setVolunteerStatuses(prevStatuses => ({
+                    ...prevStatuses,
+                    [volunteer.id]: status,
+                }));
+            } catch (error) {
+                console.error("Error fetching volunteer statuses:", error);
+            }
+        });
+
+        await Promise.all(statusPromises);
+    };
+
+    useEffect(() => {
+        const fetchFriends = async () => {
+            try {
+                const response = await fetch(`${config.apiUrl}/friends/${localId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
                     }
-                })
-        );
+                });
 
-        Promise.all(statusPromises)
-            .catch((error) => console.error("Error fetching volunteer statuses:", error));
-    }
+                if (response.status === 200) {
+                    const data = await response.json();
+                    setFriends(data);
+                }
+            } catch (error) {
+                console.error("Error fetching friends:", error);
+            }
+        };
 
-    const filteredVolunteers = volunteerList.filter(volunteer =>
-        yourId !== null && volunteer.id !== +yourId && volunteerStatuses[volunteer.id] === 0
-    );
+        fetchFriends();
+    }, [localId]);
+
+    const filteredVolunteers = volunteerList.filter(volunteer => {
+        if (activeSection === 'pending') {
+            return (
+                localId !== volunteer.id.toString() &&
+                localId !== null &&
+                friends.some(friend => friend.user_id1 === volunteer.id && friend.status === 0)
+            );
+        } else {
+            return (
+                localId !== volunteer.id.toString() &&
+                localId !== null &&
+                friends.some(friend => friend.user_id2 === volunteer.id && friend.status === 0)
+            );
+        }
+    });
 
     return (
-        <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }} >
+            <ToggleButtonGroup
+                color={'primary'}
+                value={activeSection}
+                exclusive
+                onChange={(event, newAlignment) => {
+                    if (newAlignment !== null) {
+                        setActiveSection(newAlignment);
+                    }
+                }}
+                sx={{ marginBottom: 2, marginTop: 5, display: 'flex', justifyContent: 'center' }}
+            >
+                <ToggleButton value="pending">Demandes en attente</ToggleButton>
+                <ToggleButton value="sent">Mes demandes d'amis</ToggleButton>
+            </ToggleButtonGroup>
             <div style={{ display: 'flex', justifyContent: 'center', width: '100vw' }}>
-                {
-                    filteredVolunteers.map((volunteer: Volunteer) => {
-                        return (
-                            <div key={volunteer.id} style={{ margin: '25px', width: '25%' }}>
-                                <FriendRequestCard volunteer={volunteer} />
-                            </div>
-                        )
-                    })
-                }
+            { filteredVolunteers.length === 0 ? (
+                <p style={{ textAlign: 'center', marginTop: '20px' }}>
+                    Aucune demande d'ami pour le moment.
+                </p>
+            ) : (
+                filteredVolunteers.map((volunteer: Volunteer) => (
+                    <div key={volunteer.id} style={{ margin: '25px', width: '25%' }}>
+                        <FriendRequestCard volunteer={volunteer} isPending={activeSection === 'pending'}
+ />
+                    </div>
+                ))
+            )}
             </div>
         </div>
     );
