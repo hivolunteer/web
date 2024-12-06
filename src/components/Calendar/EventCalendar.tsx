@@ -20,12 +20,12 @@ const localizer = dateFnsLocalizer({ format, parse, startOfWeek, getDay, locales
 const messages = { previous: "←", next: "→", today: "Aujourd'hui", month: "Mois", week: "Semaine", day: "Jour", date: "Date" };
 
 export interface ICategory { id: number, name: string, color: string }
-export interface IEventInfo extends Event { _id: number, id?: number, title: string, description: string, start?: Date, end?: Date, allDay?: boolean, category?: number, categoryId?: number }
-export interface EventFormData { title: string, description: string, categoryId?: number }
+export interface IEventInfo extends Event { _id: number, id?: number, title: string, description: string, start?: Date, end?: Date, allDay?: boolean, category?: number, id_mission?: number }
+export interface EventFormData { title: string, description: string, category?: number }
 export interface DatePickerEventFormData { title: string, description: string, category?: number, allDay: boolean, start_date?: Date, end_date?: Date, location?: string, id_mission?: number }
 export const generateId = () => (Math.floor(Math.random() * 10000) + 1);
 
-const initialEventFormState: EventFormData = { title: "", description: "", categoryId: 1 }; // categoryId: 1 is default category
+const initialEventFormState: EventFormData = { title: "", description: "", category: 1 }; // categoryId: 1 is default category
 const initialDatePickerEventFormData: EventCreationData = { title: "", description: "", category: 1, allDay: false, start_date: undefined, end_date: undefined, location: undefined, id_mission: undefined };
 export interface EventCreationData { title: string, description: string, category?: number, start_date?: Date, end_date?: Date, location?: string, id_mission?: number, allDay: boolean }
 
@@ -43,6 +43,27 @@ const EventCalendar = () => {
     const [, setExistingEvents] = useState<IEventInfo[]>([]);
     const [response, setResponse] = useState<{ error: Boolean; message: string }>({ error: false, message: "" });
     const [modifyEventModalOpen, setModifyEventModalOpen] = useState(false);
+    const [missionsList, setMissionsList] = useState<{ id: number, title: string }[]>([]);
+
+    const onLinkMission = () => {
+        fetch(`${config.apiUrl}/calendar/category/missions`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+          .then((response) => {
+            if (response.status === 200) {
+              response.json().then((data) => {
+                setMissionsList(data)
+              })
+            }
+          })
+          .catch((error) => {
+            console.warn(error)
+          })
+      };
 
     const GetCategoriesFetch = async () => {
         fetch(`${config.apiUrl}/calendar/category`, {
@@ -85,10 +106,11 @@ const EventCalendar = () => {
             end_date: event.end,
             start_date: event.start,
             title: event.title ?? "",
+            id_mission: event.id_mission
         });
     };
 
-    useEffect(() => {
+    const GetCalendarEvents = () => {
         fetch(`${config.apiUrl}/calendar/`, {
             method: 'GET',
             headers: {
@@ -104,6 +126,8 @@ const EventCalendar = () => {
                         description: task.description,
                         start: new Date(task.start_date),
                         end: new Date(task.end_date),
+                        category: task.category,
+                        id_mission: task.id_mission,
                     }));
                     setMissions(formattedEvents);
                 });
@@ -111,7 +135,13 @@ const EventCalendar = () => {
         }).catch((error) => {
             console.error(error);
         });
-        GetCategoriesFetch();
+    }
+
+    useEffect(() => {
+        GetCategoriesFetch().then(() => {
+            GetCalendarEvents();
+        });
+        onLinkMission();
     }, [
         setMissions
     ]);
@@ -198,9 +228,26 @@ const EventCalendar = () => {
         handleDatePickerClose();
     };
 
-    const onDeleteEvent = () => {
-        setEvents((prevEvents) => prevEvents.filter((e) => e.id !== (currentEvent as IEventInfo).id!));
+    const onDeleteEvent = (id_event: number) => {
+        fetch(`${config.apiUrl}/calendar/delete`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            body: JSON.stringify({ id_event: id_event }),
+        })
+        .then((response) => {
+            if (response.status === 200) {
+                setResponse({ error: false, message: "Évènement supprimé" });
+                setEvents((prevEvents) => prevEvents.filter((event) => event._id !== (currentEvent as IEventInfo).id));
+                setEventInfoModal(false);
+            } else {
+                setResponse({ error: true, message: "Erreur lors de la suppression de l'évènement" });
+            }
+        })
         setEventInfoModal(false);
+        GetCalendarEvents();
     };
 
     const changeHours = (date: Date | undefined) => {
@@ -214,7 +261,7 @@ const EventCalendar = () => {
         const body = {
             title: datePickerEventFormData?.title || eventFormData.title,
             description: datePickerEventFormData?.description || eventFormData.description,
-            category: datePickerEventFormData?.category || eventFormData.categoryId,
+            category: datePickerEventFormData?.category || eventFormData.category,
             start_date: datePickerEventFormData?.start_date || currentEvent?.start,
             end_date: currentEvent?.allDay || datePickerEventFormData?.allDay ? changeHours(datePickerEventFormData?.start_date || currentEvent?.start) : datePickerEventFormData?.end_date || currentEvent?.end,
             location: datePickerEventFormData?.location,
@@ -251,7 +298,7 @@ const EventCalendar = () => {
             id_event: (currentEvent as IEventInfo)?.id,
             title: datePickerEventFormData?.title || eventFormData.title,
             description: datePickerEventFormData?.description || eventFormData.description,
-            category: datePickerEventFormData?.category || eventFormData.categoryId,
+            category: datePickerEventFormData?.category || eventFormData.category,
             start_date: datePickerEventFormData?.start_date || currentEvent?.start,
             end_date: datePickerEventFormData?.end_date || currentEvent?.end,
             location: datePickerEventFormData?.location,
@@ -271,17 +318,14 @@ const EventCalendar = () => {
                 setResponse({ error: true, message: "Erreur lors de la modification de l'évènement" });
             }
         })
-        .then((data) => {
-            if (data) {
-                setEvents((prevEvents) => prevEvents.map((event) => event._id === data._id ? { ...event, ...data } : event));
-                setModifyEventModalOpen(false);
-            }
+        .then(() => {
+            setModifyEventModalOpen(false);
+            setEventInfoModal(false);
+            GetCalendarEvents();
         })
         .catch((error) => {
             setResponse({ error: true, message: "Erreur lors de la modification de l'évènement" });
         });
-        window.location.reload();
-
     };
 
     return (
@@ -303,6 +347,7 @@ const EventCalendar = () => {
                             setEventFormData={setEventFormData}
                             onAddEvent={onAddEvent}
                             categories={categories}
+                            missionsList={missionsList}
                         />
                         <AddDatePickerEventModal
                             open={openDatepickerModal}
@@ -311,6 +356,7 @@ const EventCalendar = () => {
                             setDatePickerEventFormData={setDatePickerEventFormData}
                             onAddEvent={onAddEventFromDatePicker}
                             categories={categories}
+                            missionsList={missionsList}
                         />
                         <EventInfoModal
                             open={eventInfoModal}
@@ -318,6 +364,8 @@ const EventCalendar = () => {
                             onModifyEvent={handleModifyEvent}
                             onDeleteEvent={onDeleteEvent}
                             currentEvent={currentEvent as IEventInfo}
+                            missionList={missionsList}
+                            categories={categories}
                         />
                         <ModifyDatePickerEventModal
                             open={modifyEventModalOpen}
@@ -327,6 +375,7 @@ const EventCalendar = () => {
                             onEditEvent={useUpdateEvent}
                             currentEvent={currentEvent as IEventInfo}
                             categories={categories}
+                            missionsList={missionsList}
                         />
                         <AddCategoryModal
                             open={openCategoryModal}
@@ -348,13 +397,8 @@ const EventCalendar = () => {
                             endAccessor="end"
                             defaultView="week"
                             eventPropGetter={(event) => {
-                                const hasCategory = categories.find((category) => category.id === event.categoryId);
-                                return {
-                                    style: {
-                                        backgroundColor: hasCategory ? hasCategory.color : "rgb(78,121,110)",
-                                        borderColor: hasCategory ? hasCategory.color : "rgb(103,162,147)",
-                                    },
-                                };
+                                const backgroundColor = categories.find((category) => category.id === event.category)?.color;
+                                return { style: { backgroundColor, borderColor: backgroundColor } };
                             }}
                             style={{ height: 900 }}
                         />

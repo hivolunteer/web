@@ -15,9 +15,10 @@ interface IProps {
     onEditEvent: (e: MouseEvent<HTMLButtonElement>) => void;
     currentEvent: IEventInfo | null;
     categories: ICategory[];
+    missionsList: { id: number, title: string }[];
 }
 
-const ModifyDatePickerEventModal = ({ open, handleClose, datePickerEventFormData, setDatePickerEventFormData, onEditEvent, currentEvent, categories,
+const ModifyDatePickerEventModal = ({ open, handleClose, datePickerEventFormData, setDatePickerEventFormData, onEditEvent, currentEvent, categories, missionsList
 }: IProps) => {
     useEffect(() => {
         if (currentEvent) {
@@ -28,6 +29,7 @@ const ModifyDatePickerEventModal = ({ open, handleClose, datePickerEventFormData
                 end_date: currentEvent.end,
                 allDay: currentEvent.allDay || false, // Add default value for allDay property
                 category: currentEvent.category,
+                id_mission: currentEvent.id_mission,
             });
         }
     }, [currentEvent, setDatePickerEventFormData]);
@@ -59,7 +61,14 @@ const ModifyDatePickerEventModal = ({ open, handleClose, datePickerEventFormData
     const handleCategoryChange = (e: React.SyntheticEvent, value: ICategory | null) => {
         setDatePickerEventFormData((prevState) => ({
             ...prevState,
-            categoryId: value?.id,
+            category: value?.id,
+        }));
+    };
+
+    const handleMissionChange: (e: React.SyntheticEvent, value: { id: number, title: string } | null) => void = (e, value) => {
+        setDatePickerEventFormData((prevState) => ({
+            ...prevState,
+            id_mission: value?.id,
         }));
     };
 
@@ -82,10 +91,10 @@ const ModifyDatePickerEventModal = ({ open, handleClose, datePickerEventFormData
             <CloseIcon />
           </IconButton>
         </Box>
-        <DialogTitle>Modifier un évènement</DialogTitle>
+        <DialogTitle>Modifier un événement</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Pour modifier un évènement, remplissez les cases s'il vous plaît.
+            Pour modifier un événement, remplissez les cases s'il vous plaît.
           </DialogContentText>
           <Box component="form">
             <TextField
@@ -156,10 +165,39 @@ const ModifyDatePickerEventModal = ({ open, handleClose, datePickerEventFormData
               id="combo-box-demo"
               options={categories}
               sx={{ marginTop: 4 }}
+              value={categories.find((cat) => cat.id === category)}
               getOptionLabel={(option) => option.name}
-              renderInput={(params) => (
-                <TextField {...params} label="Catégorie" />
-              )}
+              renderInput={
+                (params) => (
+                  <TextField
+                    {...params}
+                    label="Catégorie"
+                    InputProps={{
+                      ...params.InputProps,
+                      startAdornment: (
+                        <Box
+                          sx={{
+                            width: 14,
+                            height: 14,
+                            backgroundColor: params.inputProps.value ? categories.find(category => category.name === params.inputProps.value)?.color : 'transparent',
+                            marginRight: 1,
+                          }}
+                        />
+                      ),
+                    }}
+                  />
+                )
+              }
+            />
+            <Autocomplete
+              onChange={handleMissionChange}
+              disablePortal
+              id="combo-box-demo"
+              options={missionsList}
+              sx={{ marginTop: 4 }}
+              value={missionsList.find((mission) => mission.id === currentEvent?.id_mission)}
+              getOptionLabel={(option) => option.title}
+              renderInput={(params) => <TextField {...params} label="Mission" />}
             />
           </Box>
         </DialogContent>
@@ -167,7 +205,7 @@ const ModifyDatePickerEventModal = ({ open, handleClose, datePickerEventFormData
           <Button color="error" onClick={onClose}>
             Annuler
           </Button>
-          <Button disabled={isDisabled()} color="success" onClick={onEditEvent}>
+          <Button color="success" onClick={onEditEvent}>
             Modifier
           </Button>
         </DialogActions>

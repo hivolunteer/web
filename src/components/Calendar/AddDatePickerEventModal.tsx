@@ -1,4 +1,4 @@
-import React, { Dispatch, MouseEvent, SetStateAction, ChangeEvent } from "react"
+import React, { Dispatch, MouseEvent, SetStateAction, ChangeEvent, useEffect, useState } from "react"
 import {
   TextField,
   Dialog,
@@ -15,6 +15,7 @@ import {
 import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers"
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns"
 import { EventCreationData, ICategory } from "./EventCalendar"
+import config from "../../config"
 
 interface IProps {
   open: boolean
@@ -22,7 +23,8 @@ interface IProps {
   datePickerEventFormData: EventCreationData
   setDatePickerEventFormData: Dispatch<SetStateAction<EventCreationData>>
   onAddEvent: (e: MouseEvent<HTMLButtonElement>) => void
-  categories: ICategory[]
+  categories: ICategory[],
+  missionsList: { id: number, title: string }[]
 }
 
 const AddDatePickerEventModal = ({
@@ -32,6 +34,7 @@ const AddDatePickerEventModal = ({
   setDatePickerEventFormData,
   onAddEvent,
   categories,
+  missionsList
 }: IProps) => {
   const { title, description, start_date, end_date, allDay } = datePickerEventFormData
 
@@ -56,7 +59,14 @@ const AddDatePickerEventModal = ({
   const handleCategoryChange = (e: React.SyntheticEvent, value: ICategory | null) => {
     setDatePickerEventFormData((prevState) => ({
       ...prevState,
-      categoryId: value?.id,
+      category: value?.id,
+    }))
+  }
+
+  const handleMissionChange = (e: React.SyntheticEvent, value: { id: number, title: string } | null) => {
+    setDatePickerEventFormData((prevState) => ({
+      ...prevState,
+      id_mission: value?.id,
     }))
   }
 
@@ -70,11 +80,12 @@ const AddDatePickerEventModal = ({
 
   }
 
+
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Ajouter un évènement</DialogTitle>
+      <DialogTitle>Ajouter un événement</DialogTitle>
       <DialogContent>
-        <DialogContentText> Pour ajouter un évènement, repmlissez les cases s'il vous plaît.</DialogContentText>
+        <DialogContentText> Pour ajouter un événement, repmlissez les cases s'il vous plaît.</DialogContentText>
         <Box component="form">
           <TextField
             name="title"
@@ -147,7 +158,36 @@ const AddDatePickerEventModal = ({
             options={categories}
             sx={{ marginTop: 4 }}
             getOptionLabel={(option) => option.name}
-            renderInput={(params) => <TextField {...params} label="Catégorie" />}
+            renderInput={
+              (params) => (
+                <TextField
+                  {...params}
+                  label="Catégorie"
+                  InputProps={{
+                    ...params.InputProps,
+                    startAdornment: (
+                      <Box
+                        sx={{
+                          width: 14,
+                          height: 14,
+                          backgroundColor: params.inputProps.value ? categories.find(category => category.name === params.inputProps.value)?.color : 'transparent',
+                          marginRight: 1,
+                        }}
+                      />
+                    ),
+                  }}
+                />
+              )
+            }
+          />
+          <Autocomplete
+            onChange={handleMissionChange}
+            disablePortal
+            id="combo-box-demo"
+            options={missionsList}
+            sx={{ marginTop: 4 }}
+            getOptionLabel={(option) => option.title}
+            renderInput={(params) => <TextField {...params} label="Mission" />}
           />
         </Box>
       </DialogContent>

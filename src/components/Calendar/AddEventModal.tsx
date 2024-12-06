@@ -1,4 +1,4 @@
-import {ChangeEvent, Dispatch, MouseEvent, SetStateAction} from "react"
+import { ChangeEvent, Dispatch, MouseEvent, SetStateAction } from "react"
 import {
     Autocomplete,
     Box,
@@ -10,7 +10,7 @@ import {
     DialogTitle,
     TextField,
 } from "@mui/material"
-import {EventFormData, ICategory} from "./EventCalendar"
+import { EventFormData, ICategory } from "./EventCalendar"
 
 
 interface IProps {
@@ -19,11 +19,12 @@ interface IProps {
     eventFormData: EventFormData
     setEventFormData: Dispatch<SetStateAction<EventFormData>>
     onAddEvent: (e: MouseEvent<HTMLButtonElement>) => EventFormData
-    categories: ICategory[]
+    categories: ICategory[],
+    missionsList: { id: number, title: string }[]
 }
 
-const AddEventModal = ({open, handleClose, eventFormData, setEventFormData, onAddEvent, categories}: IProps) => {
-    const {title, description} = eventFormData
+const AddEventModal = ({ open, handleClose, eventFormData, setEventFormData, onAddEvent, categories, missionsList }: IProps) => {
+    const { title, description } = eventFormData
 
     const onClose = () => handleClose()
 
@@ -37,7 +38,14 @@ const AddEventModal = ({open, handleClose, eventFormData, setEventFormData, onAd
     const handleCategoryChange = (e: React.SyntheticEvent, value: ICategory | null) => {
         setEventFormData((prevState) => ({
             ...prevState,
-            categoryId: value?.id,
+            category: value?.id,
+        }))
+    }
+
+    const handleMissionChange = (e: React.SyntheticEvent, value: { id: number, title: string } | null) => {
+        setEventFormData((prevState) => ({
+            ...prevState,
+            id_mission: value?.id,
         }))
     }
 
@@ -75,9 +83,38 @@ const AddEventModal = ({open, handleClose, eventFormData, setEventFormData, onAd
                         disablePortal
                         id="combo-box-demo"
                         options={categories}
-                        sx={{marginTop: 4}}
+                        sx={{ marginTop: 4 }}
                         getOptionLabel={(option) => option.name}
-                        renderInput={(params) => <TextField {...params} label="Catégorie"/>}
+                        renderInput={
+                            (params) => (
+                                <TextField
+                                    {...params}
+                                    label="Catégorie"
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        startAdornment: (
+                                            <Box
+                                                sx={{
+                                                    width: 14,
+                                                    height: 14,
+                                                    backgroundColor: params.inputProps.value ? categories.find(category => category.name === params.inputProps.value)?.color : 'transparent',
+                                                    marginRight: 1,
+                                                }}
+                                            />
+                                        ),
+                                    }}
+                                />
+                            )
+                        }
+                    />
+                    <Autocomplete
+                        onChange={handleMissionChange}
+                        disablePortal
+                        id="combo-box-demo"
+                        options={missionsList}
+                        sx={{ marginTop: 4 }}
+                        getOptionLabel={(option) => option.title}
+                        renderInput={(params) => <TextField {...params} label="Mission" />}
                     />
                 </Box>
             </DialogContent>

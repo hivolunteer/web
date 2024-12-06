@@ -82,7 +82,7 @@ const ModifyEventModal = ({open, handleClose, eventFormData, setEventFormData, o
                         id="combo-box-demo"
                         options={categories}
                         sx={{marginTop: 4}}
-                        value={categories.find(c => c.id === eventFormData.categoryId)}
+                        value={categories.find(c => c.id === eventFormData.category)}
                         getOptionLabel={(option) => option.name}
                         renderInput={(params) => <TextField {...params} label="Catégorie"/>}
                     />
