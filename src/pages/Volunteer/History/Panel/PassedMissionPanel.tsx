@@ -29,7 +29,7 @@ function PassedMissionPanel() {
         <div className='panel-div'>
             {missions.length === 0 ? (
                 <p>
-                    Aucune mission active.
+                    Aucune mission passée.
                 </p>
             ) : (
                 missions.map((mission) => (

@@ -75,7 +75,7 @@ function RateCard(props: { mission: number }) {
     }).then((response) => {
       if (response.status === 200) {
         response.json().then((data) => {
-          if (data.stars_from_volunteer !== -1) {
+          if (data.stars_from_volunteer !== 0 && data.stars_from_volunteer !== -1 && data.stars_from_volunteer !== null) {
             setStars(data.stars_from_volunteer);
             setRated(true);
           } else {
