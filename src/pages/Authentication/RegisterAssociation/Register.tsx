@@ -32,7 +32,7 @@ function RegisterAssociation() {
   const [emailFormat, setEmailFormat] = useState(true);
   /* State for phone format */
   const [phoneFormat, setPhoneFormat] = useState(true);
-
+  const [rnaFormat, setRnaFormat] = useState(true);
 
   /***
    * Define all functions
@@ -74,6 +74,8 @@ function RegisterAssociation() {
     }
   };
 
+
+
   /* Function to check email format */
   const checkEmailFormat = (email: string) => {
     const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -83,6 +85,17 @@ function RegisterAssociation() {
       return true;
     } else {
       setEmailFormat(false);
+      return false;
+    }
+  };
+
+  const checkRNAFormat = (rna: string) => {
+    const regex = /[A-Z]\d{9}/;
+    if (regex.test(rna)) {
+      setRnaFormat(true);
+      return true;
+    } else {
+      setRnaFormat(false);
       return false;
     }
   };
@@ -110,6 +123,7 @@ function RegisterAssociation() {
     checkEmailFormat(data.get('email') as string);
     /* Check phone format */
     checkPhoneFormat(data.get('phone') as string);
+    checkRNAFormat(data.get('rna') as string);
   };
 
   /* Function to execute response */
@@ -148,7 +162,7 @@ function RegisterAssociation() {
     if (user['name'] && user['rna'] && user['phone'] && user['email'] && user['password']) {
       setStrength(checkStrengthPassword(user['password'] as string));
       /* If user is major, password is strong enough, email format is correct and phone format is correct, send data */
-      if (strength && checkEmailFormat(user['email'] as string) && checkPhoneFormat(user['phone'] as string)) {
+      if (strength && checkEmailFormat(user['email'] as string) && checkPhoneFormat(user['phone'] as string) && checkRNAFormat(user['rna'] as string)) {
         // call RegisterAssociation service
         const response_status = AuthenticationService.registerAssociations(user);
         responseExecute(await response_status)
@@ -167,7 +181,7 @@ function RegisterAssociation() {
       checkInput(data);
     }
     /* If all states are true, send data */
-    console.log(name, rna, phone, email, password, strength, emailFormat, phoneFormat);
+    console.log(name, rna, phone, email, password, strength, emailFormat, phoneFormat, rnaFormat);
     sendData(data);
   };
 
@@ -242,11 +256,17 @@ function RegisterAssociation() {
                                                  borderRadius: "10px",
                                                }
                                     }}
+                                    error={!rna || !rnaFormat}
                                 />
                                 {/* If rna is empty, display an error message */}
                                 {!rna && (
                                     <Alert severity="error" sx={{maxWidth: "20rem"}}>
                                         Le numéro RNA est requis
+                                    </Alert>
+                                )}
+                                {(rna && !rnaFormat) && (
+                                    <Alert severity="warning">
+                                        Le format du RNA doit être WXXXXXXXX
                                     </Alert>
                                 )}
                             </Grid>
@@ -335,7 +355,6 @@ function RegisterAssociation() {
                                         style: { color: "#2D2A32",
                                                  boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
                                                  borderRadius: "10px",
-                                                 marginRight: "10px"
                                                },
                                         endAdornment: (
                                           <InputAdornment position="end">
