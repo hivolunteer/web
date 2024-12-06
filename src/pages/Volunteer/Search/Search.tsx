@@ -17,21 +17,6 @@ import filterMissionAndPagination from "./functions/filterMissionAndPagination";
 import filterAssoAndPagination from "./functions/filterAssoAndPagination";
 import filterVolunteerAndPagination from "./functions/filterVolunteerAndPagination";
 
-// interface ExpandMoreProps extends IconButtonProps {
-//   expand: boolean;
-// }
-
-// const ExpandMore = styled((props: ExpandMoreProps) => {
-//   const { expand, ...other } = props;
-//   return <IconButton {...other} />;
-// })(({ theme, expand }) => ({
-//   transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-//   marginLeft: "auto",
-//   transition: theme.transitions.create("transform", {
-//     duration: theme.transitions.duration.shortest,
-//   }),
-// }));
-
 function Search(props: any) {
   const [missionList, setMissionList] = useState<Mission[]>([]);
   const [associationList, setAssociations] = useState<Association[]>([]);
@@ -115,19 +100,22 @@ function Search(props: any) {
         authorization: `Bearer ${localStorage.getItem('token')}`,
         'Content-Type': 'application/json'
       }
-    }).then((data => data.json()))
-      .then((data: any) => {
+    }).then((data => data.json())).then((data: any) => {
         let association_missions = data.associations_missions
-        let mission_list: Mission[] = [];
-        association_missions
-          .map((mission: Mission) => {
-            mission_list.push(mission);
-            return null;
-          })
         let volunteer_missions = data.close_missions
-        volunteer_missions.map((mission: Mission) => {
-          mission_list.push(mission)
+        let mission_list: Mission[] = [];
+
+        association_missions.map((mission: Mission) => {
+          mission_list.push(mission);
           return null;
+        })
+
+        const id: number = Number(localStorage.getItem('id'));
+        volunteer_missions.map((mission: Mission) => {
+          if (mission.owner_id !== id) {
+            mission_list.push(mission)
+            return null;
+          }
         });
         mission_list.sort(
           (a: Mission, b: Mission) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime()
