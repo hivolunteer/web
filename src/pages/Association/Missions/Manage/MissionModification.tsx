@@ -1,10 +1,4 @@
-/**
- * @module MissionModification.tsx
- * @description Mission Modification Page
- * @utility This page is used to modify a mission
-*/
-
-import { Autocomplete, Box, Button, Chip, Grid, TextField, FormControlLabel, Checkbox } from "@mui/material";
+import { Autocomplete, Box, Button, Chip, Grid, TextField, FormControlLabel, Checkbox, Snackbar } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
@@ -52,7 +46,6 @@ interface Address {
 const noImageComponent = () => {
   return (
     <>
-      {/* <p>Vous n'avez pas encore choisi de photo</p> */}
       <Lottie animationData={noImage} />
     </>
   );
@@ -64,7 +57,7 @@ export default function MissionModification() {
   const [selectedSkills, setSelectedSkills] = useState<Array<SkillDatabase>>([]);
   const [skillDb, setSkillDb] = useState<Array<SkillDatabase>>([]);
 
-  // preparation for adress modal
+  // preparation for address modal
   const [open, setOpen] = React.useState<boolean>(false);
   const [address, setAddress] = useState<Address>({
     name: "",
@@ -91,6 +84,8 @@ export default function MissionModification() {
   const handleCloseCompanyModal = () => {
     setCompanyModal(false);
   };
+
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   function InputFileUpload({ onFileChange }: { onFileChange: (file: File) => void }) {
     const [preview, setPreview] = useState<string | null>(null);
@@ -174,13 +169,12 @@ export default function MissionModification() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token, // localStorage.getItem("token")
+        Authorization: "Bearer " + token,
       },
     }).then((response) => {
       if (response.status === 200) {
         response.json().then((data: SkillDatabase[]) => {
           setSkillDb(data);
-          fetchSkills(data);
         });
       }
     })
@@ -191,14 +185,13 @@ export default function MissionModification() {
   }
 
   useEffect(() => {
-    // Get mission info
     const token = localStorage.getItem("token");
 
     fetch(`${config.apiUrl}/missions/association/${mission_id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token, // localStorage.getItem("token")
+        Authorization: "Bearer " + token,
       }
     }).then((response) => {
       if (response.status === 200) {
@@ -250,9 +243,15 @@ export default function MissionModification() {
     })
   }, [mission_id]);
 
-  // handle modification of the mission
   const modifyMission = () => {
     const token = localStorage.getItem("token");
+
+    if (form?.missionDate && form?.missionEndDate && form.missionDate > form.missionEndDate) {
+      setErrorMessage("La date de début doit être avant la date de fin.");
+      return;
+    } else {
+      setErrorMessage(null);
+    }
 
     const body = {
       max_volunteers: form?.missionVolunteersNumber,
@@ -260,17 +259,18 @@ export default function MissionModification() {
       practical_information: form?.missionPracticalInformation,
       location: locationId,
       start_date: form?.missionDate,
-      end_date: form?.missionEndDate,
+ end_date: form?.missionEndDate,
       title: form?.missionName,
       skills: selectedSkills,
       accept_minors: form?.missionAcceptMinors,
       company_id: (selectedCompany !== null) ? selectedCompany.id : null
     };
+    console.log("body", body.title);
     fetch(`${config.apiUrl}/missions/association/update/${mission_id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token, // localStorage.getItem("token")
+        Authorization: "Bearer " + token,
       },
       body: JSON.stringify(body),
     }).then((response) => {
@@ -280,10 +280,10 @@ export default function MissionModification() {
           if (image) {
             formData.append("file", image);
           }
-          window.location.href = "/"
-          /* if (data && data.association_missions) {
+          window.location.href = "/";
+          if (data && data.association_missions) {
             data.association_missions.forEach((mission: any) => {
-              const missionId = mission.id
+              const missionId = mission.id;
               fetch(`${config.apiUrl}/uploads/${localStorage.getItem('role')}/mission/${missionId}`, {
                 method: 'POST',
                 headers: {
@@ -301,20 +301,21 @@ export default function MissionModification() {
               .catch(
                 (error) => {
                   console.error("Error while uploading image");
-                }  )
+                }
+              );
             });
-            window.location.href = "/"
+            window.location.href = "/";
           } else {
             console.error("No association missions found in the data");
-          } */
+          }
         });
       }
     })
-      .catch(
-        (error) => {
-          console.error("Error while modifying mission");
-        }
-      )
+    .catch(
+      (error) => {
+        console.error("Error while modifying mission");
+      }
+    );
   };
 
   return (
@@ -330,6 +331,14 @@ export default function MissionModification() {
         >
           <h1>Modifier la mission</h1>
         </Box>
+        {errorMessage && (
+          <Snackbar
+            open={Boolean(errorMessage)}
+            message={errorMessage}
+            autoHideDuration={6000}
+            onClose={() => setErrorMessage(null)}
+          />
+        )}
         <Box sx={{ flexDirection: "column", "& > p": { marginBottom: "10" } }} style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "10" }}>
           {form?.missionPicture && (
             <img src={form?.missionPicture} alt="Preview" style={{ width: "20%", height: "20%", objectFit: "contain", marginBottom: "2%" }} />
@@ -389,7 +398,7 @@ export default function MissionModification() {
                 onClick={() => {
                   setOpen(true);
                 }}
-              >
+ >
                 {(locationStr !== null) ? locationStr : "Ajouter une adresse"}
               </Button>
             </Grid>
@@ -420,12 +429,11 @@ export default function MissionModification() {
                 rows={4}
                 id="missionPracticalInformation"
                 value={form?.missionPracticalInformation}
-                label={!form?.missionPracticalInformation ? "Nom de la mission" : null}
+                label={!form?.missionPracticalInformation ? "Informations pratiques" : null}
                 onChange={(missionPracticalInformation) => {
                   setForm({
                     ...form,
-                    missionPracticalInformation:
-                      missionPracticalInformation.target.value,
+                    missionPracticalInformation: missionPracticalInformation.target.value,
                   });
                 }}
               />
@@ -507,8 +515,7 @@ export default function MissionModification() {
                         ...form,
                         missionAcceptMinors: event.target.checked,
                       });
-                    }
-                    }
+                    }}
                   />
                 }
                 label="Accepter les personnes mineures"
@@ -516,40 +523,40 @@ export default function MissionModification() {
             </Grid>
           </Grid>
           <Grid container spacing={3} style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
-              {
-                (selectedCompany === null) && (
+            {
+              (selectedCompany === null) && (
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    setCompanyModal(true);
+                  }}
+                >
+                  Ajouter une entreprise affiliée
+                </Button>
+              )
+            }
+            {
+              (selectedCompany !== null) && (
+                <Box>
                   <Button
                     variant="outlined"
+                    style={{
+                      width: "100%"
+                    }}
                     onClick={() => {
                       setCompanyModal(true);
                     }}
                   >
-                    Ajouter une entreprise affiliée
-                  </Button>
-                ) 
-              }
-              {
-                (selectedCompany !== null) && (
-                  <Box>
-                  <Button
-                      variant="outlined"
-                        style={{
-                          width: "100%"
-                        }}
-                        onClick={() => {
-                          setCompanyModal(true);
-                        }}
-                  >
                     {selectedCompany.name}
                   </Button>
-                  </Box>
-                )
-              }
-              <CompanyModal
-                selectCompany={setSelectedCompany}
-                companyModal={companyModal}
-                closeCompanyModal={handleCloseCompanyModal}
-              />
+                </Box>
+              )
+            }
+            <CompanyModal
+              selectCompany={setSelectedCompany}
+              companyModal={companyModal}
+              closeCompanyModal={handleCloseCompanyModal}
+            />
           </Grid>
           <Box
             style={{
