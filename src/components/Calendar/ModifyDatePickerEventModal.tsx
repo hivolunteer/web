@@ -59,7 +59,7 @@ const ModifyDatePickerEventModal = ({ open, handleClose, datePickerEventFormData
     const handleCategoryChange = (e: React.SyntheticEvent, value: ICategory | null) => {
         setDatePickerEventFormData((prevState) => ({
             ...prevState,
-            categoryId: value?._id,
+            categoryId: value?.id,
         }));
     };
 
@@ -156,7 +156,7 @@ const ModifyDatePickerEventModal = ({ open, handleClose, datePickerEventFormData
               id="combo-box-demo"
               options={categories}
               sx={{ marginTop: 4 }}
-              getOptionLabel={(option) => option.title}
+              getOptionLabel={(option) => option.name}
               renderInput={(params) => (
                 <TextField {...params} label="Catégorie" />
               )}

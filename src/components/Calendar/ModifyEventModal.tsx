@@ -37,7 +37,7 @@ const ModifyEventModal = ({open, handleClose, eventFormData, setEventFormData, o
     const handleCategoryChange = (e: React.SyntheticEvent, value: ICategory | null) => {
         setEventFormData((prevState) => ({
             ...prevState,
-            categoryId: value?._id,
+            categoryId: value?.id,
         }))
     }
 
@@ -48,7 +48,7 @@ const ModifyEventModal = ({open, handleClose, eventFormData, setEventFormData, o
 
     return (
         <Dialog open={open} onClose={onClose}>
-            <DialogTitle>Modifier un évènémént</DialogTitle>
+            <DialogTitle>Modifier un événement</DialogTitle>
             <DialogContent>
                 <DialogContentText>Pour modifier un événement, veuillez mettre à jour les informations
                     ci-dessous.</DialogContentText>
@@ -82,8 +82,8 @@ const ModifyEventModal = ({open, handleClose, eventFormData, setEventFormData, o
                         id="combo-box-demo"
                         options={categories}
                         sx={{marginTop: 4}}
-                        value={categories.find(c => c._id === eventFormData.categoryId)}
-                        getOptionLabel={(option) => option.title}
+                        value={categories.find(c => c.id === eventFormData.categoryId)}
+                        getOptionLabel={(option) => option.name}
                         renderInput={(params) => <TextField {...params} label="Catégorie"/>}
                     />
                 </Box>

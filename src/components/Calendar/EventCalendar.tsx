@@ -19,7 +19,7 @@ const locales = { fr };
 const localizer = dateFnsLocalizer({ format, parse, startOfWeek, getDay, locales });
 const messages = { previous: "←", next: "→", today: "Aujourd'hui", month: "Mois", week: "Semaine", day: "Jour", date: "Date" };
 
-export interface ICategory { _id: number, title: string, color?: string }
+export interface ICategory { id: number, name: string, color: string }
 export interface IEventInfo extends Event { _id: number, id?: number, title: string, description: string, start?: Date, end?: Date, allDay?: boolean, category?: number, categoryId?: number }
 export interface EventFormData { title: string, description: string, categoryId?: number }
 export interface DatePickerEventFormData { title: string, description: string, category?: number, allDay: boolean, start_date?: Date, end_date?: Date, location?: string, id_mission?: number }
@@ -43,6 +43,28 @@ const EventCalendar = () => {
     const [, setExistingEvents] = useState<IEventInfo[]>([]);
     const [response, setResponse] = useState<{ error: Boolean; message: string }>({ error: false, message: "" });
     const [modifyEventModalOpen, setModifyEventModalOpen] = useState(false);
+
+    const GetCategoriesFetch = async () => {
+        fetch(`${config.apiUrl}/calendar/category`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+        })
+            .then((response) => {
+                if (response.status === 200) {
+                    response.json().then((data) => {
+                        setCategories(data)
+                    })
+                } else {
+                    setResponse({ error: true, message: "Erreur lors de la récupération des catégories" })
+                }
+            })
+            .catch((error) => {
+                console.warn(error)
+            })
+    };
 
     const handleSelectSlot = (event: Event) => {
         setOpenSlot(true);
@@ -89,6 +111,7 @@ const EventCalendar = () => {
         }).catch((error) => {
             console.error(error);
         });
+        GetCategoriesFetch();
     }, [
         setMissions
     ]);
@@ -269,10 +292,8 @@ const EventCalendar = () => {
                     <Divider />
                     <CardContent>
                         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                            <ButtonGroup size="large" variant="contained" aria-label="outlined primary button group">
-                                <Button onClick={() => setOpenDatepickerModal(true)} size="small" variant="contained">Ajouter un évènement</Button>
-                                <Button onClick={() => setOpenCategoryModal(true)} size="small" variant="contained">Créer une catégorie</Button>
-                            </ButtonGroup>
+                            <Button onClick={() => setOpenDatepickerModal(true)} size="small" variant="contained">Ajouter un événement</Button>
+                            <Button onClick={() => setOpenCategoryModal(true)} size="small" variant="contained" sx={{ backgroundColor: 'white' }}>Catégorie</Button>
                         </Box>
                         <Divider style={{ margin: 10 }} />
                         <AddEventModal
@@ -312,6 +333,7 @@ const EventCalendar = () => {
                             handleClose={() => setOpenCategoryModal(false)}
                             categories={categories}
                             setCategories={setCategories}
+                            GetCategoriesFetch={GetCategoriesFetch}
                         />
                         <Calendar
                             localizer={localizer}
@@ -326,7 +348,7 @@ const EventCalendar = () => {
                             endAccessor="end"
                             defaultView="week"
                             eventPropGetter={(event) => {
-                                const hasCategory = categories.find((category) => category._id === event.categoryId);
+                                const hasCategory = categories.find((category) => category.id === event.categoryId);
                                 return {
                                     style: {
                                         backgroundColor: hasCategory ? hasCategory.color : "rgb(78,121,110)",

@@ -37,13 +37,13 @@ const AddEventModal = ({open, handleClose, eventFormData, setEventFormData, onAd
     const handleCategoryChange = (e: React.SyntheticEvent, value: ICategory | null) => {
         setEventFormData((prevState) => ({
             ...prevState,
-            categoryId: value?._id,
+            categoryId: value?.id,
         }))
     }
 
     return (
         <Dialog open={open} onClose={onClose}>
-            <DialogTitle>Ajouter un évènémént</DialogTitle>
+            <DialogTitle>Ajouter un événement</DialogTitle>
             <DialogContent>
                 <DialogContentText>Pour ajouter un événement, veuillez remplir les informations
                     ci-dessous.</DialogContentText>
@@ -76,7 +76,7 @@ const AddEventModal = ({open, handleClose, eventFormData, setEventFormData, onAd
                         id="combo-box-demo"
                         options={categories}
                         sx={{marginTop: 4}}
-                        getOptionLabel={(option) => option.title}
+                        getOptionLabel={(option) => option.name}
                         renderInput={(params) => <TextField {...params} label="Catégorie"/>}
                     />
                 </Box>
