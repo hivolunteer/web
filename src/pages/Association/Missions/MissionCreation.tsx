@@ -255,31 +255,7 @@ export default function MissionCreation() {
             formData.append("file", image);
           }
           console.log(data.association_missions.length)
-          data.association_missions.forEach((association_mission: any) => {
-            fetch(`${config.apiUrl}/uploads/association/mission/${String(association_mission)}`, {
-              method: 'POST',
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`
-              },
-              body: formData
-            }).then(
-              (response) => {
-                if (response.status === 201) {
-                  console.log("Image uploaded");
-                  setResponse({ error: false, message: "La ou les missions ont bien été créées" });
-                  // wait for 2 seconds before redirecting
-                  new Promise((resolve) => setTimeout(resolve, 2000));
-                  window.location.href = '/';
-                }
-              }
-            )
-              .catch(
-                (error) => {
-                  setResponse({ error: true, message: "Erreur lors de l'upload de l'image" });
-                  console.error("Error while uploading image");
-                })
-          });
-
+          window.location.href = "/accueil";
         });
       }
     })

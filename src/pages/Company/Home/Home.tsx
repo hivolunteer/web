@@ -27,7 +27,7 @@ function Missions(props: any) {
     const [subType, setSubType] = useState<Subtype>(subtypes[0]);
 
     useEffect(() => {
-        fetch(`${config.apiUrl}/missions/`, {
+        fetch(`${config.apiUrl}/companies/filtered_missions`, {
             method: 'GET',
             headers: {
                 authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -37,8 +37,8 @@ function Missions(props: any) {
             .then((data) => data.json())
             .then((data: any) => {
                 console.log(data);
-                const waiting: Mission[] = Array.isArray(data.waiting) ? data.waiting : [];
-                const active: Mission[] = Array.isArray(data.associations_missions) ? data.associations_missions : [];
+                const waiting: Mission[] = Array.isArray(data.pending) ? data.pending : [];
+                const active: Mission[] = Array.isArray(data.approved) ? data.approved : [];
                 const passed: Mission[] = Array.isArray(data.passed) ? data.passed : [];
 
                 setWaitingMissions(waiting);
