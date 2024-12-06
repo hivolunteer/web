@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { Card } from "react-bootstrap";
+import { Card, Col, Row } from "react-bootstrap";
 import config from "../../../config";
 import "./Profile.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CardContent, CardMedia, Typography, Button } from "@mui/material";
 import Chart from "react-apexcharts";
 
@@ -35,6 +35,7 @@ interface ProfileData {
 function ProfilePage(props: any) {
   const [volunteerId, setVolunteerId] = useState<number | null>(null);
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`${config.apiUrl}/volunteers/profile`, {
@@ -124,7 +125,7 @@ function ProfilePage(props: any) {
   const pieChartSeries = topSkills.length > 0 ? topSkills.map(data => data.value) : [];
 
   return (
-    <div className="public-profile-container">
+    <><div className="public-profile-container">
       <img src={profileData.volunteer.profile_picture} alt="Logo de profil" className={"profile-photo"} />
       <div className="profile-info">
         <h1>{profileData.volunteer.first_name} {profileData.volunteer.last_name}</h1>
@@ -139,18 +140,16 @@ function ProfilePage(props: any) {
                 series={barChartSeries}
                 type="bar"
                 height="80%"
-                width="80%"
-              />
+                width="80%" />
             </div>
 
             <h3>Top 5 compétences :</h3>
             <div className="chart-container">
-            {topSkills.length > 0 && topSkills[0].value > 0 ? (
+              {topSkills.length > 0 && topSkills[0].value > 0 ? (
                 <Chart
                   options={pieChartOptions}
                   series={pieChartSeries}
-                  type="pie"
-                />
+                  type="pie" />
               ) : (
                 <p>Aucune compétence</p>
               )}
@@ -172,8 +171,7 @@ function ProfilePage(props: any) {
                     <CardMedia
                       component="img"
                       image={friend.profile_picture || 'https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg'}
-                      alt="Friend's Profile Picture"
-                    />
+                      alt="Friend's Profile Picture" />
                     <Typography variant="body2" color="text.secondary" className="friend-name">
                       {friend.first_name} {friend.last_name}
                     </Typography>
@@ -194,6 +192,14 @@ function ProfilePage(props: any) {
         </Card>
       </div>
     </div>
+    <Col sm={12} md={4} lg={3} className="profile-info"></Col><Row sm={12} md={4} lg={3} className="button-row">
+        <div className="profile-btn-div">
+          <Button variant="contained" color="primary" className={((localStorage.getItem("color_blind") === "true") ? " color-blind-bg" : "")} onClick={() => { navigate("/profile/blocked"); } }>
+            Gérer les utilisateurs Bloqués
+          </Button>
+        </div>
+    </Row>
+    </>
   );
 }
 
